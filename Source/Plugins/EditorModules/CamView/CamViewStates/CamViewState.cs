@@ -558,14 +558,8 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 				Vector2 mouseVec = new Vector2(cursorPos.X - this.camActionBeginLoc.X, cursorPos.Y - this.camActionBeginLoc.Y);
 				this.camActionBeginLoc = cursorPos; // Update Begic Mouse Pos
 
-				//Vector3 rotation = camObj.Transform.Rotation.EulerAngles;
-				//rotation.Y += -(mouseVec.X * 0.05f);
-				//rotation.X += (mouseVec.Y * 0.05f);
-				//rotation.Z = 0.0f;
-				//camObj.Transform.Rotation = Quaternion.FromEuler(rotation);
-
-				this._currentYaw += -mouseVec.X * 0.01f;
-				this._currentPitch += mouseVec.Y * 0.01f;
+				this._currentYaw += mouseVec.X * 0.01f;
+				this._currentPitch -= mouseVec.Y * 0.01f;
 
 				camObj.Transform.Rotation = Quaternion.CreateFromYawPitchRoll(this._currentYaw, this._currentPitch, 0f);
 
