@@ -809,6 +809,8 @@ namespace Duality
 		public void Normalize()
 		{
 			float factor = MathF.Sqrt((this.X * this.X) + (this.Y * this.Y) + (this.Z * this.Z));
+			if (factor == 0.0f)
+				return; // Were 0, nothing to normalize
 			factor = 1f / factor;
 			this.X *= factor;
 			this.Y *= factor;
@@ -823,6 +825,8 @@ namespace Duality
 		public static Vector3 Normalize(Vector3 value)
 		{
 			float factor = MathF.Sqrt((value.X * value.X) + (value.Y * value.Y) + (value.Z * value.Z));
+			if (factor == 0.0f)
+				return Vector3.Zero; // Were 0, nothing to normalize
 			factor = 1f / factor;
 			return new Vector3(value.X * factor, value.Y * factor, value.Z * factor);
 		}
@@ -835,6 +839,11 @@ namespace Duality
 		public static void Normalize(ref Vector3 value, out Vector3 result)
 		{
 			float factor = MathF.Sqrt((value.X * value.X) + (value.Y * value.Y) + (value.Z * value.Z));
+			if (factor == 0.0f)
+			{
+				result = Vector3.Zero;
+				return; // Were 0, nothing to normalize
+			}
 			factor = 1f / factor;
 			result.X = value.X * factor;
 			result.Y = value.Y * factor;

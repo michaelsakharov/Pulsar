@@ -566,7 +566,7 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 				Vector3 movement = (camObj.Transform.Forward * forward) + (camObj.Transform.Right * right) + (camObj.Transform.Up * up);
 				//camObj.Transform.Pos += movement;
 
-				this.camVel = movement;
+				this.camVel = movement * 0.1f;
 				this.camTransformChanged = true;
 			}
 			else if (this.camVel.Length > 0.01f)

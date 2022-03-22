@@ -143,11 +143,11 @@ namespace Duality.Drawing
 		/// <summary>
 		/// The default reference distance for perspective rendering.
 		/// </summary>
-		public const float DefaultFocusDist	= 500.0f;
+		public const float DefaultFocusDist	= 10.0f;
 
 		
 		private bool                      disposed         = false;
-		private float                     nearZ            = 50.0f;
+		private float                     nearZ            = 0.1f;
 		private float                     farZ             = 10000.0f;
 		private float                     focusDist        = DefaultFocusDist;
 		private ClearFlag                 clearFlags       = ClearFlag.All;
