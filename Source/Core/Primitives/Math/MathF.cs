@@ -657,6 +657,19 @@ namespace Duality
 			const float factor = (float)System.Math.PI / 180.0f;
 			return deg * factor;
 		}
+
+		/// <summary>
+		/// Converts degrees  to radians.
+		/// </summary>
+		/// <param name="deg"></param>
+		public static Vector3 DegToRad(Vector3 deg)
+		{
+			deg.X = DegToRad(deg.X);
+			deg.Y = DegToRad(deg.Y);
+			deg.Z = DegToRad(deg.Z);
+			return deg;
+		}
+
 		/// <summary>
 		/// Converts radians to degrees.
 		/// </summary>
@@ -665,6 +678,18 @@ namespace Duality
 		{
 			const float factor = 180.0f / (float)System.Math.PI;
 			return rad * factor;
+		}
+
+		/// <summary>
+		/// Converts radians to degrees.
+		/// </summary>
+		/// <param name="rad"></param>
+		public static Vector3 RadToDeg(Vector3 rad)
+		{
+			rad.X = RadToDeg(rad.X);
+			rad.Y = RadToDeg(rad.Y);
+			rad.Z = RadToDeg(rad.Z);
+			return rad;
 		}
 
 		/// <summary>

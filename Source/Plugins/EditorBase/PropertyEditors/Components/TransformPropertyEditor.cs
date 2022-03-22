@@ -218,12 +218,13 @@ namespace Duality.Editor.Plugins.Base.PropertyEditors
 		protected IEnumerable<object> AngleGetter()
 		{
 			if (this.showWorldSpace)
-				return this.GetValue().OfType<Transform>().Select(o => (object)o.Rotation);
+				return this.GetValue().OfType<Transform>().Select(o => (object)MathF.RadToDeg(o.Rotation));
 			else
-				return this.GetValue().OfType<Transform>().Select(o => (object)o.LocalRotation);
+				return this.GetValue().OfType<Transform>().Select(o => (object)MathF.RadToDeg(o.LocalRotation));
 		}
 		protected void AngleSetter(IEnumerable<object> values)
 		{
+			values = values.Select(v => (object)MathF.DegToRad((Vector3)v));
 			if (this.showWorldSpace)
 			{
 				List<Vector3> valuesList = values.Cast<Vector3>().ToList();
