@@ -63,7 +63,7 @@ namespace Duality.Components.Renderers
 		}
 
 
-		protected Rect                 rect        = Rect.Align(Alignment.Center, 0, 0, 256, 256);
+		protected Rect                 rect        = Rect.Align(Alignment.Center, 0, 0, 1, 1);
 		protected ContentRef<Material> sharedMat   = Material.DualityIcon;
 		protected BatchInfo            customMat   = null;
 		protected ColorRgba            colorTint   = ColorRgba.White;

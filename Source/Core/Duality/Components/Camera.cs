@@ -19,7 +19,7 @@ namespace Duality.Components
 	[EditorHintImage(CoreResNames.ImageCamera)]
 	public sealed class Camera : Component, ICmpInitializable
 	{
-		private float                     nearZ            = 50.0f;
+		private float                     nearZ            = 0.1f;
 		private float                     farZ             = 10000.0f;
 		private float                     focusDist        = DrawDevice.DefaultFocusDist;
 		private Rect                      targetRect       = new Rect(1.0f, 1.0f);
@@ -41,8 +41,8 @@ namespace Duality.Components
 		/// [GET / SET] The lowest Z value that can be displayed by the device.
 		/// </summary>
 		[EditorHintDecimalPlaces(0)]
-		[EditorHintIncrement(10.0f)]
-		[EditorHintRange(1.0f, 1000000.0f, 10.0f, 200.0f)]
+		[EditorHintIncrement(1.0f)]
+		[EditorHintRange(0.01f, 1000000.0f, 1.0f, 10.0f)]
 		public float NearZ
 		{
 			get { return this.nearZ; }
@@ -52,8 +52,8 @@ namespace Duality.Components
 		/// [GET / SET] The highest Z value that can be displayed by the device.
 		/// </summary>
 		[EditorHintDecimalPlaces(0)]
-		[EditorHintIncrement(1000.0f)]
-		[EditorHintRange(100.0f, 1000000.0f, 1000.0f, 100000.0f)]
+		[EditorHintIncrement(100.0f)]
+		[EditorHintRange(0.02f, 1000000.0f, 1000.0f, 100000.0f)]
 		public float FarZ
 		{
 			get { return this.farZ; }
