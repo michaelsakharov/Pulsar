@@ -521,7 +521,7 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 
 				Vector2 targetOff = (-(curPos - lastPos) / this.GetScaleAtZ(refZ));
 				Vector2 targetVel = targetOff / unscaledTimeMult;
-				MathF.TransformCoord(ref targetVel.X, ref targetVel.Y, camObj.Transform.Rotation.EulerAngles.Z);
+				MathF.TransformCoord(ref targetVel.X, ref targetVel.Y, camObj.Transform.Rotation.Z);
 				this.camVel.Z *= MathF.Pow(0.9f, unscaledTimeMult);
 				this.camVel += (new Vector3(targetVel, this.camVel.Z) - this.camVel) * unscaledTimeMult;
 				this.camTransformChanged = true;
@@ -539,7 +539,7 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 				moveVec.Y = BaseSpeed * MathF.Sign(moveVec.Y) * MathF.Pow(MathF.Abs(moveVec.Y) / BaseSpeedCursorLen, 1.5f);
 				moveVec.Z *= MathF.Pow(0.9f, unscaledTimeMult);
 
-				MathF.TransformCoord(ref moveVec.X, ref moveVec.Y, camObj.Transform.Rotation.EulerAngles.Z);
+				MathF.TransformCoord(ref moveVec.X, ref moveVec.Y, camObj.Transform.Rotation.Z);
 
 				if (this.camBeginDragScene)
 				{
@@ -559,10 +559,10 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 				this.camActionBeginLoc = cursorPos; // Update Begic Mouse Pos
 
 				this._currentYaw += mouseVec.X * 0.01f;
-				this._currentPitch -= mouseVec.Y * 0.01f;
+				this._currentPitch += mouseVec.Y * 0.01f;
 
-				camObj.Transform.Rotation = Quaternion.Euler(this._currentYaw, this._currentPitch, 0f);
-				//camObj.Transform.Rotation = Quaternion.CreateFromYawPitchRoll(this._currentYaw, this._currentPitch, 0f);
+				//camObj.Transform.Rotation = new Vector3(this._currentYaw, this._currentPitch, 0f);
+				camObj.Transform.Rotation = Quaternion.CreateFromYawPitchRoll(this._currentYaw, this._currentPitch, 0f).EulerAngles;
 
 				float forward = 0;
 				float right = 0;
@@ -574,8 +574,8 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 				if (this.KeyDIsDown) right += 1;
 				if (this.KeyAIsDown) right -= 1;
 
-				if (this.KeyEIsDown) up -= 1;
-				if (this.KeyQIsDown) up += 1;
+				if (this.KeyEIsDown) up += 1;
+				if (this.KeyQIsDown) up -= 1;
 
 				Vector3 movement = (camObj.Transform.Forward * forward) + (camObj.Transform.Right * right) + (camObj.Transform.Up * up);
 				//camObj.Transform.Pos += movement;
@@ -882,7 +882,7 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 					Vector2 curTemp = new Vector2(
 						(e.X * 2.0f / this.ClientSize.Width) - 1.0f,
 						(e.Y * 2.0f / this.ClientSize.Height) - 1.0f);
-					MathF.TransformCoord(ref curTemp.X, ref curTemp.Y, camObj.Transform.LocalRotation.EulerAngles.Z);
+					MathF.TransformCoord(ref curTemp.X, ref curTemp.Y, camObj.Transform.LocalRotation.Z);
 
 					if (MathF.Sign(e.Delta) != MathF.Sign(curVel))
 						curVel = 0.0f;

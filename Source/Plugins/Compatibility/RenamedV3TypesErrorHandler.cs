@@ -36,7 +36,7 @@ namespace Duality.Plugins.Compatibility
 				switch (resolveMemberError.MemberId)
 				{
 					case "P:Duality.Components.Transform:RelativePos": resolveMemberError.ResolvedMember = typeof(Duality.Components.Transform).GetRuntimeProperty("LocalPos"); break;
-					case "P:Duality.Components.Transform:RelativeAngle": resolveMemberError.ResolvedMember = typeof(Duality.Components.Transform).GetRuntimeProperty("LocalAngle"); break;
+					case "P:Duality.Components.Transform:RelativeAngle": resolveMemberError.ResolvedMember = typeof(Duality.Components.Transform).GetRuntimeProperty("LocalRotation"); break;
 					case "P:Duality.Components.Transform:RelativeScale": resolveMemberError.ResolvedMember = typeof(Duality.Components.Transform).GetRuntimeProperty("LocalScale"); break;
 				}
 			}

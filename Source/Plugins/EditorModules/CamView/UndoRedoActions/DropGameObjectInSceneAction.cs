@@ -17,9 +17,9 @@ namespace Duality.Editor.Plugins.CamView.UndoRedoActions
 	public class DropGameObjectInSceneAction : GameObjectAction
 	{
 		private Vector3[]		backupPos	= null;
-		private Quaternion[]			backupAngle	= null;
+		private Vector3[]			backupAngle	= null;
 		private	Vector3			dropAt		= Vector3.Zero;
-		private Quaternion turnBy		= Quaternion.Identity;
+		private Vector3 turnBy		= Vector3.Zero;
 
 		protected override string NameBase
 		{
@@ -30,7 +30,7 @@ namespace Duality.Editor.Plugins.CamView.UndoRedoActions
 			get { return CamViewRes.UndoRedo_DropGameObjectInSceneMulti; }
 		}
 
-		public DropGameObjectInSceneAction(IEnumerable<GameObject> obj, Vector3 dropAt, Quaternion turnBy) : base(obj.Where(o => o != null && o.Transform != null))
+		public DropGameObjectInSceneAction(IEnumerable<GameObject> obj, Vector3 dropAt, Vector3 turnBy) : base(obj.Where(o => o != null && o.Transform != null))
 		{
 			this.dropAt = dropAt;
 			this.turnBy = turnBy;
@@ -41,7 +41,7 @@ namespace Duality.Editor.Plugins.CamView.UndoRedoActions
 			if (this.backupPos == null)
 			{
 				this.backupPos = new Vector3[this.targetObj.Length];
-				this.backupAngle = new Quaternion[this.targetObj.Length];
+				this.backupAngle = new Vector3[this.targetObj.Length];
 				for (int i = 0; i < this.targetObj.Length; i++)
 				{
 					if (this.targetObj[i].Transform == null) continue;
@@ -57,7 +57,7 @@ namespace Duality.Editor.Plugins.CamView.UndoRedoActions
 				s.Transform.Rotation += this.turnBy;
 			}
 
-			if (this.turnBy != Quaternion.Identity)
+			if (this.turnBy != Vector3.Zero)
 			{
 				DualityEditorApp.NotifyObjPropChanged(
 					this,
@@ -84,7 +84,7 @@ namespace Duality.Editor.Plugins.CamView.UndoRedoActions
 				this.targetObj[i].Transform.Rotation = this.backupAngle[i];
 			}
 
-			if (this.turnBy != Quaternion.Identity)
+			if (this.turnBy != Vector3.Zero)
 			{
 				DualityEditorApp.NotifyObjPropChanged(
 					this,

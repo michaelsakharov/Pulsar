@@ -71,7 +71,7 @@ namespace Duality
 			Property_Transform_LocalAngle	= GetProperty(transform, "LocalRotation");
 			Property_Transform_LocalScale	= GetProperty(transform, "LocalScale");
 			Property_Transform_Pos				= GetProperty(transform, "Pos");
-			Property_Transform_Angle			= GetProperty(transform, "Angle");
+			Property_Transform_Angle			= GetProperty(transform, "Rotation");
 			Property_Transform_Scale			= GetProperty(transform, "Scale");
 			Property_Transform_IgnoreParent		= GetProperty(transform, "IgnoreParent");
 			

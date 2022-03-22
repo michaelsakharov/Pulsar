@@ -46,9 +46,9 @@ namespace Duality.Audio
 		/// <summary>
 		/// [GET] The current listeners rotation / angle in radians.
 		/// </summary>
-		public Quaternion ListenerAngle
+		public Vector3 ListenerAngle
 		{
-			get { return (this.soundListener != null) ? this.soundListener.Angle : Quaternion.Identity; }
+			get { return (this.soundListener != null) ? this.soundListener.Angle : Vector3.Zero; }
 		}
 		
 		/// <summary>

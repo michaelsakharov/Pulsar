@@ -156,7 +156,7 @@ namespace Duality.Drawing
 		private Vector2                   targetSize       = Vector2.Zero;
 		private Rect                      viewportRect     = Rect.Empty;
 		private Vector3                   viewerPos        = Vector3.Zero;
-		private Quaternion			      viewerAngle	   = Quaternion.Identity;
+		private Vector3					  viewerAngle	   = Vector3.Zero;
 		private ContentRef<RenderTarget>  renderTarget     = null;
 		private ProjectionMode            projection       = ProjectionMode.Perspective;
 		private Matrix4                   matView          = Matrix4.Identity;
@@ -197,7 +197,7 @@ namespace Duality.Drawing
 				this.UpdateMatrices();
 			}
 		}
-		public Quaternion ViewerAngle
+		public Vector3 ViewerAngle
 		{
 			get { return this.viewerAngle; }
 			set
@@ -706,7 +706,15 @@ namespace Duality.Drawing
 				//this.matView *= Matrix4.CreateRotationZ(-this.viewerAngle);
 
 				// New 3d Rotation
-				this.matView *= Matrix4.TRS(-this.viewerPos, this.viewerAngle.EulerAngles, new Vector3(1, 1, 1));
+				//this.matView *= Matrix4.TRS(-this.viewerPos, this.viewerAngle, new Vector3(1, 1, 1));
+				//this.matView *= Matrix4.CreateTranslation(this.viewerPos);
+				//this.matView *= Matrix4.CreateFromYawPitchRoll(this.viewerAngle.X, this.viewerAngle.Y, this.viewerAngle.Z);
+				//this.matView *= Matrix4.CreateScale(Vector3.One);
+
+				var matrix = Matrix4.CreateFromYawPitchRoll(this.viewerAngle.Y, this.viewerAngle.X, this.viewerAngle.Z);
+				var target = (this.viewerPos) + Vector3.Transform(Vector3.Forward, matrix);
+
+				this.matView = Matrix4.CreateLookAt(this.viewerPos, target, Vector3.Up);
 			}
 		}
 		private void UpdateProjectionMatrix()
@@ -756,25 +764,26 @@ namespace Duality.Drawing
 			}
 			else
 			{
-				// Clamp near plane to above-zero, so we avoid division by zero problems
-				float clampedNear = MathF.Max(this.nearZ, 1.0f);
+				float clampedNear = MathF.Max(this.nearZ, 0.01f);
 
-				Matrix4.CreatePerspectiveOffCenter(
-					targetRect.X - targetRect.W * 0.5f, 
-					targetRect.X + targetRect.W * 0.5f, 
-					targetRect.Y + targetRect.H * 0.5f, 
-					targetRect.Y - targetRect.H * 0.5f, 
-					clampedNear, 
-					this.farZ,
-					out this.matProjection);
+				this.matProjection = Matrix4.CreatePerspectiveFieldOfView(MathF.DegToRad(70), targetRect.W / targetRect.H, clampedNear, this.farZ);
 
-				this.matProjection = flipZDir * this.matProjection;
-
-				// Apply custom "focus distance", where objects appear at 1:1 scale.
-				// Otherwise, that distance would be the near plane. 
-				this.matProjection.M33 *= clampedNear / this.focusDist; // Output Z scale
-				this.matProjection.M43 *= clampedNear / this.focusDist; // Output Z offset
-				this.matProjection.M34 *= clampedNear / this.focusDist; // Perspective divide scale
+				//Matrix4.CreatePerspectiveOffCenter(
+				//	targetRect.X - targetRect.W * 0.5f, 
+				//	targetRect.X + targetRect.W * 0.5f, 
+				//	targetRect.Y + targetRect.H * 0.5f, 
+				//	targetRect.Y - targetRect.H * 0.5f, 
+				//	clampedNear, 
+				//	this.farZ,
+				//	out this.matProjection);
+				//
+				//this.matProjection = flipZDir * this.matProjection;
+				//
+				//// Apply custom "focus distance", where objects appear at 1:1 scale.
+				//// Otherwise, that distance would be the near plane. 
+				//this.matProjection.M33 *= clampedNear / this.focusDist; // Output Z scale
+				//this.matProjection.M43 *= clampedNear / this.focusDist; // Output Z offset
+				//this.matProjection.M34 *= clampedNear / this.focusDist; // Perspective divide scale
 			}
 		}
 

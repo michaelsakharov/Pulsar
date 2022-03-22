@@ -24,7 +24,7 @@ namespace Duality.Drawing
 		/// <summary>
 		/// [GET] Reference angle for rendering i.e. the angle of the drawing device's virtual camera.
 		/// </summary>
-		Quaternion ViewerAngle { get; }
+		Vector3 ViewerAngle { get; }
 		/// <summary>
 		/// [GET] Reference distance for calculating the perspective effect. An object this far away from
 		/// the camera will appear in its original size.

@@ -64,7 +64,7 @@ namespace Duality.Editor.Plugins.Base.PropertyEditors
 				this.AddPropertyEditor(this.editorScale);
 				this.editorScale.EndUpdate();
 			}
-			this.editorAngle = this.ParentGrid.CreateEditor(typeof(Quaternion), this);
+			this.editorAngle = this.ParentGrid.CreateEditor(typeof(Vector3), this);
 			if (this.editorAngle != null)
 			{
 				this.editorAngle.BeginUpdate();
@@ -226,7 +226,7 @@ namespace Duality.Editor.Plugins.Base.PropertyEditors
 		{
 			if (this.showWorldSpace)
 			{
-				List<Quaternion> valuesList = values.Cast<Quaternion>().ToList();
+				List<Vector3> valuesList = values.Cast<Vector3>().ToList();
 				List<object> valuesListLocal = new List<object>(valuesList.Count);
 				List<Transform> targetList = this.GetValue().OfType<Transform>().ToList();
 				List<Transform> targetListLocal = new List<Transform>(targetList.Count);
@@ -246,7 +246,7 @@ namespace Duality.Editor.Plugins.Base.PropertyEditors
 
 						if (parent == null || !targetList.Contains(parent))
 						{
-							Quaternion curValue = valuesList[Math.Min(i, valuesList.Count - 1)];
+							Vector3 curValue = valuesList[Math.Min(i, valuesList.Count - 1)];
 
 							targetListLocal.Add(t);
 							valuesListLocal.Add(parent != null ? curValue - parent.Rotation : curValue);

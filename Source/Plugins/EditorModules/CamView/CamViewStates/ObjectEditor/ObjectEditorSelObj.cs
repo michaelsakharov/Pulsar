@@ -28,9 +28,9 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 			get { return Vector3.One; }
 			set {}
 		}
-		public virtual Quaternion Angle
+		public virtual Vector3 Angle
 		{
-			get { return Quaternion.Identity; }
+			get { return Vector3.Zero; }
 			set {}
 		}
 		public virtual bool ShowBoundRadius

@@ -17,7 +17,7 @@ namespace Duality.Editor.Plugins.CamView.UndoRedoActions
 	public class RotateCamViewObjAction : CamViewObjAction
 	{
 		private Vector3[]	backupPos	= null;
-		private Quaternion[]		backupAngle	= null;
+		private Vector3[]		backupAngle	= null;
 		private	float		turnBy		= 0.0f;
 
 		public override string Name
@@ -57,7 +57,7 @@ namespace Duality.Editor.Plugins.CamView.UndoRedoActions
 			if (this.backupPos == null)
 			{
 				this.backupPos = new Vector3[this.targetObj.Length];
-				this.backupAngle = new Quaternion[this.targetObj.Length];
+				this.backupAngle = new Vector3[this.targetObj.Length];
 				for (int i = 0; i < this.targetObj.Length; i++)
 				{
 					this.backupPos[i] = this.targetObj[i].Pos;

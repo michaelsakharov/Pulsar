@@ -739,6 +739,33 @@ namespace Duality
 			return matrix;
 		}
 
+		public static void ExtractRotation(Matrix4 matrix, ref Quaternion rotation)
+		{
+			if (float.IsNaN(matrix.M11))
+				return;
+
+			float sx = (Math.Sign(matrix.M11 * matrix.M12 * matrix.M13 * matrix.M14) < 0) ? -1.0f : 1.0f;
+			float sy = (Math.Sign(matrix.M21 * matrix.M22 * matrix.M23 * matrix.M24) < 0) ? -1.0f : 1.0f;
+			float sz = (Math.Sign(matrix.M31 * matrix.M32 * matrix.M33 * matrix.M34) < 0) ? -1.0f : 1.0f;
+
+			sx *= (float)Math.Sqrt(matrix.M11 * matrix.M11 + matrix.M12 * matrix.M12 + matrix.M13 * matrix.M13);
+			sy *= (float)Math.Sqrt(matrix.M21 * matrix.M21 + matrix.M22 * matrix.M22 + matrix.M23 * matrix.M23);
+			sz *= (float)Math.Sqrt(matrix.M31 * matrix.M31 + matrix.M32 * matrix.M32 + matrix.M33 * matrix.M33);
+
+			if (sx == 0.0 || sy == 0.0 || sz == 0.0)
+			{
+				rotation = Quaternion.Identity;
+				return;
+			}
+
+			var m = new Matrix4(matrix.M11 / sx, matrix.M12 / sx, matrix.M13 / sx, 0.0f,
+								   matrix.M21 / sy, matrix.M22 / sy, matrix.M23 / sy, 0.0f,
+								   matrix.M31 / sz, matrix.M32 / sz, matrix.M33 / sz, 0.0f,
+								   0.0f, 0.0f, 0.0f, 1.0f);
+
+			rotation = Quaternion.CreateFromRotationMatrix(m);
+		}
+
 		/// <summary>
 		/// Creates a new viewing <see cref="Matrix4"/>.
 		/// </summary>
