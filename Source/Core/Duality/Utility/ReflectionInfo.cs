@@ -68,7 +68,7 @@ namespace Duality
 
 			Type transform = typeof(Transform);
 			Property_Transform_LocalPos		= GetProperty(transform, "LocalPos");
-			Property_Transform_LocalAngle	= GetProperty(transform, "LocalAngle");
+			Property_Transform_LocalAngle	= GetProperty(transform, "LocalRotation");
 			Property_Transform_LocalScale	= GetProperty(transform, "LocalScale");
 			Property_Transform_Pos				= GetProperty(transform, "Pos");
 			Property_Transform_Angle			= GetProperty(transform, "Angle");

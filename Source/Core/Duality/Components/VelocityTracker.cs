@@ -17,11 +17,8 @@ namespace Duality.Components
 	public sealed class VelocityTracker : Component, ICmpUpdatable, ICmpSerializeListener
 	{
 		[DontSerialize] private Vector3 velocity      = Vector3.Zero;
-		[DontSerialize] private float   angleVelocity = 0.0f;
 		[DontSerialize] private Vector3 posDiff       = Vector3.Zero;
-		[DontSerialize] private float   angleDiff     = 0.0f;
 		[DontSerialize] private Vector3 lastPosition  = Vector3.Zero;
-		[DontSerialize] private float   lastAngle     = 0.0f;
 
 
 		/// <summary>
@@ -33,29 +30,12 @@ namespace Duality.Components
 			get { return this.velocity; }
 		}
 		/// <summary>
-		/// [GET] The objects measured angle / rotation velocity in world space, in radians.
-		/// The value is internally smoothed over several frames to filter out fluctuations due
-		/// to framerate variations.
-		/// </summary>
-		public float AngleVel
-		{
-			get { return this.angleVelocity; }
-		}
-		/// <summary>
 		/// [GET] The objects measured continuous position change in world space between the last two frames.
 		/// Note that this value can fluctuate depending on framerate variations during simulation.
 		/// </summary>
 		public Vector3 LastMovement
 		{
 			get { return this.posDiff; }
-		}
-		/// <summary>
-		/// [GET] The objects measuredcontinuous angle / rotation change in world space between the last two frames.
-		/// Note that this value can fluctuate depending on framerate variations during simulation.
-		/// </summary>
-		public float LastAngleMovement
-		{
-			get { return this.angleDiff; }
 		}
 
 
@@ -68,15 +48,6 @@ namespace Duality.Components
 		{
 			this.lastPosition = worldPos;
 		}
-		/// <summary>
-		/// Resets the objects angle velocity value for next frame to zero, assuming the
-		/// specified world space angle as a basis for further rotation.
-		/// </summary>
-		/// <param name="worldAngle"></param>
-		public void ResetAngleVelocity(float worldAngle)
-		{
-			this.lastAngle = worldAngle;
-		}
 		
 		void ICmpUpdatable.OnUpdate()
 		{
@@ -85,25 +56,19 @@ namespace Duality.Components
 			{
 				Transform transform = this.GameObj.Transform;
 				Vector3 pos = transform.Pos;
-				float angle = transform.Rotation;
 
 				this.posDiff = pos - this.lastPosition;
-				this.angleDiff = MathF.TurnDir(this.lastAngle, angle) * MathF.CircularDist(this.lastAngle, angle);
 
 				Vector3 lastVelocity = this.posDiff / Time.TimeMult;
-				float lastAngleVelocity = this.angleDiff / Time.TimeMult;
 
 				this.velocity += (lastVelocity - this.velocity) * 0.25f * Time.TimeMult;
-				this.angleVelocity += (lastAngleVelocity - this.angleVelocity) * 0.25f * Time.TimeMult;
 				this.lastPosition = pos;
-				this.lastAngle = angle;
 			}
 		}
 		void ICmpSerializeListener.OnLoaded()
 		{
 			Transform transform = this.GameObj.Transform;
 			this.lastPosition = transform.Pos;
-			this.lastAngle = transform.Rotation;
 		}
 		void ICmpSerializeListener.OnSaved() { }
 		void ICmpSerializeListener.OnSaving() { }
@@ -113,11 +78,8 @@ namespace Duality.Components
 			base.OnCopyDataTo(targetObj, operation);
 			VelocityTracker target = targetObj as VelocityTracker;
 			target.lastPosition   = this.lastPosition;
-			target.lastAngle      = this.lastAngle;
 			target.posDiff        = this.posDiff;
-			target.angleDiff      = this.angleDiff;
 			target.velocity       = this.velocity;
-			target.angleVelocity  = this.angleVelocity;
 		}
 	}
 }

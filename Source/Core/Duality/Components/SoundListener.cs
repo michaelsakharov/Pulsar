@@ -22,7 +22,7 @@ namespace Duality.Components
 		{
 			get { return this.GameObj.GetComponent<VelocityTracker>().Vel; }
 		}
-		public float Angle
+		public Quaternion Angle
 		{
 			get { return this.GameObj.Transform.Rotation; }
 		}

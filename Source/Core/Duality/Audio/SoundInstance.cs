@@ -452,8 +452,8 @@ namespace Duality.Audio
 				// Attach to object
 				if (attachTransform != null)
 				{
-					MathF.TransformCoord(ref nativeState.Position.X, ref nativeState.Position.Y, attachTransform.Rotation);
-					MathF.TransformCoord(ref nativeState.Velocity.X, ref nativeState.Velocity.Y, attachTransform.Rotation);
+					MathF.TransformCoord(ref nativeState.Position.X, ref nativeState.Position.Y, attachTransform.Rotation.EulerAngles.Z);
+					MathF.TransformCoord(ref nativeState.Velocity.X, ref nativeState.Velocity.Y, attachTransform.Rotation.EulerAngles.Z);
 					nativeState.Position += attachTransform.Pos;
 
 					VelocityTracker attachVelocityTracker = attachTransform.GameObj.GetComponent<VelocityTracker>();
@@ -550,7 +550,7 @@ namespace Duality.Audio
 					nativeState.MaxDistance *= AudioUnit.LengthToPhysical;
 
 					// Post-process sound instance data in listener space
-					float listenerAngle = DualityApp.Sound.ListenerAngle;
+					float listenerAngle = DualityApp.Sound.ListenerAngle.EulerAngles.Z;
 					Vector3 adjustedPos = nativeState.RelativeToListener ? nativeState.Position : nativeState.Position - listenerPos * AudioUnit.LengthToPhysical;
 					MathF.TransformCoord(ref adjustedPos.X, ref adjustedPos.Z, -listenerAngle);
 

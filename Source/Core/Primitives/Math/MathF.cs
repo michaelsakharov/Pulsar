@@ -1246,5 +1246,19 @@ namespace Duality
 				throw new ArgumentOutOfRangeException("value", string.Format("Invalid float value detected: {0}", value));
 			}
 		}
+		/// <summary>
+		/// Throws an ArgumentOutOfRangeException, if the specified value is NaN or Infinity.
+		/// </summary>
+		/// <param name="value"></param>
+		public static void CheckValidValue(Quaternion value)
+		{
+			if (float.IsNaN(value.X) || float.IsInfinity(value.X) ||
+				float.IsNaN(value.Y) || float.IsInfinity(value.Y) ||
+				float.IsNaN(value.Z) || float.IsInfinity(value.Z) ||
+				float.IsNaN(value.W) || float.IsInfinity(value.W))
+			{
+				throw new ArgumentOutOfRangeException("value", string.Format("Invalid float value detected: {0}", value));
+			}
+		}
 	}
 }

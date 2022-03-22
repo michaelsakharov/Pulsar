@@ -198,6 +198,44 @@ namespace Duality
 		}
 
 		/// <summary>
+		/// Concatenates two Quaternions; the result represents the value1 rotation followed by the value2 rotation.
+		/// </summary>
+		/// <param name="value1">The first Quaternion rotation in the series.</param>
+		/// <param name="value2">The second Quaternion rotation in the series.</param>
+		/// <returns>A new Quaternion representing the concatenation of the value1 rotation followed by the value2 rotation.</returns>
+		public static Quaternion Concatenate(Quaternion value1, Quaternion value2)
+		{
+
+			// Concatenate rotation is actually q2 * q1 instead of q1 * q2.
+			// So that's why value2 goes q1 and value1 goes q2.
+			float q1x = value2.X;
+			float q1y = value2.Y;
+			float q1z = value2.Z;
+			float q1w = value2.W;
+
+			float q2x = value1.X;
+			float q2y = value1.Y;
+			float q2z = value1.Z;
+			float q2w = value1.W;
+
+			// cross(av, bv)
+			float cx = q1y * q2z - q1z * q2y;
+			float cy = q1z * q2x - q1x * q2z;
+			float cz = q1x * q2y - q1y * q2x;
+
+			float dot = q1x * q2x + q1y * q2y + q1z * q2z;
+
+			Quaternion ans = new Quaternion();
+
+			ans.X = q1x * q2w + q2x * q1w + cx;
+			ans.Y = q1y * q2w + q2y * q1w + cy;
+			ans.Z = q1z * q2w + q2z * q1w + cz;
+			ans.W = q1w * q2w - dot;
+
+			return ans;
+		}
+
+		/// <summary>
 		/// Convert the current quaternion to axis angle representation
 		/// </summary>
 		/// <param name="axis">The resultant axis</param>

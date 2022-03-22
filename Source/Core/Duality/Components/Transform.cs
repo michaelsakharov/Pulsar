@@ -16,17 +16,10 @@ namespace Duality.Components
 	{
 		private const float MinScale = 0.0000001f;
 
-		private Vector3   pos             = Vector3.Zero;
-		private float     angle           = 0.0f;
-		private Vector3   scale           = Vector3.One;
-		private bool      ignoreParent    = false;
-
-		// Cached values, recalc on change
-		private Vector3   posAbs          = Vector3.Zero;
-		private float     angleAbs        = 0.0f;
-		private Vector3   scaleAbs        = Vector3.One;
-
-		[DontSerialize] private Vector2 rotationDirAbs = new Vector2(0.0f, -1.0f);
+		private Vector3			pos             = Vector3.Zero;
+		private Quaternion		rotation        = Quaternion.Identity;
+		private Vector3			scale           = Vector3.One;
+		private bool			ignoreParent    = false;
 
 
 		/// <summary>
@@ -39,22 +32,19 @@ namespace Duality.Components
 			{ 
 				// Update position
 				this.pos = value;
-				this.UpdateAbs();
 				this.ResetVelocity();
 			}
 		}
 		/// <summary>
 		/// [GET / SET] The objects angle / rotation in local space of its parent object, in radians.
 		/// </summary>
-		public float LocalRotation
+		public Quaternion LocalRotation
 		{
-			get { return this.angle; }
-			set 
-			{ 
+			get { return this.rotation; }
+			set
+			{
 				// Update angle
-				this.angle = MathF.NormalizeAngle(value);
-				this.UpdateAbs();
-				this.ResetAngleVelocity();
+				this.rotation = value;
 			}
 		}
 		/// <summary>
@@ -68,7 +58,6 @@ namespace Duality.Components
 				this.scale.X = MathF.Max(value.X, MinScale);
 				this.scale.Y = MathF.Max(value.Y, MinScale);
 				this.scale.Z = MathF.Max(value.Z, MinScale);
-				this.UpdateAbs();
 			}
 		}
 		
@@ -77,49 +66,42 @@ namespace Duality.Components
 		/// </summary>
 		public Vector3 Pos
 		{
-			get { return this.posAbs; }
+			get 
+			{ 
+				Vector3 pos = this.pos;
+				if (this.ParentTransform != null)
+				{
+					pos = Vector3.Transform(pos, this.ParentTransform.GetWorldMatrix());
+				}
+				return pos;
+			}
 			set 
 			{ 
 				// Update position
-				this.posAbs = value;
-
-				Transform parent = this.ParentTransform;
-				if (parent != null)
-				{
-					this.pos = this.posAbs;
-					Vector3.Subtract(ref this.pos, ref parent.posAbs, out this.pos);
-					Vector3.Divide(ref this.pos, ref parent.scaleAbs, out this.pos);
-					MathF.TransformCoord(ref this.pos.X, ref this.pos.Y, -parent.angleAbs);
-				}
-				else
-				{
-					this.pos = this.posAbs;
-				}
-
-				this.UpdateAbsChild();
+				Vector3 parentPos = this.ParentTransform != null ? this.ParentTransform.Pos : Vector3.Zero;
+				this.pos = value - parentPos;
 				this.ResetVelocity();
 			}
 		}
 		/// <summary>
 		/// [GET / SET] The objects angle / rotation in world space, in radians.
 		/// </summary>
-		public float Rotation
+		public Quaternion Rotation
 		{
-			get { return this.angleAbs; }
-			set 
+			get 
 			{ 
+				Quaternion rot = this.rotation;
+				if (this.ParentTransform != null)
+				{
+					rot = Quaternion.Concatenate(this.ParentTransform.Rotation, rot);
+				}
+				return rot;
+			}
+			set 
+			{
 				// Update angle
-				this.angleAbs = MathF.NormalizeAngle(value);
-
-				Transform parent = this.ParentTransform;
-				if (parent != null)
-					this.angle = MathF.NormalizeAngle(this.angleAbs - parent.angleAbs);
-				else
-					this.angle = this.angleAbs;
-
-				this.UpdateRotationDirAbs();
-				this.UpdateAbsChild();
-				this.ResetAngleVelocity();
+				Quaternion parentRot = this.ParentTransform != null ? this.ParentTransform.Rotation : Quaternion.Identity;
+				this.rotation = Quaternion.Concatenate(Quaternion.Invert(parentRot), value);
 			}
 		}
 		/// <summary>
@@ -127,48 +109,29 @@ namespace Duality.Components
 		/// </summary>
 		public Vector3 Scale
 		{
-			get { return this.scaleAbs; }
+			get
+			{
+				Vector3 scale = this.scale;
+				if (this.ParentTransform != null)
+				{
+					scale *= this.ParentTransform.Scale;
+				}
+				return scale;
+			}
 			set 
 			{ 
-				this.scaleAbs.X = MathF.Max(value.X, MinScale);
-				this.scaleAbs.Y = MathF.Max(value.Y, MinScale);
-				this.scaleAbs.Z = MathF.Max(value.Z, MinScale);
+				Vector3 target = new Vector3(MathF.Max(value.X, MinScale), MathF.Max(value.Y, MinScale), MathF.Max(value.Z, MinScale));
 
-				Transform parent = this.ParentTransform;
-				if (parent != null)
-					this.scale = this.scaleAbs / parent.scaleAbs;
-				else
-					this.scale = value;
+				Vector3 parentScale = this.ParentTransform != null ? this.ParentTransform.Scale : Vector3.One;
+				this.scale = target / parentScale;
+			}
+		}
 
-				this.UpdateAbsChild();
-			}
-		}
-		/// <summary>
-		/// [GET] The objects directional forward (zero degree angle) vector in world space.
-		/// </summary>
-		public Vector3 Forward
-		{
-			get 
-			{ 
-				return new Vector3(
-					this.rotationDirAbs.X,
-					this.rotationDirAbs.Y,
-					0.0f);
-			}
-		}
-		/// <summary>
-		/// [GET] The objects directional right (90 degree angle) vector in world space.
-		/// </summary>
-		public Vector3 Right
-		{
-			get 
-			{
-				return new Vector3(
-					-this.rotationDirAbs.Y,
-					this.rotationDirAbs.X,
-					0.0f);
-			}
-		}
+		public Vector3 Forward { get { return Vector3.Transform(-Vector3.UnitZ, this.Rotation); } }
+
+		public Vector3 Up { get { return Vector3.Transform(Vector3.UnitY, this.Rotation); } }
+
+		public Vector3 Right { get { return Vector3.Transform(Vector3.UnitX, this.Rotation); } }
 
 		/// <summary>
 		/// [GET / SET] Specifies whether the <see cref="Transform"/> component should behave as if 
@@ -183,7 +146,6 @@ namespace Duality.Components
 				if (this.ignoreParent != value)
 				{
 					this.ignoreParent = value;
-					this.UpdateRel();
 				}
 			}
 		}
@@ -208,11 +170,7 @@ namespace Duality.Components
 		/// <param name="local"></param>
 		public Vector3 GetWorldPoint(Vector3 local)
 		{
-			//return Vector3.Transform(local, this.GetWorldMatrix());
-			return new Vector3(
-				local.X * this.scaleAbs.X * -this.rotationDirAbs.Y + local.Y * this.scaleAbs.X * -this.rotationDirAbs.X + this.posAbs.X,
-				local.X * this.scaleAbs.Y * this.rotationDirAbs.X + local.Y * this.scaleAbs.Y * -this.rotationDirAbs.Y + this.posAbs.Y,
-				local.Z * this.scaleAbs.Z + this.posAbs.Z);
+			return Vector3.Transform(local, this.GetWorldMatrix());
 		}
 		/// <summary>
 		/// Transforms a position from world space to local space of this object.
@@ -220,14 +178,7 @@ namespace Duality.Components
 		/// <param name="world"></param>
 		public Vector3 GetLocalPoint(Vector3 world)
 		{
-			//return Vector3.Transform(world, this.GetLocalMatrix());
-			float inverseScaleX = 1f / this.scaleAbs.X;
-			float inverseScaleY = 1f / this.scaleAbs.Y;
-			float inverseScaleZ = 1f / this.scaleAbs.Z;
-			return new Vector3(
-				((world.X - this.posAbs.X) * -this.rotationDirAbs.Y + (world.Y - this.posAbs.Y) * this.rotationDirAbs.X) * inverseScaleX,
-				((world.X - this.posAbs.X) * -this.rotationDirAbs.X + (world.Y - this.posAbs.Y) * -this.rotationDirAbs.Y) * inverseScaleY,
-				(world.Z - this.posAbs.Z) * inverseScaleZ);
+			return Vector3.Transform(world, this.GetLocalMatrix());
 		}
 
 		/// <summary>
@@ -237,24 +188,19 @@ namespace Duality.Components
 		public void MoveByLocal(Vector3 value)
 		{
 			this.pos += value; 
-			this.UpdateAbs();
 		}
 
 		/// <summary>
 		/// Updates the Transforms world space data all at once. This change is
 		/// not regarded as a continuous movement, but as a hard teleport.
 		/// </summary>
-		public void SetTransform(Vector3 pos, float angle, Vector3 scale)
+		public void SetTransform(Vector3 pos, Quaternion angle, Vector3 scale)
 		{
-			this.posAbs = pos;
-			this.angleAbs = angle;
-			this.scaleAbs = scale;
-
-			this.UpdateRel();
-			this.UpdateAbsChild();
+			this.Pos = pos;
+			this.Rotation = angle;
+			this.Scale = scale;
 
 			this.ResetVelocity();
-			this.ResetAngleVelocity();
 		}
 		/// <summary>
 		/// Updates the Transforms world space data all at once. This change is
@@ -296,27 +242,20 @@ namespace Duality.Components
 		void ICmpAttachmentListener.OnAddToGameObject()
 		{
 			this.SubscribeParentEvents();
-			this.UpdateRel();
 		}
 		void ICmpAttachmentListener.OnRemoveFromGameObject()
 		{
 			this.UnsubscribeParentEvents();
-			this.UpdateRel();
 		}
 		void ICmpSerializeListener.OnLoaded()
 		{
 			this.SubscribeParentEvents();
-			this.UpdateRel();
-
-			// Recalculate values we didn't serialize
-			this.UpdateRotationDirAbs();
 		}
 		void ICmpSerializeListener.OnSaved() { }
 		void ICmpSerializeListener.OnSaving() { }
 
 		private void gameobj_EventParentChanged(object sender, GameObjectParentChangedEventArgs e)
 		{
-			this.UpdateRel();
 		}
 		private void Parent_EventComponentAdded(object sender, ComponentEventArgs e)
 		{
@@ -325,7 +264,6 @@ namespace Duality.Components
 			{
 				cmpTransform.GameObj.EventComponentAdded -= this.Parent_EventComponentAdded;
 				cmpTransform.GameObj.EventComponentRemoving += this.Parent_EventComponentRemoving;
-				this.UpdateRel();
 			}
 		}
 		private void Parent_EventComponentRemoving(object sender, ComponentEventArgs e)
@@ -335,121 +273,35 @@ namespace Duality.Components
 			{
 				cmpTransform.GameObj.EventComponentAdded += this.Parent_EventComponentAdded;
 				cmpTransform.GameObj.EventComponentRemoving -= this.Parent_EventComponentRemoving;
-				this.UpdateRel();
 			}
 		}
 		
-		private void UpdateRotationDirAbs()
-		{
-			this.rotationDirAbs = new Vector2(
-				MathF.Sin(this.angleAbs), 
-				-MathF.Cos(this.angleAbs));
-		}
 		private void ResetVelocity()
 		{
 			if (this.gameobj == null) return;
 			VelocityTracker tracker = this.gameobj.GetComponent<VelocityTracker>();
 			if (tracker != null)
-				tracker.ResetVelocity(this.posAbs);
+				tracker.ResetVelocity(this.Pos);
 		}
-		private void ResetAngleVelocity()
+
+		public Matrix4 GetWorldMatrix()
 		{
-			if (this.gameobj == null) return;
-			VelocityTracker tracker = this.gameobj.GetComponent<VelocityTracker>();
-			if (tracker != null)
-				tracker.ResetAngleVelocity(this.angleAbs);
+			Matrix4 mat = Matrix4.CreateScale(this.scale)
+				* Matrix4.CreateFromQuaternion(this.rotation)
+				* Matrix4.CreateTranslation(this.pos);
+
+			if (this.ParentTransform != null)
+			{
+				mat *= this.ParentTransform.GetWorldMatrix();
+			}
+
+			return mat;
 		}
 
-		private void UpdateAbs()
+		public Matrix4 GetLocalMatrix()
 		{
-			this.CheckValidTransform();
-
-			Transform parent = this.ParentTransform;
-			if (parent == null)
-			{
-				this.angleAbs = this.angle;
-				this.posAbs = this.pos;
-				this.scaleAbs = this.scale;
-			}
-			else
-			{
-				this.angleAbs = MathF.NormalizeAngle(this.angle + parent.angleAbs);
-				this.scaleAbs = this.scale * parent.scaleAbs;
-				this.posAbs = parent.GetWorldPoint(this.pos);
-			}
-
-			// Update cached values
-			this.UpdateRotationDirAbs();
-
-			// Update absolute children coordinates
-			this.UpdateAbsChild();
-
-			this.CheckValidTransform();
+			return Matrix4.Invert(this.GetWorldMatrix());
 		}
-		private void UpdateAbsChild()
-		{
-			this.CheckValidTransform();
-
-			if (this.gameobj != null)
-			{
-				foreach (GameObject obj in this.gameobj.Children)
-				{
-					Transform transform = obj.Transform;
-					if (transform == null) continue;
-					if (transform.ignoreParent) continue;
-
-					transform.UpdateAbs();
-				}
-			}
-
-			this.CheckValidTransform();
-		}
-		private void UpdateRel()
-		{
-			this.CheckValidTransform();
-
-			Transform parent = this.ParentTransform;
-			if (parent == null)
-			{
-				this.angle = this.angleAbs;
-				this.pos = this.posAbs;
-				this.scale = this.scaleAbs;
-			}
-			else
-			{
-				this.angle = MathF.NormalizeAngle(this.angleAbs - parent.angleAbs);
-				this.scale = this.scaleAbs / parent.scaleAbs;
-				
-				Vector2 parentAngleAbsDotX;
-				Vector2 parentAngleAbsDotY;
-				MathF.GetTransformDotVec(-parent.angleAbs, out parentAngleAbsDotX, out parentAngleAbsDotY);
-
-				Vector3.Subtract(ref this.posAbs, ref parent.posAbs, out this.pos);
-				MathF.TransformDotVec(ref this.pos, ref parentAngleAbsDotX, ref parentAngleAbsDotY);
-				Vector3.Divide(ref this.pos, ref parent.scaleAbs, out this.pos);
-			}
-
-			this.CheckValidTransform();
-		}
-
-		//public Matrix4 GetWorldMatrix()
-		//{
-		//	Matrix4 mat = Matrix4.CreateScale(this.scale)
-		//		* Matrix4.CreateFromQuaternion(this.rotation)
-		//		* Matrix4.CreateTranslation(this.pos);
-		//
-		//	if (this.ParentTransform != null)
-		//	{
-		//		mat *= this.ParentTransform.GetWorldMatrix();
-		//	}
-		//
-		//	return mat;
-		//}
-		//
-		//public Matrix4 GetLocalMatrix()
-		//{
-		//	return Matrix4.Invert(this.GetWorldMatrix());
-		//}
 
 		protected override void OnCopyDataTo(object targetObj, ICloneOperation operation)
 		{
@@ -459,16 +311,8 @@ namespace Duality.Components
 			target.ignoreParent   = this.ignoreParent;
 
 			target.pos            = this.pos;
-			target.angle          = this.angle;
+			target.rotation          = this.rotation;
 			target.scale          = this.scale;
-
-			target.posAbs         = this.posAbs;
-			target.angleAbs       = this.angleAbs;
-			target.scaleAbs       = this.scaleAbs;
-			target.rotationDirAbs = this.rotationDirAbs;
-			
-			// Update absolute transformation data, because the target is relative to a different parent.
-			target.UpdateAbs();
 		}
 
 		[System.Diagnostics.Conditional("DEBUG")]
@@ -476,11 +320,7 @@ namespace Duality.Components
 		{
 			MathF.CheckValidValue(this.pos);
 			MathF.CheckValidValue(this.scale);
-			MathF.CheckValidValue(this.angle);
-
-			MathF.CheckValidValue(this.posAbs);
-			MathF.CheckValidValue(this.scaleAbs);
-			MathF.CheckValidValue(this.angleAbs);
+			MathF.CheckValidValue(this.rotation);
 		}
 	}
 }

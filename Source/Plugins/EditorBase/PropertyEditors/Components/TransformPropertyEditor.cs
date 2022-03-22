@@ -64,7 +64,7 @@ namespace Duality.Editor.Plugins.Base.PropertyEditors
 				this.AddPropertyEditor(this.editorScale);
 				this.editorScale.EndUpdate();
 			}
-			this.editorAngle = this.ParentGrid.CreateEditor(typeof(float), this);
+			this.editorAngle = this.ParentGrid.CreateEditor(typeof(Quaternion), this);
 			if (this.editorAngle != null)
 			{
 				this.editorAngle.BeginUpdate();
@@ -218,16 +218,15 @@ namespace Duality.Editor.Plugins.Base.PropertyEditors
 		protected IEnumerable<object> AngleGetter()
 		{
 			if (this.showWorldSpace)
-				return this.GetValue().OfType<Transform>().Select(o => (object)MathF.RadToDeg(o.Rotation));
+				return this.GetValue().OfType<Transform>().Select(o => (object)o.Rotation);
 			else
-				return this.GetValue().OfType<Transform>().Select(o => (object)MathF.RadToDeg(o.LocalRotation));
+				return this.GetValue().OfType<Transform>().Select(o => (object)o.LocalRotation);
 		}
 		protected void AngleSetter(IEnumerable<object> values)
 		{
-			values = values.Select(v => (object)MathF.DegToRad((float)v));
 			if (this.showWorldSpace)
 			{
-				List<float> valuesList = values.Cast<float>().ToList();
+				List<Quaternion> valuesList = values.Cast<Quaternion>().ToList();
 				List<object> valuesListLocal = new List<object>(valuesList.Count);
 				List<Transform> targetList = this.GetValue().OfType<Transform>().ToList();
 				List<Transform> targetListLocal = new List<Transform>(targetList.Count);
@@ -247,7 +246,7 @@ namespace Duality.Editor.Plugins.Base.PropertyEditors
 
 						if (parent == null || !targetList.Contains(parent))
 						{
-							float curValue = valuesList[Math.Min(i, valuesList.Count - 1)];
+							Quaternion curValue = valuesList[Math.Min(i, valuesList.Count - 1)];
 
 							targetListLocal.Add(t);
 							valuesListLocal.Add(parent != null ? curValue - parent.Rotation : curValue);

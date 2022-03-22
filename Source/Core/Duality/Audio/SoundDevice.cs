@@ -46,9 +46,9 @@ namespace Duality.Audio
 		/// <summary>
 		/// [GET] The current listeners rotation / angle in radians.
 		/// </summary>
-		public float ListenerAngle
+		public Quaternion ListenerAngle
 		{
-			get { return (this.soundListener != null) ? this.soundListener.Angle : 0.0f; }
+			get { return (this.soundListener != null) ? this.soundListener.Angle : Quaternion.Identity; }
 		}
 		
 		/// <summary>
@@ -215,7 +215,7 @@ namespace Duality.Audio
 			DualityApp.AudioBackend.UpdateListener(
 				this.ListenerPos * AudioUnit.LengthToPhysical,
 				this.ListenerVel * AudioUnit.VelocityToPhysical,
-				this.ListenerAngle * AudioUnit.AngleToPhysical,
+				0f * AudioUnit.AngleToPhysical,
 				this.mute);
 		}
 		private void UpdateWorldSettings()

@@ -119,7 +119,7 @@ namespace Duality.Resources
 		/// <param name="position"></param>
 		/// <param name="angle"></param>
 		/// <param name="scale"></param>
-		public GameObject Instantiate(Vector3 position, float angle, Vector3 scale)
+		public GameObject Instantiate(Vector3 position, Quaternion angle, Vector3 scale)
 		{
 			GameObject obj = this.Instantiate();
 			Transform transform = obj.Transform;

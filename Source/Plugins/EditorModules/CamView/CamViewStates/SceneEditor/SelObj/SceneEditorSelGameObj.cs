@@ -32,7 +32,7 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 			get { return this.gameObj.Transform.Pos; }
 			set { this.gameObj.Transform.Pos = value; }
 		}
-		public override float Angle
+		public override Quaternion Angle
 		{
 			get { return this.gameObj.Transform.Rotation; }
 			set { this.gameObj.Transform.Rotation = value; }
@@ -96,7 +96,11 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 			}
 			else if (action == ObjectEditorAction.Rotate)
 			{
-				return string.Format("Angle:{0,5:0}°", MathF.RadToDeg(this.gameObj.Transform.LocalRotation));
+				Vector3 rotation = this.gameObj.Transform.LocalRotation.EulerAngles;
+				return
+					string.Format("Rotation X:{0,7:0}/n", rotation.X) +
+					string.Format("Rotation Y:{0,7:0}/n", rotation.Y) +
+					string.Format("Rotation Z:{0,7:0}", rotation.Z);
 			}
 
 			return base.UpdateActionText(action, performing);

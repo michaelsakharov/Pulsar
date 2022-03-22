@@ -172,7 +172,7 @@ namespace Duality.Backend.DefaultOpenTK
 			AL.Listener(ALListener3f.Velocity, velocity.X, -velocity.Y, -velocity.Z);
 			orientation[3] = MathF.Sin(angle);	// up vector x value
 			orientation[4] = MathF.Cos(angle);	// up vector y value
-			AL.Listener(ALListenerfv.Orientation, ref orientation);
+			//AL.Listener(ALListenerfv.Orientation, ref orientation);
 			AL.Listener(ALListenerf.Gain, mute ? 0.0f : 1.0f);
 
 			DebugCheckOpenALErrors();

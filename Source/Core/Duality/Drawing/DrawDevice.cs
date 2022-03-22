@@ -156,7 +156,7 @@ namespace Duality.Drawing
 		private Vector2                   targetSize       = Vector2.Zero;
 		private Rect                      viewportRect     = Rect.Empty;
 		private Vector3                   viewerPos        = Vector3.Zero;
-		private float                     viewerAngle      = 0.0f;
+		private Quaternion			      viewerAngle	   = Quaternion.Identity;
 		private ContentRef<RenderTarget>  renderTarget     = null;
 		private ProjectionMode            projection       = ProjectionMode.Perspective;
 		private Matrix4                   matView          = Matrix4.Identity;
@@ -197,7 +197,7 @@ namespace Duality.Drawing
 				this.UpdateMatrices();
 			}
 		}
-		public float ViewerAngle
+		public Quaternion ViewerAngle
 		{
 			get { return this.viewerAngle; }
 			set
@@ -706,7 +706,7 @@ namespace Duality.Drawing
 				//this.matView *= Matrix4.CreateRotationZ(-this.viewerAngle);
 
 				// New 3d Rotation
-				this.matView *= Matrix4.TRS(-this.viewerPos, new Vector3(0, 0, -this.viewerAngle), new Vector3(1, 1, 1));
+				this.matView *= Matrix4.TRS(-this.viewerPos, this.viewerAngle.EulerAngles, new Vector3(1, 1, 1));
 			}
 		}
 		private void UpdateProjectionMatrix()

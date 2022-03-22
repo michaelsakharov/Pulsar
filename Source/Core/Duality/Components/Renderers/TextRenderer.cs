@@ -110,7 +110,7 @@ namespace Duality.Components.Renderers
 			Vector3 posTemp = this.gameobj.Transform.Pos;
 
 			Vector2 xDot, yDot;
-			MathF.GetTransformDotVec(this.GameObj.Transform.Rotation, this.gameobj.Transform.Scale.Length, out xDot, out yDot);
+			MathF.GetTransformDotVec(this.GameObj.Transform.Rotation.EulerAngles.Z, this.gameobj.Transform.Scale.Length, out xDot, out yDot);
 
 			// Apply block alignment
 			Vector2 textOffset = Vector2.Zero;

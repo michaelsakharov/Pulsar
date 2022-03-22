@@ -165,14 +165,8 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 
 		protected void DrawSelectionMarkers(Canvas canvas, IEnumerable<ObjectEditorSelObj> obj)
 		{
-			// Determine turned Camera axes for angle-independent drawing
-			Vector2 catDotX, catDotY;
-			float camAngle = this.CameraObj.Transform.Rotation;
-			MathF.GetTransformDotVec(camAngle, out catDotX, out catDotY);
-			Vector3 right = new Vector3(1.0f, 0.0f, 0.0f);
-			Vector3 down = new Vector3(0.0f, 1.0f, 0.0f);
-			MathF.TransformDotVec(ref right, ref catDotX, ref catDotY);
-			MathF.TransformDotVec(ref down, ref catDotX, ref catDotY);
+			Vector3 right = this.CameraObj.Transform.Right;
+			Vector3 down = -this.CameraObj.Transform.Up;
 
 			canvas.PushState();
 			canvas.State.DepthOffset = -1.0f;
@@ -206,10 +200,8 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 				// Draw angle marker
 				if (selObj.ShowAngle)
 				{
-					posTemp = selObj.Pos + 
-						radTemp * right * MathF.Sin(selObj.Angle - camAngle) - 
-						radTemp * down * MathF.Cos(selObj.Angle - camAngle);
-					canvas.DrawLine(selObj.Pos.X, selObj.Pos.Y, selObj.Pos.Z, posTemp.X, posTemp.Y, posTemp.Z);
+					//posTemp = selObj.Pos + radTemp * right * MathF.Sin(selObj.Angle - camAngle) - radTemp * down * MathF.Cos(selObj.Angle - camAngle);
+					//canvas.DrawLine(selObj.Pos.X, selObj.Pos.Y, selObj.Pos.Z, posTemp.X, posTemp.Y, posTemp.Z);
 				}
 
 				// Draw boundary
