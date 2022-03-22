@@ -1,0 +1,90 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFramework>netstandard2.0</TargetFramework>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<Version>4.0.0-alpha3</Version>
+		<Copyright>Copyright © Duality Core Team 2020</Copyright>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="NVorbis" Version="0.10.1" GeneratePathProperty="true" />
+		<PackageReference Include="System.Threading.Tasks.Parallel" Version="4.3.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\Primitives\DualityPrimitives.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<EmbeddedResource Include="EmbeddedResources\Checkerboard.png" />
+		<EmbeddedResource Include="EmbeddedResources\DualityLogoBig.png" />
+		<EmbeddedResource Include="EmbeddedResources\DualityLogoMedium.png" />
+		<EmbeddedResource Include="EmbeddedResources\DualityLogoSmall.png" />
+		<EmbeddedResource Include="EmbeddedResources\DualityIcon.png" />
+		<EmbeddedResource Include="EmbeddedResources\DualityIconB.png" />
+		<EmbeddedResource Include="EmbeddedResources\SharpAlpha.frag" />
+		<EmbeddedResource Include="EmbeddedResources\Cousine10.Font.res" />
+		<EmbeddedResource Include="EmbeddedResources\Cousine8.Font.res" />
+		<EmbeddedResource Include="EmbeddedResources\BuiltinShaderFunctions.glsl" />
+		<EmbeddedResource Include="EmbeddedResources\Beep.ogg" />
+		<EmbeddedResource Include="EmbeddedResources\Picking.frag" />
+		<EmbeddedResource Include="EmbeddedResources\Minimal.frag" />
+		<EmbeddedResource Include="EmbeddedResources\Minimal.vert" />
+		<EmbeddedResource Include="EmbeddedResources\EditorSupport\iconResVertexShader.png" />
+		<EmbeddedResource Include="EmbeddedResources\EditorSupport\iconCmpCamera.png" />
+		<EmbeddedResource Include="EmbeddedResources\EditorSupport\iconCmpCapsuleCollider.png" />
+		<EmbeddedResource Include="EmbeddedResources\EditorSupport\iconCmpCircleCollider.png" />
+		<EmbeddedResource Include="EmbeddedResources\EditorSupport\iconCmpEdgeCollider.png" />
+		<EmbeddedResource Include="EmbeddedResources\EditorSupport\iconCmpLoopCollider.png" />
+		<EmbeddedResource Include="EmbeddedResources\EditorSupport\iconCmpRectCollider.png" />
+		<EmbeddedResource Include="EmbeddedResources\EditorSupport\iconCmpRigidBodyRenderer.png" />
+		<EmbeddedResource Include="EmbeddedResources\EditorSupport\iconCmpSoundListener.png" />
+		<EmbeddedResource Include="EmbeddedResources\EditorSupport\iconCmpSpriteRenderer.png" />
+		<EmbeddedResource Include="EmbeddedResources\EditorSupport\iconCmpTransform.png" />
+		<EmbeddedResource Include="EmbeddedResources\EditorSupport\iconCmpUnknown.png" />
+		<EmbeddedResource Include="EmbeddedResources\EditorSupport\iconGameObj.png" />
+		<EmbeddedResource Include="EmbeddedResources\EditorSupport\iconResAudioData.png" />
+		<EmbeddedResource Include="EmbeddedResources\EditorSupport\iconResDrawTechnique.png" />
+		<EmbeddedResource Include="EmbeddedResources\EditorSupport\iconResFont.png" />
+		<EmbeddedResource Include="EmbeddedResources\EditorSupport\iconResFragmentShader.png" />
+		<EmbeddedResource Include="EmbeddedResources\EditorSupport\iconResMaterial.png" />
+		<EmbeddedResource Include="EmbeddedResources\EditorSupport\iconResPixmap.png" />
+		<EmbeddedResource Include="EmbeddedResources\EditorSupport\iconResPrefabEmpty.png" />
+		<EmbeddedResource Include="EmbeddedResources\EditorSupport\iconResPrefabFull.png" />
+		<EmbeddedResource Include="EmbeddedResources\EditorSupport\iconResRenderTarget.png" />
+		<EmbeddedResource Include="EmbeddedResources\EditorSupport\iconResScene.png" />
+		<EmbeddedResource Include="EmbeddedResources\EditorSupport\iconResShaderProgram.png" />
+		<EmbeddedResource Include="EmbeddedResources\EditorSupport\iconResSound.png" />
+		<EmbeddedResource Include="EmbeddedResources\EditorSupport\iconResTexture.png" />
+		<EmbeddedResource Include="EmbeddedResources\EditorSupport\iconResUnknown.png" />
+		<EmbeddedResource Include="EmbeddedResources\EditorSupport\Primitive.png" />
+		<EmbeddedResource Include="EmbeddedResources\EditorSupport\Object.png" />
+		<EmbeddedResource Include="EmbeddedResources\EditorSupport\ObjectRef.png" />
+		<EmbeddedResource Include="EmbeddedResources\EditorSupport\Method.png" />
+		<EmbeddedResource Include="EmbeddedResources\EditorSupport\Array.png" />
+		<EmbeddedResource Include="EmbeddedResources\EditorSupport\Delegate.png" />
+		<EmbeddedResource Include="EmbeddedResources\EditorSupport\Class.png" />
+		<EmbeddedResource Include="EmbeddedResources\EditorSupport\Event.png" />
+		<EmbeddedResource Include="EmbeddedResources\EditorSupport\Field.png" />
+		<EmbeddedResource Include="EmbeddedResources\EditorSupport\Property.png" />
+		<EmbeddedResource Include="EmbeddedResources\EditorSupport\iconCmpProfileRenderer.png" />
+		<EmbeddedResource Include="EmbeddedResources\White.png" />
+		<EmbeddedResource Include="EmbeddedResources\EditorSupport\iconCmpVelocityTracker.png" />
+		<EmbeddedResource Include="EmbeddedResources\EditorSupport\iconResRenderSetup.png" />
+		<EmbeddedResource Include="EmbeddedResources\EditorSupport\iconCmpSpriteAnimator.png" />
+		<EmbeddedResource Include="EmbeddedResources\EditorSupport\iconBinarySerializer.png" />
+		<EmbeddedResource Include="EmbeddedResources\EditorSupport\iconXmlSerializer.png" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Content Include="EmbeddedResources\CousineLicense.txt" />
+	</ItemGroup>
+
+	<Target Name="AggregateOutput" BeforeTargets="AfterBuild">
+		<Copy SourceFiles="$(OutputPath)$(AssemblyName).dll" DestinationFolder="$(RootFolder)Build\Output\" />
+		<Copy SourceFiles="$(OutputPath)$(AssemblyName).pdb" DestinationFolder="$(RootFolder)Build\Output\" />
+		<Copy SourceFiles="$(OutputPath)$(AssemblyName).xml" DestinationFolder="$(RootFolder)Build\Output\" />
+		<Copy SourceFiles="$(PkgNVorbis)\lib\netstandard2.0\NVorbis.dll" DestinationFolder="$(RootFolder)Build\Output\" />
+		<Copy SourceFiles="$(PkgNVorbis)\lib\netstandard2.0\NVorbis.xml" DestinationFolder="$(RootFolder)Build\Output\" />
+	</Target>
+</Project>

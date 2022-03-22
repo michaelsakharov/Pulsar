@@ -1,0 +1,379 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="ActionName_CreateMaterial" xml:space="preserve">
+    <value>Create Material</value>
+  </data>
+  <data name="ActionName_CreateShaderProgram" xml:space="preserve">
+    <value>Create ShaderProgram</value>
+  </data>
+  <data name="ActionName_CreateSound" xml:space="preserve">
+    <value>Create Sound</value>
+  </data>
+  <data name="ActionName_CreateTexture" xml:space="preserve">
+    <value>Create Texture</value>
+  </data>
+  <data name="MenuItemName_AppData" xml:space="preserve">
+    <value>Application Data</value>
+  </data>
+  <data name="MenuItemName_UserData" xml:space="preserve">
+    <value>Default User Data</value>
+  </data>
+  <data name="PropertyDesc_AddJoint" xml:space="preserve">
+    <value>Select a joint type and click the add button to add a new joint to the Collider</value>
+  </data>
+  <data name="PropertyDesc_OtherCollider" xml:space="preserve">
+    <value>The joints second Collider, i.e. the one that is connected to this one using the joint.</value>
+  </data>
+  <data name="PropertyName_AddJoint" xml:space="preserve">
+    <value>Add Joint...</value>
+  </data>
+  <data name="PropertyName_OtherCollider" xml:space="preserve">
+    <value>Other Collider</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="IconSpeakerBlack" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\EmbeddedResources\IconSpeakerBlack.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconSpeakerWhite" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\EmbeddedResources\IconSpeakerWhite.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="DropdownSettingsBlack" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\EmbeddedResources\DropdownSettingsBlack.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="MenuItemDesc_CantRemoveComponent" xml:space="preserve">
+    <value>Can't remove {0} because it is required by the '{1}' Component.</value>
+  </data>
+  <data name="MenuItemName_RemoveComponent" xml:space="preserve">
+    <value>Remove</value>
+  </data>
+  <data name="MenuItemName_ResetComponent" xml:space="preserve">
+    <value>Reset</value>
+  </data>
+  <data name="UndoRedo_DeleteObjects" xml:space="preserve">
+    <value>Delete {0} Objects</value>
+  </data>
+  <data name="UndoRedo_CreateRigidBodyJoint" xml:space="preserve">
+    <value>Create {0}</value>
+  </data>
+  <data name="UndoRedo_CreateRigidBodyJointMulti" xml:space="preserve">
+    <value>Create {0} Joints</value>
+  </data>
+  <data name="UndoRedo_CreateSoundEmitterSource" xml:space="preserve">
+    <value>Create Source {0}</value>
+  </data>
+  <data name="UndoRedo_CreateSoundEmitterSourceMulti" xml:space="preserve">
+    <value>Create {0} Sources</value>
+  </data>
+  <data name="UndoRedo_DeleteRigidBodyJoint" xml:space="preserve">
+    <value>Delete {0}</value>
+  </data>
+  <data name="UndoRedo_DeleteRigidBodyJointMulti" xml:space="preserve">
+    <value>Delete {0} Joints</value>
+  </data>
+  <data name="UndoRedo_DeleteSoundEmitterSource" xml:space="preserve">
+    <value>Delete Source {0}</value>
+  </data>
+  <data name="UndoRedo_DeleteSoundEmitterSourceMulti" xml:space="preserve">
+    <value>Delete {0} Sources</value>
+  </data>
+  <data name="UndoRedo_ReparentRigidBodyJoint" xml:space="preserve">
+    <value>Reparent {0}</value>
+  </data>
+  <data name="UndoRedo_ReparentRigidBodyJointMulti" xml:space="preserve">
+    <value>Reparent {0} Joints</value>
+  </data>
+  <data name="IconAbortCross" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\EmbeddedResources\cross.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="RigidBodyCamViewState_SelBodyName" xml:space="preserve">
+    <value>RigidBody</value>
+  </data>
+  <data name="RigidBodyCamViewState_SelCircleShapeName" xml:space="preserve">
+    <value>Circle Shape</value>
+  </data>
+  <data name="RigidBodyCamViewState_SelLoopShapeName" xml:space="preserve">
+    <value>Loop Shape</value>
+  </data>
+  <data name="RigidBodyCamViewState_SelPolyShapeName" xml:space="preserve">
+    <value>Polygon Shape</value>
+  </data>
+  <data name="RigidBodyCamViewState_SelShapeName" xml:space="preserve">
+    <value>Shape</value>
+  </data>
+  <data name="IconEye" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\EmbeddedResources\eye.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ReferenceInput" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\EmbeddedResources\application_side_expand.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconDownloadCodeIDE" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\EmbeddedResources\IconDownloadCodeIDE.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconCommunity" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\EmbeddedResources\IconCommunity.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconTutorial" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\EmbeddedResources\IconTutorial.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ActionName_ViewGettingStartedTutorial" xml:space="preserve">
+    <value>Getting Started Tutorial</value>
+  </data>
+  <data name="ActionName_VisitCommunity" xml:space="preserve">
+    <value>Join the Community</value>
+  </data>
+  <data name="ActionDesc_ExportResource" xml:space="preserve">
+    <value>Exports the Resource.</value>
+  </data>
+  <data name="ActionDesc_ReImportResource" xml:space="preserve">
+    <value>Imports the Resource using the previously used source files.</value>
+  </data>
+  <data name="ActionDesc_ShowResourceSources" xml:space="preserve">
+    <value>Shows the Resource's source files in your file system.</value>
+  </data>
+  <data name="ActionName_ExportResource" xml:space="preserve">
+    <value>Export Resource</value>
+  </data>
+  <data name="ActionName_ReImportResource" xml:space="preserve">
+    <value>Import Resource</value>
+  </data>
+  <data name="ActionName_ShowResourceSources" xml:space="preserve">
+    <value>Show Source Files</value>
+  </data>
+  <data name="ActionName_SlicePixmap" xml:space="preserve">
+    <value>Slice Pixmap</value>
+  </data>
+  <data name="Help_PixmapSlicerDefaultState_Desc" xml:space="preserve">
+    <value>Click on rects to select them. Selected rects can be resized with the mouse.</value>
+  </data>
+  <data name="Help_PixmapSlicerDefaultState_Topic" xml:space="preserve">
+    <value>Pixmap Slicer</value>
+  </data>
+  <data name="Help_PixmapSlicerNewRect_Desc" xml:space="preserve">
+    <value>Click and drag to define a new atlas rect. New rects are added to the end of the atlas.</value>
+  </data>
+  <data name="Help_PixmapSlicerNewRect_Topic" xml:space="preserve">
+    <value>New Rect</value>
+  </data>
+  <data name="Help_PixmapSlicerRectOrdering_Desc" xml:space="preserve">
+    <value>Click on the atlas rects in the desired order. Remaining rects will be be placed last in the rect order.</value>
+  </data>
+  <data name="Help_PixmapSlicerRectOrdering_Topic" xml:space="preserve">
+    <value>Rect Ordering</value>
+  </data>
+  <data name="Help_PixmapSlicer_Desc" xml:space="preserve">
+    <value>The Pixmap Slicer provides tools for automatically or manually specifying atlas rectangles.</value>
+  </data>
+  <data name="Help_PixmapSlicer_Topic" xml:space="preserve">
+    <value>Pixmap Slicer</value>
+  </data>
+  <data name="ToolTip_PixmapSlicerAddRect" xml:space="preserve">
+    <value>Add a new atlas rect</value>
+  </data>
+  <data name="ToolTip_PixmapSlicerAutoSlice" xml:space="preserve">
+    <value>Automatically calculate atlas rects</value>
+  </data>
+  <data name="ToolTip_PixmapSlicerClear" xml:space="preserve">
+    <value>Delete all atlas rects</value>
+  </data>
+  <data name="ToolTip_PixmapSlicerDelete" xml:space="preserve">
+    <value>Delete the selected atlas rect (Delete)</value>
+  </data>
+  <data name="ToolTip_PixmapSlicerOrderRects" xml:space="preserve">
+    <value>Specify the order of atlas rects</value>
+  </data>
+  <data name="UndoRedo_ClearAtlas" xml:space="preserve">
+    <value>Clear Atlas</value>
+  </data>
+  <data name="UndoRedo_DeleteAtlasRect" xml:space="preserve">
+    <value>Delete Atlas Rect</value>
+  </data>
+  <data name="UndoRedo_SetAtlas" xml:space="preserve">
+    <value>Set Atlas</value>
+  </data>
+  <data name="UndoRedo_SetAtlasRect" xml:space="preserve">
+    <value>Set Atlas Rect</value>
+  </data>
+  <data name="IconPixmapSlicer" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\EmbeddedResources\IconPixmapSlicer.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Button_AutoSlice" xml:space="preserve">
+    <value>Auto-Slice</value>
+  </data>
+  <data name="Button_GridSlice" xml:space="preserve">
+    <value>Grid-Slice</value>
+  </data>
+  <data name="Help_PixmapSlicerGridSlice_Desc" xml:space="preserve">
+    <value>Use the toolstrip controsl to specify the grid parameters.</value>
+  </data>
+  <data name="Help_PixmapSlicerGridSlice_Topic" xml:space="preserve">
+    <value>Grid Slicing</value>
+  </data>
+  <data name="ToolTip_PixmapSlicerGridSlice" xml:space="preserve">
+    <value>Slice the pixmap with a grid</value>
+  </data>
+  <data name="IconAcceptCheck" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\EmbeddedResources\accept.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconCancel" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\EmbeddedResources\cancel.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconSquareAdd" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\EmbeddedResources\shape_square_add.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconSquareDelete" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\EmbeddedResources\shape_square_delete.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconSquareDeleteMany" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\EmbeddedResources\shape_square_delete_many.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconSquareNumbers" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\EmbeddedResources\shape_square_numbers.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ToolTip_PixmapSlicerCancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="ToolTip_PixmapSlicerDone" xml:space="preserve">
+    <value>Accept Changes</value>
+  </data>
+  <data name="IconViewBrightness" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\EmbeddedResources\IconViewBrightness.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconZoomDefault" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\EmbeddedResources\IconZoomDefault.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconZoomIn" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\EmbeddedResources\IconZoomIn.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconZoomOut" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\EmbeddedResources\IconZoomOut.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconHideIndices" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\EmbeddedResources\IconHideIndices.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconRevealIndices" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\EmbeddedResources\IconRevealIndices.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconShowIndices" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\EmbeddedResources\IconShowIndices.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="MenuItemName_EditorAppData" xml:space="preserve">
+    <value>Editor Application Data</value>
+  </data>
+</root>

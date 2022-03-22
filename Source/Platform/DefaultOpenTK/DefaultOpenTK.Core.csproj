@@ -1,0 +1,48 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net472</TargetFramework>
+		<LangVersion>7.3</LangVersion>
+		<Copyright>Copyright © Duality Core Team 2020</Copyright>
+		<RootNamespace>Duality.Backend.DefaultOpenTK</RootNamespace>
+		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+		<Version>4.0.0-alpha3</Version>
+	</PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Core\Primitives\DualityPrimitives.csproj">
+      <Project>{c87a6a2f-e537-48fa-a789-3c54cf29cc09}</Project>
+      <Name>DualityPrimitives</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Core\Duality\Duality.csproj">
+      <Project>{D821AFB9-BCC9-4025-9A9C-798E2BC546AB}</Project>
+      <Name>Duality</Name>
+      <Private>False</Private>
+    </ProjectReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AdamsLair.OpenTK" GeneratePathProperty="true">
+      <Version>1.2.2</Version>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="OpenALSoft32.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="OpenALSoft64.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <Target Name="AggregateOutput" BeforeTargets="AfterBuild">
+    <Copy SourceFiles="$(OutputPath)$(AssemblyName).dll" DestinationFolder="$(RootFolder)Build\Output\Plugins\" />
+    <Copy SourceFiles="$(OutputPath)$(AssemblyName).pdb" DestinationFolder="$(RootFolder)Build\Output\Plugins\" />
+    <Copy SourceFiles="$(OutputPath)OpenALSoft32.dll" DestinationFolder="$(RootFolder)Build\Output\" />
+    <Copy SourceFiles="$(OutputPath)OpenALSoft64.dll" DestinationFolder="$(RootFolder)Build\Output\" />
+    <Copy SourceFiles="$(PkgAdamsLair_OpenTK)\lib\net20\OpenTK.dll" DestinationFolder="$(RootFolder)Build\Output\"/>
+	  <Copy SourceFiles="$(PkgAdamsLair_OpenTK)\lib\net20\OpenTK.xml" DestinationFolder="$(RootFolder)Build\Output\"/>
+  </Target>
+</Project>

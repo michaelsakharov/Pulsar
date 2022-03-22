@@ -1,0 +1,53 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net472</TargetFramework>
+		<LangVersion>7.3</LangVersion>
+		<Copyright>Copyright © Duality Core Team 2020</Copyright>
+		<RootNamespace>Duality.Editor.Backend.DefaultOpenTK</RootNamespace>
+		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+		<Version>4.0.0-alpha3</Version>
+	</PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Editor\DualityEditor\DualityEditor.csproj">
+      <Project>{9fb9f397-fd39-460c-a9ad-b4780d19945f}</Project>
+      <Name>DualityEditor</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Core\Primitives\DualityPrimitives.csproj">
+      <Project>{c87a6a2f-e537-48fa-a789-3c54cf29cc09}</Project>
+      <Name>DualityPrimitives</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Core\Duality\Duality.csproj">
+      <Project>{D821AFB9-BCC9-4025-9A9C-798E2BC546AB}</Project>
+      <Name>Duality</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\DefaultOpenTK\DefaultOpenTK.Core.csproj">
+      <Project>{35045e2e-7748-4d1d-be05-bf72a19c295f}</Project>
+      <Name>DefaultOpenTK.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AdamsLair.OpenTK">
+      <Version>1.2.2</Version>
+    </PackageReference>
+    <PackageReference Include="AdamsLair.OpenTK.GLControl" GeneratePathProperty="true">
+      <Version>1.2.2</Version>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="System.Windows.Forms" />
+  </ItemGroup>
+
+  <Target Name="AggregateOutput" BeforeTargets="AfterBuild">
+    <Copy SourceFiles="$(OutputPath)$(AssemblyName).dll" DestinationFolder="$(RootFolder)Build\Output\Plugins\" />
+    <Copy SourceFiles="$(OutputPath)$(AssemblyName).pdb" DestinationFolder="$(RootFolder)Build\Output\Plugins\" />
+    <Copy SourceFiles="$(PkgAdamsLair_OpenTK_GLControl)\lib\net20\OpenTK.GLControl.dll" DestinationFolder="$(RootFolder)Build\Output\" />
+    <Copy SourceFiles="$(PkgAdamsLair_OpenTK_GLControl)\lib\net20\OpenTK.GLControl.xml" DestinationFolder="$(RootFolder)Build\Output\" />
+  </Target>
+</Project>
