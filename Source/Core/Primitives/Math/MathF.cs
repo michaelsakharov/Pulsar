@@ -943,13 +943,7 @@ namespace Duality
 				return diff;
 		}
 
-		/// <summary>
-		/// Turns and scales a specific coordinate around [0,0].
-		/// </summary>
-		/// <param name="xCoord">The x-Coordinate to transform.</param>
-		/// <param name="yCoord">The y-Coordinate to transform.</param>
-		/// <param name="rot">The rotation to apply in radians.</param>
-		/// <param name="scale">The scale factor to apply.</param>
+
 		public static void TransformCoord(ref float xCoord, ref float yCoord, float rot, float scale)
 		{
 			float sin = (float)System.Math.Sin(rot);
@@ -958,12 +952,6 @@ namespace Duality
 			xCoord = (xCoord * cos - yCoord * sin) * scale;
 			yCoord = (lastX * sin + yCoord * cos) * scale;
 		}
-		/// <summary>
-		/// Turns a specific coordinate around [0,0].
-		/// </summary>
-		/// <param name="xCoord">The x-Coordinate to transform.</param>
-		/// <param name="yCoord">The y-Coordinate to transform.</param>
-		/// <param name="rot">The rotation to apply in radians.</param>
 		public static void TransformCoord(ref float xCoord, ref float yCoord, float rot)
 		{
 			float sin = (float)System.Math.Sin(rot);
@@ -972,14 +960,6 @@ namespace Duality
 			xCoord = xCoord * cos - yCoord * sin;
 			yCoord = lastX * sin + yCoord * cos;
 		}
-
-		/// <summary>
-		/// Prepares a 2d transformation (rotation and scale).
-		/// </summary>
-		/// <param name="rot">The rotation to apply in radians.</param>
-		/// <param name="scale">The scale factor to apply.</param>
-		/// <param name="xDot">Dot product base for the transformed x value.</param>
-		/// <param name="yDot">Dot product base for the transformed y value.</param>
 		public static void GetTransformDotVec(float rot, float scale, out Vector2 xDot, out Vector2 yDot)
 		{
 			float sin = (float)System.Math.Sin(rot);
@@ -987,14 +967,6 @@ namespace Duality
 			xDot = new Vector2(cos * scale, -sin * scale);
 			yDot = new Vector2(sin * scale, cos * scale);
 		}
-
-		/// <summary>
-		/// Prepares a 2d transformation (rotation).
-		/// </summary>
-		/// <param name="rot">The rotation to apply in radians.</param>
-		/// <param name="xDot">Dot product base for the transformed x value.</param>
-		/// <param name="yDot">Dot product base for the transformed y value.</param>
-		/// <seealso cref="TransformDotVec(ref Vector2, ref Vector2, ref Vector2)"/>
 		public static void GetTransformDotVec(float rot, out Vector2 xDot, out Vector2 yDot)
 		{
 			float sin = (float)System.Math.Sin(rot);
@@ -1002,33 +974,19 @@ namespace Duality
 			xDot = new Vector2(cos, -sin);
 			yDot = new Vector2(sin, cos);
 		}
-
-		/// <summary>
-		/// Performs a 2d transformation
-		/// </summary>
-		/// <param name="vec">The vector to transform.</param>
-		/// <param name="xDot">Dot product base for the transformed x value.</param>
-		/// <param name="yDot">Dot product base for the transformed y value.</param>
-		/// <seealso cref="GetTransformDotVec(float, out Vector2, out Vector2)"/>
 		public static void TransformDotVec(ref Vector2 vec, ref Vector2 xDot, ref Vector2 yDot)
 		{
 			float oldX = vec.X;
 			vec.X = vec.X * xDot.X + vec.Y * xDot.Y;
 			vec.Y = oldX * yDot.X + vec.Y * yDot.Y;
 		}
-		/// <summary>
-		/// Performs a 2d transformation
-		/// </summary>
-		/// <param name="vec">The vector to transform.</param>
-		/// <param name="xDot">Dot product base for the transformed x value.</param>
-		/// <param name="yDot">Dot product base for the transformed y value.</param>
-		/// <seealso cref="GetTransformDotVec(float, out Vector2, out Vector2)"/>
 		public static void TransformDotVec(ref Vector3 vec, ref Vector2 xDot, ref Vector2 yDot)
 		{
 			float oldX = vec.X;
 			vec.X = vec.X * xDot.X + vec.Y * xDot.Y;
 			vec.Y = oldX * yDot.X + vec.Y * yDot.Y;
 		}
+
 
 		/// <summary>
 		/// Checks, if two line segments (or infinite lines) cross and determines their mutual point.

@@ -151,20 +151,6 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 
 
 		/// <summary>
-		/// Provides data on how the grid layer should be displayed to the user.
-		/// The default base class implementation provides reasonable values based on
-		/// user settings and mouse coordinates, but certain editing modes might
-		/// provide more suitable or specialized information instead.
-		/// </summary>
-		/// <param name="cursorPos"></param>
-		/// <param name="data"></param>
-		public virtual void GetDisplayedGridData(Point cursorPos, ref GridLayerData data)
-		{
-			data.GridBaseSize = this.View.EditingUserGuides.GridSize.Xy;
-			data.DisplayedGridPos = this.GetWorldPos(new Vector2(cursorPos.X, cursorPos.Y));
-		}
-
-		/// <summary>
 		/// Called when the <see cref="CamViewState"/> is entered.
 		/// Use this for overall initialization of the state.
 		/// </summary>

@@ -119,48 +119,6 @@ namespace Duality.Tests.Drawing
 			}
 		}
 
-		[Test] public void GetScaleAtZ()
-		{
-			using (DrawDevice device = new DrawDevice())
-			{
-				// We'll check twice the focus distance to make sure orthographic
-				// scaling is working as expected.
-				device.FocusDist = DrawDevice.DefaultFocusDist * 2.0f;
-				device.NearZ = 100;
-				device.FarZ = 10000;
-				device.ViewerPos = new Vector3(0, 0, -device.FocusDist);
-
-				// Screen space rendering
-				device.Projection = ProjectionMode.Screen;
-
-				Assert.AreEqual(1.0f, device.GetScaleAtZ(0.0f));
-				Assert.AreEqual(1.0f, device.GetScaleAtZ(1000.0f));
-				Assert.AreEqual(1.0f, device.GetScaleAtZ(-1000.0f));
-				Assert.AreEqual(1.0f, device.GetScaleAtZ(10000.0f));
-				Assert.AreEqual(1.0f, device.GetScaleAtZ(-10000.0f));
-
-				// World space rendering with orthographic projection
-				device.Projection = ProjectionMode.Orthographic;
-
-				Assert.AreEqual(2.0f, device.GetScaleAtZ(0.0f));
-				Assert.AreEqual(2.0f, device.GetScaleAtZ(1000.0f));
-				Assert.AreEqual(2.0f, device.GetScaleAtZ(-1000.0f));
-				Assert.AreEqual(2.0f, device.GetScaleAtZ(10000.0f));
-				Assert.AreEqual(2.0f, device.GetScaleAtZ(-10000.0f));
-
-				// World space rendering with perspective projection
-				device.Projection = ProjectionMode.Perspective;
-
-				Assert.AreEqual(1.0f, device.GetScaleAtZ(0.0f));
-				Assert.AreEqual(0.5f, device.GetScaleAtZ(1000.0f));
-				Assert.AreEqual(0.25f, device.GetScaleAtZ(3000.0f));
-				Assert.AreEqual(2.0f, device.GetScaleAtZ(-500.0f));
-				Assert.AreEqual(4.0f, device.GetScaleAtZ(-750.0f));
-				Assert.AreEqual(10.0f, device.GetScaleAtZ(-900.0f));
-				Assert.AreEqual(10.0f, device.GetScaleAtZ(-1000.0f));
-				Assert.AreEqual(10.0f, device.GetScaleAtZ(-10000.0f));
-			}
-		}
 		[Test] public void GetScreenPos()
 		{
 			using (DrawDevice device = new DrawDevice())
