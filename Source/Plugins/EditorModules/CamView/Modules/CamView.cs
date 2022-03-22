@@ -1026,7 +1026,7 @@ namespace Duality.Editor.Plugins.CamView
 		public void ResetCamera()
 		{
 			this.FocusOnPos(Vector3.Zero);
-			this.camObj.Transform.Angle = 0.0f;
+			this.camObj.Transform.Rotation = 0.0f;
 		}
 		public void FocusOnPos(Vector3 targetPos)
 		{

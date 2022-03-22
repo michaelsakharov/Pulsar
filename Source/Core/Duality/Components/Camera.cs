@@ -433,7 +433,7 @@ namespace Duality.Components
 			if (this.drawDevice == null) this.SetupDrawDevice();
 
 			this.drawDevice.ViewerPos = this.gameobj.Transform.Pos;
-			this.drawDevice.ViewerAngle = this.gameobj.Transform.Angle;
+			this.drawDevice.ViewerAngle = this.gameobj.Transform.Rotation;
 			this.drawDevice.NearZ = this.nearZ;
 			this.drawDevice.FarZ = this.farZ;
 			this.drawDevice.FocusDist = this.focusDist;
@@ -466,7 +466,7 @@ namespace Duality.Components
 			if (this.transformDevice == null) this.SetupTransformDevice();
 
 			this.transformDevice.ViewerPos = this.gameobj.Transform.Pos;
-			this.transformDevice.ViewerAngle = this.gameobj.Transform.Angle;
+			this.transformDevice.ViewerAngle = this.gameobj.Transform.Rotation;
 			this.transformDevice.NearZ = this.nearZ;
 			this.transformDevice.FarZ = this.farZ;
 			this.transformDevice.FocusDist = this.focusDist;

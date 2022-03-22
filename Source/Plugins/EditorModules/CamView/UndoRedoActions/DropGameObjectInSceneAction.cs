@@ -46,7 +46,7 @@ namespace Duality.Editor.Plugins.CamView.UndoRedoActions
 				{
 					if (this.targetObj[i].Transform == null) continue;
 					this.backupPos[i] = this.targetObj[i].Transform.Pos;
-					this.backupAngle[i] = this.targetObj[i].Transform.Angle;
+					this.backupAngle[i] = this.targetObj[i].Transform.Rotation;
 				}
 			}
 
@@ -54,7 +54,7 @@ namespace Duality.Editor.Plugins.CamView.UndoRedoActions
 			{
 				if (s.Transform == null) continue;
 				s.Transform.Pos = this.dropAt;
-				s.Transform.Angle += this.turnBy;
+				s.Transform.Rotation += this.turnBy;
 			}
 
 			if (this.turnBy != 0.0f)
@@ -81,7 +81,7 @@ namespace Duality.Editor.Plugins.CamView.UndoRedoActions
 			{
 				if (this.targetObj[i].Transform == null) continue;
 				this.targetObj[i].Transform.Pos = this.backupPos[i];
-				this.targetObj[i].Transform.Angle = this.backupAngle[i];
+				this.targetObj[i].Transform.Rotation = this.backupAngle[i];
 			}
 
 			if (this.turnBy != 0.0f)

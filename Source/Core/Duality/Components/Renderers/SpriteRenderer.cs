@@ -77,7 +77,7 @@ namespace Duality.Components.Renderers
 		[EditorHintFlags(MemberFlags.Invisible)]
 		public override float BoundRadius
 		{
-			get { return this.rect.BoundingRadius * this.gameobj.Transform.Scale; }
+			get { return this.rect.BoundingRadius * this.gameobj.Transform.Scale.Length; }
 		}
 		/// <summary>
 		/// [GET / SET] The rectangular area the sprite occupies. Relative to the <see cref="GameObject"/>.
@@ -171,13 +171,10 @@ namespace Duality.Components.Renderers
 		{
 			Vector3 posTemp = this.gameobj.Transform.Pos;
 
-			Vector2 xDot, yDot;
-			MathF.GetTransformDotVec(this.GameObj.Transform.Angle, this.gameobj.Transform.Scale, out xDot, out yDot);
-
-			Vector2 edge1 = this.rect.TopLeft;
-			Vector2 edge2 = this.rect.BottomLeft;
-			Vector2 edge3 = this.rect.BottomRight;
-			Vector2 edge4 = this.rect.TopRight;
+			Vector3 edge1 = new Vector3(this.rect.TopLeft.X, this.rect.TopLeft.Y, 0);
+			Vector3 edge2 = new Vector3(this.rect.BottomLeft.X, this.rect.BottomLeft.Y, 0);
+			Vector3 edge3 = new Vector3(this.rect.BottomRight.X, this.rect.BottomRight.Y, 0);
+			Vector3 edge4 = new Vector3(this.rect.TopRight.X, this.rect.TopRight.Y, 0);
 
 			if ((this.flipMode & FlipMode.Horizontal) != FlipMode.None)
 			{ 
@@ -194,10 +191,10 @@ namespace Duality.Components.Renderers
 				edge4.Y = -edge4.Y;
 			}
 
-			MathF.TransformDotVec(ref edge1, ref xDot, ref yDot);
-			MathF.TransformDotVec(ref edge2, ref xDot, ref yDot);
-			MathF.TransformDotVec(ref edge3, ref xDot, ref yDot);
-			MathF.TransformDotVec(ref edge4, ref xDot, ref yDot);
+			edge1 = this.GameObj.Transform.GetWorldPoint(edge1);
+			edge2 = this.GameObj.Transform.GetWorldPoint(edge2);
+			edge3 = this.GameObj.Transform.GetWorldPoint(edge3);
+			edge4 = this.GameObj.Transform.GetWorldPoint(edge4);
             
 			float left   = uvRect.X;
 			float right  = uvRect.RightX;
@@ -208,7 +205,7 @@ namespace Duality.Components.Renderers
 
 			vertices[0].Pos.X = posTemp.X + edge1.X;
 			vertices[0].Pos.Y = posTemp.Y + edge1.Y;
-			vertices[0].Pos.Z = posTemp.Z;
+			vertices[0].Pos.Z = posTemp.Z + edge1.Z;
 			vertices[0].DepthOffset = this.offset;
 			vertices[0].TexCoord.X = left;
 			vertices[0].TexCoord.Y = top;
@@ -216,7 +213,7 @@ namespace Duality.Components.Renderers
 
 			vertices[1].Pos.X = posTemp.X + edge2.X;
 			vertices[1].Pos.Y = posTemp.Y + edge2.Y;
-			vertices[1].Pos.Z = posTemp.Z;
+			vertices[1].Pos.Z = posTemp.Z + edge2.Z;
 			vertices[1].DepthOffset = this.offset;
 			vertices[1].TexCoord.X = left;
 			vertices[1].TexCoord.Y = bottom;
@@ -224,7 +221,7 @@ namespace Duality.Components.Renderers
 
 			vertices[2].Pos.X = posTemp.X + edge3.X;
 			vertices[2].Pos.Y = posTemp.Y + edge3.Y;
-			vertices[2].Pos.Z = posTemp.Z;
+			vertices[2].Pos.Z = posTemp.Z + edge3.Z;
 			vertices[2].DepthOffset = this.offset;
 			vertices[2].TexCoord.X = right;
 			vertices[2].TexCoord.Y = bottom;
@@ -232,7 +229,7 @@ namespace Duality.Components.Renderers
 				
 			vertices[3].Pos.X = posTemp.X + edge4.X;
 			vertices[3].Pos.Y = posTemp.Y + edge4.Y;
-			vertices[3].Pos.Z = posTemp.Z;
+			vertices[3].Pos.Z = posTemp.Z + edge4.Z;
 			vertices[3].DepthOffset = this.offset;
 			vertices[3].TexCoord.X = right;
 			vertices[3].TexCoord.Y = top;

@@ -167,7 +167,7 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 		{
 			// Determine turned Camera axes for angle-independent drawing
 			Vector2 catDotX, catDotY;
-			float camAngle = this.CameraObj.Transform.Angle;
+			float camAngle = this.CameraObj.Transform.Rotation;
 			MathF.GetTransformDotVec(camAngle, out catDotX, out catDotY);
 			Vector3 right = new Vector3(1.0f, 0.0f, 0.0f);
 			Vector3 down = new Vector3(0.0f, 1.0f, 0.0f);

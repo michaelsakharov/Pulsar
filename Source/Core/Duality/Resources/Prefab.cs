@@ -119,14 +119,14 @@ namespace Duality.Resources
 		/// <param name="position"></param>
 		/// <param name="angle"></param>
 		/// <param name="scale"></param>
-		public GameObject Instantiate(Vector3 position, float angle = 0.0f, float scale = 1.0f)
+		public GameObject Instantiate(Vector3 position, float angle, Vector3 scale)
 		{
 			GameObject obj = this.Instantiate();
 			Transform transform = obj.Transform;
 			if (transform != null)
 			{
 				transform.Pos = position;
-				transform.Angle = angle;
+				transform.Rotation = angle;
 				transform.Scale = scale;
 			}
 			return obj;

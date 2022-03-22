@@ -34,13 +34,13 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 		}
 		public override float Angle
 		{
-			get { return this.gameObj.Transform.Angle; }
-			set { this.gameObj.Transform.Angle = value; }
+			get { return this.gameObj.Transform.Rotation; }
+			set { this.gameObj.Transform.Rotation = value; }
 		}
 		public override Vector3 Scale
 		{
-			get { return Vector3.One * this.gameObj.Transform.Scale; }
-			set { this.gameObj.Transform.Scale = value.Length / MathF.Sqrt(3.0f); }
+			get { return this.gameObj.Transform.Scale; }
+			set { this.gameObj.Transform.Scale = value; }
 		}
 		public override float BoundRadius
 		{
@@ -50,7 +50,7 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 				if (renderer == null)
 				{
 					if (this.gameObj.Transform != null)
-						return CamView.DefaultDisplayBoundRadius * this.gameObj.Transform.Scale;
+						return CamView.DefaultDisplayBoundRadius * this.gameObj.Transform.Scale.Length;
 					else
 						return CamView.DefaultDisplayBoundRadius;
 				}
@@ -89,11 +89,14 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 			}
 			else if (action == ObjectEditorAction.Scale)
 			{
-				return string.Format("Scale:{0,5:0.00}", this.gameObj.Transform.LocalScale);
+				return
+					string.Format("Scale X:{0,7:0}/n", this.gameObj.Transform.LocalScale.X) +
+					string.Format("Scale Y:{0,7:0}/n", this.gameObj.Transform.LocalScale.Y) +
+					string.Format("Scale Z:{0,7:0}", this.gameObj.Transform.LocalScale.Z);
 			}
 			else if (action == ObjectEditorAction.Rotate)
 			{
-				return string.Format("Angle:{0,5:0}°", MathF.RadToDeg(this.gameObj.Transform.LocalAngle));
+				return string.Format("Angle:{0,5:0}°", MathF.RadToDeg(this.gameObj.Transform.LocalRotation));
 			}
 
 			return base.UpdateActionText(action, performing);

@@ -517,7 +517,7 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 
 				Vector2 targetOff = (-(curPos - lastPos) / this.GetScaleAtZ(refZ));
 				Vector2 targetVel = targetOff / unscaledTimeMult;
-				MathF.TransformCoord(ref targetVel.X, ref targetVel.Y, camObj.Transform.Angle);
+				MathF.TransformCoord(ref targetVel.X, ref targetVel.Y, camObj.Transform.Rotation);
 				this.camVel.Z *= MathF.Pow(0.9f, unscaledTimeMult);
 				this.camVel += (new Vector3(targetVel, this.camVel.Z) - this.camVel) * unscaledTimeMult;
 				this.camTransformChanged = true;
@@ -535,7 +535,7 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 				moveVec.Y = BaseSpeed * MathF.Sign(moveVec.Y) * MathF.Pow(MathF.Abs(moveVec.Y) / BaseSpeedCursorLen, 1.5f);
 				moveVec.Z *= MathF.Pow(0.9f, unscaledTimeMult);
 
-				MathF.TransformCoord(ref moveVec.X, ref moveVec.Y, camObj.Transform.Angle);
+				MathF.TransformCoord(ref moveVec.X, ref moveVec.Y, camObj.Transform.Rotation);
 
 				if (this.camBeginDragScene)
 				{
@@ -571,7 +571,7 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 				if (this.KeyEIsDown) movement.Y -= 1;
 				if (this.KeyQIsDown) movement.Y += 1;
 
-				camObj.Transform.MoveBy(movement);
+				camObj.Transform.Pos += movement;
 
 				this.camVel = movement;
 				this.camTransformChanged = true;
@@ -875,7 +875,7 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 					Vector2 curTemp = new Vector2(
 						(e.X * 2.0f / this.ClientSize.Width) - 1.0f,
 						(e.Y * 2.0f / this.ClientSize.Height) - 1.0f);
-					MathF.TransformCoord(ref curTemp.X, ref curTemp.Y, camObj.Transform.LocalAngle);
+					MathF.TransformCoord(ref curTemp.X, ref curTemp.Y, camObj.Transform.LocalRotation);
 
 					if (MathF.Sign(e.Delta) != MathF.Sign(curVel))
 						curVel = 0.0f;

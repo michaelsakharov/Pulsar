@@ -72,7 +72,7 @@ namespace Duality.Components.Diagnostics
 					if (logEntry.Anchor == VisualLogAnchor.Object && logEntry.AnchorObj != null && logEntry.AnchorObj.Transform != null)
 					{
 						Transform anchorTransform = logEntry.AnchorObj.Transform;
-						logEntry.Draw(this.canvas, anchorTransform.Pos, anchorTransform.Angle, anchorTransform.Scale);
+						logEntry.Draw(this.canvas, anchorTransform.Pos, anchorTransform.Rotation, anchorTransform.Scale.Length);
 					}
 					else
 					{

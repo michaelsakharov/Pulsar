@@ -266,7 +266,7 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 
 				// Setup GameObjects
 				CreateGameObjectAction createAction = new CreateGameObjectAction(null, dragObj);
-				DropGameObjectInSceneAction dropAction = new DropGameObjectInSceneAction(dragObj, spaceCoord, this.CameraObj.Transform.Angle);
+				DropGameObjectInSceneAction dropAction = new DropGameObjectInSceneAction(dragObj, spaceCoord, this.CameraObj.Transform.Rotation);
 				UndoRedoManager.BeginMacro(dropAction.Name);
 				UndoRedoManager.Do(createAction);
 				UndoRedoManager.Do(dropAction);

@@ -24,7 +24,7 @@ namespace Duality.Components
 		}
 		public float Angle
 		{
-			get { return this.GameObj.Transform.Angle; }
+			get { return this.GameObj.Transform.Rotation; }
 		}
 
 		public void MakeCurrent()

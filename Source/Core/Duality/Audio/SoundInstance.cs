@@ -452,8 +452,8 @@ namespace Duality.Audio
 				// Attach to object
 				if (attachTransform != null)
 				{
-					MathF.TransformCoord(ref nativeState.Position.X, ref nativeState.Position.Y, attachTransform.Angle);
-					MathF.TransformCoord(ref nativeState.Velocity.X, ref nativeState.Velocity.Y, attachTransform.Angle);
+					MathF.TransformCoord(ref nativeState.Position.X, ref nativeState.Position.Y, attachTransform.Rotation);
+					MathF.TransformCoord(ref nativeState.Velocity.X, ref nativeState.Velocity.Y, attachTransform.Rotation);
 					nativeState.Position += attachTransform.Pos;
 
 					VelocityTracker attachVelocityTracker = attachTransform.GameObj.GetComponent<VelocityTracker>();

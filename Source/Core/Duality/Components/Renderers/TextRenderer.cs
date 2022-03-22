@@ -35,7 +35,7 @@ namespace Duality.Components.Renderers
 				Rect textRect = Rect.Align(this.blockAlign, 0.0f, 0.0f, 
 					MathF.Max(this.text.Size.X, this.text.MaxWidth), 
 					MathF.Max(this.text.Size.Y, this.text.MaxHeight));
-				return textRect.Transformed(this.gameobj.Transform.Scale, this.gameobj.Transform.Scale).BoundingRadius;
+				return textRect.Transformed(this.gameobj.Transform.Scale.Length, this.gameobj.Transform.Scale.Length).BoundingRadius;
 			}
 		}
 		/// <summary>
@@ -110,7 +110,7 @@ namespace Duality.Components.Renderers
 			Vector3 posTemp = this.gameobj.Transform.Pos;
 
 			Vector2 xDot, yDot;
-			MathF.GetTransformDotVec(this.GameObj.Transform.Angle, this.gameobj.Transform.Scale, out xDot, out yDot);
+			MathF.GetTransformDotVec(this.GameObj.Transform.Rotation, this.gameobj.Transform.Scale.Length, out xDot, out yDot);
 
 			// Apply block alignment
 			Vector2 textOffset = Vector2.Zero;

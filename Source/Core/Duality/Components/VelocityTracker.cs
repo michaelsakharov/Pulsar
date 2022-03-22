@@ -85,7 +85,7 @@ namespace Duality.Components
 			{
 				Transform transform = this.GameObj.Transform;
 				Vector3 pos = transform.Pos;
-				float angle = transform.Angle;
+				float angle = transform.Rotation;
 
 				this.posDiff = pos - this.lastPosition;
 				this.angleDiff = MathF.TurnDir(this.lastAngle, angle) * MathF.CircularDist(this.lastAngle, angle);
@@ -103,7 +103,7 @@ namespace Duality.Components
 		{
 			Transform transform = this.GameObj.Transform;
 			this.lastPosition = transform.Pos;
-			this.lastAngle = transform.Angle;
+			this.lastAngle = transform.Rotation;
 		}
 		void ICmpSerializeListener.OnSaved() { }
 		void ICmpSerializeListener.OnSaving() { }

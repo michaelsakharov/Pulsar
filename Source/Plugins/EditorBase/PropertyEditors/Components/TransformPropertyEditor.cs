@@ -52,14 +52,15 @@ namespace Duality.Editor.Plugins.Base.PropertyEditors
 				this.AddPropertyEditor(this.editorPos);
 				this.editorPos.EndUpdate();
 			}
-			this.editorScale = this.ParentGrid.CreateEditor(typeof(float), this);
+			this.editorScale = this.ParentGrid.CreateEditor(typeof(Vector3), this);
 			if (this.editorScale != null)
 			{
 				this.editorScale.BeginUpdate();
 				this.editorScale.Getter = this.ScaleGetter;
 				this.editorScale.Setter = this.ScaleSetter;
 				this.editorScale.PropertyName = "Scale";
-				this.ParentGrid.ConfigureEditor(this.editorScale);
+				this.ParentGrid.ConfigureEditor(this.editorScale, new EditorHintAttribute[]
+				{ new EditorHintDecimalPlacesAttribute(0), new EditorHintIncrementAttribute(1) });
 				this.AddPropertyEditor(this.editorScale);
 				this.editorScale.EndUpdate();
 			}
@@ -169,7 +170,7 @@ namespace Duality.Editor.Plugins.Base.PropertyEditors
 		{
 			if (this.showWorldSpace)
 			{
-				List<float> valuesList = values.Cast<float>().ToList();
+				List<Vector3> valuesList = values.Cast<Vector3>().ToList();
 				List<object> valuesListLocal = new List<object>(valuesList.Count);
 				List<Transform> targetList = this.GetValue().OfType<Transform>().ToList();
 				List<Transform> targetListLocal = new List<Transform>(targetList.Count);
@@ -189,7 +190,7 @@ namespace Duality.Editor.Plugins.Base.PropertyEditors
 
 						if (parent == null || !targetList.Contains(parent))
 						{
-							float curValue = valuesList[Math.Min(i, valuesList.Count - 1)];
+							Vector3 curValue = valuesList[Math.Min(i, valuesList.Count - 1)];
 
 							targetListLocal.Add(t);
 							valuesListLocal.Add(parent != null ? curValue / parent.Scale : curValue);
@@ -217,9 +218,9 @@ namespace Duality.Editor.Plugins.Base.PropertyEditors
 		protected IEnumerable<object> AngleGetter()
 		{
 			if (this.showWorldSpace)
-				return this.GetValue().OfType<Transform>().Select(o => (object)MathF.RadToDeg(o.Angle));
+				return this.GetValue().OfType<Transform>().Select(o => (object)MathF.RadToDeg(o.Rotation));
 			else
-				return this.GetValue().OfType<Transform>().Select(o => (object)MathF.RadToDeg(o.LocalAngle));
+				return this.GetValue().OfType<Transform>().Select(o => (object)MathF.RadToDeg(o.LocalRotation));
 		}
 		protected void AngleSetter(IEnumerable<object> values)
 		{
@@ -249,7 +250,7 @@ namespace Duality.Editor.Plugins.Base.PropertyEditors
 							float curValue = valuesList[Math.Min(i, valuesList.Count - 1)];
 
 							targetListLocal.Add(t);
-							valuesListLocal.Add(parent != null ? curValue - parent.Angle : curValue);
+							valuesListLocal.Add(parent != null ? curValue - parent.Rotation : curValue);
 							removeIndices.Add(i);
 						}
 					}

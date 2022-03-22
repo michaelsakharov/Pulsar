@@ -962,6 +962,7 @@ namespace Duality
 			xDot = new Vector2(cos * scale, -sin * scale);
 			yDot = new Vector2(sin * scale, cos * scale);
 		}
+
 		/// <summary>
 		/// Prepares a 2d transformation (rotation).
 		/// </summary>
