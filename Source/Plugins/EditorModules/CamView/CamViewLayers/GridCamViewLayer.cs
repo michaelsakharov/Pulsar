@@ -58,7 +58,7 @@ namespace Duality.Editor.Plugins.CamView.CamViewLayers
 			adjustedGridBaseSize.X = gridBaseSize.X * MathF.NextPowerOfTwo((int)MathF.Ceiling(gridVisualMinSize / gridBaseSize.X));
 			adjustedGridBaseSize.Y = gridBaseSize.Y * MathF.NextPowerOfTwo((int)MathF.Ceiling(gridVisualMinSize / gridBaseSize.Y));
 
-			float scaleAtGrid = device.GetScaleAtZ(0.0f);
+			float scaleAtGrid = 1f;
 			float scaleAdjustmentFactor = 4.0f * MathF.Pow(2.0f, -MathF.Round(1.0f - MathF.Log(1.0f / scaleAtGrid, 2.0f)));
 			Vector2 adjustedGridSize;
 			adjustedGridSize.X = MathF.Max(adjustedGridBaseSize.X * scaleAdjustmentFactor, gridBaseSize.X);

@@ -561,7 +561,8 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 				this._currentYaw += mouseVec.X * 0.01f;
 				this._currentPitch -= mouseVec.Y * 0.01f;
 
-				camObj.Transform.Rotation = Quaternion.CreateFromYawPitchRoll(this._currentYaw, this._currentPitch, 0f);
+				camObj.Transform.Rotation = Quaternion.Euler(this._currentYaw, this._currentPitch, 0f);
+				//camObj.Transform.Rotation = Quaternion.CreateFromYawPitchRoll(this._currentYaw, this._currentPitch, 0f);
 
 				float forward = 0;
 				float right = 0;

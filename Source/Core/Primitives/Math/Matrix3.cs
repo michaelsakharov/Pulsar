@@ -209,9 +209,9 @@ namespace Duality
 		/// <param name="matrix">A Matrix4 to take the upper-left 3x3 from.</param>
 		public Matrix3(Matrix4 matrix)
 		{
-			this.Row0 = matrix.Row0.Xyz;
-			this.Row1 = matrix.Row1.Xyz;
-			this.Row2 = matrix.Row2.Xyz;
+			this.Row0 = new Vector3(matrix.Row0.X, matrix.Row0.Y, matrix.Row0.Z);
+			this.Row1 = new Vector3(matrix.Row1.X, matrix.Row1.Y, matrix.Row1.Z);
+			this.Row2 = new Vector3(matrix.Row2.X, matrix.Row2.Y, matrix.Row2.Z);
 		}
 
 		/// <summary>

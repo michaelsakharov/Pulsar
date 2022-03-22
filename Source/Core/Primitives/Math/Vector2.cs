@@ -437,11 +437,8 @@ namespace Duality
 		/// <param name="result"></param>
 		public static void Transform(ref Vector2 vec, ref Matrix4 mat, out Vector2 result)
 		{
-			Vector4 row0 = mat.Row0;
-			Vector4 row1 = mat.Row1;
-			Vector4 row3 = mat.Row3;
-			result.X = vec.X * row0.X + vec.Y * row1.X + row3.X;
-			result.Y = vec.X * row0.Y + vec.Y * row1.Y + row3.Y;
+			result.X = vec.X * mat.Row0.X + vec.Y * mat.Row1.X + mat.Row3.X;
+			result.Y = vec.X * mat.Row0.Y + vec.Y * mat.Row1.Y + mat.Row3.Y;
 		}
 
 		/// <summary>

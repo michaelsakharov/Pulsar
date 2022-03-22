@@ -286,9 +286,10 @@ namespace Duality.Components
 
 		public Matrix4 GetWorldMatrix()
 		{
-			Matrix4 mat = Matrix4.CreateScale(this.scale)
-				* Matrix4.CreateFromQuaternion(this.rotation)
-				* Matrix4.CreateTranslation(this.pos);
+			Matrix4 mat = Matrix4.Identity;
+			mat *= Matrix4.CreateScale(this.scale);
+			mat *= Matrix4.CreateFromQuaternion(this.rotation);
+			mat *= Matrix4.CreateTranslation(this.pos);
 
 			if (this.ParentTransform != null)
 			{
@@ -311,7 +312,7 @@ namespace Duality.Components
 			target.ignoreParent   = this.ignoreParent;
 
 			target.pos            = this.pos;
-			target.rotation          = this.rotation;
+			target.rotation       = this.rotation;
 			target.scale          = this.scale;
 		}
 

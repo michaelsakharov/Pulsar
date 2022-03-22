@@ -18,11 +18,11 @@ namespace Duality.Tests.Utility
 
 		[Test] public void Constuctors()
 		{
-			AssertVectorEqual(new Vector3(), 0.0f, 0.0f, 0.0f);
-			AssertVectorEqual(new Vector3(1.2f), 1.2f, 1.2f, 1.2f);
-			AssertVectorEqual(new Vector3(new Vector2(1.2f, 3.4f)), 1.2f, 3.4f, 0.0f);
-			AssertVectorEqual(new Vector3(new Vector2(1.2f, 3.4f), 5.6f), 1.2f, 3.4f, 5.6f);
-			AssertVectorEqual(new Vector3(1.2f, 3.4f, 5.6f), 1.2f, 3.4f, 5.6f);
+			this.AssertVectorEqual(new Vector3(), 0.0f, 0.0f, 0.0f);
+			this.AssertVectorEqual(new Vector3(1.2f), 1.2f, 1.2f, 1.2f);
+			this.AssertVectorEqual(new Vector3(new Vector2(1.2f, 3.4f)), 1.2f, 3.4f, 0.0f);
+			this.AssertVectorEqual(new Vector3(new Vector2(1.2f, 3.4f), 5.6f), 1.2f, 3.4f, 5.6f);
+			this.AssertVectorEqual(new Vector3(1.2f, 3.4f, 5.6f), 1.2f, 3.4f, 5.6f);
 		}
 		[Test] public void EqualityChecks()
 		{
@@ -59,19 +59,19 @@ namespace Duality.Tests.Utility
 		}
 		[Test] public void MathOperators()
 		{
-			AssertVectorEpsilonEqual(-new Vector3(1.2f, 3.4f, 5.6f), -1.2f, -3.4f, -5.6f);
-			AssertVectorEpsilonEqual(new Vector3(1.2f, 3.4f, 5.6f) + new Vector3(1.1f, 2.2f, 3.3f), 2.3f, 5.6f, 8.9f);
-			AssertVectorEpsilonEqual(new Vector3(1.2f, 3.4f, 5.6f) - new Vector3(1.1f, 2.2f, 3.3f), 0.1f, 1.2f, 2.3f);
-			AssertVectorEpsilonEqual(new Vector3(1.2f, 3.4f, 5.6f) * new Vector3(2.0f, 3.0f, 4.0f), 2.4f, 10.2f, 22.4f);
-			AssertVectorEpsilonEqual(new Vector3(1.2f, 3.4f, 5.6f) * 2.0f, 2.4f, 6.8f, 11.2f);
-			AssertVectorEpsilonEqual(2.0f * new Vector3(1.2f, 3.4f, 5.6f), 2.4f, 6.8f, 11.2f);
-			AssertVectorEpsilonEqual(new Vector3(2.4f, 10.2f, 22.4f) / new Vector3(2.0f, 3.0f, 4.0f), 1.2f, 3.4f, 5.6f);
-			AssertVectorEpsilonEqual(new Vector3(2.4f, 6.8f, 11.2f) / 2.0f, 1.2f, 3.4f, 5.6f);
+			this.AssertVectorEpsilonEqual(-new Vector3(1.2f, 3.4f, 5.6f), -1.2f, -3.4f, -5.6f);
+			this.AssertVectorEpsilonEqual(new Vector3(1.2f, 3.4f, 5.6f) + new Vector3(1.1f, 2.2f, 3.3f), 2.3f, 5.6f, 8.9f);
+			this.AssertVectorEpsilonEqual(new Vector3(1.2f, 3.4f, 5.6f) - new Vector3(1.1f, 2.2f, 3.3f), 0.1f, 1.2f, 2.3f);
+			this.AssertVectorEpsilonEqual(new Vector3(1.2f, 3.4f, 5.6f) * new Vector3(2.0f, 3.0f, 4.0f), 2.4f, 10.2f, 22.4f);
+			this.AssertVectorEpsilonEqual(new Vector3(1.2f, 3.4f, 5.6f) * 2.0f, 2.4f, 6.8f, 11.2f);
+			this.AssertVectorEpsilonEqual(2.0f * new Vector3(1.2f, 3.4f, 5.6f), 2.4f, 6.8f, 11.2f);
+			this.AssertVectorEpsilonEqual(new Vector3(2.4f, 10.2f, 22.4f) / new Vector3(2.0f, 3.0f, 4.0f), 1.2f, 3.4f, 5.6f);
+			this.AssertVectorEpsilonEqual(new Vector3(2.4f, 6.8f, 11.2f) / 2.0f, 1.2f, 3.4f, 5.6f);
 		}
 		[Test] public void MinMax()
 		{
-			AssertVectorEqual(Vector3.Min(new Vector3(1.2f, 3.4f, 5.6f), new Vector3(5.6f, 3.5f, 1.2f)), 1.2f, 3.4f, 1.2f);
-			AssertVectorEqual(Vector3.Max(new Vector3(1.2f, 3.4f, 5.6f), new Vector3(5.6f, 3.5f, 1.2f)), 5.6f, 3.5f, 5.6f);
+			this.AssertVectorEqual(Vector3.Min(new Vector3(1.2f, 3.4f, 5.6f), new Vector3(5.6f, 3.5f, 1.2f)), 1.2f, 3.4f, 1.2f);
+			this.AssertVectorEqual(Vector3.Max(new Vector3(1.2f, 3.4f, 5.6f), new Vector3(5.6f, 3.5f, 1.2f)), 5.6f, 3.5f, 5.6f);
 		}
 		[Test] public void DotProduct()
 		{
@@ -103,13 +103,13 @@ namespace Duality.Tests.Utility
 			for (int i = 0; i < 10; i++)
 			{
 				float length = MathF.Pow(1.25f, i);
-				AssertVectorEpsilonEqual(new Vector3(length, 0.0f, 0.0f).Normalized, 1.0f, 0.0f, 0.0f);
-				AssertVectorEpsilonEqual(new Vector3(0.0f, length, 0.0f).Normalized, 0.0f, 1.0f, 0.0f);
-				AssertVectorEpsilonEqual(new Vector3(0.0f, 0.0f, length).Normalized, 0.0f, 0.0f, 1.0f);
-				AssertVectorEpsilonEqual(new Vector3(-length, 0.0f, 0.0f).Normalized, -1.0f, 0.0f, 0.0f);
-				AssertVectorEpsilonEqual(new Vector3(0.0f, -length, 0.0f).Normalized, 0.0f, -1.0f, 0.0f);
-				AssertVectorEpsilonEqual(new Vector3(0.0f, 0.0f, -length).Normalized, 0.0f, 0.0f, -1.0f);
-				AssertVectorEpsilonEqual(new Vector3(length, length, length).Normalized, 1.0f / MathF.Sqrt(3), 1.0f / MathF.Sqrt(3), 1.0f / MathF.Sqrt(3));
+				this.AssertVectorEpsilonEqual(new Vector3(length, 0.0f, 0.0f).Normalized, 1.0f, 0.0f, 0.0f);
+				this.AssertVectorEpsilonEqual(new Vector3(0.0f, length, 0.0f).Normalized, 0.0f, 1.0f, 0.0f);
+				this.AssertVectorEpsilonEqual(new Vector3(0.0f, 0.0f, length).Normalized, 0.0f, 0.0f, 1.0f);
+				this.AssertVectorEpsilonEqual(new Vector3(-length, 0.0f, 0.0f).Normalized, -1.0f, 0.0f, 0.0f);
+				this.AssertVectorEpsilonEqual(new Vector3(0.0f, -length, 0.0f).Normalized, 0.0f, -1.0f, 0.0f);
+				this.AssertVectorEpsilonEqual(new Vector3(0.0f, 0.0f, -length).Normalized, 0.0f, 0.0f, -1.0f);
+				this.AssertVectorEpsilonEqual(new Vector3(length, length, length).Normalized, 1.0f / MathF.Sqrt(3), 1.0f / MathF.Sqrt(3), 1.0f / MathF.Sqrt(3));
 			}
 
 			// Normalizing random vectors - direction should be preserved
@@ -125,14 +125,14 @@ namespace Duality.Tests.Utility
 				float angleToZ = Vector3.AngleBetween(vector, Vector3.UnitZ);
 
 				Assert.AreEqual(1.0f, normalizedVector.Length, Epsilon);
-				AssertVectorEpsilonEqual(normalizedVector * length, vector.X, vector.Y, vector.Z);
+				this.AssertVectorEpsilonEqual(normalizedVector * length, vector.X, vector.Y, vector.Z);
 				Assert.AreEqual(angleToX, Vector3.AngleBetween(normalizedVector, Vector3.UnitX), Epsilon);
 				Assert.AreEqual(angleToY, Vector3.AngleBetween(normalizedVector, Vector3.UnitY), Epsilon);
 				Assert.AreEqual(angleToZ, Vector3.AngleBetween(normalizedVector, Vector3.UnitZ), Epsilon);
 			}
 
 			// Normalizing a zero-length vector should return a zero-length vector
-			AssertVectorEqual(new Vector3(0.0f, 0.0f, 0.0f).Normalized, 0.0f, 0.0f, 0.0f);
+			this.AssertVectorEqual(new Vector3(0.0f, 0.0f, 0.0f).Normalized, 0.0f, 0.0f, 0.0f);
 
 			// Normalizing an increasingly small vector should never produce any invalid vectors
 			for (int i = 0; i < 50; i++)
@@ -159,11 +159,11 @@ namespace Duality.Tests.Utility
 				Vector3 normalizedVector = vector;
 				normalizedVector.Normalize();
 
-				AssertVectorEpsilonEqual(normalizedVector, vector.Normalized.X, vector.Normalized.Y, vector.Normalized.Z);
+				this.AssertVectorEpsilonEqual(normalizedVector, vector.Normalized.X, vector.Normalized.Y, vector.Normalized.Z);
 			}
 
 			// Normalizing a zero-length vector should return a zero-length vector
-			AssertVectorEqual(new Vector3(0.0f, 0.0f, 0.0f).Normalized, 0.0f, 0.0f, 0.0f);
+			this.AssertVectorEqual(new Vector3(0.0f, 0.0f, 0.0f).Normalized, 0.0f, 0.0f, 0.0f);
 
 			// Normalizing an increasingly small vector should never produce any invalid vectors
 			for (int i = 0; i < 50; i++)

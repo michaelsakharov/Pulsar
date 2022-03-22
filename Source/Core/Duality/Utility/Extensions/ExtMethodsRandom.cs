@@ -133,9 +133,9 @@ namespace Duality
 		public static Vector3 NextVector3(this Random r)
 		{
 			Quaternion rot = Quaternion.Identity;
-			rot *= Quaternion.FromAxisAngle(Vector3.UnitZ, r.NextFloat(MathF.RadAngle360));
-			rot *= Quaternion.FromAxisAngle(Vector3.UnitX, r.NextFloat(MathF.RadAngle360));
-			rot *= Quaternion.FromAxisAngle(Vector3.UnitY, r.NextFloat(MathF.RadAngle360));
+			rot *= Quaternion.CreateFromAxisAngle(Vector3.UnitZ, r.NextFloat(MathF.RadAngle360));
+			rot *= Quaternion.CreateFromAxisAngle(Vector3.UnitX, r.NextFloat(MathF.RadAngle360));
+			rot *= Quaternion.CreateFromAxisAngle(Vector3.UnitY, r.NextFloat(MathF.RadAngle360));
 			return Vector3.Transform(Vector3.UnitX, rot);
 		}
 		/// <summary>
@@ -146,9 +146,9 @@ namespace Duality
 		public static Vector3 NextVector3(this Random r, float radius)
 		{
 			Quaternion rot = Quaternion.Identity;
-			rot *= Quaternion.FromAxisAngle(Vector3.UnitZ, r.NextFloat(MathF.RadAngle360));
-			rot *= Quaternion.FromAxisAngle(Vector3.UnitX, r.NextFloat(MathF.RadAngle360));
-			rot *= Quaternion.FromAxisAngle(Vector3.UnitY, r.NextFloat(MathF.RadAngle360));
+			rot *= Quaternion.CreateFromAxisAngle(Vector3.UnitZ, r.NextFloat(MathF.RadAngle360));
+			rot *= Quaternion.CreateFromAxisAngle(Vector3.UnitX, r.NextFloat(MathF.RadAngle360));
+			rot *= Quaternion.CreateFromAxisAngle(Vector3.UnitY, r.NextFloat(MathF.RadAngle360));
 			return Vector3.Transform(new Vector3(radius, 0, 0), rot);
 		}
 		/// <summary>
