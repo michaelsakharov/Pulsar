@@ -92,11 +92,11 @@ namespace Duality
 		{
 			get
 			{
-				return ToEuler(this);
+				return -ToEuler(this);
 			}
 			set
 			{
-				this = FromEuler(value);
+				this = FromEuler(-value);
 			}
 		}
 
@@ -233,6 +233,40 @@ namespace Duality
 			ans.W = q1w * q2w - dot;
 
 			return ans;
+		}
+		
+		/// <summary>
+		/// Creates a new Quaternion from the given yaw, pitch, and roll, in radians.
+		/// </summary>
+		/// <param name="yaw">The yaw angle, in radians, around the Y-axis.</param>
+		/// <param name="pitch">The pitch angle, in radians, around the X-axis.</param>
+		/// <param name="roll">The roll angle, in radians, around the Z-axis.</param>
+		/// <returns></returns>
+		public static Quaternion CreateFromYawPitchRoll(float yaw, float pitch, float roll)
+		{
+			//  Roll first, about axis the object is facing, then
+			//  pitch upward, then yaw to face into the new heading
+			float sr, cr, sp, cp, sy, cy;
+
+			float halfRoll = roll * 0.5f;
+			sr = (float)Math.Sin(halfRoll);
+			cr = (float)Math.Cos(halfRoll);
+
+			float halfPitch = pitch * 0.5f;
+			sp = (float)Math.Sin(halfPitch);
+			cp = (float)Math.Cos(halfPitch);
+
+			float halfYaw = yaw * 0.5f;
+			sy = (float)Math.Sin(halfYaw);
+			cy = (float)Math.Cos(halfYaw);
+
+			Quaternion result = new Quaternion();
+			result.X = cy * sp * cr + sy * cp * sr;
+			result.Y = sy * cp * cr - cy * sp * sr;
+			result.Z = cy * cp * sr - sy * sp * cr;
+			result.W = cy * cp * cr + sy * sp * sr;
+
+			return result;
 		}
 
 		/// <summary>
@@ -459,6 +493,30 @@ namespace Duality
 			{
 				result = q;
 			}
+		}
+
+		/// <summary>
+		/// Returns the inverse of a Quaternion.
+		/// </summary>
+		/// <param name="value">The source Quaternion.</param>
+		/// <returns>The inverted Quaternion.</returns>
+		public static Quaternion Inverse(Quaternion value)
+		{
+			//  -1   (       a              -v       )
+			// q   = ( -------------   ------------- )
+			//       (  a^2 + |v|^2  ,  a^2 + |v|^2  )
+
+			Quaternion ans = new Quaternion();
+
+			float ls = value.X * value.X + value.Y * value.Y + value.Z * value.Z + value.W * value.W;
+			float invNorm = 1.0f / ls;
+
+			ans.X = -value.X * invNorm;
+			ans.Y = -value.Y * invNorm;
+			ans.Z = -value.Z * invNorm;
+			ans.W = value.W * invNorm;
+
+			return ans;
 		}
 
 		/// <summary>

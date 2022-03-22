@@ -495,6 +495,10 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 			renderSetup.RemoveRendererFilter(this.RendererFilter);
 			renderSetup.EventCollectDrawcalls -= this.CameraComponent_EventCollectDrawcalls;
 		}
+
+		private float _currentYaw = 0.3f;
+		private float _currentPitch = 0.3f;
+
 		protected virtual void OnUpdateState()
 		{
 			Camera cam = this.CameraComponent;
@@ -551,27 +555,35 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 			else if (this.camAction == CameraAction.MoveWASD)
 			{
 				// calculate mouse movement
-				//Vector2 mouseVec = new Vector2(cursorPos.X - this.camActionBeginLoc.X, cursorPos.Y - this.camActionBeginLoc.Y);
-				//this.camActionBeginLoc = cursorPos; // Update Begic Mouse Pos
+				Vector2 mouseVec = new Vector2(cursorPos.X - this.camActionBeginLoc.X, cursorPos.Y - this.camActionBeginLoc.Y);
+				this.camActionBeginLoc = cursorPos; // Update Begic Mouse Pos
 
 				//Vector3 rotation = camObj.Transform.Rotation.EulerAngles;
-				//rotation.Y += mouseVec.X * speed;
-				//rotation.X += -(mouseVec.Y * speed);
+				//rotation.Y += -(mouseVec.X * 0.05f);
+				//rotation.X += (mouseVec.Y * 0.05f);
 				//rotation.Z = 0.0f;
-				//camObj.Transform.Rotation.EulerAngles = rotation;
+				//camObj.Transform.Rotation = Quaternion.FromEuler(rotation);
 
-				Vector3 movement = Vector3.Zero;
+				this._currentYaw += -mouseVec.X * 0.01f;
+				this._currentPitch += mouseVec.Y * 0.01f;
 
-				if (this.KeyWIsDown) movement.Z += 1;
-				if (this.KeySIsDown) movement.Z -= 1;
+				camObj.Transform.Rotation = Quaternion.CreateFromYawPitchRoll(this._currentYaw, this._currentPitch, 0f);
 
-				if (this.KeyDIsDown) movement.X += 1;
-				if (this.KeyAIsDown) movement.X -= 1;
+				float forward = 0;
+				float right = 0;
+				float up = 0;
 
-				if (this.KeyEIsDown) movement.Y -= 1;
-				if (this.KeyQIsDown) movement.Y += 1;
+				if (this.KeyWIsDown) forward += 1;
+				if (this.KeySIsDown) forward -= 1;
 
-				camObj.Transform.Pos += movement;
+				if (this.KeyDIsDown) right += 1;
+				if (this.KeyAIsDown) right -= 1;
+
+				if (this.KeyEIsDown) up -= 1;
+				if (this.KeyQIsDown) up += 1;
+
+				Vector3 movement = (camObj.Transform.Forward * forward) + (camObj.Transform.Right * right) + (camObj.Transform.Up * up);
+				//camObj.Transform.Pos += movement;
 
 				this.camVel = movement;
 				this.camTransformChanged = true;

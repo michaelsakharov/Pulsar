@@ -101,7 +101,7 @@ namespace Duality.Components
 			{
 				// Update angle
 				Quaternion parentRot = this.ParentTransform != null ? this.ParentTransform.Rotation : Quaternion.Identity;
-				this.rotation = Quaternion.Concatenate(Quaternion.Invert(parentRot), value);
+				this.rotation = Quaternion.Concatenate(Quaternion.Inverse(parentRot), value);
 			}
 		}
 		/// <summary>
@@ -127,7 +127,7 @@ namespace Duality.Components
 			}
 		}
 
-		public Vector3 Forward { get { return Vector3.Transform(-Vector3.UnitZ, this.Rotation); } }
+		public Vector3 Forward { get { return Vector3.Transform(Vector3.UnitZ, this.Rotation); } }
 
 		public Vector3 Up { get { return Vector3.Transform(Vector3.UnitY, this.Rotation); } }
 

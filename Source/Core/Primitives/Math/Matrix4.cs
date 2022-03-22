@@ -1278,22 +1278,28 @@ namespace Duality
 		{
 			anglesDeg = new Vector3(ConvertDegToRad(anglesDeg[0]), ConvertDegToRad(anglesDeg[1]), ConvertDegToRad(anglesDeg[2]));
 
-			Matrix4 rotationX = new Matrix4(new Vector4(1, 0, 0, 0),
-												new Vector4(0, MathF.Cos(anglesDeg[0]), MathF.Sin(anglesDeg[0]), 0),
-												new Vector4(0, -MathF.Sin(anglesDeg[0]), MathF.Cos(anglesDeg[0]), 0),
-												new Vector4(0, 0, 0, 1));
+			CreateRotationX(anglesDeg.X, out Matrix4 X);
+			CreateRotationY(anglesDeg.Y, out Matrix4 Y);
+			CreateRotationZ(anglesDeg.Z, out Matrix4 Z);
+			return X * Y * Z;
 
-			Matrix4 rotationY = new Matrix4(new Vector4(MathF.Cos(anglesDeg[1]), 0, -MathF.Sin(anglesDeg[1]), 0),
-												new Vector4(0, 1, 0, 0),
-												new Vector4(MathF.Sin(anglesDeg[1]), 0, MathF.Cos(anglesDeg[1]), 0),
-												new Vector4(0, 0, 0, 1));
-
-			Matrix4 rotationZ = new Matrix4(new Vector4(MathF.Cos(anglesDeg[2]), MathF.Sin(anglesDeg[2]), 0, 0),
-												new Vector4(-MathF.Sin(anglesDeg[2]), MathF.Cos(anglesDeg[2]), 0, 0),
-												new Vector4(0, 0, 1, 0),
-												new Vector4(0, 0, 0, 1));
-
-			return rotationX * rotationY * rotationZ;
+			//anglesDeg = new Vector3(ConvertDegToRad(anglesDeg[0]), ConvertDegToRad(anglesDeg[1]), ConvertDegToRad(anglesDeg[2]));
+			//Matrix4 rotationX = new Matrix4(new Vector4(1, 0, 0, 0),
+			//									new Vector4(0, MathF.Cos(anglesDeg[0]), MathF.Sin(anglesDeg[0]), 0),
+			//									new Vector4(0, -MathF.Sin(anglesDeg[0]), MathF.Cos(anglesDeg[0]), 0),
+			//									new Vector4(0, 0, 0, 1));
+			//
+			//Matrix4 rotationY = new Matrix4(new Vector4(MathF.Cos(anglesDeg[1]), 0, -MathF.Sin(anglesDeg[1]), 0),
+			//									new Vector4(0, 1, 0, 0),
+			//									new Vector4(MathF.Sin(anglesDeg[1]), 0, MathF.Cos(anglesDeg[1]), 0),
+			//									new Vector4(0, 0, 0, 1));
+			//
+			//Matrix4 rotationZ = new Matrix4(new Vector4(MathF.Cos(anglesDeg[2]), MathF.Sin(anglesDeg[2]), 0, 0),
+			//									new Vector4(-MathF.Sin(anglesDeg[2]), MathF.Cos(anglesDeg[2]), 0, 0),
+			//									new Vector4(0, 0, 1, 0),
+			//									new Vector4(0, 0, 0, 1));
+			//
+			//return rotationX * rotationY * rotationZ;
 		}
 
 		public static Matrix4 GetScaleMatrix(Vector3 scale)
