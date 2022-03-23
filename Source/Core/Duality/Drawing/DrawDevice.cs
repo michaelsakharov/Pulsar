@@ -699,18 +699,6 @@ namespace Duality.Drawing
 			this.matView = Matrix4.Identity;
 			if (this.projection != ProjectionMode.Screen)
 			{
-				// Old
-				// Translate opposite to camera position
-				//this.matView *= Matrix4.CreateTranslation(-this.viewerPos);
-				// Rotate opposite to camera angle
-				//this.matView *= Matrix4.CreateRotationZ(-this.viewerAngle);
-
-				// New 3d Rotation
-				//this.matView *= Matrix4.TRS(-this.viewerPos, this.viewerAngle, new Vector3(1, 1, 1));
-				//this.matView *= Matrix4.CreateTranslation(this.viewerPos);
-				//this.matView *= Matrix4.CreateFromYawPitchRoll(this.viewerAngle.X, this.viewerAngle.Y, this.viewerAngle.Z);
-				//this.matView *= Matrix4.CreateScale(Vector3.One);
-
 				var matrix = Matrix4.CreateFromYawPitchRoll(this.viewerAngle.Y, this.viewerAngle.X, this.viewerAngle.Z);
 				var target = (this.viewerPos) + Vector3.Transform(Vector3.Forward, matrix);
 
@@ -721,69 +709,25 @@ namespace Duality.Drawing
 		{
 			Rect targetRect = new Rect(this.targetSize);
 
-			// Flip Z direction from "out of the screen" to "into the screen".
-			Matrix4 flipZDir;
-			Matrix4.CreateScale(1.0f, 1.0f, -1.0f, out flipZDir);
-
 			if (this.projection == ProjectionMode.Screen)
 			{
 				// When rendering in screen space, all reasonable positive depth should be valid,
 				// so we'll ignore any of the projection specific near and far plane settings.
-				Matrix4.CreateOrthographicOffCenter(
-					targetRect.X,
-					targetRect.X + targetRect.W, 
-					targetRect.Y + targetRect.H, 
-					targetRect.Y, 
-					// These values give us a linear depth precision of ~0.006 at 24 bit
-					0.0f, 
-					100000.0f,
-					out this.matProjection);
+				// These values give us a linear depth precision of ~0.006 at 24 bit
+				Matrix4.CreateOrthographicOffCenter( targetRect.X, targetRect.X + targetRect.W, targetRect.Y + targetRect.H, targetRect.Y, 0.0f, 100000.0f, out this.matProjection);
 
-				this.matProjection = flipZDir * this.matProjection;
+				// Flip Z direction from "out of the screen" to "into the screen".
+				this.matProjection = Matrix4.CreateScale(1.0f, 1.0f, -1.0f) * this.matProjection;
 			}
 			else if (this.projection == ProjectionMode.Orthographic)
 			{
-				Matrix4.CreateOrthographicOffCenter(
-					targetRect.X - targetRect.W * 0.5f,
-					targetRect.X + targetRect.W * 0.5f, 
-					targetRect.Y + targetRect.H * 0.5f, 
-					targetRect.Y - targetRect.H * 0.5f,
-					this.nearZ, 
-					this.farZ,
-					out this.matProjection);
-					
-				// In non-perspective projection, we'll use FocusDist for scaling
-				Matrix4 scaleByFocusDist;
-				Matrix4.CreateScale(
-					this.focusDist / DefaultFocusDist, 
-					this.focusDist / DefaultFocusDist,
- 					1.0f,
-					out scaleByFocusDist);
-
-				this.matProjection = scaleByFocusDist * flipZDir * this.matProjection;
+				float clampedNear = MathF.Max(this.nearZ, 0.01f);
+				Matrix4.CreateOrthographic(targetRect.W, targetRect.H, clampedNear, this.farZ, out this.matProjection);
 			}
 			else
 			{
 				float clampedNear = MathF.Max(this.nearZ, 0.01f);
-
 				this.matProjection = Matrix4.CreatePerspectiveFieldOfView(MathF.DegToRad(70), targetRect.W / targetRect.H, clampedNear, this.farZ);
-
-				//Matrix4.CreatePerspectiveOffCenter(
-				//	targetRect.X - targetRect.W * 0.5f, 
-				//	targetRect.X + targetRect.W * 0.5f, 
-				//	targetRect.Y + targetRect.H * 0.5f, 
-				//	targetRect.Y - targetRect.H * 0.5f, 
-				//	clampedNear, 
-				//	this.farZ,
-				//	out this.matProjection);
-				//
-				//this.matProjection = flipZDir * this.matProjection;
-				//
-				//// Apply custom "focus distance", where objects appear at 1:1 scale.
-				//// Otherwise, that distance would be the near plane. 
-				//this.matProjection.M33 *= clampedNear / this.focusDist; // Output Z scale
-				//this.matProjection.M43 *= clampedNear / this.focusDist; // Output Z offset
-				//this.matProjection.M34 *= clampedNear / this.focusDist; // Perspective divide scale
 			}
 		}
 
