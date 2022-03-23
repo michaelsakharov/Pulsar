@@ -181,7 +181,8 @@ namespace Duality.Drawing
 			Vector3 pos = new Vector3(x, y, z);
 			if (!this.device.IsSphereInView(pos, r)) return;
 
-			float projectedSizeAtPos = this.device.GetScaleAtZ(pos.Z);
+			//float projectedSizeAtPos = this.device.GetScaleAtZ(pos.Z);
+			float projectedSizeAtPos = 1f;
 
 			int segmentNum = MathF.Clamp(MathF.RoundToInt(MathF.Pow(r * projectedSizeAtPos, 0.65f) * 2.5f), 4, 128);
 			Vector2 shapeHandle = pos.Xy;
@@ -529,7 +530,8 @@ namespace Duality.Drawing
 			else if (outline)
 				loop = true;
 
-			float projectedSizeAtPos = this.device.GetScaleAtZ(pos.Z);
+			//float projectedSizeAtPos = this.device.GetScaleAtZ(pos.Z);
+			float projectedSizeAtPos = 1f;
 			int segmentNum = MathF.Clamp(MathF.RoundToInt(MathF.Pow(MathF.Max(width, height) * projectedSizeAtPos, 0.65f) * 3.5f * angleRange / MathF.RadAngle360), 4, 128);
 			float angleStep = angleRange / segmentNum;
 			Vector2 shapeHandle = pos.Xy - new Vector2(width, height);
@@ -811,7 +813,8 @@ namespace Duality.Drawing
 
 			float angleRange = MathF.Min(maxAngle - minAngle, MathF.RadAngle360);
 
-			float projectedSizeAtPos = this.device.GetScaleAtZ(pos.Z);
+			//float projectedSizeAtPos = this.device.GetScaleAtZ(pos.Z);
+			float projectedSizeAtPos = 1f;
 			int segmentNum = MathF.Clamp(MathF.RoundToInt(MathF.Pow(MathF.Max(width, height) * projectedSizeAtPos, 0.65f) * 3.5f * angleRange / MathF.RadAngle360), 4, 128);
 			float angleStep = angleRange / segmentNum;
 			Vector2 shapeHandle = pos.Xy - new Vector2(width, height);

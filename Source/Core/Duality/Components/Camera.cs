@@ -282,15 +282,6 @@ namespace Duality.Components
 		}
 
 		/// <summary>
-		/// Returns the scale factor of objects that are located at the specified world space Z position.
-		/// </summary>
-		/// <param name="z"></param>
-		public float GetScaleAtZ(float z)
-		{
-			this.UpdateTransformDevice();
-			return this.transformDevice.GetScaleAtZ(z);
-		}
-		/// <summary>
 		/// Transforms screen space to world space positions. The screen positions Z coordinate is
 		/// interpreted as the target world Z coordinate.
 		/// </summary>

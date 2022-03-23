@@ -128,10 +128,6 @@ namespace Duality.Editor.Plugins.CamView
 		{
 			return this.CameraComponent.IsSphereInView(worldPos, radius);
 		}
-		public float GetScaleAtZ(float z)
-		{
-			return this.CameraComponent.GetScaleAtZ(z);
-		}
 		public Vector3 GetWorldPos(Vector3 screenPos)
 		{
 			return this.CameraComponent.GetWorldPos(screenPos);

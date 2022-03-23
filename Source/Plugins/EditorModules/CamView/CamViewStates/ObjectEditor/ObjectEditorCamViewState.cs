@@ -409,7 +409,8 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 
 				// Determine action variables
 				Vector3 mouseSpaceCoord = this.GetWorldPos(new Vector3(mouseLoc.X, mouseLoc.Y, this.selectionCenter.Z));
-				float scale = this.GetScaleAtZ(this.selectionCenter.Z);
+				//float scale = this.GetScaleAtZ(this.selectionCenter.Z);
+				float scale = 1f;
 				const float boundaryThickness = 10.0f;
 				bool tooSmall = this.selectionRadius * scale <= boundaryThickness * 2.0f;
 				bool mouseOverBoundary = MathF.Abs((mouseSpaceCoord - this.selectionCenter).Length - this.selectionRadius) * scale < boundaryThickness;
@@ -637,7 +638,8 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 			bool canScale = (canMove && this.actionObjSel.Count > 1) || this.actionObjSel.Any(s => s.IsActionAvailable(ObjectEditorAction.Scale));
 			if (canScale)
 			{
-				float dotR = 3.0f / this.GetScaleAtZ(this.selectionCenter.Z);
+				//float dotR = 3.0f / this.GetScaleAtZ(this.selectionCenter.Z);
+				float dotR = 3.0f / 1f;
 				canvas.State.DepthOffset -= 0.1f;
 				canvas.State.ColorTint = this.FgColor;
 				canvas.FillCircle(

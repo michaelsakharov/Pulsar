@@ -505,7 +505,7 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 				if (camObj.Transform.Pos.Z >= refZ - cam.NearZ)
 					refZ = camObj.Transform.Pos.Z + MathF.Abs(cam.FocusDist);
 
-				Vector2 targetOff = (-(curPos - lastPos) / this.GetScaleAtZ(refZ));
+				Vector2 targetOff = (-(curPos - lastPos) / 1f);
 				Vector2 targetVel = targetOff / unscaledTimeMult;
 				MathF.TransformCoord(ref targetVel.X, ref targetVel.Y, camObj.Transform.Rotation.Z);
 				this.camVel.Z *= MathF.Pow(0.9f, unscaledTimeMult);
@@ -526,14 +526,6 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 				moveVec.Z *= MathF.Pow(0.9f, unscaledTimeMult);
 
 				MathF.TransformCoord(ref moveVec.X, ref moveVec.Y, camObj.Transform.Rotation.Z);
-
-				if (this.camBeginDragScene)
-				{
-					float refZ = (this.HasCameraFocusPosition && camObj.Transform.Pos.Z < this.CameraFocusPosition.Z - cam.NearZ) ? this.CameraFocusPosition.Z : 0.0f;
-					if (camObj.Transform.Pos.Z >= refZ - cam.NearZ)
-						refZ = camObj.Transform.Pos.Z + MathF.Abs(cam.FocusDist);
-					moveVec = new Vector3(moveVec.Xy * 0.5f / this.GetScaleAtZ(refZ), moveVec.Z);
-				}
 
 				this.camVel = moveVec;
 				this.camTransformChanged = true;
