@@ -264,8 +264,8 @@ namespace Duality.Drawing
 			Rect texCoordRect = this.State.TextureCoordinateRect;
 			VertexC1P3T2[] vertices = this.RentVertices(2);
 
-			vertices[0].Pos = pos + new Vector3(0.5f, 0.5f, 0.0f);
-			vertices[1].Pos = target + new Vector3(0.5f, 0.5f, 0.0f);
+			vertices[0].Pos = pos;
+			vertices[1].Pos = target;
 
 			vertices[0].DepthOffset = offset;
 			vertices[1].DepthOffset = offset;
