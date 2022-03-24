@@ -354,34 +354,119 @@ namespace Duality.Drawing
 			else
 				return this.focusDist / DefaultFocusDist;
 		}
+
 		/// <summary>
-		/// Transforms screen space to world space positions. The screen positions Z coordinate is
-		/// interpreted as the target world Z coordinate.
+		/// Projects a <see cref="Vector3"/> from model space into screen space.
+		/// The source point is transformed from model space to world space by the world matrix,
+		/// then from world space to view space by the view matrix, and
+		/// finally from view space to screen space by the projection matrix.
+		/// </summary>
+		/// <param name="source">The <see cref="Vector3"/> to project.</param>
+		/// <param name="projection">The projection <see cref="Matrix4"/>.</param>
+		/// <param name="view">The view <see cref="Matrix4"/>.</param>
+		/// <param name="world">The world <see cref="Matrix4"/>.</param>
+		/// <returns></returns>
+		public Vector3 Project(Vector3 source, Matrix4 projection, Matrix4 view, Matrix4 world)
+		{
+			Matrix4 matrix = Matrix4.Multiply(Matrix4.Multiply(world, view), projection);
+			Vector3 vector = Vector3.Transform(source, matrix);
+			float a = (((source.X * matrix.M14) + (source.Y * matrix.M24)) + (source.Z * matrix.M34)) + matrix.M44;
+			if (!WithinEpsilon(a, 1f))
+			{
+				vector.X = vector.X / a;
+				vector.Y = vector.Y / a;
+				vector.Z = vector.Z / a;
+			}
+			vector.X = (((vector.X + 1f) * 0.5f) * this.viewportRect.W) + this.viewportRect.X;
+			vector.Y = (((-vector.Y + 1f) * 0.5f) * this.viewportRect.H) + this.viewportRect.Y;
+			//vector.Z = (vector.Z * (this.maxDepth - this.minDepth)) + this.minDepth;
+			return vector;
+		}
+
+		public Vector3 Project(Vector3 source)
+		{
+			return this.Project(source, this.matProjection, this.matView, Matrix4.Identity);
+		}
+
+		/// <summary>
+		/// Unprojects a <see cref="Vector3"/> from screen space into model space.
+		/// The source point is transformed from screen space to view space by the inverse of the projection matrix,
+		/// then from view space to world space by the inverse of the view matrix, and
+		/// finally from world space to model space by the inverse of the world matrix.
+		/// Note source.Z must be less than or equal to MaxDepth.
+		/// </summary>
+		/// <param name="source">The <see cref="Vector3"/> to unproject.</param>
+		/// <param name="projection">The projection <see cref="Matrix4"/>.</param>
+		/// <param name="view">The view <see cref="Matrix4"/>.</param>
+		/// <param name="world">The world <see cref="Matrix4"/>.</param>
+		/// <returns></returns>
+		public Vector3 Unproject(Vector3 source, Matrix4 projection, Matrix4 view, Matrix4 world)
+		{
+			Matrix4 matrix = Matrix4.Invert(Matrix4.Multiply(Matrix4.Multiply(world, view), projection));
+			source.X = (((source.X - this.viewportRect.X) / ((float)this.viewportRect.W)) * 2f) - 1f;
+			source.Y = -((((source.Y - this.viewportRect.Y) / ((float)this.viewportRect.H)) * 2f) - 1f);
+			//source.Z = (source.Z - this.minDepth) / (this.maxDepth - this.minDepth);
+			Vector3 vector = Vector3.Transform(source, matrix);
+			float a = (((source.X * matrix.M14) + (source.Y * matrix.M24)) + (source.Z * matrix.M34)) + matrix.M44;
+			if (!WithinEpsilon(a, 1f))
+			{
+				vector.X = vector.X / a;
+				vector.Y = vector.Y / a;
+				vector.Z = vector.Z / a;
+			}
+			return vector;
+
+		}
+
+		public Vector3 Unproject(Vector3 source)
+		{
+			return this.Unproject(source, this.matProjection, this.matView, Matrix4.Identity);
+		}
+
+		private static bool WithinEpsilon(float a, float b)
+		{
+			float num = a - b;
+			return ((-1.401298E-45f <= num) && (num <= float.Epsilon));
+		}
+
+		/// <summary>
+		/// Creates a Ray translating screen cursor position into screen position
+		/// </summary>
+		/// <param name="screenPoint"></param>
+		/// <returns></returns>
+		public Ray CalculateScreenPointRay(Vector2 screenPoint)
+		{
+			// create 2 positions in screenspace using the cursor position. 0 is as
+			// close as possible to the camera, 1 is as far away as possible.
+			Vector3 nearSource = new Vector3(screenPoint, 0f);
+			Vector3 farSource = new Vector3(screenPoint, 1f);
+
+			// use Viewport.Unproject to tell what those two screen space positions
+			// would be in world space. we'll need the projection matrix and view
+			// matrix, which we have saved as member variables. We also need a world
+			// matrix, which can just be identity.
+			Vector3 nearPoint = this.Unproject(nearSource);
+			Vector3 farPoint = this.Unproject(farSource);
+
+			// find the direction vector that goes from the nearPoint to the farPoint
+			// and normalize it....
+			Vector3 direction = farPoint - nearPoint;
+			direction.Normalize();
+
+			// and then create a new ray using nearPoint as the source.
+			return new Ray(nearPoint, direction);
+		}
+
+		/// <summary>
+		/// Transforms screen space to world space positions. The screen positions Z coordinate [0, 1] is
+		/// interpreted as the interpolated location between the Near and Far clip planes, a Z of 0 is on the near clip plane, a Z of 1 would be on the Far Clip Plane
 		/// </summary>
 		/// <param name="screenPos"></param>
 		public Vector3 GetWorldPos(Vector3 screenPos)
 		{
-			// Determine which clip space depth and divide the target Z corresponds to
-			Vector4 targetWorldPos = new Vector4(0.0f, 0.0f, screenPos.Z, 1.0f);
-			Vector4 targetClipPos;
-			Vector4.Transform(ref targetWorldPos, ref this.matFinal, out targetClipPos);
-
-			// Calculate the clip space position for the specified screen position
-			Vector4 clipPos;
-			clipPos.X = (2.0f * screenPos.X / this.targetSize.X) - 1.0f;
-			clipPos.Y = -(2.0f * screenPos.Y / this.targetSize.Y) + 1.0f;
-			clipPos.Z = targetClipPos.Z;
-			clipPos.W = targetClipPos.W;
-
-			// Inverse perspective divide on the normalized screen coordinates
-			clipPos.X *= targetClipPos.W;
-			clipPos.Y *= targetClipPos.W;
-
-			// Do an inverse transformation with projection and view matrix
-			Vector4 worldPos;
-			Vector4.Transform(ref clipPos, ref this.matFinalInv, out worldPos);
-
-			return worldPos.Xyz;
+			//Ray ray = this.CalculateScreenPointRay(screenPos.Xy);
+			//return ray.Position + (ray.Direction * screenPos.Z);
+			return this.Unproject(screenPos);
 		}
 		/// <summary>
 		/// Transforms world space to screen space positions.
@@ -389,22 +474,8 @@ namespace Duality.Drawing
 		/// <param name="worldPos"></param>
 		public Vector2 GetScreenPos(Vector3 worldPos)
 		{
-			// Transform coordinate into clip space
-			Vector4 worldPosFull = new Vector4(worldPos, 1.0f);
-			Vector4 clipPos;
-			Vector4.Transform(ref worldPosFull, ref this.matFinal, out clipPos);
-			
-			// Apply the perspective divide and invert Y
-			float invClipW = 1.0f / MathF.Max(clipPos.W, 0.000001f);
-			clipPos.X *= invClipW;
-			clipPos.Y *= -invClipW;
-
-			// Transform NDC coordinates to pixel coordinates
-			Vector2 screenPos;
-			screenPos.X = (clipPos.X + 1.0f) * 0.5f * this.targetSize.X;
-			screenPos.Y = (clipPos.Y + 1.0f) * 0.5f * this.targetSize.Y;
-
-			return screenPos;
+			var result = this.Project(worldPos);
+			return new Vector2(result.X, result.Y);
 		}
 		
 		/// <summary>

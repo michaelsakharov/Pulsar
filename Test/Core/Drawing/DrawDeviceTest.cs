@@ -56,29 +56,32 @@ namespace Duality.Tests.Drawing
 				device.TargetSize = viewportSize;
 				device.ViewportRect = new Rect(viewportSize);
 				device.ViewerPos = new Vector3(0, 0, 0);
-				device.FocusDist = 500;
+				device.ViewerAngle = new Vector3(0, 0, 0);
+				device.FocusDist = 0;
 				device.NearZ = 100;
 				device.FarZ = 10000;
 				device.Projection = ProjectionMode.Orthographic;
 
+				float sphereDist = -500;
+
 				// Viewport center
-				Assert.IsTrue(device.IsSphereInView(new Vector3(0, 0, device.FocusDist), 150));
+				Assert.IsTrue(device.IsSphereInView(new Vector3(0, 0, sphereDist), 150));
 
 				// Just inside each of the viewports sides
-				Assert.IsTrue(device.IsSphereInView(new Vector3(-viewportSize.X * 0.5f - 100, 0, device.FocusDist), 150));
-				Assert.IsTrue(device.IsSphereInView(new Vector3(0, -viewportSize.Y * 0.5f - 100, device.FocusDist), 150));
-				Assert.IsTrue(device.IsSphereInView(new Vector3(viewportSize.X * 0.5f + 100, 0, device.FocusDist), 150));
-				Assert.IsTrue(device.IsSphereInView(new Vector3(0, viewportSize.Y * 0.5f + 100, device.FocusDist), 150));
-				Assert.IsTrue(device.IsSphereInView(new Vector3(0, 0, device.FarZ - 50), 150));
-				Assert.IsTrue(device.IsSphereInView(new Vector3(0, 0, device.NearZ + 50), 150));
+				Assert.IsTrue(device.IsSphereInView(new Vector3(-viewportSize.X * 0.5f - 100, 0, sphereDist), 150));
+				Assert.IsTrue(device.IsSphereInView(new Vector3(0, -viewportSize.Y * 0.5f - 100, sphereDist), 150));
+				Assert.IsTrue(device.IsSphereInView(new Vector3(viewportSize.X * 0.5f + 100, 0, sphereDist), 150));
+				Assert.IsTrue(device.IsSphereInView(new Vector3(0, viewportSize.Y * 0.5f + 100, sphereDist), 150));
+				Assert.IsTrue(device.IsSphereInView(new Vector3(0, 0, (-device.FarZ) - 50), 150));
+				Assert.IsTrue(device.IsSphereInView(new Vector3(0, 0, (-device.NearZ) + 50), 150));
 				
 				// Just outside each of the viewports sides
-				Assert.IsFalse(device.IsSphereInView(new Vector3(-viewportSize.X * 0.5f - 200, 0, device.FocusDist), 150));
-				Assert.IsFalse(device.IsSphereInView(new Vector3(0, -viewportSize.Y * 0.5f - 200, device.FocusDist), 150));
-				Assert.IsFalse(device.IsSphereInView(new Vector3(viewportSize.X * 0.5f + 200, 0, device.FocusDist), 150));
-				Assert.IsFalse(device.IsSphereInView(new Vector3(0, viewportSize.Y * 0.5f + 200, device.FocusDist), 150));
-				Assert.IsFalse(device.IsSphereInView(new Vector3(0, 0, device.FarZ + 50), 150));
-				Assert.IsFalse(device.IsSphereInView(new Vector3(0, 0, device.NearZ - 50), 150));
+				Assert.IsFalse(device.IsSphereInView(new Vector3(-viewportSize.X * 0.5f - 200, 0, sphereDist), 150));
+				Assert.IsFalse(device.IsSphereInView(new Vector3(0, -viewportSize.Y * 0.5f - 200, sphereDist), 150));
+				Assert.IsFalse(device.IsSphereInView(new Vector3(viewportSize.X * 0.5f + 200, 0, sphereDist), 150));
+				Assert.IsFalse(device.IsSphereInView(new Vector3(0, viewportSize.Y * 0.5f + 200, sphereDist), 150));
+				Assert.IsFalse(device.IsSphereInView(new Vector3(0, 0, (-device.FarZ) - 151), 150));
+				Assert.IsFalse(device.IsSphereInView(new Vector3(0, 0, (-device.NearZ) + 151), 150));
 			}
 		}
 		[Test] public void IsSphereInViewPerspective()
@@ -89,33 +92,36 @@ namespace Duality.Tests.Drawing
 				device.TargetSize = viewportSize;
 				device.ViewportRect = new Rect(viewportSize);
 				device.ViewerPos = new Vector3(0, 0, 0);
-				device.FocusDist = 500;
+				device.ViewerAngle = new Vector3(0, 0, 0);
+				device.FocusDist = 0f;
 				device.NearZ = 100;
 				device.FarZ = 10000;
 				device.Projection = ProjectionMode.Perspective;
 
+				float sphereDist = -500;
+
 				// Viewport center
-				Assert.IsTrue(device.IsSphereInView(new Vector3(0, 0, device.FocusDist), 150));
+				Assert.IsTrue(device.IsSphereInView(new Vector3(0, 0, sphereDist), 150));
 
 				// Just inside each of the viewports sides
-				Assert.IsTrue(device.IsSphereInView(new Vector3(-viewportSize.X * 0.5f - 100, 0, device.FocusDist), 150));
-				Assert.IsTrue(device.IsSphereInView(new Vector3(0, -viewportSize.Y * 0.5f - 100, device.FocusDist), 150));
-				Assert.IsTrue(device.IsSphereInView(new Vector3(viewportSize.X * 0.5f + 100, 0, device.FocusDist), 150));
-				Assert.IsTrue(device.IsSphereInView(new Vector3(0, viewportSize.Y * 0.5f + 100, device.FocusDist), 150));
-				Assert.IsTrue(device.IsSphereInView(new Vector3(0, 0, device.FarZ - 50), 150));
-				Assert.IsTrue(device.IsSphereInView(new Vector3(0, 0, device.NearZ + 50), 150));
+				Assert.IsTrue(device.IsSphereInView(new Vector3(-viewportSize.X * 0.5f - 100, 0, sphereDist), 150));
+				Assert.IsTrue(device.IsSphereInView(new Vector3(0, -viewportSize.Y * 0.5f - 100, sphereDist), 150));
+				Assert.IsTrue(device.IsSphereInView(new Vector3(viewportSize.X * 0.5f + 100, 0, sphereDist), 150));
+				Assert.IsTrue(device.IsSphereInView(new Vector3(0, viewportSize.Y * 0.5f + 100, sphereDist), 150));
+				Assert.IsTrue(device.IsSphereInView(new Vector3(0, 0, (-device.FarZ) - 50), 150));
+				Assert.IsTrue(device.IsSphereInView(new Vector3(0, 0, (-device.NearZ) + 50), 150));
 				
 				// Just outside each of the viewports sides
-				Assert.IsFalse(device.IsSphereInView(new Vector3(-viewportSize.X * 0.5f - 200, 0, device.FocusDist), 150));
-				Assert.IsFalse(device.IsSphereInView(new Vector3(0, -viewportSize.Y * 0.5f - 200, device.FocusDist), 150));
-				Assert.IsFalse(device.IsSphereInView(new Vector3(viewportSize.X * 0.5f + 200, 0, device.FocusDist), 150));
-				Assert.IsFalse(device.IsSphereInView(new Vector3(0, viewportSize.Y * 0.5f + 200, device.FocusDist), 150));
-				Assert.IsFalse(device.IsSphereInView(new Vector3(0, 0, device.FarZ + 50), 150));
-				Assert.IsFalse(device.IsSphereInView(new Vector3(0, 0, device.NearZ - 50), 150));
+				Assert.IsFalse(device.IsSphereInView(new Vector3(-viewportSize.X * 0.5f - 300, 0, sphereDist), 150));
+				Assert.IsFalse(device.IsSphereInView(new Vector3(0, -viewportSize.Y * 0.5f - 300, sphereDist), 150));
+				Assert.IsFalse(device.IsSphereInView(new Vector3(viewportSize.X * 0.5f + 300, 0, sphereDist), 150));
+				Assert.IsFalse(device.IsSphereInView(new Vector3(0, viewportSize.Y * 0.5f + 300, sphereDist), 150));
+				Assert.IsFalse(device.IsSphereInView(new Vector3(0, 0, (-device.FarZ) - 151), 150));
+				Assert.IsFalse(device.IsSphereInView(new Vector3(0, 0, (-device.NearZ) + 151), 150));
 
 				// Things that are in/visible because of perspective projection
-				Assert.IsFalse(device.IsSphereInView(new Vector3(-viewportSize.X * 0.5f - 100, 0, device.FocusDist * 0.5f), 150));
-				Assert.IsTrue(device.IsSphereInView(new Vector3(-viewportSize.X * 0.5f - 200, 0, device.FocusDist * 2.0f), 150));
+				Assert.IsFalse(device.IsSphereInView(new Vector3(-viewportSize.X * 0.5f - 100, 0, sphereDist * 0.5f), 150));
+				Assert.IsTrue(device.IsSphereInView(new Vector3(-viewportSize.X * 0.5f - 200, 0, sphereDist * 2.0f), 150));
 			}
 		}
 
@@ -181,6 +187,7 @@ namespace Duality.Tests.Drawing
 		}
 		[Test] public void GetWorldPos()
 		{
+			// Could be more Thorough
 			using (DrawDevice device = new DrawDevice())
 			{
 				Vector2 targetSize = new Vector2(800, 600);
@@ -188,12 +195,12 @@ namespace Duality.Tests.Drawing
 
 				// We'll check twice the focus distance to make sure orthographic
 				// scaling is working as expected.
-				device.FocusDist = DrawDevice.DefaultFocusDist * 2.0f;
+				device.FocusDist = 0.0f;
 				device.NearZ = 100;
 				device.FarZ = 10000;
 				device.TargetSize = targetSize;
 				device.ViewportRect = new Rect(targetSize);
-				device.ViewerPos = new Vector3(0, 0, -device.FocusDist);
+				device.ViewerPos = new Vector3(0, 0, 0);
 
 				// Screen space rendering
 				device.Projection = ProjectionMode.Screen;
@@ -202,41 +209,39 @@ namespace Duality.Tests.Drawing
 				AssertRoughlyEqual(new Vector3(0.0f, 0.0f, 0.0f), device.GetWorldPos(new Vector3(0.0f, 0.0f, 0.0f)));
 				AssertRoughlyEqual(new Vector3(400.0f, 300.0f, 0.0f), device.GetWorldPos(new Vector3(400.0f, 300.0f, 0.0f)));
 				AssertRoughlyEqual(new Vector3(800.0f, 600.0f, 0.0f), device.GetWorldPos(new Vector3(800.0f, 600.0f, 0.0f)));
-				AssertRoughlyEqual(new Vector3(0.0f, 0.0f, 1000.0f), device.GetWorldPos(new Vector3(0.0f, 0.0f, 1000.0f)));
-				AssertRoughlyEqual(new Vector3(400.0f, 0.0f, 1000.0f), device.GetWorldPos(new Vector3(400.0f, 0.0f, 1000.0f)));
-				AssertRoughlyEqual(new Vector3(800.0f, 0.0f, 1000.0f), device.GetWorldPos(new Vector3(800.0f, 0.0f, 1000.0f)));
-				AssertRoughlyEqual(new Vector3(0.0f, 300.0f, 1000.0f), device.GetWorldPos(new Vector3(0.0f, 300.0f, 1000.0f)));
-				AssertRoughlyEqual(new Vector3(0.0f, 600.0f, 1000.0f), device.GetWorldPos(new Vector3(0.0f, 600.0f, 1000.0f)));
 
 				// World space rendering with orthographic projection
 				device.Projection = ProjectionMode.Orthographic;
 
-				// Scaled up 2:1 due to focus distance scaling factor
-				AssertRoughlyEqual(new Vector3(0.0f, 0.0f, 0.0f), device.GetWorldPos(new Vector3(viewportCenter, 0.0f)));
-				AssertRoughlyEqual(new Vector3(-200.0f, -150.0f, 0.0f), device.GetWorldPos(new Vector3(viewportCenter + new Vector2(-400.0f, -300.0f), 0.0f)));
-				AssertRoughlyEqual(new Vector3(200.0f, 150.0f, 0.0f), device.GetWorldPos(new Vector3(viewportCenter + new Vector2(400.0f, 300.0f), 0.0f)));
-
-				// No scale changes at other distances
-				AssertRoughlyEqual(new Vector3(0.0f, 0.0f, 1000.0f), device.GetWorldPos(new Vector3(viewportCenter, 1000.0f)));
-				AssertRoughlyEqual(new Vector3(-200.0f, 0.0f, 1000.0f), device.GetWorldPos(new Vector3(viewportCenter + new Vector2(-400.0f, 0.0f), 1000.0f)));
-				AssertRoughlyEqual(new Vector3(200.0f, 0.0f, 1000.0f), device.GetWorldPos(new Vector3(viewportCenter + new Vector2(400.0f, 0.0f), 1000.0f)));
-				AssertRoughlyEqual(new Vector3(0.0f, -150.0f, 1000.0f), device.GetWorldPos(new Vector3(viewportCenter + new Vector2(0.0f, -300.0f), 1000.0f)));
-				AssertRoughlyEqual(new Vector3(0.0f, 150.0f, 1000.0f), device.GetWorldPos(new Vector3(viewportCenter + new Vector2(0.0f, 300.0f), 1000.0f)));
+				// Near Clip
+				AssertRoughlyEqual(new Vector3(0.0f, 0.0f, -100), device.GetWorldPos(new Vector3(viewportCenter, 0.0f)));
+				AssertRoughlyEqual(new Vector3(0.0f, 300f, -100), device.GetWorldPos(new Vector3(viewportCenter.X, 0, 0.0f)));
+				AssertRoughlyEqual(new Vector3(-400f, 0.0f, -100), device.GetWorldPos(new Vector3(0, viewportCenter.Y, 0.0f)));
+				// Far Clip
+				AssertRoughlyEqual(new Vector3(0.0f, 0.0f, -10000), device.GetWorldPos(new Vector3(viewportCenter, 1.0f)));
+				AssertRoughlyEqual(new Vector3(0.0f, 300f, -10000), device.GetWorldPos(new Vector3(viewportCenter.X, 0, 1.0f)));
+				AssertRoughlyEqual(new Vector3(-400f, 0.0f, -10000), device.GetWorldPos(new Vector3(0, viewportCenter.Y, 1.0f)));
 
 				// World space rendering with perspective projection
 				device.Projection = ProjectionMode.Perspective;
-				
-				// 1:1 scaling at focus distance
-				AssertRoughlyEqual(new Vector3(0.0f, 0.0f, 0.0f), device.GetWorldPos(new Vector3(viewportCenter, 0.0f)));
-				AssertRoughlyEqual(new Vector3(-400.0f, -300.0f, 0.0f), device.GetWorldPos(new Vector3(viewportCenter + new Vector2(-400.0f, -300.0f), 0.0f)));
-				AssertRoughlyEqual(new Vector3(400.0f, 300.0f, 0.0f), device.GetWorldPos(new Vector3(viewportCenter + new Vector2(400.0f, 300.0f), 0.0f)));
 
-				// Scaled down 1:2 at double the focus distance
-				AssertRoughlyEqual(new Vector3(0.0f, 0.0f, 1000.0f), device.GetWorldPos(new Vector3(viewportCenter, 1000.0f)));
-				AssertRoughlyEqual(new Vector3(-400.0f, 0.0f, 1000.0f), device.GetWorldPos(new Vector3(viewportCenter + new Vector2(-200.0f, 0.0f), 1000.0f)));
-				AssertRoughlyEqual(new Vector3(400.0f, 0.0f, 1000.0f), device.GetWorldPos(new Vector3(viewportCenter + new Vector2(200.0f, 0.0f), 1000.0f)));
-				AssertRoughlyEqual(new Vector3(0.0f, -600.0f, 1000.0f), device.GetWorldPos(new Vector3(viewportCenter + new Vector2(0.0f, -300.0f), 1000.0f)));
-				AssertRoughlyEqual(new Vector3(0.0f, 600.0f, 1000.0f), device.GetWorldPos(new Vector3(viewportCenter + new Vector2(0.0f, 300.0f), 1000.0f)));
+				// Near Clip
+				AssertRoughlyEqual(new Vector3(0.0f, 0.0f, -100), device.GetWorldPos(new Vector3(viewportCenter, 0.0f)));
+				AssertRoughlyEqual(new Vector3(0.0f, 70.02075f, -100), device.GetWorldPos(new Vector3(viewportCenter.X, 0, 0.0f)));
+				AssertRoughlyEqual(new Vector3(0.0f, -70.02075f, -100), device.GetWorldPos(new Vector3(viewportCenter.X, targetSize.Y, 0.0f)));
+				AssertRoughlyEqual(new Vector3(-93.36101f, 0.0f, -100), device.GetWorldPos(new Vector3(0, viewportCenter.Y, 0.0f)));
+				AssertRoughlyEqual(new Vector3(93.36101f, 0.0f, -100), device.GetWorldPos(new Vector3(targetSize.X, viewportCenter.Y, 0.0f)));
+				AssertRoughlyEqual(new Vector3(-93.36101f, 70.02075f, -100), device.GetWorldPos(new Vector3(0, 0, 0.0f)));
+				AssertRoughlyEqual(new Vector3(93.36101f, -70.02075f, -100), device.GetWorldPos(new Vector3(targetSize.X, targetSize.Y, 0.0f)));
+
+				// Far Clip
+				AssertRoughlyEqual(new Vector3(0.0f, 0.0f, -10000), device.GetWorldPos(new Vector3(viewportCenter, 1.0f)));
+				AssertRoughlyEqual(new Vector3(0.0f, 70.02075f, -10000), device.GetWorldPos(new Vector3(viewportCenter.X, 0, 1.0f)));
+				AssertRoughlyEqual(new Vector3(0.0f, -70.02075f, -10000), device.GetWorldPos(new Vector3(viewportCenter.X, targetSize.Y, 1.0f)));
+				AssertRoughlyEqual(new Vector3(-93.36101f, 0.0f, -10000), device.GetWorldPos(new Vector3(0, viewportCenter.Y, 1.0f)));
+				AssertRoughlyEqual(new Vector3(93.36101f, 0.0f, -10000), device.GetWorldPos(new Vector3(targetSize.X, viewportCenter.Y, 1.0f)));
+				AssertRoughlyEqual(new Vector3(-93.36101f, 70.02075f, -10000), device.GetWorldPos(new Vector3(0, 0, 1.0f)));
+				AssertRoughlyEqual(new Vector3(93.36101f, -70.02075f, -10000), device.GetWorldPos(new Vector3(targetSize.X, targetSize.Y, 1.0f)));
 			}
 		}
 

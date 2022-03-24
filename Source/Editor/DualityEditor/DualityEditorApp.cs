@@ -245,7 +245,7 @@ namespace Duality.Editor
 				if (!Directory.EnumerateFiles(DualityApp.DataDirectory, "*" + Resource.GetFileExtByType<Scene>(), SearchOption.AllDirectories).Any())
 				{
 					GameObject mainCam = new GameObject("MainCamera");
-					mainCam.AddComponent<Transform>().Pos = new Vector3(0, 5, -10);
+					mainCam.AddComponent<Transform>().Pos = new Vector3(0, 5, 10);
 					mainCam.AddComponent<VelocityTracker>();
 					mainCam.AddComponent<Camera>();
 					mainCam.AddComponent<SoundListener>();

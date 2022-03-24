@@ -699,7 +699,7 @@ namespace Duality.Editor.Plugins.CamView
 			c.FarZ = 100000.0f;
 			c.RenderingSetup = RenderSetup.Default;
 
-			this.nativeCamObj.Transform.Pos = new Vector3(0.0f, 5.0f, c.FocusDist);
+			this.nativeCamObj.Transform.Pos = new Vector3(0.0f, 5.0f, 10);
 			DualityEditorApp.EditorObjects.AddObject(this.nativeCamObj);
 		}
 		private int GetCameraSelectorIndex(Camera c)
