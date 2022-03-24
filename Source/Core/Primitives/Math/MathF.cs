@@ -967,6 +967,13 @@ namespace Duality
 			xDot = new Vector2(cos * scale, -sin * scale);
 			yDot = new Vector2(sin * scale, cos * scale);
 		}
+		public static void GetTransformDotVec(float rot, Vector2 scale, out Vector2 xDot, out Vector2 yDot)
+		{
+			float sin = (float)System.Math.Sin(rot);
+			float cos = (float)System.Math.Cos(rot);
+			xDot = new Vector2(cos * scale.X, -sin * scale.X);
+			yDot = new Vector2(sin * scale.Y, cos * scale.Y);
+		}
 		public static void GetTransformDotVec(float rot, out Vector2 xDot, out Vector2 yDot)
 		{
 			float sin = (float)System.Math.Sin(rot);

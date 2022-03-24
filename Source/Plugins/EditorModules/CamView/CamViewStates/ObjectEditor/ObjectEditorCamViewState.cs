@@ -165,8 +165,9 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 
 		protected void DrawSelectionMarkers(Canvas canvas, IEnumerable<ObjectEditorSelObj> obj)
 		{
-			Vector3 right = this.CameraObj.Transform.Right;
-			Vector3 down = -this.CameraObj.Transform.Up;
+			Vector3 forward = Vector3.Forward;
+			Vector3 right = Vector3.Right;
+			Vector3 down = Vector3.Up;
 
 			canvas.PushState();
 			canvas.State.DepthOffset = -1.0f;
@@ -182,19 +183,26 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 				if (selObj.ShowPos)
 				{
 					canvas.DrawLine(
-						(posTemp - right * 5.0f).X,
-						(posTemp - right * 5.0f).Y,
+						(posTemp - right * 0.5f).X,
+						(posTemp - right * 0.5f).Y,
 						posTemp.Z,
-						(posTemp + right * 5.0f).X,
-						(posTemp + right * 5.0f).Y,
+						(posTemp + right * 0.5f).X,
+						(posTemp + right * 0.5f).Y,
 						posTemp.Z);
 					canvas.DrawLine(
-						(posTemp - down * 5.0f).X,
-						(posTemp - down * 5.0f).Y,
+						(posTemp - down * 0.5f).X,
+						(posTemp - down * 0.5f).Y,
 						posTemp.Z,
-						(posTemp + down * 5.0f).X,
-						(posTemp + down * 5.0f).Y,
+						(posTemp + down * 0.5f).X,
+						(posTemp + down * 0.5f).Y,
 						posTemp.Z);
+					canvas.DrawLine(
+						posTemp.X,
+						posTemp.Y,
+						(posTemp - forward * 0.5f).Z,
+						posTemp.X,
+						posTemp.Y,
+						(posTemp + forward * 0.5f).Z);
 				}
 
 				// Draw angle marker

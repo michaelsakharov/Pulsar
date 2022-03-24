@@ -415,31 +415,9 @@ namespace Duality.Drawing
 		/// <param name="radius">A world space radius around the point.</param>
 		public bool IsSphereInView(Vector3 worldPos, float radius)
 		{
-			// Transform coordinate into clip space
-			Vector4 worldPosFull = new Vector4(worldPos, 1.0f);
-			Vector4 clipPos;
-			Vector4.Transform(ref worldPosFull, ref this.matFinal, out clipPos);
-
-			// If the perspective divide near zero or negative, we know it's something behind the camera. Discard.
-			if (clipPos.W < 0.000000001f) return false;
-
-			// Apply the perspective divide
-			float invClipW = 1.0f / clipPos.W;
-			clipPos.X *= invClipW;
-			clipPos.Y *= invClipW;
-			clipPos.Z *= invClipW;
-			Vector2 clipRadius;
-			clipRadius.X = radius * Math.Abs(this.matProjection.Row0.X) * invClipW;
-			clipRadius.Y = radius * Math.Abs(this.matProjection.Row1.Y) * invClipW;
-
-			// Check if the result would still be within valid device coordinates
-			return 
-				clipPos.Z >= -1.0f &&
-				clipPos.Z <= 1.0f &&
-				clipPos.X >= -1.0f - clipRadius.X &&
-				clipPos.X <= 1.0f + clipRadius.X &&
-				clipPos.Y >= -1.0f - clipRadius.Y &&
-				clipPos.Y <= 1.0f + clipRadius.Y;
+			BoundingFrustum frustum = new BoundingFrustum(this.matView * this.matProjection);
+			var result = frustum.Contains(new BoundingSphere(worldPos, radius));
+			return result == ContainmentType.Intersects || result == ContainmentType.Contains;
 		}
 		
 		/// <summary>

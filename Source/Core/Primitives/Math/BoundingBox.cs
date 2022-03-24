@@ -22,12 +22,19 @@ namespace Duality
 
         public const int CornerCount = 8;
 
-        #endregion Public Fields
+		public Vector3 Center { get { return (this.Min + this.Max) / 2.0f; } }
+
+		public float Width { get { return this.Max.X - this.Min.X; } }
+
+		public float Height { get { return this.Max.Y - this.Min.Y; } }
+
+		public float Depth { get { return this.Max.Z - this.Min.Z; } }
+		#endregion Public Fields
 
 
-        #region Public Constructors
+		#region Public Constructors
 
-        public BoundingBox(Vector3 min, Vector3 max)
+		public BoundingBox(Vector3 min, Vector3 max)
         {
             this.Min = min;
             this.Max = max;
