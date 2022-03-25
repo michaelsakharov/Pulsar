@@ -42,7 +42,7 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 			get { return this.gameObj.Transform.Scale; }
 			set { this.gameObj.Transform.Scale = value; }
 		}
-		public override float BoundRadius
+		public override Vector3 BoundRadius
 		{
 			get
 			{
@@ -50,7 +50,7 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 				if (renderer == null)
 				{
 					if (this.gameObj.Transform != null)
-						return CamView.DefaultDisplayBoundRadius * this.gameObj.Transform.Scale.Length;
+						return CamView.DefaultDisplayBoundRadius * this.gameObj.Transform.Scale;
 					else
 						return CamView.DefaultDisplayBoundRadius;
 				}

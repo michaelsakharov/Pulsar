@@ -175,9 +175,9 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 			{
 				if (!selObj.HasTransform) continue;
 				Vector3 posTemp = selObj.Pos;
-				float radTemp = selObj.BoundRadius;
+				Vector3 radTemp = selObj.BoundRadius;
 
-				if (!canvas.DrawDevice.IsSphereInView(posTemp, radTemp)) continue;
+				if (!canvas.DrawDevice.IsBoundsInView(posTemp, radTemp)) continue;
 
 				// Draw selection marker
 				if (selObj.ShowPos)
@@ -213,8 +213,8 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 				}
 
 				// Draw boundary
-				if (selObj.ShowBoundRadius && radTemp > 0.0f)
-					canvas.DrawCircle(selObj.Pos.X, selObj.Pos.Y, selObj.Pos.Z, radTemp);
+				if (selObj.ShowBoundRadius && radTemp.Length > 0.0f)
+					canvas.DrawCircle(selObj.Pos.X, selObj.Pos.Y, selObj.Pos.Z, radTemp.Length);
 			}
 			canvas.PopState();
 		}
@@ -397,7 +397,7 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 			if (transformObjSel.Count > 0) this.selectionCenter /= transformObjSel.Count;
 
 			foreach (ObjectEditorSelObj s in transformObjSel)
-				this.selectionRadius = MathF.Max(this.selectionRadius, s.BoundRadius + (s.Pos - this.selectionCenter).Length);
+				this.selectionRadius = MathF.Max(this.selectionRadius, (s.BoundRadius + (s.Pos - this.selectionCenter)).Length);
 
 			this.selectionStatsValid = true;
 		}

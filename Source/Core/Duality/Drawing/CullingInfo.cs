@@ -18,7 +18,7 @@ namespace Duality.Drawing
 		/// <summary>
 		/// Radius of the renderers bounding sphere originating at its world space <see cref="Position"/>.
 		/// </summary>
-		public float Radius;
+		public Vector3 Radius;
 		/// <summary>
 		/// A bitmask that describes the renderers visibility in each rendering group.
 		/// </summary>

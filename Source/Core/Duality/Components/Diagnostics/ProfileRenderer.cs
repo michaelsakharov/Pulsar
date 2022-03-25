@@ -131,7 +131,7 @@ namespace Duality.Components.Diagnostics
 		void ICmpRenderer.GetCullingInfo(out CullingInfo info)
 		{
 			info.Position = Vector3.Zero;
-			info.Radius = float.MaxValue;
+			info.Radius = Vector3.MaxValue;
 			info.Visibility = VisibilityFlag.AllGroups | VisibilityFlag.ScreenOverlay;
 		}
 		void ICmpRenderer.Draw(IDrawDevice device)

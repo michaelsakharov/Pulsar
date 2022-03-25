@@ -84,6 +84,14 @@ namespace Duality.Drawing
 		bool IsSphereInView(Vector3 worldPos, float radius = 1.0f);
 
 		/// <summary>
+		/// Determines whether a bounding box is inside the devices viewing frustum,
+		/// given a world space position and radius.
+		/// </summary>
+		/// <param name="center">The points world space position.</param>
+		/// <param name="size">A world space radius around the point.</param>
+		bool IsBoundsInView(Vector3 center, Vector3 size);
+
+		/// <summary>
 		/// Rents a temporary material instance which can be used for rendering.
 		/// The instance is returned implicitly when the device is done with the 
 		/// current rendering operation.

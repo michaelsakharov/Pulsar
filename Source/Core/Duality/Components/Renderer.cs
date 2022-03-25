@@ -30,7 +30,7 @@ namespace Duality.Components
 		/// [GET] The Renderers bounding radius, originating from the <see cref="GameObject">GameObjects</see> position.
 		/// </summary>
 		[EditorHintFlags(MemberFlags.Invisible)]
-		public abstract float BoundRadius { get; }
+		public abstract Vector3 BoundRadius { get; }
 
 		/// <summary>
 		/// Performs the Renderers drawing operation.

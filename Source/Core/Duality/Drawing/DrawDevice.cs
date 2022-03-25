@@ -490,7 +490,20 @@ namespace Duality.Drawing
 			var result = frustum.Contains(new BoundingSphere(worldPos, radius));
 			return result == ContainmentType.Intersects || result == ContainmentType.Contains;
 		}
-		
+
+		/// <summary>
+		/// Determines whether a point or sphere is inside the devices viewing frustum,
+		/// given a world space position and radius.
+		/// </summary>
+		/// <param name="center">The points world space position.</param>
+		/// <param name="size">A world space size of bounds.</param>
+		public bool IsBoundsInView(Vector3 center, Vector3 size)
+		{
+			BoundingFrustum frustum = new BoundingFrustum(this.matView * this.matProjection);
+			var result = frustum.Contains(new BoundingBox(center, size));
+			return result == ContainmentType.Intersects || result == ContainmentType.Contains;
+		}
+
 		/// <summary>
 		/// Rents a temporary material instance which can be used for rendering. The instance
 		/// is returned implicitly when the device is done with the current rendering operation.

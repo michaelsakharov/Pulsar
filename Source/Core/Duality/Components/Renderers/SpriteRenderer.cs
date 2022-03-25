@@ -75,9 +75,9 @@ namespace Duality.Components.Renderers
 
 
 		[EditorHintFlags(MemberFlags.Invisible)]
-		public override float BoundRadius
+		public override Vector3 BoundRadius
 		{
-			get { return this.rect.BoundingRadius * this.gameobj.Transform.Scale.Length; }
+			get { return this.rect.BoundingRadius * this.gameobj.Transform.Scale; }
 		}
 		/// <summary>
 		/// [GET / SET] The rectangular area the sprite occupies. Relative to the <see cref="GameObject"/>.

@@ -28,14 +28,14 @@ namespace Duality.Components.Renderers
 
 
 		[EditorHintFlags(MemberFlags.Invisible)]
-		public override float BoundRadius
+		public override Vector3 BoundRadius
 		{
 			get 
 			{
 				Rect textRect = Rect.Align(this.blockAlign, 0.0f, 0.0f, 
 					MathF.Max(this.text.Size.X, this.text.MaxWidth), 
 					MathF.Max(this.text.Size.Y, this.text.MaxHeight));
-				return textRect.Transformed(this.gameobj.Transform.Scale.Length, this.gameobj.Transform.Scale.Length).BoundingRadius;
+				return textRect.BoundingRadius * this.gameobj.Transform.Scale;
 			}
 		}
 		/// <summary>

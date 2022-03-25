@@ -24,7 +24,6 @@ using Duality.Drawing;
 using Duality.Resources;
 
 using Duality.Editor;
-using Duality.Editor.Backend;
 using Duality.Editor.Forms;
 using Duality.Editor.UndoRedoActions;
 using Duality.Editor.Plugins.CamView.CamViewStates;
@@ -33,7 +32,7 @@ using Duality.Editor.Plugins.CamView.CamViewLayers;
 using Key = Duality.Input.Key;
 using MouseButton = Duality.Input.MouseButton;
 using MouseEventArgs = System.Windows.Forms.MouseEventArgs;
-
+using Duality.Editor.Backend;
 
 namespace Duality.Editor.Plugins.CamView
 {
@@ -174,7 +173,7 @@ namespace Duality.Editor.Plugins.CamView
 		}
 
 
-		public const float DefaultDisplayBoundRadius = 25.0f;
+		public readonly static Vector3 DefaultDisplayBoundRadius = Vector3.One;
 
 		private static CamView	activeCamView	= null;
 

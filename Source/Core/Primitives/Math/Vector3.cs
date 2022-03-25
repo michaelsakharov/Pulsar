@@ -49,6 +49,7 @@ namespace Duality
 		private static readonly Vector3 left = new Vector3(-1f, 0f, 0f);
 		private static readonly Vector3 forward = new Vector3(0f, 0f, -1f);
 		private static readonly Vector3 backward = new Vector3(0f, 0f, 1f);
+		private static readonly Vector3 maxValue = new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
 
 		#endregion
 
@@ -159,6 +160,14 @@ namespace Duality
 		public static Vector3 Backward
 		{
 			get { return backward; }
+		}
+
+		/// <summary>
+		/// Returns a <see cref="Vector3"/> with components float.MaxValue.
+		/// </summary>
+		public static Vector3 MaxValue
+		{
+			get { return maxValue; }
 		}
 
 		/// <summary>
