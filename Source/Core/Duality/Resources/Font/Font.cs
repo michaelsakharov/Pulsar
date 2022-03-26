@@ -62,7 +62,6 @@ namespace Duality.Resources
 
 		
 		private FontData          fontData         = EmptyData;
-		private FontRenderMode    renderMode       = FontRenderMode.SharpBitmap;
 		private float             spacing          = 0.0f;
 		private float             lineHeightFactor = 1.0f;
 		private bool              kerning          = true;
@@ -74,22 +73,6 @@ namespace Duality.Resources
 		[DontSerialize] private FontKerningLookup kerningLookup = null;
 
 
-		/// <summary>
-		/// [GET / SET] Specifies how the glyphs of this <see cref="Font"/> are rendered in a text.
-		/// </summary>
-		[EditorHintFlags(MemberFlags.AffectsOthers)]
-		public FontRenderMode RenderMode
-		{
-			get { return this.renderMode; }
-			set
-			{
-				if (this.renderMode != value)
-				{
-					this.renderMode = value;
-					this.GenerateTexture(); // Filtering depends on pixel-grid alignment.
-				}
-			}
-		}
 		/// <summary>
 		/// [GET] The <see cref="Duality.Resources.Material"/> to use when rendering text of this Font.
 		/// </summary>
@@ -125,18 +108,6 @@ namespace Duality.Resources
 		{
 			get { return this.kerning; }
 			set { this.kerning = value; }
-		}
-		/// <summary>
-		/// [GET] Returns whether this Font is (requesting to be) aligned to the pixel grid.
-		/// </summary>
-		public bool IsPixelGridAligned
-		{
-			get
-			{ 
-				return 
-					this.renderMode == FontRenderMode.MonochromeBitmap || 
-					this.renderMode == FontRenderMode.GrayscaleBitmap;
-			}
 		}
 		/// <summary>
 		/// [GET] The Fonts height.
@@ -206,8 +177,8 @@ namespace Duality.Resources
 
 			this.texture = new Texture(this.pixmap, 
 				TextureSizeMode.Enlarge, 
-				this.IsPixelGridAligned ? TextureMagFilter.Nearest : TextureMagFilter.Linear,
-				this.IsPixelGridAligned ? TextureMinFilter.Nearest : TextureMinFilter.LinearMipmapLinear);
+				TextureMagFilter.Linear,
+				TextureMinFilter.LinearMipmapLinear);
 		}
 		private void GenerateCharLookup()
 		{

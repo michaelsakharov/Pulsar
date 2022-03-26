@@ -14,7 +14,6 @@ namespace Duality.Resources
 	/// A Texture refers to pixel data stored in video memory
 	/// </summary>
 	/// <seealso cref="Duality.Resources.Pixmap"/>
-	/// <seealso cref="Duality.Resources.RenderTarget"/>
 	[ExplicitResourceReference(typeof(Pixmap))]
 	[EditorHintCategory(CoreResNames.CategoryGraphics)]
 	[EditorHintImage(CoreResNames.ImageTexture)]

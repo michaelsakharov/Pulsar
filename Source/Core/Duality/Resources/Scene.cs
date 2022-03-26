@@ -250,7 +250,6 @@ namespace Duality.Resources
 		}
 
 		private Vector2                     globalGravity      = Vector2.UnitY * 33.0f;
-		private IRendererVisibilityStrategy visibilityStrategy = new DefaultRendererVisibilityStrategy();
 		private GameObject[]                serializeObj       = null;
 
 		[DontSerialize] private bool active = false;
@@ -273,14 +272,6 @@ namespace Duality.Resources
 
 		[DontSerialize] private readonly CoroutineManager coroutineManager = new CoroutineManager();
 
-		/// <summary>
-		/// [GET / SET] The strategy that is used to determine which <see cref="ICmpRenderer">renderers</see> are visible.
-		/// </summary>
-		public IRendererVisibilityStrategy VisibilityStrategy
-		{
-			get { return this.visibilityStrategy; }
-			set { this.visibilityStrategy = value ?? new DefaultRendererVisibilityStrategy(); }
-		}
 		/// <summary>
 		/// [GET] Returns the <see cref="Coroutine"/> manager for this <see cref="Scene"/>.
 		/// </summary>
@@ -399,13 +390,6 @@ namespace Duality.Resources
 					initList[i].OnActivate();
 				}
 			});
-
-			// Update object visibility / culling info, so a scheduled switch at the
-			// end of a frame will get up-to-date culling for rendering
-			DualityApp.EditorGuard(() =>
-			{
-				this.visibilityStrategy.Update();
-			});
 		}
 		/// <summary>
 		/// Transitions the <see cref="Scene"/> into an inactive state, where it can no 
@@ -455,7 +439,6 @@ namespace Duality.Resources
 				DualityApp.EditorGuard(() =>
 				{
 					this.UpdateComponents<ICmpUpdatable>(cmp => cmp.OnUpdate());
-					this.visibilityStrategy.Update();
 				});
 				Profile.TimeUpdateScene.EndMeasure();
 
@@ -585,7 +568,6 @@ namespace Duality.Resources
 		public void CleanupDisposedObjects()
 		{
 			this.objectManager.Flush();
-			this.visibilityStrategy.CleanupRenderers();
 			foreach (List<Component> cmpList in this.componentsByType.Values)
 				cmpList.RemoveAll(i => i == null || i.Disposed);
 		}
@@ -843,10 +825,6 @@ namespace Duality.Resources
 				this.componentsByType[cmpType] = cmpList;
 			}
 			cmpList.Add(cmp);
-
-			// Specialized lists
-			ICmpRenderer renderer = cmp as ICmpRenderer;
-			if (renderer != null) this.visibilityStrategy.AddRenderer(renderer);
 		}
 		private void RemoveFromManagers(GameObject obj)
 		{
@@ -860,10 +838,6 @@ namespace Duality.Resources
 			List<Component> cmpList;
 			if (this.componentsByType.TryGetValue(cmpType, out cmpList))
 				cmpList.Remove(cmp);
-
-			// Specialized lists
-			ICmpRenderer renderer = cmp as ICmpRenderer;
-			if (renderer != null) this.visibilityStrategy.RemoveRenderer(renderer);
 		}
 		private void RegisterManagerEvents()
 		{
@@ -1020,9 +994,6 @@ namespace Duality.Resources
 		}
 		protected override void OnLoaded()
 		{
-			if (this.visibilityStrategy == null)
-				this.visibilityStrategy = new DefaultRendererVisibilityStrategy();
-
 			if (this.serializeObj != null)
 			{
 				this.UnregisterManagerEvents();

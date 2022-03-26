@@ -4,7 +4,6 @@ using System.Linq;
 
 using Duality.Resources;
 using Duality.Components;
-using Duality.Components.Renderers;
 using Duality.Drawing;
 
 namespace Duality
@@ -30,17 +29,8 @@ namespace Duality
 		public static readonly PropertyInfo	Property_Transform_Scale;
 		public static readonly PropertyInfo	Property_Transform_IgnoreParent;
 
-		public static readonly PropertyInfo	Property_Camera_ClearColor;
-		public static readonly PropertyInfo	Property_Camera_FocusDist;
-		public static readonly PropertyInfo	Property_Camera_RenderingSetup;
-
 		public static readonly PropertyInfo	Property_SoundEmitter_Sources;
 		
-		public static readonly PropertyInfo	Property_RigidBody_Shapes;
-		public static readonly PropertyInfo	Property_RigidBody_Joints;
-		public static readonly PropertyInfo	Property_CircleShapeInfo_Position;
-		public static readonly PropertyInfo	Property_CircleShapeInfo_Radius;
-
 		public static readonly PropertyInfo	Property_DrawTechnique_PreferredVertexFormat;
 
 		public static readonly PropertyInfo	Property_Resource_AssetInfo;
@@ -74,11 +64,6 @@ namespace Duality
 			Property_Transform_Angle			= GetProperty(transform, "Rotation");
 			Property_Transform_Scale			= GetProperty(transform, "Scale");
 			Property_Transform_IgnoreParent		= GetProperty(transform, "IgnoreParent");
-			
-			Type camera = typeof(Camera);
-			Property_Camera_FocusDist			= GetProperty(camera, "FocusDist");
-			Property_Camera_ClearColor			= GetProperty(camera, "ClearColor");
-			Property_Camera_RenderingSetup		= GetProperty(camera, "RenderingSetup");
 
 			Type drawTech = typeof(DrawTechnique);
 			Property_DrawTechnique_PreferredVertexFormat	= GetProperty(drawTech, "PreferredVertexFormat");

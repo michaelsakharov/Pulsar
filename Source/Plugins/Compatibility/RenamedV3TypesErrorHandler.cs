@@ -26,9 +26,6 @@ namespace Duality.Plugins.Compatibility
 					case "Duality.Resources.BatchInfo": resolveTypeError.ResolvedType = typeof(Duality.Drawing.BatchInfo); break;
 					case "Duality.Resources.BatchInfo+DirtyFlag": resolveTypeError.ResolvedType = typeof(ObsoleteEnum); break;
 					case "Duality.Resources.Pixmap+Layer": resolveTypeError.ResolvedType = typeof(Duality.Drawing.PixelData); break;
-					case "Duality.Drawing.IRendererVisibilityStrategy": resolveTypeError.ResolvedType = typeof(Duality.Components.IRendererVisibilityStrategy); break;
-					case "Duality.Drawing.DefaultRendererVisibilityStrategy": resolveTypeError.ResolvedType = typeof(Duality.Components.DefaultRendererVisibilityStrategy); break;
-					case "Duality.Components.Renderers.AnimSpriteRenderer": resolveTypeError.ResolvedType = typeof(Duality.Components.Renderers.SpriteRenderer); break;
 				}
 			}
 			else if (resolveMemberError != null)

@@ -16,7 +16,6 @@ namespace Duality
 		private string                  appName                = "Duality Application";
 		private uint                    version                = 0;
 		private ContentRef<Scene>       startScene             = null;
-		private ContentRef<RenderSetup> renderSetup            = RenderSetup.Default;
 		private Point2                  forcedRenderSize       = Point2.Zero;
 		private TargetResize            forcedRenderResizeMode = TargetResize.Fit;
 		private float                   speedOfSound           = 360.0f;
@@ -51,15 +50,6 @@ namespace Duality
 		{
 			get { return this.startScene; }
 			set { this.startScene = value; }
-		}
-		/// <summary>
-		/// [GET / SET] The default <see cref="RenderSetup"/> that describes both how to render a given <see cref="Scene"/>, e.g.
-		/// the rendering steps that a <see cref="Duality.Components.Camera"/> will execute by default.
-		/// </summary>
-		public ContentRef<RenderSetup> RenderingSetup
-		{
-			get { return this.renderSetup; }
-			set { this.renderSetup = value; }
 		}
 		/// <summary>
 		/// [GET / SET] When set to a non-zero value, the game's viewport will be adjusted to fit this size within the constraints

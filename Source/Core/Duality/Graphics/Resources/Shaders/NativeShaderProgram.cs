@@ -128,22 +128,22 @@ namespace Duality.Backend
 		/// Returns -1, if no match was found.
 		/// </summary>
 		/// <param name="element"></param>
-		public int SelectField(ref VertexElement element)
-		{
-			// Check for fields matching the elements preferred name
-			for (int i = 0; i < this.fields.Length; i++)
-			{
-				// Skip invalid and non-attribute fields
-				if (this.fieldLocations[i] == -1) continue;
-				if (this.fields[i].Scope != ShaderFieldScope.Attribute) continue;
-
-				// We do not check for type or data length matches. When matching
-				// explicitly, this is the users responsibility.
-				if (this.fields[i].Name == element.FieldName)
-					return i;
-			}
-			return -1;
-		}
+		//public int SelectField(ref VertexElement element)
+		//{
+		//	// Check for fields matching the elements preferred name
+		//	for (int i = 0; i < this.fields.Length; i++)
+		//	{
+		//		// Skip invalid and non-attribute fields
+		//		if (this.fieldLocations[i] == -1) continue;
+		//		if (this.fields[i].Scope != ShaderFieldScope.Attribute) continue;
+		//
+		//		// We do not check for type or data length matches. When matching
+		//		// explicitly, this is the users responsibility.
+		//		if (this.fields[i].Name == element.FieldName)
+		//			return i;
+		//	}
+		//	return -1;
+		//}
 
 		private void DeleteProgram()
 		{

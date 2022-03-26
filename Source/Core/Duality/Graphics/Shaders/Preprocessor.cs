@@ -12,33 +12,33 @@ namespace Duality.Graphics.Shaders
     /// </summary>
     class Preprocessor
     {
-        private readonly Duality.IO.FileSystem _fileSystem;
-        private static readonly Regex _preprocessorIncludeRegex = new Regex(@"^#include\s""([ \t\w /]+)""", RegexOptions.Multiline);
-        public List<string> Dependencies { get; } = new List<string>();
-
-        public Preprocessor(Duality.IO.FileSystem fileSystem)
-        {
-            _fileSystem = fileSystem ?? throw new ArgumentNullException(nameof(fileSystem));
-        }
-
-        public string Process(string source)
-        {
-            var output = _preprocessorIncludeRegex.Replace(source, PreprocessorImportReplacer);
-
-            return output;
-        }
-
-        string PreprocessorImportReplacer(Match match)
-        {
-            var path = match.Groups[1].Value + ".glsl";
-
-            Dependencies.Add(path);
-
-            using (var stream = _fileSystem.OpenRead(path))
-            using (var reader = new System.IO.StreamReader(stream))
-            {
-                return Process(reader.ReadToEnd());
-            }
-        }
+        //private readonly Duality.IO.FileSystem _fileSystem;
+        //private static readonly Regex _preprocessorIncludeRegex = new Regex(@"^#include\s""([ \t\w /]+)""", RegexOptions.Multiline);
+        //public List<string> Dependencies { get; } = new List<string>();
+		//
+        //public Preprocessor(Duality.IO.FileSystem fileSystem)
+        //{
+        //    _fileSystem = fileSystem ?? throw new ArgumentNullException(nameof(fileSystem));
+        //}
+		//
+        //public string Process(string source)
+        //{
+        //    var output = _preprocessorIncludeRegex.Replace(source, PreprocessorImportReplacer);
+		//
+        //    return output;
+        //}
+		//
+        //string PreprocessorImportReplacer(Match match)
+        //{
+        //    var path = match.Groups[1].Value + ".glsl";
+		//
+        //    Dependencies.Add(path);
+		//
+        //    using (var stream = _fileSystem.OpenRead(path))
+        //    using (var reader = new System.IO.StreamReader(stream))
+        //    {
+        //        return Process(reader.ReadToEnd());
+        //    }
+        //}
     }
 }

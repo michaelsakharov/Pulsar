@@ -39,13 +39,6 @@ namespace Duality.Backend
 		{
 			get { return this.maxTextureBindings; }
 		}
-		/// <summary>
-		/// The maximum edge length of a <see cref="RenderTarget"/>.
-		/// </summary>
-		public int MaxRenderTargetSize
-		{
-			get { return this.maxRenderTargetSize; }
-		}
 
 
 		public GraphicsBackendCapabilities()
