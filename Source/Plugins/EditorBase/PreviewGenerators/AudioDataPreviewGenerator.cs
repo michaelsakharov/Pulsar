@@ -33,7 +33,7 @@ namespace Duality.Editor.Plugins.Base.PreviewGenerators
 			int yMid = result.Height / 2;
 			int stepWidth = (channelLength / (2 * result.Width)) - 1;
 			const int samples = 10;
-			using (Graphics g = Graphics.FromImage(result))
+			using (System.Drawing.Graphics g = System.Drawing.Graphics.FromImage(result))
 			{
 				Color baseColor = ExtMethodsColor.ColorFromHSV(
 					(float)(oggHash % 90) * (float)(oggLen % 4) / 360.0f, 

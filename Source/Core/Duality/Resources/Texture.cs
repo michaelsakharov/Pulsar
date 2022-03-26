@@ -195,71 +195,6 @@ namespace Duality.Resources
 			}
 		}
 		/// <summary>
-		/// [GET / SET] The Textures magnifying filter
-		/// </summary>
-		public TextureMagFilter FilterMag
-		{
-			get { return this.filterMag; }
-			set { if (this.filterMag != value) { this.filterMag = value; this.needsReload = true; } }
-		}
-		/// <summary>
-		/// [GET / SET] The Textures minifying filter
-		/// </summary>
-		public TextureMinFilter FilterMin
-		{
-			get { return this.filterMin; }
-			set { if (this.filterMin != value) { this.filterMin = value; this.needsReload = true; } }
-		}
-		/// <summary>
-		/// [GET / SET] Specifies whether this texture uses anisotropic filtering.
-		/// </summary>
-		public bool AnisotropicFilter
-		{
-			get { return this.anisoFilter; }
-			set { if (this.anisoFilter != value) { this.anisoFilter = value; this.needsReload = true; } }
-		}
-		/// <summary>
-		/// [GET / SET] The Textures horizontal wrap mode
-		/// </summary>
-		public TextureWrapMode WrapX
-		{
-			get { return this.wrapX; }
-			set { if (this.wrapX != value) { this.wrapX = value; this.needsReload = true; } }
-		}
-		/// <summary>
-		/// [GET / SET] The Textures vertical wrap mode
-		/// </summary>
-		public TextureWrapMode WrapY
-		{
-			get { return this.wrapY; }
-			set { if (this.wrapY != value) { this.wrapY = value; this.needsReload = true; } }
-		}
-		/// <summary>
-		/// [GET / SET] The Textures pixel format
-		/// </summary>
-		public TexturePixelFormat PixelFormat
-		{
-			get { return this.pixelformat; }
-			set { if (this.pixelformat != value) { this.pixelformat = value; this.needsReload = true; } }
-		}
-		/// <summary>
-		/// [GET / SET] Handles how the Textures base Pixmap is adjusted in order to fit GPU texture size requirements (Power of Two dimensions)
-		/// </summary>
-		[EditorHintFlags(MemberFlags.AffectsOthers)]
-		public TextureSizeMode TexSizeMode
-		{
-			get { return this.texSizeMode; }
-			set 
-			{ 
-				if (this.texSizeMode != value) 
-				{ 
-					this.texSizeMode = value; 
-					this.AdjustSize(this.size.X, this.size.Y);
-					this.needsReload = true;
-				}
-			}
-		}
-		/// <summary>
 		/// [GET / SET] Reference to a Pixmap that contains the pixel data that is or has been uploaded to the Texture
 		/// </summary>
 		[EditorHintFlags(MemberFlags.AffectsOthers)]
@@ -335,14 +270,6 @@ namespace Duality.Resources
 		public void ReloadData()
 		{
 			this.LoadData(this.basePixmap, this.texSizeMode);
-		}
-		/// <summary>
-		/// Loads the specified <see cref="Duality.Resources.Pixmap">Pixmaps</see> pixel data.
-		/// </summary>
-		/// <param name="basePixmap">The <see cref="Duality.Resources.Pixmap"/> that is used as pixel data source.</param>
-		public void LoadData(ContentRef<Pixmap> basePixmap)
-		{
-			this.LoadData(basePixmap, this.texSizeMode);
 		}
 		/// <summary>
 		/// Loads the specified <see cref="Duality.Resources.Pixmap">Pixmaps</see> pixel data.
@@ -437,16 +364,6 @@ namespace Duality.Resources
 			this.GetPixelDataInternal(data);
 			target.SetData(data, this.texWidth, this.texHeight);
 		}
-		/// <summary>
-		/// Retrieves the pixel data that is currently stored in video memory.
-		/// </summary>
-		/// <param name="targetBuffer">The buffer (Rgba8 format) to store all the pixel data in. 
-		/// Its byte length should be at least <see cref="InternalWidth"/> * <see cref="InternalHeight"/> * 4.</param>
-		/// <returns>The number of bytes that were read.</returns>
-		public int GetPixelData<T>(T[] targetBuffer) where T : struct
-		{
-			return this.GetPixelDataInternal(targetBuffer);
-		}
 
 		private int GetPixelDataInternal<T>(T[] buffer) where T : struct
 		{
@@ -483,16 +400,6 @@ namespace Duality.Resources
 			{
 				uv = this.atlas[MathF.Clamp(index, 0, this.atlas.Length - 1)];
 			}
-		}
-		/// <summary>
-		/// Does a safe (null-checked, clamped) texture <see cref="Duality.Resources.Pixmap.Atlas"/> lookup.
-		/// </summary>
-		/// <param name="index"></param>
-		public Rect LookupAtlas(int index)
-		{
-			Rect result;
-			this.LookupAtlas(index, out result);
-			return result;
 		}
 
 		/// <summary>

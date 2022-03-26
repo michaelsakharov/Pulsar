@@ -261,7 +261,7 @@ namespace Duality.Editor.Plugins.Base
 			Bitmap measureBm = new Bitmap(1, 1);
 			Rect[] atlas = new Rect[glyphs.Length];
 			PixelData[] glyphBitmaps = new PixelData[glyphs.Length];
-			using (Graphics measureGraphics = Graphics.FromImage(measureBm))
+			using (System.Drawing.Graphics measureGraphics = System.Drawing.Graphics.FromImage(measureBm))
 			{
 				Brush fntBrush = new SolidBrush(Color.Black);
 
@@ -281,7 +281,7 @@ namespace Duality.Editor.Plugins.Base
 
 					// Rasterize a single glyph for rendering
 					Bitmap bm = new Bitmap((int)Math.Ceiling(Math.Max(1, charSize.Width)), internalFont.Height + 1);
-					using (Graphics glyphGraphics = Graphics.FromImage(bm))
+					using (System.Drawing.Graphics glyphGraphics = System.Drawing.Graphics.FromImage(bm))
 					{
 						glyphGraphics.Clear(Color.Transparent);
 						glyphGraphics.TextRenderingHint = textRenderingHint;
@@ -289,7 +289,7 @@ namespace Duality.Editor.Plugins.Base
 					}
 					glyphBitmaps[i] = new PixelData();
 					glyphBitmaps[i].FromBitmap(bm);
-					
+
 					// Rasterize a single glyph in typographic mode for metric analysis
 					PixelData glyphTempTypo;
 					if (!isSpace)
@@ -308,7 +308,7 @@ namespace Duality.Editor.Plugins.Base
 							descent += glyphTempOpaqueTopLeft.Y + glyphTempOpaqueSize.Y;
 						
 						bm = new Bitmap((int)Math.Ceiling(Math.Max(1, charSize.Width)), internalFont.Height + 1);
-						using (Graphics glyphGraphics = Graphics.FromImage(bm))
+						using (System.Drawing.Graphics glyphGraphics = System.Drawing.Graphics.FromImage(bm))
 						{
 							glyphGraphics.Clear(Color.Transparent);
 							glyphGraphics.TextRenderingHint = textRenderingHint;

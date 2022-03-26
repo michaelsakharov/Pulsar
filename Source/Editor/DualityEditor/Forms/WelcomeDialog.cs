@@ -33,7 +33,7 @@ namespace Duality.Editor.Forms
 		{
 			public override void Draw(TreeNodeAdv node, DrawContext context)
 			{
-				Graphics g = context.Graphics;
+				System.Drawing.Graphics g = context.Graphics;
 				Rectangle targetRect = new Rectangle(
 					context.Bounds.X + this.LeftMargin,
 					context.Bounds.Y,

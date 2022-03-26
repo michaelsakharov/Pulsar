@@ -1115,7 +1115,7 @@ namespace Duality.Editor
 					{
 						Bitmap independentBitmap = new Bitmap(bitmap.Width, bitmap.Height);
 						independentBitmap.SetResolution(bitmap.HorizontalResolution, bitmap.VerticalResolution);
-						using (Graphics graphics = Graphics.FromImage(independentBitmap))
+						using (System.Drawing.Graphics graphics = System.Drawing.Graphics.FromImage(independentBitmap))
 						{
 							graphics.DrawImageUnscaled(bitmap, 0, 0);
 						}

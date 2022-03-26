@@ -500,7 +500,7 @@ namespace Duality.Drawing
 		public bool IsBoundsInView(Vector3 center, Vector3 size)
 		{
 			BoundingFrustum frustum = new BoundingFrustum(this.matView * this.matProjection);
-			var result = frustum.Contains(new BoundingBox(center, size));
+			var result = frustum.Contains(BoundingBox.CreateFromCenterSize(center, size));
 			return result == ContainmentType.Intersects || result == ContainmentType.Contains;
 		}
 

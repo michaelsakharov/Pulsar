@@ -660,13 +660,13 @@ namespace Duality.Backend.DefaultOpenTK
 					GL.DepthMask(false);
 					GL.Enable(EnableCap.Blend);
 					GL.Disable(EnableCap.SampleAlphaToCoverage);
-					GL.BlendFunc(BlendingFactorSrc.DstColor, BlendingFactorDest.Zero);
+					GL.BlendFunc(BlendingFactor.DstColor, BlendingFactor.Zero);
 					break;
 				case BlendMode.Invert:
 					GL.DepthMask(false);
 					GL.Enable(EnableCap.Blend);
 					GL.Disable(EnableCap.SampleAlphaToCoverage);
-					GL.BlendFunc(BlendingFactorSrc.OneMinusDstColor, BlendingFactorDest.OneMinusSrcColor);
+					GL.BlendFunc(BlendingFactor.OneMinusDstColor, BlendingFactor.OneMinusSrcColor);
 					break;
 			}
 

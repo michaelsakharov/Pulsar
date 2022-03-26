@@ -383,7 +383,7 @@ namespace Duality.Editor.Plugins.Base.Forms.PixmapSlicer
 				this.backBitmap = new Bitmap(
 					cellSize.Width * 2,
 					cellSize.Height * 2);
-				using (Graphics g = Graphics.FromImage(this.backBitmap))
+				using (System.Drawing.Graphics g = System.Drawing.Graphics.FromImage(this.backBitmap))
 				{
 					g.Clear(Color.Transparent);
 
@@ -454,7 +454,7 @@ namespace Duality.Editor.Plugins.Base.Forms.PixmapSlicer
 		/// <summary>
 		/// Draws an index value in the middle of the given Rect
 		/// </summary>
-		public void DrawRectIndex(Graphics g, Rectangle displayRect, int index)
+		public void DrawRectIndex(System.Drawing.Graphics g, Rectangle displayRect, int index)
 		{
 			string indexText = index.ToString();
 			SizeF textSize = g.MeasureString(indexText, this.Font);

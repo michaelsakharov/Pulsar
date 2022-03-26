@@ -32,12 +32,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="AdamsLair.OpenTK">
-      <Version>1.2.2</Version>
-    </PackageReference>
-    <PackageReference Include="AdamsLair.OpenTK.GLControl" GeneratePathProperty="true">
-      <Version>1.2.2</Version>
-    </PackageReference>
+    <PackageReference Include="OpenTK.GLControl" Version="3.1.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -47,7 +42,6 @@
   <Target Name="AggregateOutput" BeforeTargets="AfterBuild">
     <Copy SourceFiles="$(OutputPath)$(AssemblyName).dll" DestinationFolder="$(RootFolder)Build\Output\Plugins\" />
     <Copy SourceFiles="$(OutputPath)$(AssemblyName).pdb" DestinationFolder="$(RootFolder)Build\Output\Plugins\" />
-    <Copy SourceFiles="$(PkgAdamsLair_OpenTK_GLControl)\lib\net20\OpenTK.GLControl.dll" DestinationFolder="$(RootFolder)Build\Output\" />
-    <Copy SourceFiles="$(PkgAdamsLair_OpenTK_GLControl)\lib\net20\OpenTK.GLControl.xml" DestinationFolder="$(RootFolder)Build\Output\" />
+    <Copy SourceFiles="$(OutputPath)\OpenTK.GLControl.dll" DestinationFolder="$(RootFolder)Build\Output\" />
   </Target>
 </Project>

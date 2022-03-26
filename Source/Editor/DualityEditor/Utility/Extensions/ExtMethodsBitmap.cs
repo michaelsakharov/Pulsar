@@ -25,7 +25,7 @@ namespace Duality.Editor
 		{
 			if (w == 0 || h == 0) return null;
 			Bitmap result = new Bitmap(w, h);
-			using (Graphics g = Graphics.FromImage(result))
+			using (System.Drawing.Graphics g = System.Drawing.Graphics.FromImage(result))
 			{
 				g.DrawImageUnscaledAndClipped(bm, new Rectangle(-x, -y, bm.Width, bm.Height));
 			}
@@ -101,7 +101,7 @@ namespace Duality.Editor
 		public static Bitmap Rescale(this Bitmap bm, int w, int h, InterpolationMode mode = InterpolationMode.Bilinear)
 		{
 			Bitmap result = new Bitmap(w, h);
-			using (Graphics g = Graphics.FromImage(result))
+			using (System.Drawing.Graphics g = System.Drawing.Graphics.FromImage(result))
 			{
 				g.InterpolationMode = mode;
 

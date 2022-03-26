@@ -23,12 +23,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="AdamsLair.OpenTK" GeneratePathProperty="true">
-      <Version>1.2.2</Version>
-    </PackageReference>
-  </ItemGroup>
-
-  <ItemGroup>
     <Content Include="OpenALSoft32.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -42,7 +36,6 @@
     <Copy SourceFiles="$(OutputPath)$(AssemblyName).pdb" DestinationFolder="$(RootFolder)Build\Output\Plugins\" />
     <Copy SourceFiles="$(OutputPath)OpenALSoft32.dll" DestinationFolder="$(RootFolder)Build\Output\" />
     <Copy SourceFiles="$(OutputPath)OpenALSoft64.dll" DestinationFolder="$(RootFolder)Build\Output\" />
-    <Copy SourceFiles="$(PkgAdamsLair_OpenTK)\lib\net20\OpenTK.dll" DestinationFolder="$(RootFolder)Build\Output\"/>
-	  <Copy SourceFiles="$(PkgAdamsLair_OpenTK)\lib\net20\OpenTK.xml" DestinationFolder="$(RootFolder)Build\Output\"/>
+    <Copy SourceFiles="$(OutputPath)\OpenTK.dll" DestinationFolder="$(RootFolder)Build\Output\" />
   </Target>
 </Project>

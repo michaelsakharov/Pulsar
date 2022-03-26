@@ -207,9 +207,9 @@ namespace Duality.Editor
 		private Color GetColorAt(int x, int y)
 		{
 			// See here: http://stackoverflow.com/questions/1483928/how-to-read-the-color-of-a-screen-pixel
-			using (Graphics gdest = Graphics.FromImage(this.screenPixel))
+			using (System.Drawing.Graphics gdest = System.Drawing.Graphics.FromImage(this.screenPixel))
 			{
-				using (Graphics gsrc = Graphics.FromHwnd(IntPtr.Zero))
+				using (System.Drawing.Graphics gsrc = System.Drawing.Graphics.FromHwnd(IntPtr.Zero))
 				{
 					IntPtr hSrcDC = gsrc.GetHdc();
 					IntPtr hDC = gdest.GetHdc();

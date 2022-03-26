@@ -131,7 +131,7 @@ namespace Duality.Editor
 				if (!this.overlayDict.TryGetValue(overlayImage, out baseWithOverlay))
 				{
 					baseWithOverlay = this.baseImage.Clone() as Image;
-					using (Graphics g = Graphics.FromImage(baseWithOverlay))
+					using (System.Drawing.Graphics g = System.Drawing.Graphics.FromImage(baseWithOverlay))
 					{
 						g.DrawImageUnscaled(overlayImage, 0, 0);
 					}

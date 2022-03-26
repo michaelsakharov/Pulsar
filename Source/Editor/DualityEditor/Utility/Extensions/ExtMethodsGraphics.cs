@@ -12,7 +12,7 @@ namespace Duality.Editor
 {
 	public static class ExtMethodsGraphics
 	{
-		public static void DrawImageTint(this Graphics g, Image img, Color tint, Rectangle rect)
+		public static void DrawImageTint(this System.Drawing.Graphics g, Image img, Color tint, Rectangle rect)
 		{
 			ImageAttributes attrib = new ImageAttributes();
 			ColorMatrix matrix = new ColorMatrix(new[] {
@@ -24,19 +24,19 @@ namespace Duality.Editor
 			attrib.SetColorMatrix(matrix);
 			g.DrawImage(img, rect, 0, 0, img.Width, img.Height, GraphicsUnit.Pixel, attrib);
 		}
-		public static void DrawImageTint(this Graphics g, Image img, Color tint, int x, int y)
+		public static void DrawImageTint(this System.Drawing.Graphics g, Image img, Color tint, int x, int y)
 		{
 			DrawImageTint(g, img, tint, new Rectangle(x, y, img.Width, img.Height));
 		}
-		public static void DrawImageAlpha(this Graphics g, Image img, float alpha, Rectangle rect)
+		public static void DrawImageAlpha(this System.Drawing.Graphics g, Image img, float alpha, Rectangle rect)
 		{
 			DrawImageTint(g, img, Color.FromArgb(MathF.Clamp((int)(alpha * 255), 0, 255), Color.White), rect);
 		}
-		public static void DrawImageAlpha(this Graphics g, Image img, float alpha, int x, int y)
+		public static void DrawImageAlpha(this System.Drawing.Graphics g, Image img, float alpha, int x, int y)
 		{
 			DrawImageAlpha(g, img, alpha, new Rectangle(x, y, img.Width, img.Height));
 		}
-		public static void DrawImageMonochrome(this Graphics g, Image img, Rectangle rect)
+		public static void DrawImageMonochrome(this System.Drawing.Graphics g, Image img, Rectangle rect)
 		{
 			ImageAttributes attrib = new ImageAttributes();
 			ColorMatrix matrix = new ColorMatrix(new[] {
@@ -48,7 +48,7 @@ namespace Duality.Editor
 			attrib.SetColorMatrix(matrix);
 			g.DrawImage(img, rect, 0, 0, img.Width, img.Height, GraphicsUnit.Pixel, attrib);
 		}
-		public static void DrawImageMonochrome(this Graphics g, Image img, int x, int y)
+		public static void DrawImageMonochrome(this System.Drawing.Graphics g, Image img, int x, int y)
 		{
 			DrawImageMonochrome(g, img, new Rectangle(x, y, img.Width, img.Height));
 		}

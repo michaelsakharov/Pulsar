@@ -38,14 +38,14 @@ namespace Duality
         {
             this.Min = min;
             this.Max = max;
-        }
+		}
 
-        #endregion Public Constructors
+		#endregion Public Constructors
 
 
-        #region Public Methods
+		#region Public Methods
 
-        public ContainmentType Contains(BoundingBox box)
+		public ContainmentType Contains(BoundingBox box)
         {
             //test if all corner is in the same side of a face by just checking min and max
             if (box.Max.X < this.Min.X
@@ -278,9 +278,23 @@ namespace Duality
             var corner = new Vector3(sphere.Radius);
             result.Min = sphere.Center - corner;
             result.Max = sphere.Center + corner;
-        }
+		}
 
-        public static BoundingBox CreateMerged(BoundingBox original, BoundingBox additional)
+		public static BoundingBox CreateFromCenterSize(Vector3 center, Vector3 size)
+		{
+			BoundingBox result;
+			CreateFromCenterSize(center, size, out result);
+			return result;
+		}
+
+		public static void CreateFromCenterSize(Vector3 center,  Vector3 size, out BoundingBox result)
+		{
+			var halfSize = size / 2f;
+			result.Min = center - halfSize;
+			result.Max = center + halfSize;
+		}
+
+		public static BoundingBox CreateMerged(BoundingBox original, BoundingBox additional)
         {
             BoundingBox result;
             CreateMerged(ref original, ref additional, out result);
