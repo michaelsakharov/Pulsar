@@ -234,7 +234,7 @@ namespace Duality.Resources
 
 			if (this.native == null) this.native = DualityApp.GraphicsBackend.CreateRenderTarget();
 
-			INativeTexture[] targets = this.targets
+			NativeTexture[] targets = this.targets
 				.Select(t => t.Res != null ? t.Res.Native : null)
 				.ToArray();
 

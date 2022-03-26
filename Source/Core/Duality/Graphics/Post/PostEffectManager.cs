@@ -33,7 +33,6 @@ namespace Duality.Graphics.Post
         private readonly Effects.Tonemap _tonemap;
         private readonly Effects.Gamma _gamma;
         private readonly Effects.FXAA _fxaa;
-        private readonly Effects.SMAA _smaa;
         private readonly Effects.Fog _fog;
         private readonly Effects.Visualize _visualize;
         private readonly Effects.SSAO _ssao;
@@ -43,17 +42,23 @@ namespace Duality.Graphics.Post
 
         private List<BaseEffect> _effects = new List<BaseEffect>();
 
-        public Resources.Texture ColorCorrectLUT
-        {
-            get => _gamma.ColorCorrectLUT;
-            set => _gamma.ColorCorrectLUT = value;
-        }
+        public Duality.Resources.Texture ColorCorrectLUT
+		{
+			get
+			{
+				return _gamma.ColorCorrectLUT;
+			}
 
-        public bool EnableAtmosphere { get; set; } = false;
+			set
+			{
+				_gamma.ColorCorrectLUT = value;
+			}
+		}
 
-        public PostEffectManager(IO.FileSystem fileSystem, ResourceManager resourceManager, Backend backend, int width, int height)
+		public bool EnableAtmosphere { get; set; } = false;
+
+        public PostEffectManager(ResourceManager resourceManager, Backend backend, int width, int height)
         {
-            if (fileSystem == null) throw new ArgumentNullException("fileSystem");
             _backend = backend ?? throw new ArgumentNullException("backend");
 
             _renderTargetManager = new Post.RenderTargetManager(_backend);
@@ -79,7 +84,6 @@ namespace Duality.Graphics.Post
             _tonemap = new Effects.Tonemap(_backend, _quadMesh);
             _gamma = new Effects.Gamma(_backend, _quadMesh);
             _fxaa = new Effects.FXAA(_backend, _quadMesh);
-            _smaa = new Effects.SMAA(_backend, fileSystem, _quadMesh);
             _fog = new Fog(_backend, _quadMesh);
             _visualize = new Visualize(_backend, _quadMesh);
             _ssao = new SSAO(_backend, _quadMesh);
@@ -90,14 +94,13 @@ namespace Duality.Graphics.Post
             _effects.Add(_tonemap);
             _effects.Add(_gamma);
             _effects.Add(_fxaa);
-            _effects.Add(_smaa);
             _effects.Add(_fog);
             _effects.Add(_visualize);
             _effects.Add(_ssao);
             _effects.Add(_atmosphericScattering);
 
             // Default settings
-            AntiAliasing = AntiAliasing.SMAA;
+            AntiAliasing = AntiAliasing.FXAA;
             AntiAliasingQuality = AntiAliasingQuality.Ultra;
 
             HDRSettings = new HDRSettings
@@ -141,10 +144,6 @@ namespace Duality.Graphics.Post
             {
                 case AntiAliasing.FXAA:
                     _fxaa.Render(_temporaryRenderTargets[0], _temporaryRenderTargets[1]);
-                    SwapRenderTargets();
-                    break;
-                case AntiAliasing.SMAA:
-                    _smaa.Render(AntiAliasingQuality, _temporaryRenderTargets[0], _temporaryRenderTargets[1]);
                     SwapRenderTargets();
                     break;
                 case Post.AntiAliasing.Off:
@@ -221,7 +220,7 @@ namespace Duality.Graphics.Post
             if (VisualizationMode != VisualizationMode.None)
             {
                 // Visualize does it's own gamma, but only if it wants to (some things are linear)
-                _visualize.Render(VisualizationMode, camera, gbuffer, _ssaoOutput, _smaa, csmShadowBuffer, _temporaryRenderTargets[0], _temporaryRenderTargets[1]);
+                _visualize.Render(VisualizationMode, camera, gbuffer, _ssaoOutput, csmShadowBuffer, _temporaryRenderTargets[0], _temporaryRenderTargets[1]);
                 SwapRenderTargets();
             }
 
@@ -236,7 +235,6 @@ namespace Duality.Graphics.Post
             _bloom.Resize(width, height);
             _adaptLuminance.Resize(width, height);
             _gamma.Resize(width, height);
-            _smaa.Resize(width, height);
             _fxaa.Resize(width, height);
             _tonemap.Resize(width, height);
         }

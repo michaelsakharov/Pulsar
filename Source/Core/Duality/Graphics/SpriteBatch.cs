@@ -37,14 +37,12 @@ namespace Duality.Graphics
         /// <summary>
         /// Should always be created through Backend.CreateSpriteBatch
         /// </summary>
-        internal SpriteBatch(Backend backend, Renderer.RenderSystem renderSystem, ResourceManager resourceManager)
+        internal SpriteBatch(Backend backend, Renderer.RenderSystem renderSystem)
         {
             if (backend == null)
                 throw new ArgumentNullException("backend");
             if (renderSystem == null)
                 throw new ArgumentNullException("renderSystem");
-            if (resourceManager == null)
-                throw new ArgumentNullException("resourceManager");
 
             _backend = backend;
 
@@ -73,32 +71,32 @@ namespace Duality.Graphics
             });
         }
 
-        public void RenderQuad(Resources.Texture texture, Vector2 position)
+        public void RenderQuad(Duality.Resources.Texture texture, Vector2 position)
         {
             RenderQuad(texture, position, new Vector2(texture.Width, texture.Height), Vector4.One);
         }
 
-        public void RenderQuad(Resources.Texture texture, Vector2 position, Vector4 color)
+        public void RenderQuad(Duality.Resources.Texture texture, Vector2 position, Vector4 color)
         {
             RenderQuad(texture, position, new Vector2(texture.Width, texture.Height), color);
         }
 
-        public void RenderQuad(Resources.Texture texture, Vector2 position, Vector2 size)
+        public void RenderQuad(Duality.Resources.Texture texture, Vector2 position, Vector2 size)
         {
             RenderQuad(texture, position, size, Vector4.One);
         }
 
-        public void RenderQuad(Resources.Texture texture, Vector2 position, Vector2 size, Vector4 color)
+        public void RenderQuad(Duality.Resources.Texture texture, Vector2 position, Vector2 size, Vector4 color)
         {
             RenderQuad(texture, position, size, Vector2.Zero, Vector2.One, color);
         }
 
-        public void RenderQuad(Resources.Texture texture, Vector2 position, Vector2 size, Vector2 uvPosition, Vector2 uvSize)
+        public void RenderQuad(Duality.Resources.Texture texture, Vector2 position, Vector2 size, Vector2 uvPosition, Vector2 uvSize)
         {
             RenderQuad(texture, position, size, uvPosition, uvSize, Vector4.One);
         }
 
-        public void RenderQuad(Resources.Texture texture, Vector2 position, Vector2 size, Vector2 uvPosition, Vector2 uvSize, Vector4 color, SpriteFlags flags = SpriteFlags.AlphaBlend, float smoothing = 1.0f / 16.0f)
+        public void RenderQuad(Duality.Resources.Texture texture, Vector2 position, Vector2 size, Vector2 uvPosition, Vector2 uvSize, Vector4 color, SpriteFlags flags = SpriteFlags.AlphaBlend, float smoothing = 1.0f / 16.0f)
         {
             if (_lastQuad == _quads.Count)
             {
@@ -124,7 +122,7 @@ namespace Duality.Graphics
             if (_lastQuad == 0) // Bail out
                 return;
 
-            Resources.Texture lastTexture = null;
+			Duality.Resources.Texture lastTexture = null;
             var lastFlags = SpriteFlags.None;
             var lastSmoothing = 0.0f;
 
@@ -156,7 +154,7 @@ namespace Duality.Graphics
             _lastQuad = 0;
         }
 
-        void SubmitBatch(Resources.Texture texture, SpriteFlags flags, float smoothing, ref Matrix4 projectionMatrix)
+        void SubmitBatch(Duality.Resources.Texture texture, SpriteFlags flags, float smoothing, ref Matrix4 projectionMatrix)
         {
             var alphaBlend = (flags & SpriteFlags.AlphaBlend) == SpriteFlags.AlphaBlend;
 
@@ -193,7 +191,7 @@ namespace Duality.Graphics
 
         class QuadInfo
         {
-            public void Init(Resources.Texture texture, Vector2 position, Vector2 size, Vector2 uvPosition, Vector2 uvSize, Vector4 color, SpriteFlags flags, float smoothing)
+            public void Init(Duality.Resources.Texture texture, Vector2 position, Vector2 size, Vector2 uvPosition, Vector2 uvSize, Vector4 color, SpriteFlags flags, float smoothing)
             {
                 Texture = texture;
                 Position = position;
@@ -205,7 +203,7 @@ namespace Duality.Graphics
                 Smoothing = smoothing;
             }
 
-            public Resources.Texture Texture;
+            public Duality.Resources.Texture Texture;
             public Vector2 Position;
             public Vector2 Size;
             public Vector2 UvPositon;

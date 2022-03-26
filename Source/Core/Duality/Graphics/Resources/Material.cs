@@ -10,7 +10,7 @@ namespace Duality.Graphics.Resources
     {
         private bool Initialized = false;
 
-        public readonly Dictionary<string, Texture> Textures = new Dictionary<string, Texture>();
+        public readonly Dictionary<string, Duality.Resources.Texture> Textures = new Dictionary<string, Duality.Resources.Texture>();
 
         public ShaderProgram Shader;
         private ShaderHandles _handles;
@@ -63,7 +63,7 @@ namespace Duality.Graphics.Resources
 
             foreach (var uniform in _uniforms)
             {
-                uniform.Location = Shader.GetUniform(new Utility.HashedString(uniform.Name));
+                uniform.Location = Shader.GetUniform(new HashedString(uniform.Name));
             }
         }
 

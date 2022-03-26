@@ -17,7 +17,7 @@ namespace Duality.Graphics.Post.Effects
         private RenderTarget _renderTarget;
         private RenderTarget _renderTargetBlur;
         private Vector3[] _sampleKernel;
-        private Resources.Texture _noiseTexture;
+        private Duality.Resources.Texture _noiseTexture;
         private int _noiseSampler;
 
         public SSAO(Backend backend, BatchBuffer quadMesh) : base(backend, quadMesh)
@@ -36,19 +36,20 @@ namespace Duality.Graphics.Post.Effects
                 }));
 
             var noise = new Vector3[16];
+			var rnd = new System.Random();
             for (var i = 0; i < noise.Length; i++)
             {
                 noise[i] = new Vector3(
-                    Math.Util.Random(-1.0f, 1.0f),
-                    Math.Util.Random(-1.0f, 1.0f),
+                    rnd.NextFloat(-1.0f, 2.0f),
+					rnd.NextFloat(-1.0f, 2.0f),
                     0.0f
                     );
 
-                noise[i] = noise[i].Normalize();
+                noise[i] = noise[i].Normalized;
             }
 
             var noiseData = GetBytes(noise);
-            _noiseTexture = _backend.CreateTexture("ssao_noise", 4, 4, Renderer.PixelFormat.Rgb, Renderer.PixelInternalFormat.Rgb16f, Renderer.PixelType.Float, noiseData, false);
+            //_noiseTexture = _backend.CreateTexture("ssao_noise", 4, 4, Renderer.PixelFormat.Rgb, Renderer.PixelInternalFormat.Rgb16f, Renderer.PixelType.Float, noiseData, false);
 
             _noiseSampler = _backend.RenderSystem.CreateSampler(new Dictionary<Renderer.SamplerParameterName, int>
             {
@@ -63,9 +64,9 @@ namespace Duality.Graphics.Post.Effects
             {
                 var scale = (float)i / (float)_sampleKernel.Length;
                 var v = new Vector3(
-                        Math.Util.Random(-1.0f, 1.0f),
-                        Math.Util.Random(-1.0f, 1.0f),
-                        Math.Util.Random(0.0f, 1.0f)
+						rnd.NextFloat(-1.0f, 2.0f),
+                        rnd.NextFloat(-1.0f, 2.0f),
+                        rnd.NextFloat(0.0f, 2.0f)
                     );
 
                 v *= (0.1f + 0.9f * scale * scale);
@@ -100,6 +101,7 @@ namespace Duality.Graphics.Post.Effects
 
         public RenderTarget Render(Camera camera, RenderTarget gbuffer)
         {
+			return gbuffer;
             if (_shaderParams == null)
             {
                 _shaderParams = new SSAOShaderParams();

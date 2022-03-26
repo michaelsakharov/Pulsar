@@ -80,7 +80,7 @@ namespace Duality.Resources
 		private	TexturePixelFormat	pixelformat	= TexturePixelFormat.Rgba;
 		private	bool				anisoFilter	= false;
 
-		[DontSerialize] private	INativeTexture nativeTex = null;
+		[DontSerialize] private	NativeTexture nativeTex = null;
 		[DontSerialize] private	int		pxWidth		= 0;
 		[DontSerialize] private	int		pxHeight	= 0;
 		[DontSerialize] private	float	pxDiameter	= 0.0f;
@@ -143,9 +143,21 @@ namespace Duality.Resources
 		/// [GET] The backends native texture. You shouldn't use this unless you know exactly what you're doing.
 		/// </summary>
 		[EditorHintFlags(MemberFlags.Invisible)]
-		public INativeTexture Native
+		public NativeTexture Native
 		{
 			get { return this.nativeTex; }
+		}
+		public int Handle
+		{
+			get { return this.nativeTex.Handle; }
+		}
+		public int Width
+		{
+			get { return this.nativeTex.Width; }
+		}
+		public int Height
+		{
+			get { return this.nativeTex.Height; }
 		}
 		/// <summary>
 		/// [GET] The UV coordinate size that represents the texture's used content area.

@@ -59,9 +59,9 @@ namespace Duality.Backend.Dummy
 		{
 			return new DummyNativeGraphicsBuffer(type);
 		}
-		INativeTexture IGraphicsBackend.CreateTexture()
+		NativeTexture IGraphicsBackend.CreateTexture()
 		{
-			return new DummyNativeTexture();
+			return new NativeTexture();
 		}
 		INativeRenderTarget IGraphicsBackend.CreateRenderTarget()
 		{

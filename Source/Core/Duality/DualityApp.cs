@@ -14,6 +14,7 @@ using Duality.Cloning;
 using Duality.Input;
 using Duality.IO;
 using Duality.Launcher;
+using System.Runtime.CompilerServices;
 
 namespace Duality
 {
@@ -69,6 +70,7 @@ namespace Duality
 		public const string DataDirectory   = "Data";
 
 
+		private static Thread				   mainThread;
 		private static bool                    initialized        = false;
 		private static bool                    isUpdating         = false;
 		private static bool                    runFromEditor      = false;
@@ -258,6 +260,7 @@ namespace Duality
 		public static void Init(ExecutionEnvironment env, ExecutionContext context, IAssemblyLoader plugins, LauncherArgs launcherArgs)
 		{
 			if (initialized) return;
+			mainThread = Thread.CurrentThread;
 
 			// Process command line options
 			if (launcherArgs.IsDebugging) System.Diagnostics.Debugger.Launch();
@@ -998,6 +1001,28 @@ namespace Duality
 			{
 				action();
 			}
+		}
+		/// <summary>
+		/// Guards the calling method agains being called from a thread that is not the main thread.
+		/// Use this only at critical code segments that are likely to be called from somewhere else than the main thread
+		/// but aren't allowed to.
+		/// </summary>
+		/// <param name="silent"></param>
+		/// <returns>True if everyhing is allright. False if the guarded state has been violated.</returns>
+		[System.Diagnostics.DebuggerStepThrough]
+		internal static bool GuardSingleThreadState(bool silent = false, [CallerMemberName] string callerInfoMember = null)
+		{
+			if (Thread.CurrentThread != mainThread)
+			{
+				if (!silent)
+				{
+					Logs.Core.WriteError(
+						"Method {0} isn't allowed to be called from a Thread that is not the main Thread.",
+						callerInfoMember);
+				}
+				return false;
+			}
+			return true;
 		}
 	}
 }

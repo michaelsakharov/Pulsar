@@ -11,6 +11,7 @@ using OpenTK.Graphics.OpenGL;
 
 using Duality.Drawing;
 using Duality.Resources;
+using Duality.Backend;
 
 namespace Duality.Backend.DefaultOpenTK
 {
@@ -294,7 +295,7 @@ namespace Duality.Backend.DefaultOpenTK
 		{
 			return new NativeGraphicsBuffer(type);
 		}
-		INativeTexture IGraphicsBackend.CreateTexture()
+		NativeTexture IGraphicsBackend.CreateTexture()
 		{
 			return new NativeTexture();
 		}

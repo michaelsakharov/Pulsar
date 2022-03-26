@@ -21,7 +21,7 @@ namespace Duality.Backend
 		void EndRendering();
 
 		INativeGraphicsBuffer CreateBuffer(GraphicsBufferType type);
-		INativeTexture CreateTexture();
+		NativeTexture CreateTexture();
 		INativeRenderTarget CreateRenderTarget();
 		INativeShaderPart CreateShaderPart();
 		INativeShaderProgram CreateShaderProgram();

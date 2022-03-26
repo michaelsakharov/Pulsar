@@ -11,7 +11,7 @@ namespace Duality.Graphics.Post.Effects
 		private Resources.ShaderProgram _shader;
 		private GammaShaderParams _shaderParams;
 
-        public Resources.Texture ColorCorrectLUT { get; set; }
+        public Duality.Resources.Texture ColorCorrectLUT { get; set; }
         public bool EnableColorCorrection { get; set; } = false;
 
         public Gamma(Backend backend, BatchBuffer quadMesh)

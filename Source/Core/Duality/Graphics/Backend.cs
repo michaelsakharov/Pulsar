@@ -62,7 +62,6 @@ namespace Duality.Graphics
         private readonly ConcurrentQueue<Action> _processQueue = new ConcurrentQueue<Action>();
         private readonly List<Action> _endOfFrameActions = new List<Action>();
 
-        private readonly ResourceManager _resourceManager;
         private readonly ContextReference _contextReference;
 
         private bool _isExiting = false;
@@ -83,12 +82,11 @@ namespace Duality.Graphics
 
         private ShaderHotReloader _shaderHotReloader;
 
-        public Backend(ResourceManager resourceManager, int width, int height, ContextReference contextReference)
+        public Backend(int width, int height, ContextReference contextReference)
         {
             Width = width;
             Height = height;
 
-            _resourceManager = resourceManager ?? throw new ArgumentNullException("resourceManager");
             _contextReference = contextReference;
 
             // Setup the render system
@@ -916,18 +914,17 @@ namespace Duality.Graphics
                 renderTarget.IsReady = true;
             });
 
-            var textures = new Resources.Texture[textureHandles.Length];
+            var textures = new Duality.Resources.Texture[textureHandles.Length];
             for (var i = 0; i < textureHandles.Length; i++)
             {
-                var texture = new Resources.Texture(this)
-                {
-                    Handle = textureHandles[i],
-                    Width = definition.Width,
-                    Height = definition.Height
-                };
+                //var texture = new Duality.Resources.Texture(this)
+                //{
+                //    Handle = textureHandles[i],
+                //    Width = definition.Width,
+                //    Height = definition.Height
+                //};
 
-                _resourceManager.Manage("_sys/render_targets/" + name + "_" + StringConverter.ToString(i), texture);
-
+				var texture = new Duality.Resources.Texture(definition.Width, definition.Height);
                 textures[i] = texture;
             }
 
@@ -938,11 +935,16 @@ namespace Duality.Graphics
 
         public void ResizeRenderTarget(RenderTarget renderTarget, int width, int height)
         {
+
+
             foreach (var texture in renderTarget.Textures)
             {
-                texture.Width = width;
-                texture.Height = height;
-            }
+				texture.Size = new Point2(width, height);
+				texture.ReloadData();
+
+				//texture.Width = width;
+				//texture.Height = height;
+			}
 
             renderTarget.Width = width;
             renderTarget.Height = height;
@@ -955,33 +957,9 @@ namespace Duality.Graphics
             return new BatchBuffer(RenderSystem, vertexFormat, initialCount);
         }
 
-        public Resources.Texture CreateTexture<T>(string name, int width, int height, PixelFormat pixelFormat, PixelInternalFormat interalFormat, PixelType pixelType, T[] data, bool mipmap)
-            where T : struct
-        {
-            var handle = RenderSystem.CreateTexture(width, height, data, pixelFormat, interalFormat, pixelType, mipmap, null);
-
-            var texture = new Resources.Texture(this)
-            {
-                Handle = handle,
-                Width = width,
-                Height = height,
-                PixelInternalFormat = interalFormat,
-                PixelFormat = pixelFormat
-            };
-
-            _resourceManager.Manage(name, texture);
-
-            return texture;
-        }
-
-        public void UpdateTexture(Resources.Texture texture, bool mipmap, byte[] data)
-        {
-            RenderSystem.SetTextureData(texture.Handle, texture.Width, texture.Height, data, texture.PixelFormat, texture.PixelInternalFormat, PixelType.UnsignedByte, mipmap, null);
-        }
-
         public SpriteBatch CreateSpriteBatch()
         {
-            return new SpriteBatch(this, RenderSystem, _resourceManager);
+            return new SpriteBatch(this, RenderSystem);
         }
 
         public int CreateRenderState(bool enableAlphaBlend = false, bool enableDepthWrite = true, bool enableDepthTest = true, BlendingFactorSrc src = BlendingFactorSrc.Zero, BlendingFactorDest dest = BlendingFactorDest.One, CullFaceMode cullFaceMode = CullFaceMode.Back, bool enableCullFace = true, DepthFunction depthFunction = DepthFunction.Less, bool wireFrame = false)

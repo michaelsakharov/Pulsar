@@ -15,7 +15,7 @@ namespace Duality.Graphics
 		internal int Handle;
 		internal int Width;
 		internal int Height;
-		public Resources.Texture[] Textures { get; internal set; }
+		public Duality.Resources.Texture[] Textures { get; internal set; }
 
 		public bool IsReady { get; internal set; }
 
@@ -26,7 +26,7 @@ namespace Duality.Graphics
 			Height = height;
 		}
 
-		public Resources.Texture GetTexture(int i)
+		public Duality.Resources.Texture GetTexture(int i)
 		{
 			return Textures[i];
 		}

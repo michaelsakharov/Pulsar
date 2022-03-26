@@ -15,7 +15,7 @@ namespace Duality.Backend
 		/// <param name="targets"></param>
 		/// <param name="multisample"></param>
 		/// <param name="depthBuffer"></param>
-		void Setup(IReadOnlyList<INativeTexture> targets, AAQuality multisample, bool depthBuffer);
+		void Setup(IReadOnlyList<NativeTexture> targets, AAQuality multisample, bool depthBuffer);
 
 		/// <summary>
 		/// Retrieves the rendering targets pixel data from video memory in the Rgba8 format.

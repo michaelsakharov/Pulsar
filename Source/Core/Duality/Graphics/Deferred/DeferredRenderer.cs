@@ -70,7 +70,7 @@ namespace Duality.Graphics.Deferred
         private int[] _lightSamplers = new int[5];
 
         private RenderTarget _shadowBuffer = null;
-        private Texture _specularIntegarion;
+        private Duality.Resources.Texture _specularIntegarion;
 
         public RenderTarget SpotShadowAtlas;
         private int _spotShadowCount = 0;
@@ -145,7 +145,7 @@ namespace Duality.Graphics.Deferred
                 _lightComputeShader[i] = _resourceManager.Load<Resources.ShaderProgram>("/shaders/deferred/light_cs", shadowQualities[i]);
             }
             
-            _specularIntegarion = _resourceManager.Load<Resources.Texture>("/textures/specular_integartion");
+            _specularIntegarion = _resourceManager.Load<Duality.Resources.Texture>("/textures/specular_integartion");
 
             _quadMesh = _backend.CreateBatchBuffer();
             _quadMesh.Begin();
@@ -599,7 +599,7 @@ namespace Duality.Graphics.Deferred
                 new Vector3(0, 1, 0)
             };
 
-            var projection = Matrix4.CreatePerspectiveFieldOfView(Math.Util.DegreesToRadians(92.0f), 1.0f, 0.1f, light.Range);
+            var projection = Matrix4.CreatePerspectiveFieldOfView(MathF.DegToRad(92.0f), 1.0f, 0.1f, light.Range);
 
             for (var i = 0; i < 6; i++)
             {

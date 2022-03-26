@@ -50,7 +50,7 @@ namespace Duality.Graphics.Resources
                     var define = $"HAS_SAMPLER_{texture.Key.ToUpperInvariant()}";
 
                     shaderDefines.Add(define);
-                    material.Textures.Add(samplerName, await _resourceManager.LoadAsync<Texture>(texture.Value));
+                    material.Textures.Add(samplerName, await _resourceManager.LoadAsync<Duality.Resources.Texture>(texture.Value));
                 }
             }
 

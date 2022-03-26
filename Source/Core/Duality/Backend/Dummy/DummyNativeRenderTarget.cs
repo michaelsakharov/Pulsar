@@ -8,7 +8,7 @@ namespace Duality.Backend.Dummy
 {
 	internal class DummyNativeRenderTarget : INativeRenderTarget
 	{
-		void INativeRenderTarget.Setup(IReadOnlyList<INativeTexture> targets, AAQuality multisample, bool depthBuffer) { }
+		void INativeRenderTarget.Setup(IReadOnlyList<NativeTexture> targets, AAQuality multisample, bool depthBuffer) { }
 		void INativeRenderTarget.GetData(IntPtr buffer, ColorDataLayout dataLayout, ColorDataElementType dataElementType, int targetIndex, int x, int y, int width, int height) { }
 		void IDisposable.Dispose() { }
 	}

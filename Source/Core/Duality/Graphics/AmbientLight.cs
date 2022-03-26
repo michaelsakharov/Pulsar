@@ -9,9 +9,9 @@ namespace Duality.Graphics
 {
     public class AmbientLight
     {
-        public Texture Irradiance { get; set; }
+        public Duality.Resources.Texture Irradiance { get; set; }
         public float IrradianceStrength { get; set; } = 1.0f;
-        public Texture Specular { get; set; }
+        public Duality.Resources.Texture Specular { get; set; }
         public float SpecularStrength { get; set; } = 1.0f;
     }
 }

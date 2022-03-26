@@ -10,7 +10,6 @@ namespace Duality.Graphics.Post
 	{
 		Off,
 		FXAA,
-		SMAA,
 		Last
 	}
 }

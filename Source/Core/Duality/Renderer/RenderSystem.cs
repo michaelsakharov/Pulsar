@@ -137,40 +137,9 @@ namespace Duality.Renderer
             }
         }
 
-        public int CreateTexture<T>(int width, int height, T[] data, PixelFormat format, PixelInternalFormat internalFormat, PixelType type, bool mipmap, OnLoadedCallback loadedCallback)
-            where T : struct
-        {
-            var handle = _textureManager.Create();
-            SetTextureData(handle, width, height, data, format, internalFormat, type, mipmap, loadedCallback);
-
-            return handle;
-        }
-
         public void DestroyTexture(int handle)
         {
             _addToWorkQueue(() => _textureManager.Destroy(handle));
-        }
-
-        public int CreateFromDDS(byte[] data, out int width, out int height)
-        {
-            var handle = _textureManager.Create();
-
-            _textureManager.LoadDDS(handle, data, out width, out height);
-
-            return handle;
-        }
-
-        public void SetTextureData<T>(int handle, int width, int height, T[] data, PixelFormat format, PixelInternalFormat internalFormat, PixelType type, bool mipmap, OnLoadedCallback loadedCallback)
-            where T : struct
-        {
-            Action loadAction = () =>
-            {
-                _textureManager.SetPixelData(handle, TextureTarget.Texture2D, width, height, data, format, internalFormat, type, mipmap);
-
-                loadedCallback?.Invoke(handle, true, "");
-            };
-
-            _addToWorkQueue(loadAction);
         }
 
         public void BindTexture(int handle, int textureUnit)
