@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-
+using Duality.Backend;
+using Duality.Components;
 using Duality.Editor;
 using Duality.Resources;
 
@@ -13,9 +14,10 @@ namespace Duality.Drawing
 	/// <seealso cref="Material"/>
 	public class BatchInfo : IEquatable<BatchInfo>
 	{
-		private ContentRef<DrawTechnique> technique  = DrawTechnique.Mask;
+		private ContentRef<DrawTechnique> technique  = DrawTechnique.Solid;
 		private ShaderParameterCollection parameters = null;
-		
+		private ShaderHandles _handles;
+
 		/// <summary>
 		/// [GET / SET] The <see cref="Duality.Resources.DrawTechnique"/> that is used.
 		/// </summary>
@@ -226,6 +228,20 @@ namespace Duality.Drawing
 
 			return default(T);
 		}
+		public object GetValue(string name, ShaderFieldType type)
+		{
+			// Retrieve the material parameter if available
+			object result;
+			if (this.parameters != null && this.parameters.TryGet(name, type, out result))
+				return result;
+
+			// Fall back to the used techniques default parameter value
+			DrawTechnique tech = this.technique.Res;
+			if (tech != null && tech.DefaultParameters.TryGet(name, type, out result))
+				return result;
+
+			return null;
+		}
 		/// <summary>
 		/// Retrieves a texture from the specified variable.
 		/// </summary>
@@ -283,6 +299,170 @@ namespace Duality.Drawing
 				return result;
 
 			return null;
+		}
+
+		public ShaderParameterCollection GetParameters()
+		{
+			if (this.parameters != null)
+				return this.parameters;
+			if (this.technique.Res != null)
+				return this.technique.Res.DefaultParameters;
+			return null;
+		}
+
+		[NonSerialized] private int[] _textureHandles;
+		[NonSerialized] private int[] _samplerToTexture;
+		[NonSerialized] private int[] _samplers;
+		[NonSerialized] private bool Initialized;
+
+		public void Initialize(Duality.Graphics.Backend backend)
+		{
+			Initialized = true;
+			_handles = new ShaderHandles();
+
+			DrawTechnique tech = this.technique.Res ?? DrawTechnique.Solid.Res;
+			tech.BindUniformLocations(_handles);
+
+			var Textures = GetParameters().GetAllTextures();
+
+			_textureHandles = new int[Textures.Count];
+			_samplerToTexture = new int[Textures.Count];
+			_samplers = new int[Textures.Count];
+
+			var i = 0;
+			foreach (var samplerInfo in Textures)
+			{
+				_textureHandles[i] = samplerInfo.Item2.Res.Handle;
+				_samplers[i] = backend.DefaultSampler;
+				_samplerToTexture[i] = tech.GetUniform(samplerInfo.Item1);
+				i++;
+			}
+		}
+
+		public void BeginInstance(Duality.Graphics.Backend backend, Camera camera, int renderStateId)
+		{
+			if (!Initialized)
+			{
+				Initialize(backend);
+			}
+
+			DrawTechnique tech = this.technique.Res ?? DrawTechnique.Solid.Res;
+
+			backend.BeginInstance(tech.Handle, _textureHandles, samplers: _samplers, renderStateId: renderStateId);
+			for (var i = 0; i < _samplerToTexture.Length; i++)
+			{
+				backend.BindShaderVariable(_samplerToTexture[i], i);
+			}
+
+			// Bind Shader
+			NativeShaderProgram nativeShader = tech.NativeShader as NativeShaderProgram;
+			NativeShaderProgram.Bind(nativeShader);
+
+			// Setup shader data
+			ShaderFieldInfo[] varInfo = nativeShader.Fields;
+			int[] locations = nativeShader.FieldLocations;
+
+			backend.BindShaderVariable(_handles.Time, backend.ElapsedTime);
+			Vector3 camPos = camera.GameObj.Transform.Pos;
+			backend.BindShaderVariable(_handles.CameraPosition, ref camPos);
+
+			// Setup sampler bindings and uniform data
+			for (int i = 0; i < varInfo.Length; i++)
+			{
+				ShaderFieldInfo field = varInfo[i];
+				int location = locations[i];
+
+				if (field.Scope == ShaderFieldScope.Attribute) continue;
+				//if (this.sharedShaderParameters.Contains(field.Name)) continue;
+
+				if (field.Type == ShaderFieldType.Sampler2D)
+				{
+					// textures are handled Above
+					//ContentRef<Texture> texRef = GetInternalTexture(field.Name);
+					//NativeTexture.Bind(texRef, curSamplerIndex);
+					//GL.Uniform1(location, curSamplerIndex);
+				}
+				else
+				{
+					object data = GetValue(field.Name, field.Type);
+					if (data == null)
+						continue;
+					SetUniform(backend, field, location, data);
+				}
+			}
+			//NativeTexture.ResetBinding(curSamplerIndex);
+		}
+
+		public static void SetUniform(Duality.Graphics.Backend backend, ShaderFieldInfo field, int location, object data)
+		{
+			if (field.Scope != ShaderFieldScope.Uniform) return;
+			if (location == -1) return;
+			switch (field.Type)
+			{
+				case ShaderFieldType.Bool:
+				case ShaderFieldType.Int:
+					backend.BindShaderVariable(location, (int)data);
+					break;
+				case ShaderFieldType.Float:
+					backend.BindShaderVariable(location, (float)data);
+					break;
+				case ShaderFieldType.Vec2:
+					var vec2 = (Vector2)data;
+					backend.BindShaderVariable(location, ref vec2);
+					break;
+				case ShaderFieldType.Vec3:
+					var vec3 = (Vector2)data;
+					backend.BindShaderVariable(location, ref vec3);
+					break;
+				case ShaderFieldType.Vec4:
+					var vec4 = (Vector2)data;
+					backend.BindShaderVariable(location, ref vec4);
+					break;
+				case ShaderFieldType.Mat2:
+					break;
+				case ShaderFieldType.Mat3:
+					var mat3 = (Vector2)data;
+					backend.BindShaderVariable(location, ref mat3);
+					break;
+				case ShaderFieldType.Mat4:
+					var mat2 = (Vector2)data;
+					backend.BindShaderVariable(location, ref mat2);
+					break;
+			}
+		}
+
+		/// <summary>
+		/// Bind the material, this will call BeginInstance on the backend
+		/// It is up to the caller to call EndInstance
+		/// </summary>
+		/// <param name="backend"></param>
+		/// <param name="world"></param>
+		/// <param name="worldView"></param>
+		/// <param name="itWorldView"></param>
+		/// <param name="modelViewProjection"></param>
+		public void BindPerObject(Duality.Graphics.Backend backend, ref Matrix4 world, ref Matrix4 worldView, ref Matrix4 itWorld, ref Matrix4 modelViewProjection, Graphics.SkeletalAnimation.SkeletonInstance skeleton)
+		{
+			backend.BindShaderVariable(_handles.ModelViewProjection, ref modelViewProjection);
+			backend.BindShaderVariable(_handles.World, ref world);
+			backend.BindShaderVariable(_handles.WorldView, ref worldView);
+			backend.BindShaderVariable(_handles.ItWorld, ref itWorld);
+
+			if (skeleton != null)
+			{
+				backend.BindShaderVariable(_handles.Bones, ref skeleton.FinalBoneTransforms);
+			}
+		}
+
+		class ShaderHandles
+		{
+			public int ModelViewProjection = 0;
+			public int World = 0;
+			public int WorldView = 0;
+			public int ItWorldView = 0;
+			public int Bones = 0;
+			public int CameraPosition = 0;
+			public int ItWorld = 0;
+			public int Time = 0;
 		}
 
 		public override string ToString()

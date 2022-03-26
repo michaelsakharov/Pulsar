@@ -10,7 +10,7 @@ namespace Duality.Graphics.Post.Effects
 {
     public class Visualize : BaseEffect
     {
-        private Resources.ShaderProgram _shader;
+        private Duality.Resources.Shader _shader;
         private ShaderParams _shaderParams;
 
         public Visualize(Backend backend, BatchBuffer quadMesh)
@@ -21,10 +21,10 @@ namespace Duality.Graphics.Post.Effects
         internal override void LoadResources(Duality.Resources.ResourceManager resourceManager)
         {
             base.LoadResources(resourceManager);
-            _shader = resourceManager.Load<Resources.ShaderProgram>("/shaders/post/visualize");
+            _shader = resourceManager.Load<Duality.Resources.Shader>("/shaders/post/visualize");
         }
 
-        public void Render(VisualizationMode mode, Camera camera, RenderTarget gbuffer, RenderTarget ssao, RenderTarget csmShadowBuffer, RenderTarget input, RenderTarget output)
+        public void Render(VisualizationMode mode, Duality.Components.Camera camera, RenderTarget gbuffer, RenderTarget ssao, RenderTarget csmShadowBuffer, RenderTarget input, RenderTarget output)
         {
             if (_shaderParams == null)
             {

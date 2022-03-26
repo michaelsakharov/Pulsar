@@ -19,7 +19,6 @@ namespace Duality.Graphics.Deferred
         private const int PointShadowResolution = 256;
         private const int PointShadowAtlasResolution = PointShadowResolution * 6;
 
-        private readonly Duality.Resources.ResourceManager _resourceManager;
         private readonly Backend _backend;
         private readonly ShadowRenderer _shadowRenderer;
 
@@ -35,9 +34,9 @@ namespace Duality.Graphics.Deferred
 
         private BatchBuffer _quadMesh;
 
-        private Resources.ShaderProgram _ambientLightShader;
-        private Resources.ShaderProgram[] _lightShaders;
-        private Resources.ShaderProgram[] _lightComputeShader = new ShaderProgram[(int)ShadowQuality.High + 1];
+        private Duality.Resources.Shader _ambientLightShader;
+        private Duality.Resources.Shader[] _lightShaders;
+        private Duality.Resources.Shader[] _lightComputeShader = new Duality.Resources.Shader[(int)ShadowQuality.High + 1];
 
         private const int NumLightInstances = 1024;
         private readonly PointLightDataCS[] _pointLightDataCS = new PointLightDataCS[NumLightInstances];
@@ -115,13 +114,13 @@ namespace Duality.Graphics.Deferred
 						new Definition.Attachment(Definition.AttachmentPoint.Depth, Renderer.PixelFormat.DepthComponent, Renderer.PixelInternalFormat.DepthComponent16, Renderer.PixelType.Float, 0)
                     }));
 
-            _ambientLightShader = _resourceManager.Load<Duality.Graphics.Resources.ShaderProgram>("/shaders/deferred/ambient");
+            _ambientLightShader = _resourceManager.Load<Duality.Resources.Shader>("/shaders/deferred/ambient");
 
             // Init light shaders
             var lightTypes = new string[] { "DIRECTIONAL_LIGHT" };
             var lightPermutations = new string[] { "NO_SHADOWS", "SHADOWS" };
 
-            _lightShaders = new Resources.ShaderProgram[lightTypes.Length * lightPermutations.Length];
+            _lightShaders = new Duality.Resources.Shader[lightTypes.Length * lightPermutations.Length];
             _lightParams = new LightParams[lightTypes.Length * lightPermutations.Length];
 
             for (var l = 0; l < lightTypes.Length; l++)
@@ -132,7 +131,7 @@ namespace Duality.Graphics.Deferred
                     var index = l * lightPermutations.Length + p;
                     var defines = lightType + ";" + lightPermutations[p];
 
-                    _lightShaders[index] = _resourceManager.Load<Duality.Graphics.Resources.ShaderProgram>("/shaders/deferred/light", defines);
+                    _lightShaders[index] = _resourceManager.Load<Duality.Resources.Shader>("/shaders/deferred/light", defines);
                     _lightParams[index] = new LightParams();
                 }
             }
@@ -142,7 +141,7 @@ namespace Duality.Graphics.Deferred
             var shadowQualities = new string[] { "SHADOW_QUALITY_LOWEST", "SHADOW_QUALITY_LOW", "SHADOW_QUALITY_MEDIUM", "SHADOW_QUALITY_HIGH" };
             for (var i = 0; i < _lightComputeShader.Length; i++)
             {
-                _lightComputeShader[i] = _resourceManager.Load<Resources.ShaderProgram>("/shaders/deferred/light_cs", shadowQualities[i]);
+                _lightComputeShader[i] = _resourceManager.Load<Duality.Resources.Shader>("/shaders/deferred/light_cs", shadowQualities[i]);
             }
             
             _specularIntegarion = _resourceManager.Load<Duality.Resources.Texture>("/textures/specular_integartion");
@@ -188,7 +187,7 @@ namespace Duality.Graphics.Deferred
             }
         }
 
-        public RenderTarget RenderGBuffer(Stage stage, Camera camera)
+        public RenderTarget RenderGBuffer(Stage stage, Duality.Components.Camera camera)
         {
             Initialize();
 
@@ -208,7 +207,7 @@ namespace Duality.Graphics.Deferred
             return _gbuffer;
         }
 
-        public RenderTarget RenderLighting(Stage stage, Camera camera, RenderTarget shadowBuffer, RenderTarget ssao)
+        public RenderTarget RenderLighting(Stage stage, Duality.Components.Camera camera, RenderTarget shadowBuffer, RenderTarget ssao)
         {
             Initialize();
 
@@ -240,7 +239,7 @@ namespace Duality.Graphics.Deferred
             return dispatchSize;
         }
 
-        private void RenderScene(Stage stage, Camera camera, ref Matrix4 view, ref Matrix4 projection)
+        private void RenderScene(Stage stage, Duality.Components.Camera camera, ref Matrix4 view, ref Matrix4 projection)
         {
             var viewProjection = view * projection;
 
@@ -249,7 +248,7 @@ namespace Duality.Graphics.Deferred
 
             _renderOperations.GetOperations(out var operations, out var count);
 
-            Resources.Material activeMaterial = null;
+			Duality.Resources.Material activeMaterial = null;
             Matrix4 worldView, world, itWorld, worldViewProjection;
 
             for (var i = 0; i < count; i++)
@@ -271,7 +270,7 @@ namespace Duality.Graphics.Deferred
             }
         }
 
-        private void RenderAmbientLight(Camera camera, Stage stage, RenderTarget ssao)
+        private void RenderAmbientLight(Duality.Components.Camera camera, Stage stage, RenderTarget ssao)
         {
             Matrix4 modelViewProjection = Matrix4.Identity;
 
@@ -301,13 +300,14 @@ namespace Duality.Graphics.Deferred
             _backend.BindShaderVariable(_ambientLightParams.Mode, irradianceHandle == 0 ? 0 : 1);
             _backend.BindShaderVariable(_ambientLightParams.IrradianceStrength, stage.AmbientLight?.IrradianceStrength ?? 1.0f);
             _backend.BindShaderVariable(_ambientLightParams.SpecularStrength, stage.AmbientLight?.SpecularStrength ?? 1.0f);
-            _backend.BindShaderVariable(_ambientLightParams.CameraPosition, ref camera.Position);
+			var Pos = camera.GameObj.Transform.Pos;
+			_backend.BindShaderVariable(_ambientLightParams.CameraPosition, ref Pos);
             _backend.BindShaderVariable(_ambientLightParams.InvViewProjection, ref inverseViewProjectionMatrix);
 
             _backend.DrawMesh(_quadMesh.MeshHandle);
         }
 
-        private void RenderLights(Camera camera, ref Matrix4 view, ref Matrix4 projection, IReadOnlyCollection<Components.LightComponent> lights, Stage stage)
+        private void RenderLights(Duality.Components.Camera camera, ref Matrix4 view, ref Matrix4 projection, IReadOnlyCollection<Components.LightComponent> lights, Stage stage)
         {
             var frustum = camera.GetFrustum();
 
@@ -324,7 +324,7 @@ namespace Duality.Graphics.Deferred
             _backend.ProfileEndSection(Profiler.DirectionaLight);
         }
 
-        private void RenderDirectionalLight(Camera camera, BoundingFrustum cameraFrustum, ref Matrix4 view, ref Matrix4 projection, Stage stage, Components.LightComponent light)
+        private void RenderDirectionalLight(Duality.Components.Camera camera, BoundingFrustum cameraFrustum, ref Matrix4 view, ref Matrix4 projection, Stage stage, Components.LightComponent light)
         {
             if (light.Type != LighType.Directional)
                 return;
@@ -378,11 +378,13 @@ namespace Duality.Graphics.Deferred
             _backend.BindShaderVariable(shaderParams.ScreenSize, ref _screenSize);
             _backend.BindShaderVariable(shaderParams.ModelViewProjection, ref modelViewProjection);
             _backend.BindShaderVariable(shaderParams.LightColor, ref lightColor);
-            _backend.BindShaderVariable(shaderParams.CameraPosition, ref camera.Position);
+			var Pos = camera.GameObj.Transform.Pos;
+			_backend.BindShaderVariable(shaderParams.CameraPosition, ref Pos);
 
             Vector3 unitZ = Vector3.UnitZ;
-            Vector3.Transform(ref unitZ, ref light.Owner.Orientation, out var lightDirWS);
-            lightDirWS = lightDirWS.Normalize();
+			var quat = light.GameObj.Transform.Quaternion;
+			Vector3.Transform(ref unitZ, ref quat, out var lightDirWS);
+            lightDirWS = lightDirWS.Normalized;
 
             _backend.BindShaderVariable(shaderParams.LightDirection, ref lightDirWS);
 
@@ -394,7 +396,7 @@ namespace Duality.Graphics.Deferred
             _backend.EndInstance();
         }
 
-        private unsafe void RenderTiledLights(Camera camera, BoundingFrustum cameraFrustum, ref Matrix4 view, ref Matrix4 projection, Stage stage, IReadOnlyCollection<Components.LightComponent> lights)
+        private unsafe void RenderTiledLights(Duality.Components.Camera camera, BoundingFrustum cameraFrustum, ref Matrix4 view, ref Matrix4 projection, Stage stage, IReadOnlyCollection<Components.LightComponent> lights)
         {
             // Do light stuff!
             var boundingSphere = new BoundingSphere();
@@ -405,7 +407,7 @@ namespace Duality.Graphics.Deferred
 
             // Sort by distance, this prioritizes closer shadow casting lights
             // TODO: This generates the garbage
-            lights = lights.OrderBy(x => (x.Owner.Position - camera.Position).LengthSquared).ToList();
+            lights = lights.OrderBy(x => (x.GameObj.Transform.Pos - camera.GameObj.Transform.Pos).LengthSquared).ToList();
             _backend.ProfileBeginSection(Profiler.ShadowRenderPointSpot);
             foreach (var light in lights)
             {
@@ -414,7 +416,7 @@ namespace Duality.Graphics.Deferred
 
                 var radius = light.Range * 1.1f;
 
-                var lightPositionWS = light.Owner.Position;
+                var lightPositionWS = light.GameObj.Transform.Pos;
 
                 boundingSphere.Center = lightPositionWS;
                 boundingSphere.Radius = radius;
@@ -447,8 +449,9 @@ namespace Duality.Graphics.Deferred
                 else
                 {
                     Vector3 unitZ = Vector3.UnitZ;
-                    Vector3.Transform(ref unitZ, ref light.Owner.Orientation, out var lightDirWS);
-                    lightDirWS = lightDirWS.Normalize();
+					var quat = light.GameObj.Transform.Quaternion;
+					Vector3.Transform(ref unitZ, ref quat, out var lightDirWS);
+                    lightDirWS.Normalize();
 
                     _spotLightDataCS[spotLightCount].PositionRange = new Vector4(lightPositionWS, light.Range);
                     _spotLightDataCS[spotLightCount].ColorInnerAngle = new Vector4(lightColor, light.InnerAngle);
@@ -512,7 +515,8 @@ namespace Duality.Graphics.Deferred
             var clipDistance = new Vector2(camera.NearClipDistance, camera.FarClipDistance);
             _backend.BindShaderVariable(_computeLightParams.CameraClipPlanes, ref clipDistance);
 
-            _backend.BindShaderVariable(_computeLightParams.CameraPositionWS, ref camera.Position);
+			var Pos = camera.GameObj.Transform.Pos;
+			_backend.BindShaderVariable(_computeLightParams.CameraPositionWS, ref Pos);
             _backend.BindShaderVariable(_computeLightParams.View, ref view);
             _backend.BindShaderVariable(_computeLightParams.Projection, ref projection);
             _backend.BindShaderVariable(_computeLightParams.SpotShadowMatrices, ref _spotShadowMatrices);
@@ -545,8 +549,9 @@ namespace Duality.Graphics.Deferred
 
             // Light direction
             Vector3 unitZ = Vector3.UnitZ;
-            Vector3.Transform(ref unitZ, ref light.Owner.Orientation, out var lightDirWS);
-            lightDirWS = lightDirWS.Normalize();
+			var quat = light.GameObj.Transform.Quaternion;
+			Vector3.Transform(ref unitZ, ref quat, out var lightDirWS);
+            lightDirWS = lightDirWS.Normalized;
 
             // Calculate index and viewport
             var index = _spotShadowCount++;
@@ -555,7 +560,7 @@ namespace Duality.Graphics.Deferred
             var y = 0;
             
             // Camera matrix
-            var view = Matrix4.LookAt(light.Owner.Position, light.Owner.Position + lightDirWS, Vector3.UnitY);
+            var view = Matrix4.CreateLookAt(light.GameObj.Transform.Pos, light.GameObj.Transform.Pos + lightDirWS, Vector3.UnitY);
             var projection = Matrix4.CreatePerspectiveFieldOfView(light.OuterAngle, 1.0f, 0.1f, light.Range * 1.2f);
 
             var viewProjection = view * projection;
@@ -607,7 +612,7 @@ namespace Duality.Graphics.Deferred
                 var y = index * PointShadowResolution;
 
                 // Camera matrix
-                var view = Matrix4.LookAt(light.Owner.Position, light.Owner.Position + dir[i], up[i]);
+                var view = Matrix4.CreateLookAt(light.GameObj.Transform.Pos, light.GameObj.Transform.Pos + dir[i], up[i]);
 
                 var viewProjection = view * projection;
                 _pointShadowMatrices[(index * 6) + i] = viewProjection;

@@ -9,15 +9,29 @@ namespace Duality.Graphics.Particles.Renderers
 {
     public class BillboardRenderer : IParticleRenderer, IDisposable
     {
-        [DataMember] public Resources.Material Material { get; set; }
+        [DataMember] public Duality.Resources.Material Material { get; set; }
 
         private Vector3 _commonDirection = -Vector3.UnitY;
-        [DataMember] public Vector3 CommonDirection { get => _commonDirection; set => _commonDirection = value; }
+        [DataMember] public Vector3 CommonDirection
+		{
+			get { return _commonDirection; }
+			set
+			{
+				_commonDirection = value;
+			}
+		}
 
-        private Vector3 _commonUpVector = Vector3.UnitY;
-        [DataMember] public Vector3 CommonUpVector { get => _commonUpVector; set => _commonUpVector = value; }
+		private Vector3 _commonUpVector = Vector3.UnitY;
+        [DataMember] public Vector3 CommonUpVector
+		{
+			get { return _commonUpVector; }
+			set
+			{
+				_commonUpVector = value;
+			}
+		}
 
-        [DataMember] public OrientationMode OrientationMode { get; set; }
+		[DataMember] public OrientationMode OrientationMode { get; set; }
         [DataMember] public Vector2 Size { get; set; } = Vector2.One;
 
         [DataMember] public bool AccurateFacing { get; set; } = false;
@@ -34,10 +48,12 @@ namespace Duality.Graphics.Particles.Renderers
                 }));
         }
 
-        public void Dispose()
-            => _buffer.Dispose();
+		public void Dispose()
+		{
+			_buffer.Dispose();
+		}
 
-        public void PrepareRenderOperations(ParticleSystem particleSystem, RenderOperations operations, Matrix4 worldOffset)
+		public void PrepareRenderOperations(ParticleSystem particleSystem, RenderOperations operations, Matrix4 worldOffset)
         {
             operations.Add(_buffer.MeshHandle, Matrix4.Identity, Material);
         }
@@ -56,9 +72,11 @@ namespace Duality.Graphics.Particles.Renderers
             {
                 Quaternion.Invert(ref particleSystem.Orientation, out var invOrientation);
 
-                Quaternion.Multiply(ref invOrientation, ref camera.Orientation, out cameraOrientation);
+				var ori = camera.GameObj.Transform.Quaternion;
+				Quaternion.Multiply(ref invOrientation, ref ori, out cameraOrientation);
 
-                Vector3.Subtract(ref particleSystem.Position, ref camera.Position, out var cameraPosition);
+				var Pos = camera.GameObj.Transform.Pos;
+				Vector3.Subtract(ref particleSystem.Position, ref Pos, out var cameraPosition);
                 Vector3.Transform(ref cameraPosition, ref invOrientation, out cameraPosition);
             }
 

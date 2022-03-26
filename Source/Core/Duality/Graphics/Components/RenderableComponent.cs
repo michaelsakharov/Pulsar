@@ -14,18 +14,16 @@ namespace Duality.Graphics.Components
         public BoundingSphere BoundingSphere;
         public BoundingBox BoundingBox;
 
-		internal Stage Stage => this.gameobj.Scene.Stage;
-
 		public abstract void PrepareRenderOperations(BoundingFrustum frustum, RenderOperations operations);
 
 		void ICmpInitializable.OnActivate()
 		{
-			Stage.AddRenderableComponent(this);
+			Duality.Resources.Scene.Stage.AddRenderableComponent(this);
 		}
 
 		void ICmpInitializable.OnDeactivate()
 		{
-			Stage.RemoveRenderableComponent(this);
+			Duality.Resources.Scene.Stage.RemoveRenderableComponent(this);
 		}
     }
 }

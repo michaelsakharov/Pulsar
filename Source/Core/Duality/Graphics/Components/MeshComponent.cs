@@ -8,7 +8,7 @@ using Duality.Graphics.Resources;
 
 namespace Duality.Graphics.Components
 {
-    public class MeshComponent : RenderableComponent, ICmpUpdatable, ICmpInitializable
+    public class MeshComponent : RenderableComponent, ICmpUpdatable
 	{
         protected bool _meshDirty = false;
 
@@ -30,18 +30,6 @@ namespace Duality.Graphics.Components
 				_meshDirty = true;
 			}
 		}
-
-		//Will This And the RenderableComponent one get called togather?
-		// Might work? !!!!3D
-		void ICmpInitializable.OnActivate()
-		{
-			Stage.AddRenderableComponent(this);
-		}
-
-		//override void OnActivate()
-        //{
-        //    UpdateDerviedMeshSettings();
-        //}
 
         protected virtual void UpdateDerviedMeshSettings()
         {

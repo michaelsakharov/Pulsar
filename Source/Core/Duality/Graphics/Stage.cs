@@ -18,7 +18,7 @@ namespace Duality.Graphics
 
         public AmbientLight AmbientLight { get; set; }
 
-        public Camera Camera { get; set; }
+        public Duality.Components.Camera Camera { get; set; }
 
         private List<Components.RenderableComponent> _renderableComponents = new List<Components.RenderableComponent>();
         private List<Components.LightComponent> _lightComponents = new List<Components.LightComponent>();

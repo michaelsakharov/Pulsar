@@ -6,7 +6,8 @@ using Duality.Drawing;
 using Duality.Properties;
 using Duality.Editor;
 using Duality.Cloning;
-using Duality.IO;
+using Duality.Graphics.Resources;
+using Duality.Components;
 
 namespace Duality.Resources
 {
@@ -66,19 +67,17 @@ namespace Duality.Resources
 			{
 				{ "SolidWhite", new Material(DrawTechnique.Solid, ColorRgba.White) },
 				{ "SolidBlack", new Material(DrawTechnique.Solid, ColorRgba.Black) },
-				{ "InvertWhite", new Material(DrawTechnique.Invert, ColorRgba.White) },
-				{ "DualityIcon", new Material(DrawTechnique.Mask, Texture.DualityIcon) },
-				{ "DualityIconB", new Material(DrawTechnique.Mask, Texture.DualityIconB) },
-				{ "DualityLogoBig", new Material(DrawTechnique.Alpha, Texture.DualityLogoBig) },
-				{ "DualityLogoMedium", new Material(DrawTechnique.Alpha, Texture.DualityLogoMedium) },
-				{ "DualityLogoSmall", new Material(DrawTechnique.Alpha, Texture.DualityLogoSmall) },
 				{ "Checkerboard", new Material(DrawTechnique.Solid, Texture.Checkerboard) },
 			});
 		}
 
 
 		private BatchInfo info = new BatchInfo();
-		
+
+		// Would a Hashcode be better here?
+		private static int LastId = 0;
+		public readonly int Id = LastId++;
+
 		/// <summary>
 		/// [GET] Returns the Materials internal <see cref="BatchInfo"/> instance, which can be used for rendering.
 		/// </summary>
@@ -230,6 +229,16 @@ namespace Duality.Resources
 		public ContentRef<Texture> GetTexture(string name)
 		{
 			return this.info.GetTexture(name);
+		}
+
+		public void BeginInstance(Duality.Graphics.Backend backend, Camera camera, int renderStateId)
+		{
+			info.BeginInstance(backend, camera, renderStateId);
+		}
+
+		public void BindPerObject(Duality.Graphics.Backend backend, ref Matrix4 world, ref Matrix4 worldView, ref Matrix4 itWorld, ref Matrix4 modelViewProjection, Graphics.SkeletalAnimation.SkeletonInstance skeleton)
+		{
+			info.BindPerObject(backend, ref world, ref worldView, ref itWorld, ref modelViewProjection, skeleton);
 		}
 
 		protected override void OnLoaded()

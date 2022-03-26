@@ -21,10 +21,12 @@ namespace Duality.Graphics.Particles
         public Vector3 Position;
         public Quaternion Orientation;
 
-        public ParticleSystem(int maxCount)
-            => Particles = new ParticleData(maxCount);
+		public ParticleSystem(int maxCount)
+		{
+			Particles = new ParticleData(maxCount);
+		}
 
-        public void Update(float deltaTime)
+		public void Update(float deltaTime)
         {
             var position = WorldSpace ? Position : Vector3.Zero;
             var orientation = WorldSpace ? Orientation : Quaternion.Identity;
@@ -40,7 +42,9 @@ namespace Duality.Graphics.Particles
             }
         }
 
-        public void Reset()
-            => Particles.AliveCount = 0;
-    }
+		public void Reset()
+		{
+			Particles.AliveCount = 0;
+		}
+	}
 }

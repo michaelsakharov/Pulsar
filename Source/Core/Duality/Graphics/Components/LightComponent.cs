@@ -20,16 +20,14 @@ namespace Duality.Graphics.Components
         [DataMember] public float ShadowBias { get; set; } = 0.001f;
         [DataMember] public float ShadowNearClipDistance { get; set; } = 0.0005f;
 
-        internal Stage Stage => this.gameobj.Scene.Stage;
-
         void ICmpInitializable.OnActivate()
         {
-            Stage.AddLightComponent(this);
+			Duality.Resources.Scene.Stage.AddLightComponent(this);
         }
 
         void ICmpInitializable.OnDeactivate()
         {
-            Stage.RemoveLightComponent(this);
+			Duality.Resources.Scene.Stage.RemoveLightComponent(this);
         }
     }
 }

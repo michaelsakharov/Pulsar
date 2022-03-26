@@ -9,8 +9,8 @@ namespace Duality.Graphics.Post.Effects
 {
 	public class AdaptLuminance : BaseEffect
 	{
-		private Resources.ShaderProgram _luminanceMapShader;
-		private Resources.ShaderProgram _adaptLuminanceShader;
+		private Duality.Resources.Shader _luminanceMapShader;
+		private Duality.Resources.Shader _adaptLuminanceShader;
 
 		private LuminanceMapShaderParams _luminanceMapParams;
 		private AdaptLuminanceShaderParams _adaptLuminanceParams;
@@ -46,8 +46,8 @@ namespace Duality.Graphics.Post.Effects
 		{
 			base.LoadResources(resourceManager);
 
-			_luminanceMapShader = resourceManager.Load<Resources.ShaderProgram>("/shaders/post/luminance_map");
-			_adaptLuminanceShader = resourceManager.Load<Resources.ShaderProgram>("/shaders/post/adapt_luminance");
+			_luminanceMapShader = resourceManager.Load<Duality.Resources.Shader>("/shaders/post/luminance_map");
+			_adaptLuminanceShader = resourceManager.Load<Duality.Resources.Shader>("/shaders/post/adapt_luminance");
 		}
 
 		public RenderTarget Render(HDRSettings settings, RenderTarget input, float deltaTime)

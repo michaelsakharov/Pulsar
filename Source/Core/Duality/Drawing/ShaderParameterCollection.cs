@@ -120,6 +120,17 @@ namespace Duality.Drawing
 			}
 		}
 
+		public List<(string, ContentRef<Texture>)> GetAllTextures()
+		{
+			List<(string, ContentRef<Texture>)> textures = new List<(string, ContentRef<Texture>)>();
+			for (int i = 0; i < this.values.Count; i++)
+			{
+				if (this.values.Data[i].Texture != null)
+					textures.Add((this.values.Data[i].Name, this.values.Data[i].Texture));
+			}
+			return textures;
+		}
+
 		/// <summary>
 		/// Removes all variables and values from the <see cref="ShaderParameterCollection"/> instance.
 		/// </summary>
@@ -747,6 +758,69 @@ namespace Duality.Drawing
 			{
 				ThrowUnsupportedValueType<T>();
 				return false;
+			}
+		}
+		public bool TryGet(string name, ShaderFieldType type, out object value)
+		{
+			value = null;
+			if (string.IsNullOrEmpty(name)) return false;
+
+			float[] rawData;
+			if (!this.TryGetInternal(name, out rawData)) return false;
+
+			switch (type)
+			{
+				case ShaderFieldType.Float:
+					if (rawData.Length < 1) return false;
+					value = rawData[0];
+					return true;
+				case ShaderFieldType.Vec2:
+					if (rawData.Length < 2) return false;
+					value = new Vector2(rawData[0], rawData[1]);
+					return true;
+				case ShaderFieldType.Vec3:
+					if (rawData.Length < 3) return false;
+					value = new Vector3(rawData[0], rawData[1], rawData[2]);
+					return true;
+				case ShaderFieldType.Vec4:
+					if (rawData.Length < 4) return false;
+					value = new Vector4(rawData[0], rawData[1], rawData[2], rawData[3]);
+					return true;
+				case ShaderFieldType.Mat3:
+					if (rawData.Length < 9) return false;
+					value = new Matrix3(
+						rawData[0], rawData[1], rawData[2],
+						rawData[3], rawData[4], rawData[5],
+						rawData[6], rawData[7], rawData[8]);
+					return true;
+				case ShaderFieldType.Mat4:
+					if (rawData.Length < 16) return false;
+					value = new Matrix4(
+						rawData[0], rawData[1], rawData[2], rawData[3],
+						rawData[4], rawData[5], rawData[6], rawData[7],
+						rawData[8], rawData[9], rawData[10], rawData[11],
+						rawData[12], rawData[13], rawData[14], rawData[15]);
+					return true;
+				case ShaderFieldType.Int:
+					if (rawData.Length < 1) return false;
+					value = MathF.RoundToInt(rawData[0]);
+					return true;
+				case ShaderFieldType.Bool:
+					if (rawData.Length < 1) return false;
+					value = (rawData[0] != 0.0f);
+					return true;
+				case ShaderFieldType.Sampler2D:
+					int index = this.FindIndex(name);
+					if (index != -1)
+					{
+						value = this.values.Data[index].Texture;
+						return true;
+					}
+					return false;
+				default:
+					ThrowUnsupportedValueType<ShaderFieldType>();
+					return false;
+
 			}
 		}
 		/// <summary>

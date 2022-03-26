@@ -17,7 +17,7 @@ namespace Duality.Graphics
         private Vector3 _positonZero = Vector3.Zero;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void Add(int meshHandle, Matrix4 world, Resources.Material material, SkeletalAnimation.SkeletonInstance skeleton = null, bool useInstancing = false, bool castShadows = true)
+        public void Add(int meshHandle, Matrix4 world, Duality.Resources.Material material, SkeletalAnimation.SkeletonInstance skeleton = null, bool useInstancing = false, bool castShadows = true)
 		{
             var index = _operationsCount;
 			_operations[index].MeshHandle = meshHandle;

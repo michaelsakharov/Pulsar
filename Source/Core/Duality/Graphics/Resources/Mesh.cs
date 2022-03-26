@@ -50,7 +50,7 @@ namespace Duality.Graphics.Resources
 
     public class SubMesh
     {
-        public Material Material;
+        public Duality.Resources.Material Material;
         public BoundingSphere BoundingSphere;
         public BoundingBox BoundingBox;
         public VertexFormat VertexFormat;

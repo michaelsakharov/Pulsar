@@ -8,7 +8,7 @@ namespace Duality.Graphics.Post.Effects
 {
 	public class FXAA : BaseEffect
 	{
-		private Resources.ShaderProgram _shader;
+		private Duality.Resources.Shader _shader;
 		private FXAAShaderParams _shaderParams;
 
 		public FXAA(Backend backend, BatchBuffer quadMesh)
@@ -20,7 +20,7 @@ namespace Duality.Graphics.Post.Effects
 		{
 			base.LoadResources(resourceManager);
 
-			_shader = resourceManager.Load<Resources.ShaderProgram>("/shaders/post/fxaa");
+			_shader = resourceManager.Load<Duality.Resources.Shader>("/shaders/post/fxaa");
 		}
 
 		public void Render(RenderTarget input, RenderTarget output)

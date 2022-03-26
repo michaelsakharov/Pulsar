@@ -8,7 +8,7 @@ namespace Duality.Graphics.Post.Effects
 {
 	public class Gamma : BaseEffect
 	{
-		private Resources.ShaderProgram _shader;
+		private Duality.Resources.Shader _shader;
 		private GammaShaderParams _shaderParams;
 
         public Duality.Resources.Texture ColorCorrectLUT { get; set; }
@@ -22,7 +22,7 @@ namespace Duality.Graphics.Post.Effects
 		internal override void LoadResources(Duality.Resources.ResourceManager resourceManager)
 		{
 			base.LoadResources(resourceManager);
-			_shader = resourceManager.Load<Resources.ShaderProgram>("/shaders/post/gamma");
+			_shader = resourceManager.Load<Duality.Resources.Shader>("/shaders/post/gamma");
 		}
 
 		public void Render(RenderTarget input, RenderTarget output)

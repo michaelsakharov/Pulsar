@@ -8,7 +8,7 @@ namespace Duality.Graphics.Post.Effects
 {
     public class AtmosphericScattering : BaseEffect
     {
-        private Resources.ShaderProgram _shader;
+        private Duality.Resources.Shader _shader;
         private ShaderParams _shaderParams;
 
         private readonly int[] _textures = new int[3];
@@ -23,10 +23,10 @@ namespace Duality.Graphics.Post.Effects
         internal override void LoadResources(Duality.Resources.ResourceManager resourceManager)
         {
             base.LoadResources(resourceManager);
-            _shader = resourceManager.Load<Resources.ShaderProgram>("/shaders/post/atmosphericscattering");
+            _shader = resourceManager.Load<Duality.Resources.Shader>("/shaders/post/atmosphericscattering");
         }
 
-        public bool Render(Camera camera, Stage stage, RenderTarget gbuffer, RenderTarget input, RenderTarget output)
+        public bool Render(Duality.Components.Camera camera, Stage stage, RenderTarget gbuffer, RenderTarget input, RenderTarget output)
         {
             var light = stage.GetSunLight();
             if (light == null)
@@ -45,7 +45,8 @@ namespace Duality.Graphics.Post.Effects
             _textures[2] = gbuffer.Textures[1].Handle;
 
             Vector3 unitZ = Vector3.UnitZ;
-            Vector3.Transform(ref unitZ, ref light.Owner.Orientation, out var lightDirWS);
+			var ori = light.GameObj.Transform.Quaternion;
+			Vector3.Transform(ref unitZ, ref ori, out var lightDirWS);
             lightDirWS = -lightDirWS.Normalized;
 
             camera.GetViewMatrix(out var view);
@@ -58,7 +59,8 @@ namespace Duality.Graphics.Post.Effects
             _backend.BindShaderVariable(_shaderParams.SamplerGBuffer1, 2);
             _backend.BindShaderVariable(_shaderParams.SunDirection, ref lightDirWS);
             _backend.BindShaderVariable(_shaderParams.InvViewProjection, ref inverseViewProjectionMatrix);
-            _backend.BindShaderVariable(_shaderParams.CameraPosition, ref camera.Position);
+			var Pos = camera.GameObj.Transform.Pos;
+			_backend.BindShaderVariable(_shaderParams.CameraPosition, ref Pos);
 
             _backend.DrawMesh(_quadMesh.MeshHandle);
             _backend.EndPass();

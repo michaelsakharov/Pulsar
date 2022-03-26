@@ -8,7 +8,7 @@ using Duality.Drawing;
 using Duality.Editor;
 using Duality.Cloning;
 using Duality.Backend;
-
+using OpenTK.Graphics.OpenGL;
 
 namespace Duality.Resources
 {
@@ -51,18 +51,28 @@ namespace Duality.Resources
 
 		private string source = null;
 
-		[DontSerialize] private INativeShaderPart native   = null;
+		[DontSerialize] private NativeShaderPart native   = null;
 		[DontSerialize] private bool              compiled = false;
 		[DontSerialize] private ShaderFieldInfo[] fields   = null;
+		[DontSerialize] private int[] fieldLocations = null;
 
 
 		/// <summary>
 		/// [GET] The shaders native backend. Don't use this unless you know exactly what you're doing.
 		/// </summary>
 		[EditorHintFlags(MemberFlags.Invisible)]
-		public INativeShaderPart Native
+		public NativeShaderPart Native
 		{
 			get { return this.native; }
+		}
+
+		/// <summary>
+		/// [GET] The shaders native backend Handle. Don't use this unless you know exactly what you're doing.
+		/// </summary>
+		[EditorHintFlags(MemberFlags.Invisible)]
+		public int Handle
+		{
+			get { return this.native.Handle; }
 		}
 		/// <summary>
 		/// The shader stage at which this shader will be used.
@@ -155,6 +165,23 @@ namespace Duality.Resources
 				try
 				{
 					this.native.LoadSource(processedSource, this.Type);
+
+					// Get Field Locations
+					List<int> validLocations = new List<int>();
+					foreach (ShaderFieldInfo field in fields)
+					{
+						int location;
+						if (field.Scope == ShaderFieldScope.Uniform)
+							location = GL.GetUniformLocation(this.native.Handle, field.Name);
+						else
+							location = GL.GetAttribLocation(this.native.Handle, field.Name);
+
+						if (location >= 0)
+						{
+							validLocations.Add(location);
+						}
+					}
+					this.fieldLocations = validLocations.ToArray();
 				}
 				catch (Exception e)
 				{
@@ -163,8 +190,41 @@ namespace Duality.Resources
 			}
 
 			this.fields = fields;
+
 			this.compiled = true;
 			Logs.Core.PopIndent();
+		}
+
+		public int GetUniform(HashedString name)
+		{
+			for(int i=0; i < fields.Length; i++)
+			{
+				if (fields[i].Name == name)
+					return fieldLocations[i];
+			}
+			return -1;
+		}
+
+		[DontSerialize] private object _mutex = new object();
+		public void BindUniformLocations<T>(T handles) where T : class
+		{
+			lock (_mutex)
+			{
+				var type = typeof(T);
+				foreach (var field in type.GetFields())
+				{
+					if (field.FieldType != typeof(int))
+						continue;
+
+					var fieldName = field.Name;
+					var uniformName = fieldName.Replace("Handle", "");
+					uniformName = char.ToLower(uniformName[0]) + uniformName.Substring(1);
+
+					int uniformLocation = GetUniform(uniformName);
+
+					field.SetValue(handles, uniformLocation);
+				}
+			}
 		}
 
 		protected override void OnLoaded()

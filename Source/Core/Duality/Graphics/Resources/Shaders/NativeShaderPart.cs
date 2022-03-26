@@ -12,10 +12,10 @@ using OpenTK.Graphics.OpenGL;
 using ShaderType = Duality.Resources.ShaderType;
 using GLShaderType = OpenTK.Graphics.OpenGL.ShaderType;
 
-namespace Duality.Backend.DefaultOpenTK
+namespace Duality.Backend
 {
 	[DontSerialize]
-	public class NativeShaderPart : INativeShaderPart
+	public class NativeShaderPart : IDisposable
 	{
 		private int handle;
 		private ShaderType type;
@@ -29,9 +29,9 @@ namespace Duality.Backend.DefaultOpenTK
 			get { return this.type; }
 		}
 
-		void INativeShaderPart.LoadSource(string sourceCode, ShaderType type)
+		public void LoadSource(string sourceCode, ShaderType type)
 		{
-			DefaultOpenTKBackendPlugin.GuardSingleThreadState();
+			DualityApp.GuardSingleThreadState();
 
 			this.type = type;
 			if (this.handle == 0)
@@ -69,12 +69,12 @@ namespace Duality.Backend.DefaultOpenTK
 				throw new BackendException(string.Format("Failed to compile {0} shader:{2}{1}", type, infoLog, Environment.NewLine));
 			}
 		}
-		void IDisposable.Dispose()
+		public void Dispose()
 		{
 			if (DualityApp.ExecContext != DualityApp.ExecutionContext.Terminated &&
 				this.handle != 0)
 			{
-				DefaultOpenTKBackendPlugin.GuardSingleThreadState();
+				DualityApp.GuardSingleThreadState();
 				GL.DeleteShader(this.handle);
 				this.handle = 0;
 			}

@@ -91,9 +91,9 @@ namespace Duality.Graphics.Resources
             {
                 var materialName = reader.ReadString();
 
-                Material material = null;
+				Duality.Resources.Material material = null;
                 if (materialName != "no_material")
-                    material = await _resourceManager.LoadAsync<Material>(materialName);
+                    material = await _resourceManager.LoadAsync<Duality.Resources.Material>(materialName);
 
                 var triangleCount = reader.ReadInt32();
                 var vertexCount = reader.ReadInt32();

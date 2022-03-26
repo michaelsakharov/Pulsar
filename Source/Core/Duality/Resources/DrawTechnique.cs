@@ -27,37 +27,6 @@ namespace Duality.Resources
 		/// </summary>
 		public static ContentRef<DrawTechnique> Solid		{ get; private set; }
 		/// <summary>
-		/// Renders alpha-masked solid geometry. This is the recommended DrawTechnique for regular sprite rendering.
-		/// If multisampling is available, it is utilized to smooth masked edges.
-		/// </summary>
-		public static ContentRef<DrawTechnique> Mask		{ get; private set; }
-		/// <summary>
-		/// Renders geometry using the alpha channel, but enforces sharp edges by using an adaptive antialiazing shader.
-		/// This is the recommended DrawTechnique for rendering text or stencil sprites.
-		/// </summary>
-		public static ContentRef<DrawTechnique> SharpAlpha	{ get; private set; }
-		/// <summary>
-		/// Renders additive geometry. Ideal for glow effects.
-		/// </summary>
-		public static ContentRef<DrawTechnique> Add			{ get; private set; }
-		/// <summary>
-		/// Renders geometry and using the alpha channel. However, for stencil-sharp alpha edges, <see cref="Mask"/> might
-		/// be sufficient and is a lot faster. Consider using it.
-		/// </summary>
-		public static ContentRef<DrawTechnique> Alpha		{ get; private set; }
-		/// <summary>
-		/// Renders geometry multiplying the existing background with incoming color values. Can be used for shadowing effects.
-		/// </summary>
-		public static ContentRef<DrawTechnique> Multiply	{ get; private set; }
-		/// <summary>
-		/// Renders geometry adding incoming color values weighted based on the existing background. Can be used for lighting effects.
-		/// </summary>
-		public static ContentRef<DrawTechnique> Light		{ get; private set; }
-		/// <summary>
-		/// Renders geometry inverting the background color.
-		/// </summary>
-		public static ContentRef<DrawTechnique> Invert		{ get; private set; }
-		/// <summary>
 		/// Renders geometry for a picking operation. This isn't used for regular rendering.
 		/// </summary>
 		public static ContentRef<DrawTechnique> Picking		{ get; private set; }
@@ -66,28 +35,20 @@ namespace Duality.Resources
 		{
 			DefaultContent.InitType<DrawTechnique>(new Dictionary<string,DrawTechnique>
 			{
-				{ "Solid", new DrawTechnique(BlendMode.Solid) },
-				{ "Mask", new DrawTechnique(BlendMode.Mask) },
-				{ "Add", new DrawTechnique(BlendMode.Add) },
-				{ "Alpha", new DrawTechnique(BlendMode.Alpha) },
-				{ "Multiply", new DrawTechnique(BlendMode.Multiply) },
-				{ "Light", new DrawTechnique(BlendMode.Light) },
-				{ "Invert", new DrawTechnique(BlendMode.Invert) },
+				{ "Solid", new DrawTechnique(VertexShader.Minimal, FragmentShader.Minimal) },
 
-				{ "Picking", new DrawTechnique(BlendMode.Mask, VertexShader.Minimal, FragmentShader.Picking) },
-				{ "SharpAlpha", new DrawTechnique(BlendMode.Alpha, VertexShader.Minimal, FragmentShader.SharpAlpha) }
+				{ "Picking", new DrawTechnique(VertexShader.Minimal, FragmentShader.Picking) },
 			});
 		}
 		
 
-		private BlendMode                  blendType         = BlendMode.Solid;
 		private ContentRef<VertexShader>   vertexShader      = VertexShader.Minimal;
 		private ContentRef<FragmentShader> fragmentShader    = FragmentShader.Minimal;
 		private Type                       prefType          = null;
 
 		[DontSerialize] private VertexDeclaration         prefFormat        = null;
 		[DontSerialize] private ShaderParameterCollection defaultParameters = null;
-		[DontSerialize] private INativeShaderProgram      nativeShader      = null;
+		[DontSerialize] private NativeShaderProgram      nativeShader      = null;
 		[DontSerialize] private bool                      compiled          = false;
 		[DontSerialize] private ShaderFieldInfo[]         shaderFields      = null;
 
@@ -96,13 +57,27 @@ namespace Duality.Resources
 		/// [GET] The shaders native backend. Don't use this unless you know exactly what you're doing.
 		/// </summary>
 		[EditorHintFlags(MemberFlags.Invisible)]
-		public INativeShaderProgram NativeShader
+		public NativeShaderProgram NativeShader
 		{
 			get
 			{
 				if (!this.compiled)
 					this.Compile();
 				return this.nativeShader;
+			}
+		}
+
+		/// <summary>
+		/// [GET] The shaders native backend Handle. Don't use this unless you know exactly what you're doing.
+		/// </summary>
+		[EditorHintFlags(MemberFlags.Invisible)]
+		public int Handle
+		{
+			get
+			{
+				if (!this.compiled)
+					this.Compile();
+				return this.nativeShader.Handle;
 			}
 		}
 		/// <summary>
@@ -125,15 +100,6 @@ namespace Duality.Resources
 					this.Compile();
 				return this.shaderFields;
 			}
-		}
-		/// <summary>
-		/// [GET / SET] Specifies how incoming color values interact with the existing background color.
-		/// </summary>
-		[EditorHintFlags(MemberFlags.AffectsOthers)]
-		public BlendMode Blending
-		{
-			get { return this.blendType; }
-			set { this.blendType = value; }
 		}
 		/// <summary>
 		/// [GET / SET] The <see cref="Resources.VertexShader"/> that is used for rendering.
@@ -193,41 +159,16 @@ namespace Duality.Resources
 				this.prefType = value != null ? value.DataType : null;
 			}
 		}
-		/// <summary>
-		/// [GET] Returns whether this DrawTechnique requires z sorting. It is derived from its <see cref="Blending"/>.
-		/// </summary>
-		public bool NeedsZSort
-		{
-			get 
-			{ 
-				return 
-					this.blendType == BlendMode.Alpha ||
-					this.blendType == BlendMode.AlphaPre ||
-					this.blendType == BlendMode.Add ||
-					this.blendType == BlendMode.Invert ||
-					this.blendType == BlendMode.Multiply ||
-					this.blendType == BlendMode.Light; 
-			}
-		}
 
 		/// <summary>
 		/// Creates a new, default DrawTechnique
 		/// </summary>
 		public DrawTechnique() {}
 		/// <summary>
-		/// Creates a new DrawTechnique that uses the specified <see cref="BlendMode"/>.
-		/// </summary>
-		/// <param name="blendType"></param>
-		public DrawTechnique(BlendMode blendType) 
-		{
-			this.blendType = blendType;
-		}
-		/// <summary>
 		/// Creates a new DrawTechnique using the specified <see cref="BlendMode"/> and shaders.
 		/// </summary>
-		public DrawTechnique(BlendMode blendType, ContentRef<VertexShader> vertexShader, ContentRef<FragmentShader> fragmentShader) 
+		public DrawTechnique(ContentRef<VertexShader> vertexShader, ContentRef<FragmentShader> fragmentShader) 
 		{
-			this.blendType = blendType;
 			this.vertexShader = vertexShader;
 			this.fragmentShader = fragmentShader;
 		}
@@ -251,7 +192,7 @@ namespace Duality.Resources
 			parts.Add(this.fragmentShader.Res ?? FragmentShader.Minimal.Res);
 
 			// Ensure all shader parts are compiled
-			List<INativeShaderPart> nativeParts = new List<INativeShaderPart>();
+			List<NativeShaderPart> nativeParts = new List<NativeShaderPart>();
 			foreach (Shader part in parts)
 			{
 				if (!part.Compiled) part.Compile();
@@ -287,6 +228,38 @@ namespace Duality.Resources
 			// Even if we failed, we tried to compile it. Don't do it again and again.
 			this.compiled = true;
 			Logs.Core.PopIndent();
+		}
+
+		public int GetUniform(HashedString name)
+		{
+			for (int i = 0; i < NativeShader.Fields.Length; i++)
+			{
+				if (NativeShader.Fields[i].Name == name)
+					return NativeShader.FieldLocations[i];
+			}
+			return -1;
+		}
+
+		[DontSerialize] private object _mutex = new object();
+		public void BindUniformLocations<T>(T handles) where T : class
+		{
+			lock (_mutex)
+			{
+				var type = typeof(T);
+				foreach (var field in type.GetFields())
+				{
+					if (field.FieldType != typeof(int))
+						continue;
+
+					var fieldName = field.Name;
+					var uniformName = fieldName.Replace("Handle", "");
+					uniformName = char.ToLower(uniformName[0]) + uniformName.Substring(1);
+
+					int uniformLocation = GetUniform(uniformName);
+
+					field.SetValue(handles, uniformLocation);
+				}
+			}
 		}
 
 		protected override void OnLoaded()

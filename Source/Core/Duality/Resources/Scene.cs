@@ -8,6 +8,7 @@ using Duality.Components;
 using Duality.Cloning;
 using Duality.Properties;
 using Duality.Utility.Coroutines;
+using Duality.Graphics;
 
 namespace Duality.Resources
 {
@@ -27,8 +28,8 @@ namespace Duality.Resources
 		private static int                 switchLock        = 0;
 		private static bool                switchToScheduled = false;
 		private static ContentRef<Scene>   switchToTarget    = null;
+		private static Stage			   stage			 = null;
 
-		
 		/// <summary>
 		/// [GET / SET] The Scene that is currently active i.e. updated and rendered. This is never null.
 		/// You may assign null in order to leave the current Scene and enter en empty dummy Scene.
@@ -101,6 +102,10 @@ namespace Duality.Resources
 		public static bool IsSwitching
 		{
 			get { return isSwitching; }
+		}
+		public static Stage Stage
+		{
+			get { return stage; }
 		}
 
 

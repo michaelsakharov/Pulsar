@@ -9,7 +9,7 @@ namespace Duality.Graphics.Post.Effects
 {
 	public class Tonemap : BaseEffect
 	{
-		private Resources.ShaderProgram _shader;
+		private Duality.Resources.Shader _shader;
 		private TonemapShaderParams _shaderParams;
 
 		private readonly int[] _textures = new int[4];
@@ -32,7 +32,7 @@ namespace Duality.Graphics.Post.Effects
 		internal override void LoadResources(Duality.Resources.ResourceManager resourceManager)
 		{
 			base.LoadResources(resourceManager);
-			_shader = resourceManager.Load<Resources.ShaderProgram>("/shaders/post/tonemap");
+			_shader = resourceManager.Load<Duality.Resources.Shader>("/shaders/post/tonemap");
 		}
 
 		public void Render(HDRSettings settings, RenderTarget input, RenderTarget output, RenderTarget bloom, RenderTarget lensFlares, RenderTarget luminance)

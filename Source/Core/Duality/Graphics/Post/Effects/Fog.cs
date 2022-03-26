@@ -10,7 +10,7 @@ namespace Duality.Graphics.Post.Effects
 {
 	public class Fog : BaseEffect
 	{
-		private Resources.ShaderProgram _shader;
+		private Duality.Resources.Shader _shader;
 		private ShaderParams _shaderParams;
 
 		public Fog(Backend backend, BatchBuffer quadMesh)
@@ -21,10 +21,10 @@ namespace Duality.Graphics.Post.Effects
 		internal override void LoadResources(Duality.Resources.ResourceManager resourceManager)
 		{
 			base.LoadResources(resourceManager);
-			_shader = resourceManager.Load<Resources.ShaderProgram>("/shaders/post/fog");
+			_shader = resourceManager.Load<Duality.Resources.Shader>("/shaders/post/fog");
 		}
 
-		public void Render(Camera camera, Stage stage, RenderTarget gbuffer, RenderTarget input, RenderTarget output)
+		public void Render(Duality.Components.Camera camera, Stage stage, RenderTarget gbuffer, RenderTarget input, RenderTarget output)
 		{
 			if (_shaderParams == null)
 			{
@@ -41,20 +41,22 @@ namespace Duality.Graphics.Post.Effects
 			var inverseViewProjectionMatrix = Matrix4.Invert(view * projection);
 
 			var itView = Matrix4.Invert(Matrix4.Transpose(view));
-			_backend.BeginInstance(_shader.Handle,
+			_backend.BeginInstance(_shader.Native.Handle,
 				new int[] { gbuffer.Textures[3].Handle, input.Textures[0].Handle },
 				new int[] { _backend.DefaultSamplerNoFiltering, _backend.DefaultSamplerNoFiltering });
 			_backend.BindShaderVariable(_shaderParams.SamplerDepth, 0);
 			_backend.BindShaderVariable(_shaderParams.SamplerScene, 1);
 			_backend.BindShaderVariable(_shaderParams.InvViewProjection, ref inverseViewProjectionMatrix);
-			_backend.BindShaderVariable(_shaderParams.CameraPosition, ref camera.Position);
+			var Pos = camera.GameObj.Transform.Pos;
+			_backend.BindShaderVariable(_shaderParams.CameraPosition, ref Pos);
 
 			var sunLight = stage.GetSunLight();
             if (sunLight != null)
             {
                 Vector3 unitZ = Vector3.UnitZ;
-                Vector3.Transform(ref unitZ, ref sunLight.Owner.Orientation, out var lightDirWS);
-                lightDirWS = lightDirWS.Normalize();
+				var orient = sunLight.GameObj.Transform.Quaternion;
+				Vector3.Transform(ref unitZ, ref orient, out var lightDirWS);
+				lightDirWS.Normalize();
 
                 _backend.BindShaderVariable(_shaderParams.SunDir, ref lightDirWS);
             }

@@ -11,8 +11,8 @@ namespace Duality.Graphics.Post.Effects
 {
     public class SSAO : BaseEffect
     {
-        private Resources.ShaderProgram _shader;
-        private Resources.ShaderProgram _shaderBlur;
+        private Duality.Resources.Shader _shader;
+        private Duality.Resources.Shader _shaderBlur;
         private SSAOShaderParams _shaderParams;
         private RenderTarget _renderTarget;
         private RenderTarget _renderTargetBlur;
@@ -95,11 +95,11 @@ namespace Duality.Graphics.Post.Effects
         {
             base.LoadResources(resourceManager);
 
-            _shader = resourceManager.Load<Resources.ShaderProgram>("/shaders/post/ssao");
-            _shaderBlur = resourceManager.Load<Resources.ShaderProgram>("/shaders/post/ssao_blur");
+            _shader = resourceManager.Load<Duality.Resources.Shader>("/shaders/post/ssao");
+            _shaderBlur = resourceManager.Load<Duality.Resources.Shader>("/shaders/post/ssao_blur");
         }
 
-        public RenderTarget Render(Camera camera, RenderTarget gbuffer)
+        public RenderTarget Render(Duality.Components.Camera camera, RenderTarget gbuffer)
         {
 			return gbuffer;
             if (_shaderParams == null)
@@ -127,7 +127,8 @@ namespace Duality.Graphics.Post.Effects
             _backend.BindShaderVariable(_shaderParams.ItView, ref itViewMatrix);
             _backend.BindShaderVariable(_shaderParams.Proj, ref projectionMatrix);
             _backend.BindShaderVariable(_shaderParams.SampleKernel, ref _sampleKernel);
-            _backend.BindShaderVariable(_shaderParams.CameraPosition, ref camera.Position);
+			var Pos = camera.GameObj.Transform.Pos;
+			_backend.BindShaderVariable(_shaderParams.CameraPosition, ref Pos);
 
             var tanHalfFov = (float)System.Math.Tan(camera.Fov / 2.0f);
             var aspectRatio = camera.Viewport.X / camera.Viewport.Y;

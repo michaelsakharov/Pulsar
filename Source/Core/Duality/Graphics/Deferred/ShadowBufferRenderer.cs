@@ -17,7 +17,7 @@ namespace Duality.Graphics.Deferred
         private readonly BatchBuffer _quadMesh;
         private readonly int _shadowSampler;
 
-        private Resources.ShaderProgram[] _renderShadowsCSMShader = new Resources.ShaderProgram[(int)ShadowQuality.High + 1];
+        private Duality.Resources.Shader[] _renderShadowsCSMShader = new Duality.Resources.Shader[(int)ShadowQuality.High + 1];
         private RenderShadowsCSMParams _renderShadowsCSMParams = new RenderShadowsCSMParams();
 
         private bool _handlesInitialized = false;
@@ -51,7 +51,7 @@ namespace Duality.Graphics.Deferred
             var shadowQualities = new string[] { "SHADOW_QUALITY_LOWEST", "SHADOW_QUALITY_LOW", "SHADOW_QUALITY_MEDIUM", "SHADOW_QUALITY_HIGH" };
             for (var i = 0; i < _renderShadowsCSMShader.Length; i++)
             {
-                _renderShadowsCSMShader[i] = resourceManager.Load<Resources.ShaderProgram>("/shaders/deferred/csm", shadowQualities[i]);
+                _renderShadowsCSMShader[i] = resourceManager.Load<Duality.Resources.Shader>("/shaders/deferred/csm", shadowQualities[i]);
             }
         }
 
@@ -61,7 +61,7 @@ namespace Duality.Graphics.Deferred
             _backend.ResizeRenderTarget(_renderTarget, width, height);
         }
 
-        public RenderTarget Render(Camera camera, RenderTarget gbuffer, List<RenderTarget> csmRenderTargets, Matrix4[] shadowViewProjections, float[] clipDistances, ShadowQuality quality)
+        public RenderTarget Render(Duality.Components.Camera camera, RenderTarget gbuffer, List<RenderTarget> csmRenderTargets, Matrix4[] shadowViewProjections, float[] clipDistances, ShadowQuality quality)
         {
             if (!_handlesInitialized)
             {

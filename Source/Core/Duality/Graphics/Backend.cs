@@ -80,8 +80,6 @@ namespace Duality.Graphics
 
         public int DrawCalls = 0;
 
-        private ShaderHotReloader _shaderHotReloader;
-
         public Backend(int width, int height, ContextReference contextReference)
         {
             Width = width;
@@ -173,12 +171,6 @@ namespace Duality.Graphics
             {
                 if (_processQueue.TryDequeue(out var workItem))
                     workItem();
-            }
-
-            // Shader hot reloading, it's a bit ad hoc and ugly atm ... but it might work
-            if (_shaderHotReloader != null)
-            {
-                _shaderHotReloader.Tick();
             }
 
             // Process the rendering stream, do not swap buffers if no rendering commands have been sent, ie if the stream is still at position 0
@@ -1014,14 +1006,6 @@ namespace Duality.Graphics
         public void ScheduleForEndOfFrame(Action action)
         {
             _endOfFrameActions.Add(action);
-        }
-
-        internal void ConfigureShaderHotReloading(ShaderSerializer loader, ShaderHotReloadConfig shaderHotReloadConfig)
-        {
-            if (!shaderHotReloadConfig.Enable)
-                return;
-
-            _shaderHotReloader = new ShaderHotReloader(loader, shaderHotReloadConfig.Path, shaderHotReloadConfig.BasePath);
         }
 
         /// <summary>

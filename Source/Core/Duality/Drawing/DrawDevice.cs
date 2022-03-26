@@ -571,7 +571,7 @@ namespace Duality.Drawing
 			};
 			
 			// Determine whether we need depth sorting and calculate a reference depth
-			bool sortByDepth = (this.projection == ProjectionMode.Screen) || material.Technique.Res.NeedsZSort;
+			bool sortByDepth = this.projection == ProjectionMode.Screen;
 			RawList<SortItem> sortBuffer = sortByDepth ? this.sortBufferBlended : this.sortBufferSolid;
 			SortItem sortItem = new SortItem();
 			if (sortByDepth)
@@ -623,7 +623,7 @@ namespace Duality.Drawing
 		/// <param name="batch"></param>
 		public void AddBatch(DrawBatch batch)
 		{
-			bool sortByDepth = (this.projection == ProjectionMode.Screen) || batch.Material.Technique.Res.NeedsZSort;
+			bool sortByDepth = this.projection == ProjectionMode.Screen;
 			RawList<DrawBatch> batchBuffer = sortByDepth ? this.batchBufferBlended : this.batchBufferSolid;
 			batchBuffer.Add(batch);
 			++this.numRawBatches;

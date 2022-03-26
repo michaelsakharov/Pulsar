@@ -7,10 +7,10 @@ using Duality.Resources;
 
 using OpenTK.Graphics.OpenGL;
 
-namespace Duality.Backend.DefaultOpenTK
+namespace Duality.Backend
 {
 	[DontSerialize]
-	public class NativeShaderProgram : INativeShaderProgram
+	public class NativeShaderProgram : IDisposable
 	{
 		private	static NativeShaderProgram curBound = null;
 		public static void Bind(NativeShaderProgram prog)
@@ -26,41 +26,6 @@ namespace Duality.Backend.DefaultOpenTK
 			{
 				GL.UseProgram(prog.Handle);
 				curBound = prog;
-			}
-		}
-		public static void SetUniform(ShaderFieldInfo field, int location, float[] data)
-		{
-			if (field.Scope != ShaderFieldScope.Uniform) return;
-			if (location == -1) return;
-			switch (field.Type)
-			{
-				case ShaderFieldType.Bool:
-				case ShaderFieldType.Int:
-					int[] arrI = new int[field.ArrayLength];
-					for (int j = 0; j < arrI.Length; j++) arrI[j] = (int)data[j];
-					GL.Uniform1(location, arrI.Length, arrI);
-					break;
-				case ShaderFieldType.Float:
-					GL.Uniform1(location, data.Length, data);
-					break;
-				case ShaderFieldType.Vec2:
-					GL.Uniform2(location, data.Length / 2, data);
-					break;
-				case ShaderFieldType.Vec3:
-					GL.Uniform3(location, data.Length / 3, data);
-					break;
-				case ShaderFieldType.Vec4:
-					GL.Uniform4(location, data.Length / 4, data);
-					break;
-				case ShaderFieldType.Mat2:
-					GL.UniformMatrix2(location, data.Length / 4, false, data);
-					break;
-				case ShaderFieldType.Mat3:
-					GL.UniformMatrix3(location, data.Length / 9, false, data);
-					break;
-				case ShaderFieldType.Mat4:
-					GL.UniformMatrix4(location, data.Length / 16, false, data);
-					break;
 			}
 		}
 
@@ -81,16 +46,16 @@ namespace Duality.Backend.DefaultOpenTK
 			get { return this.fieldLocations; }
 		}
 
-		void INativeShaderProgram.LoadProgram(IEnumerable<INativeShaderPart> shaderParts, IEnumerable<ShaderFieldInfo> shaderFields)
+		public void LoadProgram(IEnumerable<NativeShaderPart> shaderParts, IEnumerable<ShaderFieldInfo> shaderFields)
 		{
-			DefaultOpenTKBackendPlugin.GuardSingleThreadState();
+			DualityApp.GuardSingleThreadState();
 
 			// Verify that we have exactly one shader part for each stage.
 			// Other scenarios are valid in desktop GL, but not GL ES, so 
 			// we'll enforce the stricter rules manually to ease portability.
 			int vertexCount = 0;
 			int fragmentCount = 0;
-			foreach (INativeShaderPart part in shaderParts)
+			foreach (NativeShaderPart part in shaderParts)
 			{
 				Resources.ShaderType type = (part as NativeShaderPart).Type;
 				if (type == Resources.ShaderType.Fragment)
@@ -110,7 +75,7 @@ namespace Duality.Backend.DefaultOpenTK
 				this.DetachShaders();
 
 			// Attach all individual shaders to the program
-			foreach (INativeShaderPart part in shaderParts)
+			foreach (NativeShaderPart part in shaderParts)
 			{
 				GL.AttachShader(this.handle, (part as NativeShaderPart).Handle);
 			}
@@ -149,7 +114,7 @@ namespace Duality.Backend.DefaultOpenTK
 			this.fields = validFields.ToArray();
 			this.fieldLocations = validLocations.ToArray();
 		}
-		void IDisposable.Dispose()
+		public void Dispose()
 		{
 			if (DualityApp.ExecContext == DualityApp.ExecutionContext.Terminated)
 				return;

@@ -10,11 +10,11 @@ namespace Duality.Graphics.Post.Effects
 {
 	public class Bloom : BaseEffect
 	{
-		private Resources.ShaderProgram _highPassShader;
-		private Resources.ShaderProgram _blurCombineShader;
-		private Resources.ShaderProgram _blurHorizontalShader;
-		private Resources.ShaderProgram _blurVerticalShader;
-		private Resources.ShaderProgram _quadShader;
+		private Duality.Resources.Shader _highPassShader;
+		private Duality.Resources.Shader _blurCombineShader;
+		private Duality.Resources.Shader _blurHorizontalShader;
+		private Duality.Resources.Shader _blurVerticalShader;
+		private Duality.Resources.Shader _quadShader;
 
 		private HighPassShaderParams _highPassParams;
 		private QuadShaderParams _quadParams;
@@ -69,11 +69,11 @@ namespace Duality.Graphics.Post.Effects
 		{
 			base.LoadResources(resourceManager);
 
-			_highPassShader = resourceManager.Load<Resources.ShaderProgram>("/shaders/post/highpass");
-			_blurHorizontalShader = resourceManager.Load<Resources.ShaderProgram>("/shaders/post/blur", "BLUR_HORIZONTAL");
-			_blurVerticalShader = resourceManager.Load<Resources.ShaderProgram>("/shaders/post/blur", "BLUR_VERTICAL");
-			_quadShader = resourceManager.Load<Resources.ShaderProgram>("/shaders/post/quad");
-			_blurCombineShader = resourceManager.Load<Resources.ShaderProgram>("/shaders/post/combine_blur");
+			_highPassShader = resourceManager.Load<Duality.Resources.Shader>("/shaders/post/highpass");
+			_blurHorizontalShader = resourceManager.Load<Duality.Resources.Shader>("/shaders/post/blur", "BLUR_HORIZONTAL");
+			_blurVerticalShader = resourceManager.Load<Duality.Resources.Shader>("/shaders/post/blur", "BLUR_VERTICAL");
+			_quadShader = resourceManager.Load<Duality.Resources.Shader>("/shaders/post/quad");
+			_blurCombineShader = resourceManager.Load<Duality.Resources.Shader>("/shaders/post/combine_blur");
 		}
 
 		private RenderTarget Downsample(RenderTarget source, RenderTarget destination)

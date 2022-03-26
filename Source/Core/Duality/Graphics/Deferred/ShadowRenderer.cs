@@ -29,8 +29,8 @@ namespace Duality.Graphics.Deferred
 
         private readonly int _shadowsRenderState;
 
-        private Resources.ShaderProgram[] _renderShadowsShaders = new Resources.ShaderProgram[3];
-        private Resources.ShaderProgram[] _renderShadowsSkinnedShaders = new Resources.ShaderProgram[3];
+        private Duality.Resources.Shader[] _renderShadowsShaders = new Duality.Resources.Shader[3];
+        private Duality.Resources.Shader[] _renderShadowsSkinnedShaders = new Duality.Resources.Shader[3];
 
         private bool _handlesInitialized = false;
 
@@ -71,17 +71,17 @@ namespace Duality.Graphics.Deferred
             });
 
             // Load shaders
-            _renderShadowsShaders = new Resources.ShaderProgram[]
+            _renderShadowsShaders = new Duality.Resources.Shader[]
             {
-                resourceManager.Load<Resources.ShaderProgram>("/shaders/deferred/render_shadows", "POINT"),
-                resourceManager.Load<Resources.ShaderProgram>("/shaders/deferred/render_shadows", "SPOT"),
-                resourceManager.Load<Resources.ShaderProgram>("/shaders/deferred/render_shadows", "DIRECTIONAL")
+                resourceManager.Load<Duality.Resources.Shader>("/shaders/deferred/render_shadows", "POINT"),
+                resourceManager.Load<Duality.Resources.Shader>("/shaders/deferred/render_shadows", "SPOT"),
+                resourceManager.Load<Duality.Resources.Shader>("/shaders/deferred/render_shadows", "DIRECTIONAL")
             };
-            _renderShadowsSkinnedShaders = new Resources.ShaderProgram[]
+            _renderShadowsSkinnedShaders = new Duality.Resources.Shader[]
             {
-                resourceManager.Load<Resources.ShaderProgram>("/shaders/deferred/render_shadows", "SKINNED;POINT"),
-                resourceManager.Load<Resources.ShaderProgram>("/shaders/deferred/render_shadows", "SKINNED;SPOT"),
-                resourceManager.Load<Resources.ShaderProgram>("/shaders/deferred/render_shadows", "SKINNED;DIRECTIONAL")
+                resourceManager.Load<Duality.Resources.Shader>("/shaders/deferred/render_shadows", "SKINNED;POINT"),
+                resourceManager.Load<Duality.Resources.Shader>("/shaders/deferred/render_shadows", "SKINNED;SPOT"),
+                resourceManager.Load<Duality.Resources.Shader>("/shaders/deferred/render_shadows", "SKINNED;DIRECTIONAL")
             };
 
             _perFrameDataBuffer = _backend.RenderSystem.CreateBuffer(BufferTarget.UniformBuffer, true);
@@ -134,7 +134,7 @@ namespace Duality.Graphics.Deferred
             _shadowViewProjections = new Matrix4[count];
         }
 
-        public List<RenderTarget> RenderCSM(RenderTarget gbuffer, Components.LightComponent light, Stage stage, Camera camera, out Matrix4[] viewProjections, out float[] clipDistances)
+        public List<RenderTarget> RenderCSM(RenderTarget gbuffer, Components.LightComponent light, Stage stage, Duality.Components.Camera camera, out Matrix4[] viewProjections, out float[] clipDistances)
         {
             // Basic camera setup
             clipDistances = new float[_renderTargets.Count + 1];
@@ -188,7 +188,7 @@ namespace Duality.Graphics.Deferred
             return _renderTargets;
         }
 
-        private void RenderCascade(RenderTarget renderTarget, Components.LightComponent light, Stage stage, Camera camera, float prevSplitDistance, float splitDistance, int cascadeIndex, out Matrix4 shadowViewProjection)
+        private void RenderCascade(RenderTarget renderTarget, Components.LightComponent light, Stage stage, Duality.Components.Camera camera, float prevSplitDistance, float splitDistance, int cascadeIndex, out Matrix4 shadowViewProjection)
         {
             // Calculate light direction
             Vector3 unitZ = Vector3.UnitZ;
@@ -244,7 +244,7 @@ namespace Duality.Graphics.Deferred
 
                 var lightCameraPosition = frustumCenter;
                 var lookAt = frustumCenter - lightDir;
-                var lightView = Matrix4.LookAt(lightCameraPosition, lookAt, upDir);
+                var lightView = Matrix4.CreateLookAt(lightCameraPosition, lookAt, upDir);
 
                 var mins = new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
                 var maxes = -mins;
@@ -263,7 +263,7 @@ namespace Duality.Graphics.Deferred
             var cascadeExtents = maxExtents - minExtents;
             var shadowCameraPos = frustumCenter + lightDir * -minExtents.Z;
 
-            var shadowView = Matrix4.LookAt(shadowCameraPos, frustumCenter, upDir);
+            var shadowView = Matrix4.CreateLookAt(shadowCameraPos, frustumCenter, upDir);
             Matrix4.CreateOrthographicOffCenter(minExtents.X, maxExtents.X, minExtents.Y, maxExtents.Y, 0.0f, cascadeExtents.Z, out var shadowProjection);
 
             if (StabilizeCascades)

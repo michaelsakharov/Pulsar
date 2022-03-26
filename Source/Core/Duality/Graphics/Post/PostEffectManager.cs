@@ -175,7 +175,7 @@ namespace Duality.Graphics.Post
             SwapRenderTargets();
         }
 
-        private void ApplyAtmosphere(Camera camera, RenderTarget gbuffer, Stage stage)
+        private void ApplyAtmosphere(Duality.Components.Camera camera, RenderTarget gbuffer, Stage stage)
         {
             _backend.ProfileBeginSection(Profiler.AtmosphericScattering);
             if (_atmosphericScattering.Render(camera, stage, gbuffer, _temporaryRenderTargets[0], _temporaryRenderTargets[1]))
@@ -185,13 +185,13 @@ namespace Duality.Graphics.Post
             _backend.ProfileEndSection(Profiler.AtmosphericScattering);
         }
 
-        public RenderTarget RenderSSAO(Camera camera, RenderTarget gbuffer)
+        public RenderTarget RenderSSAO(Duality.Components.Camera camera, RenderTarget gbuffer)
         {
             _ssaoOutput = _ssao.Render(camera, gbuffer);
             return _ssaoOutput;
         }
 
-        public RenderTarget Render(Camera camera, Stage stage, RenderTarget gbuffer, RenderTarget input, RenderTarget csmShadowBuffer, float deltaTime)
+        public RenderTarget Render(Duality.Components.Camera camera, Stage stage, RenderTarget gbuffer, RenderTarget input, RenderTarget csmShadowBuffer, float deltaTime)
         {
             _backend.ProfileBeginSection(Profiler.Post);
 

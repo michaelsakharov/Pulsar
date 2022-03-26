@@ -21,7 +21,7 @@ namespace Duality.Graphics
         public Vector3 PositionWS;
         public Vector3 PositionVS;
 
-        public Resources.Material Material;
+        public Duality.Resources.Material Material;
 
 		/// <summary>
 		/// Attached skeleton, can be null
