@@ -65,6 +65,21 @@ namespace Duality
 		{
 			return min + (max - min) * (float)r.NextDouble();
 		}
+		public static void NextFloat(this Random r, ref Vector4 min, ref Vector4 max, out Vector4 result)
+		{
+			float x = r.NextFloat(min.X, max.X);
+			float y = r.NextFloat(min.Y, max.Y);
+			float z = r.NextFloat(min.Z, max.Z);
+			float w = r.NextFloat(min.W, max.W);
+			result = new Vector4(x, y, z, w);
+		}
+		public static void NextFloat(this Random r, ref Vector3 min, ref Vector3 max, out Vector3 result)
+		{
+			float x = r.NextFloat(min.X, max.X);
+			float y = r.NextFloat(min.Y, max.Y);
+			float z = r.NextFloat(min.Z, max.Z);
+			result = new Vector3(x, y, z);
+		}
 
 		/// <summary>
 		/// Returns a random bool.

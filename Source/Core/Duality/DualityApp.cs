@@ -15,6 +15,9 @@ using Duality.Input;
 using Duality.IO;
 using Duality.Launcher;
 using System.Runtime.CompilerServices;
+using OpenTK.Graphics;
+using OpenTK;
+using Duality.Renderer;
 
 namespace Duality
 {
@@ -70,26 +73,31 @@ namespace Duality
 		public const string DataDirectory   = "Data";
 
 
-		private static Thread				   mainThread;
-		private static bool                    initialized        = false;
-		private static bool                    isUpdating         = false;
-		private static bool                    runFromEditor      = false;
-		private static bool                    terminateScheduled = false;
-		private static IAssemblyLoader         assemblyLoader     = null;
-		private static CorePluginManager       pluginManager      = new CorePluginManager();
-		private static ISystemBackend          systemBack         = null;
-		private static IGraphicsBackend        graphicsBack       = null;
-		private static IAudioBackend           audioBack          = null;
-		private static Point2                  windowSize         = Point2.Zero;
-		private static MouseInput              mouse              = new MouseInput();
-		private static KeyboardInput           keyboard           = new KeyboardInput();
-		private static JoystickInputCollection joysticks          = new JoystickInputCollection();
-		private static GamepadInputCollection  gamepads           = new GamepadInputCollection();
-		private static SoundDevice             sound              = null;
-		private static ExecutionEnvironment    environment        = ExecutionEnvironment.Unknown;
-		private static ExecutionContext        execContext        = ExecutionContext.Terminated;
-		private static List<object>            disposeSchedule    = new List<object>();
-		
+		private static Thread				    mainThread;
+		private static bool                     initialized        = false;
+		private static bool                     isUpdating         = false;
+		private static bool                     runFromEditor      = false;
+		private static bool                     terminateScheduled = false;
+		private static IAssemblyLoader          assemblyLoader     = null;
+		private static CorePluginManager        pluginManager      = new CorePluginManager();
+		private static ISystemBackend           systemBack         = null;
+		private static Duality.Graphics.Backend graphicsBack       = null;
+		private static IAudioBackend            audioBack          = null;
+		private static Point2                   windowSize         = Point2.Zero;
+		private static MouseInput               mouse              = new MouseInput();
+		private static KeyboardInput            keyboard           = new KeyboardInput();
+		private static JoystickInputCollection  joysticks          = new JoystickInputCollection();
+		private static GamepadInputCollection   gamepads           = new GamepadInputCollection();
+		private static SoundDevice              sound              = null;
+		private static ExecutionEnvironment     environment        = ExecutionEnvironment.Unknown;
+		private static ExecutionContext         execContext        = ExecutionContext.Terminated;
+		private static List<object>             disposeSchedule    = new List<object>();
+
+		public static int RequestedWidth { get; set; }
+		public static int RequestedHeight { get; set; }
+		public static float ResolutionScale { get; set; }
+		public static bool CursorVisible { get; set; } = true;
+
 		/// <summary>
 		/// Called when the game becomes focused or loses focus.
 		/// </summary>
@@ -142,7 +150,7 @@ namespace Duality
 		/// <summary>
 		/// [GET] The graphics backend that is used by Duality. Don't use this unless you know exactly what you're doing.
 		/// </summary>
-		public static IGraphicsBackend GraphicsBackend
+		public static Duality.Graphics.Backend GraphicsBackend
 		{
 			get { return graphicsBack; }
 		}
@@ -327,9 +335,6 @@ namespace Duality
 			DualityApp.AppData.Load();
 			DualityApp.UserData.Load();
 
-			// Initialize the graphics backend
-			InitBackend(out graphicsBack);
-
 			// Initialize the audio backend
 			InitBackend(out audioBack);
 			sound = new SoundDevice();
@@ -351,17 +356,45 @@ namespace Duality
 		/// Opens up a window for Duality to render into. This also initializes the part of Duality that requires a 
 		/// valid rendering context. Should be called before performing any rendering related operations with Duality.
 		/// </summary>
-		public static INativeWindow OpenWindow(WindowOptions options)
+		public static OpenTK.GameWindow OpenWindow(WindowOptions options)
 		{
 			if (!initialized) throw new InvalidOperationException("Can't initialize graphics / rendering because Duality itself isn't initialized yet.");
 
 			Logs.Core.Write("Opening Window...");
 			Logs.Core.PushIndent();
-			INativeWindow window = graphicsBack.CreateWindow(options);
+
+			var graphicsMode = new GraphicsMode(new ColorFormat(32), 24, 0, 0);
+			var window = new OpenTK.GameWindow(RequestedWidth, RequestedHeight, graphicsMode, "Game Window", GameWindowFlags.Default, DisplayDevice.Default)
+			{
+				Visible = true,
+				CursorVisible = CursorVisible
+			};
+
+			var context = new GraphicsContext(graphicsMode, window.WindowInfo, 4, 6, GraphicsContextFlags.ForwardCompatible | GraphicsContextFlags.Debug);
+			context.MakeCurrent(window.WindowInfo);
+			context.LoadAll();
+
+			var ctx = new ContextReference
+			{
+				Context = context,
+				SwapBuffers = context.SwapBuffers
+			};
+
+			var timer = new System.Diagnostics.Stopwatch();
+			timer.Start();
+
+			graphicsBack = new Duality.Graphics.Backend(window.Width, window.Height, ctx);
+
 			Logs.Core.PopIndent();
 
-			InitPostWindow();
+			ShadowRenderer = new Graphics.Deferred.ShadowRenderer(GraphicsBackend);
+			DeferredRenderer = new Graphics.Deferred.DeferredRenderer(GraphicsBackend, ShadowRenderer, GraphicsBackend.Width, GraphicsBackend.Height);
+			ShadowBufferRenderer = new Graphics.Deferred.ShadowBufferRenderer(GraphicsBackend, GraphicsBackend.Width, GraphicsBackend.Height);
+			PostEffectManager = new Graphics.Post.PostEffectManager(GraphicsBackend, GraphicsBackend.Width, GraphicsBackend.Height);
+			SpriteRenderer = GraphicsBackend.CreateSpriteBatch();
 
+			InitPostWindow();
+			
 			return window;
 		}
 		/// <summary>
@@ -419,7 +452,8 @@ namespace Duality
 
 			sound.Dispose();
 			sound = null;
-			ShutdownBackend(ref graphicsBack);
+
+
 			ShutdownBackend(ref audioBack);
 			pluginManager.ClearPlugins();
 
@@ -512,13 +546,11 @@ namespace Duality
 
 			Time.FrameTick(forceFixedStep, true);
 			Profile.FrameTick();
-			VisualLogs.UpdateLogEntries();
 			pluginManager.InvokeBeforeUpdate();
 			UpdateUserInput();
 			Scene.Current.Update();
 			sound.Update();
 			pluginManager.InvokeAfterUpdate();
-			VisualLogs.PrepareRenderLogEntries();
 
 			// Perform a cleanup step to catch all DisposeLater calls from this update
 			RunCleanup();
@@ -541,7 +573,6 @@ namespace Duality
 
 			if (simulateGame)
 			{
-				VisualLogs.UpdateLogEntries();
 				pluginManager.InvokeBeforeUpdate();
 
 				UpdateUserInput();
@@ -582,7 +613,6 @@ namespace Duality
 			}
 
 			sound.Update();
-			VisualLogs.PrepareRenderLogEntries();
 
 			// Perform a cleanup step to catch all DisposeLater calls from this update
 			RunCleanup();
@@ -609,7 +639,84 @@ namespace Duality
 		/// <param name="imageSize">Target size of the rendered image before adjusting it to fit the specified viewport.</param>
 		public static void Render(ContentRef<RenderTarget> target, Rect viewportRect, Vector2 imageSize)
 		{
-			Scene.Current.Render(target, viewportRect, imageSize);
+			RenderScene(Time.DeltaTime);
+			if (!GraphicsBackend.Process())
+				return;
+		}
+
+		public static Graphics.Deferred.DeferredRenderer DeferredRenderer { get; private set; }
+		public static Graphics.Deferred.ShadowRenderer ShadowRenderer { get; private set; }
+		public static Graphics.Deferred.ShadowBufferRenderer ShadowBufferRenderer { get; private set; }
+		public static Graphics.Post.PostEffectManager PostEffectManager { get; private set; }
+		public static Graphics.SpriteBatch SpriteRenderer;
+
+		/// <summary>
+		/// Feed render commands to the graphics backend.
+		/// Only override this method if you wish to customize the rendering pipeline.
+		/// </summary>
+		public static void RenderScene(float deltaTime)
+		{
+			GraphicsBackend.BeginScene();
+
+			var gbuffer = DeferredRenderer.RenderGBuffer(Scene.Stage, Scene.Camera);
+			var sunLight = Scene.Stage.GetSunLight();
+
+			// Prepare shadow buffer for sunlight
+			List<RenderTarget> csm = null; RenderTarget shadows = null;
+			if (sunLight != null && sunLight.CastShadows)
+			{
+				//GraphicsBackend.ProfileBeginSection(Profiler.ShadowsGeneration);
+				csm = ShadowRenderer.RenderCSM(gbuffer, sunLight, Scene.Stage, Scene.Camera, out var viewProjections, out var clipDistances);
+				//GraphicsBackend.ProfileEndSection(Profiler.ShadowsGeneration);
+
+				ShadowBufferRenderer.DebugCascades = PostEffectManager.VisualizationMode == Graphics.Post.VisualizationMode.CSM;
+
+				//GraphicsBackend.ProfileBeginSection(Profiler.ShadowsRender);
+				shadows = ShadowBufferRenderer.Render(Scene.Camera, gbuffer, csm, viewProjections, clipDistances, DeferredRenderer.Settings.ShadowQuality);
+				//GraphicsBackend.ProfileEndSection(Profiler.ShadowsRender);
+			}
+
+			// Light + post, ssao needed for ambient so we render it first
+			//GraphicsBackend.ProfileBeginSection(Profiler.SSAO);
+			var ssao = PostEffectManager.RenderSSAO(Scene.Camera, gbuffer);
+			//GraphicsBackend.ProfileEndSection(Profiler.SSAO);
+			var lightOutput = DeferredRenderer.RenderLighting(Scene.Stage, Scene.Camera, shadows, ssao);
+			var postProcessedResult = PostEffectManager.Render(Scene.Camera, Scene.Stage, gbuffer, lightOutput, shadows, deltaTime);
+
+			GraphicsBackend.BeginPass(null, Vector4.Zero, ClearFlags.Color);
+
+			SpriteRenderer.RenderQuad(postProcessedResult.Textures[0], Vector2.Zero, new Vector2(WindowSize.X, WindowSize.Y));
+			SpriteRenderer.Render(WindowSize.X, WindowSize.Y);
+
+			//if ((DebugFlags & DebugFlags.ShadowMaps) == DebugFlags.ShadowMaps)
+			//{
+			//	var x = _window.Width - 10 - 256;
+			//	var y = 10;
+			//
+			//	SpriteRenderer.RenderQuad(DeferredRenderer.PointShadowAtlas.Textures[0], new Vector2(x - 256 - 10, y), new Vector2(256, 256));
+			//	SpriteRenderer.RenderQuad(DeferredRenderer.SpotShadowAtlas.Textures[0], new Vector2(x, y), new Vector2(256, 256));
+			//
+			//	if (csm != null)
+			//	{
+			//		x = _window.Width;
+			//		y = RequestedHeight - 256 - 10;
+			//
+			//		var cascadeOffset = 256 + 10;
+			//		var xOffset = csm.Count * (cascadeOffset);
+			//
+			//		for (var i = 0; i < csm.Count; i++)
+			//		{
+			//			SpriteRenderer.RenderQuad(csm[i].Textures[0], new Vector2(x - xOffset + (i * cascadeOffset), y), new Vector2(256, 256));
+			//		}
+			//	}
+			//
+			//	SpriteRenderer.Render(_window.Width, _window.Height);
+			//}
+
+			//DoRenderUI(deltaTime);
+			//SpriteRenderer.Render(_window.Width, _window.Height);
+
+			GraphicsBackend.EndScene();
 		}
 
 		/// <summary>
@@ -704,7 +811,7 @@ namespace Duality
 		/// <param name="baseType">The base type to use for matching the result types.</param>
 		/// <returns>An enumeration of all Duality types deriving from the specified type.</returns>
 		/// <example>
-		/// The following code logs all available kinds of <see cref="Duality.Components.Renderer">Renderers</see>:
+		/// The following code logs all available kinds of <see cref="Duality.Graphics.Components.RenderableComponent">Renderers</see>:
 		/// <code>
 		/// var rendererTypes = DualityApp.GetAvailDualityTypes(typeof(Duality.Components.Renderer));
 		/// foreach (Type rt in rendererTypes)
@@ -853,7 +960,6 @@ namespace Duality
 			DualityApp.AppData.Save();
 
 			// Dispose static Resources that could reference plugin data
-			VisualLogs.ClearAll();
 			if (!Scene.Current.IsEmpty)
 				Scene.Current.Dispose();
 

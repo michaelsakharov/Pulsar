@@ -281,6 +281,10 @@ namespace Duality.Components
 
 		void ICmpInitializable.OnActivate()
 		{
+			if(DualityApp.ExecContext == DualityApp.ExecutionContext.Game)
+			{
+				Scene.Camera = this;
+			}
 		}
 		void ICmpInitializable.OnDeactivate()
 		{

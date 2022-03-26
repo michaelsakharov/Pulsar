@@ -7,7 +7,6 @@ using Duality;
 using Duality.Drawing;
 using Duality.Resources;
 using Duality.Components;
-using Duality.Components.Renderers;
 
 using Duality.Tests.Components;
 
@@ -361,54 +360,6 @@ namespace Duality.Tests.Resources
 			// Clean up
 			scene.Deactivate();
 			scene.Dispose();
-		}
-
-		/// <summary>
-		/// This test will determine whether a <see cref="Scene"/> can be rendered
-		/// in isolation from the global <see cref="Scene.Current"/> setting.
-		/// </summary>
-		[Test, Category("Rendering")]
-		public void IsolatedRendering()
-		{
-			// Create an isolated new test scene with a ball and a platform
-			Scene scene = new Scene();
-
-			GameObject ball = new GameObject("Ball");
-			Transform ballTransform = ball.AddComponent<Transform>();
-			SpriteRenderer ballRenderer = ball.AddComponent<SpriteRenderer>();
-			scene.AddObject(ball);
-
-			GameObject cameraObj = new GameObject("Camera");
-			Transform cameraTransform = cameraObj.AddComponent<Transform>();
-			cameraTransform.Pos = new Vector3(0.0f, 0.0f, -500.0f);
-			Camera camera = cameraObj.AddComponent<Camera>();
-			camera.ClearColor = new ColorRgba(128, 192, 255);
-			scene.AddObject(cameraObj);
-
-			// Activate the scene to prepare for simulation
-			scene.Activate();
-
-			// Render the scene to an image target
-			PixelData renderedImage = null;
-			using (Texture texture = new Texture(800, 600, TextureSizeMode.NonPowerOfTwo, TextureMagFilter.Nearest, TextureMinFilter.Nearest))
-			using (RenderTarget renderTarget = new RenderTarget(AAQuality.Off, true, texture))
-			{
-				scene.Render(renderTarget, new Rect(renderTarget.Size), renderTarget.Size);
-				renderedImage = texture.GetPixelData();
-			}
-
-			// Determine where in the resulting image we should see the ball object.
-			// Note that we need to do this after rendering, but before deactivating the scene again,
-			// so the correct target resolution is assumed.
-			Vector2 ballPosInOutputImage = camera.GetScreenPos(ballTransform.Pos);
-
-			// Deactivate the scene again
-			scene.Deactivate();
-
-			// Assert that the image target has the correct background color
-			// and deviates from it at the balls position
-			Assert.AreEqual(camera.ClearColor, renderedImage[0, 0]);
-			Assert.AreNotEqual(camera.ClearColor, renderedImage[(int)ballPosInOutputImage.X, (int)ballPosInOutputImage.Y]);
 		}
 		/// <summary>
 		/// This test will determine whether a <see cref="Scene"/> that was activated in isolation / without

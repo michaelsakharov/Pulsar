@@ -64,7 +64,6 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 		private TimeSpan      renderedGameTime       = TimeSpan.MinValue;
 		private int           renderFrameLast        = -1;
 		private bool          renderFrameScheduled   = false;
-		private Canvas        overlayCanvas          = new Canvas();
 		private bool	      KeyWIsDown			 = false;
 		private bool	      KeyAIsDown			 = false;
 		private bool	      KeySIsDown			 = false;
@@ -1049,46 +1048,6 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 		}
 		private void CameraComponent_EventCollectDrawcalls(object sender, CollectDrawcallEventArgs e)
 		{
-			if (e.RenderStepId == this.camPassBg.Id)
-			{
-				this.overlayCanvas.Begin(e.Device);
-				this.overlayCanvas.State.ColorTint = this.FgColor;
-				this.overlayCanvas.State.TextFont = OverlayFont;
-
-				this.OnCollectStateBackgroundDrawcalls(this.overlayCanvas);
-
-				this.overlayCanvas.End();
-			}
-			else if (e.RenderStepId == this.camPassEdWorld.Id)
-			{
-				this.overlayCanvas.Begin(e.Device);
-				this.overlayCanvas.State.ColorTint = this.FgColor;
-				this.overlayCanvas.State.TextFont = OverlayFont;
-
-				this.OnCollectStateDrawcalls(this.overlayCanvas);
-
-				this.overlayCanvas.End();
-			}
-			else if (e.RenderStepId == this.camPassEdWorldNoDepth.Id)
-			{
-				this.overlayCanvas.Begin(e.Device);
-				this.overlayCanvas.State.ColorTint = this.FgColor;
-				this.overlayCanvas.State.TextFont = OverlayFont;
-
-				this.OnCollectStateWorldOverlayDrawcalls(this.overlayCanvas);
-
-				this.overlayCanvas.End();
-			}
-			else if (e.RenderStepId == this.camPassEdScreen.Id)
-			{
-				this.overlayCanvas.Begin(e.Device);
-				this.overlayCanvas.State.ColorTint = this.FgColor;
-				this.overlayCanvas.State.TextFont = OverlayFont;
-
-				this.OnCollectStateOverlayDrawcalls(this.overlayCanvas);
-
-				this.overlayCanvas.End();
-			}
 		}
 
 		public virtual HelpInfo ProvideHoverHelp(Point localPos, ref bool captured)

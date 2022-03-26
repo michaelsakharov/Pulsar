@@ -57,7 +57,7 @@ namespace Duality.Graphics.Post
 
 		public bool EnableAtmosphere { get; set; } = false;
 
-        public PostEffectManager(ResourceManager resourceManager, Backend backend, int width, int height)
+        public PostEffectManager(Backend backend, int width, int height)
         {
             _backend = backend ?? throw new ArgumentNullException("backend");
 

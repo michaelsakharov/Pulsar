@@ -16,11 +16,12 @@ namespace Duality.Graphics.Particles.Generators
 			var minPosition = Position - MaxStartPosOffset;
 			var maxPosition = Position + MaxStartPosOffset;
 
+			Random rnd = new Random();
 			for (var i = startId; i < endId; i++)
 			{
-				particles.Position[i].X = Math.Util.Random(minPosition.X, maxPosition.X);
-				particles.Position[i].Y = Math.Util.Random(minPosition.Y, maxPosition.Y);
-				particles.Position[i].Z = Math.Util.Random(minPosition.Z, maxPosition.Z);
+				particles.Position[i].X = rnd.NextFloat(minPosition.X, maxPosition.X);
+				particles.Position[i].Y = rnd.NextFloat(minPosition.Y, maxPosition.Y);
+				particles.Position[i].Z = rnd.NextFloat(minPosition.Z, maxPosition.Z);
 			}
 		}
 	}

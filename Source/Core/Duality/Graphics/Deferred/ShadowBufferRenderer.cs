@@ -24,7 +24,7 @@ namespace Duality.Graphics.Deferred
 
         public bool DebugCascades = false;
 
-        public ShadowBufferRenderer(Backend backend, Duality.Resources.ResourceManager resourceManager, int width, int height)
+        public ShadowBufferRenderer(Backend backend, int width, int height)
         {
             _backend = backend ?? throw new ArgumentNullException("backend");
 

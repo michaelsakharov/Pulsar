@@ -52,7 +52,7 @@ namespace Duality.Graphics.Deferred
         private Matrix4[] _worldMatrices = new Matrix4[4096];
         private DrawMeshMultiData[] _drawMeshMultiData = new DrawMeshMultiData[4096];
         
-        public ShadowRenderer(Backend backend, Duality.Resources.ResourceManager resourceManager, int cascadeCount = MaxCascadeCount, int resolution = DefaultResolution)
+        public ShadowRenderer(Backend backend, int cascadeCount = MaxCascadeCount, int resolution = DefaultResolution)
         {
             _backend = backend ?? throw new ArgumentNullException(nameof(backend));
 

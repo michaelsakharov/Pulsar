@@ -29,6 +29,7 @@ namespace Duality.Resources
 		private static bool                switchToScheduled = false;
 		private static ContentRef<Scene>   switchToTarget    = null;
 		private static Stage			   stage			 = null;
+		private static Camera			   camera			 = null;
 
 		/// <summary>
 		/// [GET / SET] The Scene that is currently active i.e. updated and rendered. This is never null.
@@ -107,6 +108,11 @@ namespace Duality.Resources
 		{
 			get { return stage; }
 		}
+		public static Camera Camera
+		{
+			get { return camera; }
+			set { camera = value; }
+		}
 
 
 		/// <summary>
@@ -142,6 +148,7 @@ namespace Duality.Resources
 		static Scene()
 		{
 			Current = new Scene();
+			stage = new Stage();
 		}
 
 		/// <summary>
@@ -172,6 +179,7 @@ namespace Duality.Resources
 			else
 			{
 				Scene.Current = scene.Res;
+				stage = new Stage();
 			}
 		}
 		/// <summary>
@@ -213,6 +221,7 @@ namespace Duality.Resources
 
 			// Perform the scheduled switch
 			Scene.Current = target;
+			stage = new Stage();
 
 			// If we now end up with another scheduled switch, we might be
 			// caught up in a redirect loop, where a Scene, when activated,
@@ -427,36 +436,6 @@ namespace Duality.Resources
 			});
 
 			this.active = false;
-		}
-
-		/// <summary>
-		/// Renders the Scene.
-		/// </summary>
-		/// <param name="target">
-		/// The <see cref="RenderTarget"/> which will be used for all rendering output. 
-		/// "null" means rendering directly to the output buffer of the game window / screen.
-		/// </param>
-		/// <param name="viewportRect">The viewport to which will be rendered.</param>
-		/// <param name="imageSize">Target size of the rendered image before adjusting it to fit the specified viewport.</param>
-		public void Render(ContentRef<RenderTarget> target, Rect viewportRect, Vector2 imageSize)
-		{
-			if (!this.active) throw new InvalidOperationException("Cannot render a scene that is not active. Call Activate first.");
-			if (this.isRendering) throw new InvalidOperationException("Can't render a Scene while it is already being rendered.");
-			this.isRendering = true;
-			try
-			{
-				// Retrieve the rendering setup that will be used for rendering the scene
-				RenderSetup setup =
-					DualityApp.AppData.Instance.RenderingSetup.Res ??
-					RenderSetup.Default.Res;
-
-				// Render the scene
-				setup.RenderScene(this, target, viewportRect, imageSize);
-			}
-			finally
-			{
-				this.isRendering = false;
-			}
 		}
 		/// <summary>
 		/// Updates the Scene.

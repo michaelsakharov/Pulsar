@@ -79,7 +79,7 @@ namespace Duality.Graphics.Deferred
         private int _pointShadowCount = 0;
         private Matrix4[] _pointShadowMatrices = new Matrix4[MaxShadowCastingPointLights * 6];
 
-        public DeferredRenderer(Duality.Resources.ResourceManager resourceManager, Backend backend, ShadowRenderer shadowRenderer, int width, int height)
+        public DeferredRenderer(Backend backend, ShadowRenderer shadowRenderer, int width, int height)
         {
             Settings.ShadowQuality = ShadowQuality.High;
             Settings.EnableShadows = true;

@@ -13,9 +13,10 @@ namespace Duality.Graphics.Particles.Generators
 
 		public void Generate(float deltaTime, ParticleData particles, int startId, int endId)
 		{
+			Random rnd = new Random();
 			for (var i = startId; i < endId; i++)
 			{
-				Math.Util.Random(ref MinStartVelocity, ref MaxStartVelocity, out particles.Velocity[i]);
+				rnd.NextFloat(ref MinStartVelocity, ref MaxStartVelocity, out particles.Velocity[i]);
 			}
 		}
 	}

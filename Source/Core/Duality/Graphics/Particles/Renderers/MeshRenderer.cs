@@ -24,7 +24,7 @@ namespace Duality.Graphics.Particles.Renderers
             for (var i = 0; i < particles.AliveCount; i++)
             {
                 Matrix4.CreateTranslation(ref particles.Position[i], out var translation);
-                Matrix4.Mult(ref worldOffset, ref translation, out var world);
+                Matrix4.Multiply(ref worldOffset, ref translation, out var world);
 
                 foreach (var subMesh in Mesh.SubMeshes)
                 {

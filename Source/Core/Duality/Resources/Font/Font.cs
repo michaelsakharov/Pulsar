@@ -87,7 +87,6 @@ namespace Duality.Resources
 				{
 					this.renderMode = value;
 					this.GenerateTexture(); // Filtering depends on pixel-grid alignment.
-					this.GenerateMaterial();
 				}
 			}
 		}
@@ -179,7 +178,6 @@ namespace Duality.Resources
 			this.GenerateCharLookup();
 			this.GeneratePixmap();
 			this.GenerateTexture();
-			this.GenerateMaterial();
 			this.GenerateKerningLookup();
 		}
 		private void ReleaseResources()
@@ -210,32 +208,6 @@ namespace Duality.Resources
 				TextureSizeMode.Enlarge, 
 				this.IsPixelGridAligned ? TextureMagFilter.Nearest : TextureMagFilter.Linear,
 				this.IsPixelGridAligned ? TextureMinFilter.Nearest : TextureMinFilter.LinearMipmapLinear);
-		}
-		private void GenerateMaterial()
-		{
-			if (this.material != null) this.material.Dispose();
-
-			if (this.texture == null)
-				return;
-
-			// Select DrawTechnique to use
-			ContentRef<DrawTechnique> technique;
-			if (this.renderMode == FontRenderMode.MonochromeBitmap)
-				technique = DrawTechnique.Mask;
-			else if (this.renderMode == FontRenderMode.GrayscaleBitmap)
-				technique = DrawTechnique.Alpha;
-			else if (this.renderMode == FontRenderMode.SmoothBitmap)
-				technique = DrawTechnique.Alpha;
-			else
-				technique = DrawTechnique.SharpAlpha;
-
-			// Create and configure internal BatchInfo
-			BatchInfo matInfo = new BatchInfo(technique, this.texture);
-			if (technique == DrawTechnique.SharpAlpha)
-			{
-				matInfo.SetValue("smoothness", this.fontData.Metrics.Size * 4.0f);
-			}
-			this.material = new Material(matInfo);
 		}
 		private void GenerateCharLookup()
 		{
@@ -306,131 +278,6 @@ namespace Duality.Resources
 			return subImg;
 		}
 
-		/// <summary>
-		/// Emits a set of vertices based on a text. To render this text, simply use that set of vertices combined with
-		/// the Fonts <see cref="Material"/>.
-		/// </summary>
-		/// <param name="text">The text to render.</param>
-		/// <param name="vertices">The set of vertices that is emitted. You can re-use the same array each frame.</param>
-		/// <param name="x">An X-Offset applied to the position of each emitted vertex.</param>
-		/// <param name="y">An Y-Offset applied to the position of each emitted vertex.</param>
-		/// <param name="z">An Z-Offset applied to the position of each emitted vertex.</param>
-		/// <returns>The number of emitted vertices. This values isn't necessarily equal to the emitted arrays length.</returns>
-		public int EmitTextVertices(string text, ref VertexC1P3T2[] vertices, float x, float y, float z = 0.0f)
-		{
-			return this.EmitTextVertices(text, ref vertices, x, y, z, ColorRgba.White);
-		}
-		/// <summary>
-		/// Emits a set of vertices based on a text. To render this text, simply use that set of vertices combined with
-		/// the Fonts <see cref="Material"/>.
-		/// </summary>
-		/// <param name="text">The text to render.</param>
-		/// <param name="vertices">The set of vertices that is emitted. You can re-use the same array each frame.</param>
-		/// <param name="x">An X-Offset applied to the position of each emitted vertex.</param>
-		/// <param name="y">An Y-Offset applied to the position of each emitted vertex.</param>
-		/// <param name="z">An Z-Offset applied to the position of each emitted vertex.</param>
-		/// <param name="clr">The color value that is applied to each emitted vertex.</param>
-		/// <param name="angle">An angle by which the text is rotated (before applying the offset).</param>
-		/// <param name="scale">A factor by which the text is scaled (before applying the offset).</param>
-		/// <returns>The number of emitted vertices. This values isn't necessarily equal to the emitted arrays length.</returns>
-		public int EmitTextVertices(string text, ref VertexC1P3T2[] vertices, float x, float y, float z, ColorRgba clr, float angle = 0.0f, float scale = 1.0f)
-		{
-			int len = this.EmitTextVertices(text, ref vertices);
-			
-			Vector3 offset = new Vector3(x, y, z);
-			Vector2 xDot, yDot;
-			MathF.GetTransformDotVec(angle, scale, out xDot, out yDot);
-
-			for (int i = 0; i < len; i++)
-			{
-				MathF.TransformDotVec(ref vertices[i].Pos, ref xDot, ref yDot);
-				Vector3.Add(ref vertices[i].Pos, ref offset, out vertices[i].Pos);
-				vertices[i].Color = clr;
-			}
-
-			return len;
-		}
-		/// <summary>
-		/// Emits a set of vertices based on a text. To render this text, simply use that set of vertices combined with
-		/// the Fonts <see cref="Material"/>.
-		/// </summary>
-		/// <param name="text">The text to render.</param>
-		/// <param name="vertices">The set of vertices that is emitted. You can re-use the same array each frame.</param>
-		/// <param name="x">An X-Offset applied to the position of each emitted vertex.</param>
-		/// <param name="y">An Y-Offset applied to the position of each emitted vertex.</param>
-		/// <param name="clr">The color value that is applied to each emitted vertex.</param>
-		/// <returns>The number of emitted vertices. This values isn't necessarily equal to the emitted arrays length.</returns>
-		public int EmitTextVertices(string text, ref VertexC1P3T2[] vertices, float x, float y, ColorRgba clr)
-		{
-			int len = this.EmitTextVertices(text, ref vertices);
-			
-			Vector3 offset = new Vector3(x, y, 0);
-
-			for (int i = 0; i < len; i++)
-			{
-				Vector3.Add(ref vertices[i].Pos, ref offset, out vertices[i].Pos);
-				vertices[i].Color = clr;
-			}
-
-			return len;
-		}
-		/// <summary>
-		/// Emits a set of vertices based on a text. To render this text, simply use that set of vertices combined with
-		/// the Fonts <see cref="Material"/>.
-		/// </summary>
-		/// <param name="text">The text to render.</param>
-		/// <param name="vertices">The set of vertices that is emitted. You can re-use the same array each frame.</param>
-		/// <returns>The number of emitted vertices. This values isn't necessarily equal to the emitted arrays length.</returns>
-		public int EmitTextVertices(string text, ref VertexC1P3T2[] vertices)
-		{
-			int len = text.Length * 4;
-			if (vertices == null || vertices.Length < len) vertices = new VertexC1P3T2[len];
-			
-			if (this.texture == null)
-				return len;
-
-			float curOffset = 0.0f;
-			FontGlyphData glyphData;
-			Rect uvRect;
-			float glyphXAdv;
-			for (int i = 0; i < text.Length; i++)
-			{
-				this.ProcessTextAdv(text, i, out glyphData, out uvRect, out glyphXAdv);
-
-				Vector2 glyphPos;
-				glyphPos.X = MathF.Round(curOffset - glyphData.Offset.X);
-				glyphPos.Y = MathF.Round(0 - glyphData.Offset.Y);
-
-				vertices[i * 4 + 0].Pos.X = glyphPos.X;
-				vertices[i * 4 + 0].Pos.Y = glyphPos.Y;
-				vertices[i * 4 + 0].Pos.Z = 0.0f;
-				vertices[i * 4 + 0].TexCoord = uvRect.TopLeft;
-				vertices[i * 4 + 0].Color = ColorRgba.White;
-
-				vertices[i * 4 + 1].Pos.X = glyphPos.X + glyphData.Size.X;
-				vertices[i * 4 + 1].Pos.Y = glyphPos.Y;
-				vertices[i * 4 + 1].Pos.Z = 0.0f;
-				vertices[i * 4 + 1].TexCoord = uvRect.TopRight;
-				vertices[i * 4 + 1].Color = ColorRgba.White;
-
-				vertices[i * 4 + 2].Pos.X = glyphPos.X + glyphData.Size.X;
-				vertices[i * 4 + 2].Pos.Y = glyphPos.Y + glyphData.Size.Y;
-				vertices[i * 4 + 2].Pos.Z = 0.0f;
-				vertices[i * 4 + 2].TexCoord = uvRect.BottomRight;
-				vertices[i * 4 + 2].Color = ColorRgba.White;
-
-				vertices[i * 4 + 3].Pos.X = glyphPos.X;
-				vertices[i * 4 + 3].Pos.Y = glyphPos.Y + glyphData.Size.Y;
-				vertices[i * 4 + 3].Pos.Z = 0.0f;
-				vertices[i * 4 + 3].TexCoord = uvRect.BottomLeft;
-				vertices[i * 4 + 3].Color = ColorRgba.White;
-
-				curOffset += glyphXAdv;
-			}
-
-			return len;
-		}
-		
 		/// <summary>
 		/// Renders a text to the specified target <see cref="Duality.Resources.Pixmap"/> <see cref="Duality.Drawing.PixelData"/>.
 		/// </summary>
@@ -645,7 +492,6 @@ namespace Duality.Resources
 			this.GenerateCharLookup();
 			this.GeneratePixmap();
 			this.GenerateTexture();
-			this.GenerateMaterial();
 			this.GenerateKerningLookup();
 			base.OnLoaded();
 		}
@@ -661,7 +507,6 @@ namespace Duality.Resources
 			c.GenerateCharLookup();
 			c.GeneratePixmap();
 			c.GenerateTexture();
-			c.GenerateMaterial();
 			c.GenerateKerningLookup();
 		}
 	}

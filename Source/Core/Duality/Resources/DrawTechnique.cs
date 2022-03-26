@@ -44,9 +44,7 @@ namespace Duality.Resources
 
 		private ContentRef<VertexShader>   vertexShader      = VertexShader.Minimal;
 		private ContentRef<FragmentShader> fragmentShader    = FragmentShader.Minimal;
-		private Type                       prefType          = null;
 
-		[DontSerialize] private VertexDeclaration         prefFormat        = null;
 		[DontSerialize] private ShaderParameterCollection defaultParameters = null;
 		[DontSerialize] private NativeShaderProgram      nativeShader      = null;
 		[DontSerialize] private bool                      compiled          = false;
@@ -146,19 +144,6 @@ namespace Duality.Resources
 				return this.defaultParameters;
 			}
 		}
-		/// <summary>
-		/// [GET / SET] The vertex format that is preferred by this DrawTechnique. If there is no specific preference,
-		/// null is returned.
-		/// </summary>
-		public VertexDeclaration PreferredVertexFormat
-		{
-			get { return this.prefFormat; }
-			set
-			{
-				this.prefFormat = value;
-				this.prefType = value != null ? value.DataType : null;
-			}
-		}
 
 		/// <summary>
 		/// Creates a new, default DrawTechnique
@@ -184,7 +169,7 @@ namespace Duality.Resources
 			Logs.Core.PushIndent();
 
 			if (this.nativeShader == null)
-				this.nativeShader = DualityApp.GraphicsBackend.CreateShaderProgram();
+				this.nativeShader = new NativeShaderProgram();
 
 			// Create a list of all shader parts that we'll be linking
 			List<Shader> parts = new List<Shader>();
@@ -266,7 +251,6 @@ namespace Duality.Resources
 		{
 			this.Compile();
 			base.OnLoaded();
-			this.prefFormat = VertexDeclaration.Get(this.prefType);
 		}
 		protected override void OnDisposing(bool manually)
 		{

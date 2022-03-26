@@ -25,10 +25,6 @@
       <Name>Duality</Name>
       <Private>False</Private>
     </ProjectReference>
-    <ProjectReference Include="..\DefaultOpenTK\DefaultOpenTK.Core.csproj">
-      <Project>{35045e2e-7748-4d1d-be05-bf72a19c295f}</Project>
-      <Name>DefaultOpenTK.Core</Name>
-    </ProjectReference>
   </ItemGroup>
 
   <ItemGroup>

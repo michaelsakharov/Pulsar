@@ -14,9 +14,10 @@ namespace Duality.Graphics.Particles.Generators
 
 		public void Generate(float deltaTime, ParticleData particles, int startId, int endId)
 		{
+			Random rnd = new Random();
 			for (var i = startId; i < endId; i++)
 			{
-				var angle = Math.Util.Random(0.0f, Math.Util.TwoPi);
+				var angle = rnd.NextFloat(0.0f, MathF.TwoPi);
 
 				particles.Position[i] = Position;
 
