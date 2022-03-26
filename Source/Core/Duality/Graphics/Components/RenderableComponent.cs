@@ -7,29 +7,25 @@ using System.Threading.Tasks;
 
 namespace Duality.Graphics.Components
 {
-    public abstract class RenderableComponent : GameObjectComponent
-    {
+    public abstract class RenderableComponent : Component, ICmpInitializable
+	{
         [DataMember] public bool CastShadows { get; set; } = true;
 
         public BoundingSphere BoundingSphere;
         public BoundingBox BoundingBox;
 
-        internal Stage Stage => Owner.World.Services.Get<Stage>();
+		internal Stage Stage => this.gameobj.Scene.Stage;
 
-        public abstract void PrepareRenderOperations(BoundingFrustum frustum, RenderOperations operations);
+		public abstract void PrepareRenderOperations(BoundingFrustum frustum, RenderOperations operations);
 
-        public override void OnActivate()
-        {
-            base.OnActivate();
+		void ICmpInitializable.OnActivate()
+		{
+			Stage.AddRenderableComponent(this);
+		}
 
-            Stage.AddRenderableComponent(this);
-        }
-
-        public override void OnDeactivate()
-        {
-            base.OnDeactivate();
-
-            Stage.RemoveRenderableComponent(this);
-        }
+		void ICmpInitializable.OnDeactivate()
+		{
+			Stage.RemoveRenderableComponent(this);
+		}
     }
 }

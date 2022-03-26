@@ -192,8 +192,9 @@ namespace Duality.Graphics.Deferred
         {
             // Calculate light direction
             Vector3 unitZ = Vector3.UnitZ;
-            Vector3.Transform(ref unitZ, ref light.Owner.Orientation, out var lightDir);
-            lightDir = -lightDir.Normalize();
+			Quaternion oreintation = light.GameObj.Transform.Quaternion;
+			Vector3.Transform(ref unitZ, ref oreintation, out var lightDir);
+            lightDir = -lightDir.Normalized;
 
             // Shadow view & projection matrices
             Matrix4 view, projection;
@@ -263,7 +264,7 @@ namespace Duality.Graphics.Deferred
             var shadowCameraPos = frustumCenter + lightDir * -minExtents.Z;
 
             var shadowView = Matrix4.LookAt(shadowCameraPos, frustumCenter, upDir);
-            var shadowProjection = Matrix4.CreateOrthographicOffCenter(minExtents.X, maxExtents.X, minExtents.Y, maxExtents.Y, 0.0f, cascadeExtents.Z);
+            Matrix4.CreateOrthographicOffCenter(minExtents.X, maxExtents.X, minExtents.Y, maxExtents.Y, 0.0f, cascadeExtents.Z, out var shadowProjection);
 
             if (StabilizeCascades)
             {
@@ -314,7 +315,7 @@ namespace Duality.Graphics.Deferred
             _shadowRenderOperations.GetOperations(ref view, out var operations, out var count);
 
             // Upload per shadow render data
-            _perFrameData[0].LightDirWSAndBias = new Vector4(light.Type == LighType.PointLight ? light.Owner.Position : lightDir, light.ShadowBias);
+            _perFrameData[0].LightDirWSAndBias = new Vector4(light.Type == LighType.PointLight ? light.GameObj.Transform.Pos : lightDir, light.ShadowBias);
             _perFrameData[0].View = view;
             _perFrameData[0].Projection = projection;
             _perFrameData[0].ViewProjection = view * projection;

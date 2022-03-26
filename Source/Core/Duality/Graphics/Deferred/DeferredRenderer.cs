@@ -256,8 +256,8 @@ namespace Duality.Graphics.Deferred
             {
                 world = operations[i].WorldMatrix;
 
-                Matrix4.Mult(ref world, ref viewProjection, out worldViewProjection);
-                Matrix4.Mult(ref world, ref view, out worldView);
+                Matrix4.Multiply(ref world, ref viewProjection, out worldViewProjection);
+                Matrix4.Multiply(ref world, ref view, out worldView);
 
                 itWorld = Matrix4.Invert(Matrix4.Transpose(world));
 

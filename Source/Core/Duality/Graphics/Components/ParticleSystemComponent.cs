@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace Duality.Graphics.Components
 {
-    public class ParticleSystemComponent : RenderableComponent
-    {
+    public class ParticleSystemComponent : RenderableComponent, ICmpUpdatable
+	{
         [DataMember] public Particles.ParticleSystem ParticleSystem { get; set; }
 
         public override void PrepareRenderOperations(BoundingFrustum frustum, RenderOperations operations)
@@ -16,23 +16,21 @@ namespace Duality.Graphics.Components
             if (ParticleSystem == null || ParticleSystem.Renderer == null)
                 return;
 
-            Owner.GetWorldMatrix(out var world);
-            ParticleSystem.Renderer.PrepareRenderOperations(ParticleSystem, operations, world);
+			var world = gameobj.Transform.WorldMatrix;
+			ParticleSystem.Renderer.PrepareRenderOperations(ParticleSystem, operations, world);
         }
 
-        public override void Update(float dt)
-        {
-            base.Update(dt);
-
-            BoundingSphere.Center = Owner.Position;
+		void ICmpUpdatable.OnUpdate()
+		{
+            BoundingSphere.Center = gameobj.Transform.Pos;
             BoundingSphere.Radius = 100f;
             if (ParticleSystem != null)
             {
-                ParticleSystem.Position = Owner.Position;
-                ParticleSystem.Orientation = Owner.Orientation;
+                ParticleSystem.Position = gameobj.Transform.Pos;
+                ParticleSystem.Orientation = gameobj.Transform.Quaternion;
 
-                ParticleSystem.Update(dt);
-                ParticleSystem.Renderer?.Update(ParticleSystem, Stage, dt);
+                ParticleSystem.Update(Time.DeltaTime);
+                ParticleSystem.Renderer?.Update(ParticleSystem, Stage, Time.DeltaTime);
             }
         }
     }

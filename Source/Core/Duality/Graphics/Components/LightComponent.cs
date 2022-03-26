@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace Duality.Graphics.Components
 {
-    public class LightComponent : GameObjectComponent
-    {
+    public class LightComponent : Component, ICmpInitializable
+	{
         [DataMember] public LighType Type { get; set; }
         [DataMember] public Vector3 Color { get; set; }
         [DataMember] public float Intensity { get; set; } = 1.0f;
@@ -20,19 +20,15 @@ namespace Duality.Graphics.Components
         [DataMember] public float ShadowBias { get; set; } = 0.001f;
         [DataMember] public float ShadowNearClipDistance { get; set; } = 0.0005f;
 
-        internal Stage Stage => Owner.World.Services.Get<Stage>();
+        internal Stage Stage => this.gameobj.Scene.Stage;
 
-        public override void OnActivate()
+        void ICmpInitializable.OnActivate()
         {
-            base.OnActivate();
-
             Stage.AddLightComponent(this);
         }
 
-        public override void OnDeactivate()
+        void ICmpInitializable.OnDeactivate()
         {
-            base.OnDeactivate();
-
             Stage.RemoveLightComponent(this);
         }
     }

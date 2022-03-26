@@ -7,25 +7,37 @@ using Duality.Graphics.SkeletalAnimation;
 
 namespace Duality.Graphics.Components
 {
-    public class SkinnedMeshComponent : MeshComponent
-    {
+    public class SkinnedMeshComponent : MeshComponent, ICmpUpdatable, ICmpInitializable
+	{
         public SkeletonInstance _skeletonInstance = null;
 
-        public override void OnDeactivate()
-        {
-            base.OnDeactivate();
-
+		void ICmpInitializable.OnDeactivate()
+		{
             _skeletonInstance = null;
         }
 
-        public AnimationState GetAnimationState(string animation)
-            => _skeletonInstance.GetAnimationState(animation);
+		public AnimationState GetAnimationState(string animation)
+		{
+			return _skeletonInstance.GetAnimationState(animation);
+		}
 
-        public IReadOnlyList<AnimationState> AnimationStates => _skeletonInstance.AnimationStates;
+		public IReadOnlyList<AnimationState> AnimationStates
+		{
+			get
+			{
+				return _skeletonInstance.AnimationStates;
+			}
+		}
 
-        public Skeleton Skeleton => _skeletonInstance.Skeleton;
+		public Skeleton Skeleton
+		{
+			get
+			{
+				return _skeletonInstance.Skeleton;
+			}
+		}
 
-        protected override void UpdateDerviedMeshSettings()
+		protected override void UpdateDerviedMeshSettings()
         {
             base.UpdateDerviedMeshSettings();
 
@@ -35,10 +47,8 @@ namespace Duality.Graphics.Components
             }
         }
 
-        public override void Update(float dt)
-        {
-            base.Update(dt);
-
+		void ICmpUpdatable.OnUpdate()
+		{
             _skeletonInstance?.Update();
         }
 
@@ -47,9 +57,9 @@ namespace Duality.Graphics.Components
             if (_mesh == null)
                 return;
 
-            Owner.GetWorldMatrix(out var world);
+			var world = gameobj.Transform.WorldMatrix;
 
-            for (var i = 0; i < Mesh.SubMeshes.Length; i++)
+			for (var i = 0; i < Mesh.SubMeshes.Length; i++)
             {
                 var subMesh = Mesh.SubMeshes[i];
                 operations.Add(subMesh.Handle, world, subMesh.Material, _skeletonInstance, false, CastShadows);

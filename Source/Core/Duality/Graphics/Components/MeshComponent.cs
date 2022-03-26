@@ -8,8 +8,8 @@ using Duality.Graphics.Resources;
 
 namespace Duality.Graphics.Components
 {
-    public class MeshComponent : RenderableComponent
-    {
+    public class MeshComponent : RenderableComponent, ICmpUpdatable, ICmpInitializable
+	{
         protected bool _meshDirty = false;
 
         // Used for world space transform
@@ -18,21 +18,30 @@ namespace Duality.Graphics.Components
         protected Mesh _mesh;
         [DataMember]
         public Mesh Mesh
-        {
-            get => _mesh;
-            set
-            {
-                _mesh = value;
-                _meshDirty = true;
-            }
-        }
+		{
+			get
+			{
+				return _mesh;
+			}
 
-        public override void OnActivate()
-        {
-            base.OnActivate();
+			set
+			{
+				_mesh = value;
+				_meshDirty = true;
+			}
+		}
 
-            UpdateDerviedMeshSettings();
-        }
+		//Will This And the RenderableComponent one get called togather?
+		// Might work? !!!!3D
+		void ICmpInitializable.OnActivate()
+		{
+			Stage.AddRenderableComponent(this);
+		}
+
+		//override void OnActivate()
+        //{
+        //    UpdateDerviedMeshSettings();
+        //}
 
         protected virtual void UpdateDerviedMeshSettings()
         {
@@ -53,17 +62,15 @@ namespace Duality.Graphics.Components
             _meshDirty = false;
         }
 
-        public override void Update(float dt)
-        {
-            base.Update(dt);
-
+		void ICmpUpdatable.OnUpdate()
+		{
             if (_meshDirty)
             {
                 UpdateDerviedMeshSettings();
             }
 
-            Owner.GetWorldMatrix(out var world);
-            _boundingSphereLocalSpace.Transform(ref world, out BoundingSphere);
+			var world = gameobj.Transform.WorldMatrix;
+			_boundingSphereLocalSpace.Transform(ref world, out BoundingSphere);
         }
 
         public override void PrepareRenderOperations(BoundingFrustum frustum, RenderOperations operations)
@@ -71,15 +78,15 @@ namespace Duality.Graphics.Components
             if (_mesh == null)
                 return;
 
-            Owner.GetWorldMatrix(out var world);
+			var world = gameobj.Transform.WorldMatrix;
 
-            for (var i = 0; i < Mesh.SubMeshes.Length; i++)
+			for (var i = 0; i < Mesh.SubMeshes.Length; i++)
             {
                 var subMesh = Mesh.SubMeshes[i];
 
                 Mesh.SubMeshes[i].BoundingSphere.Transform(ref world, out var subMeshBoundingSphere);
 
-                if (frustum == null || frustum.Intersects(ref subMeshBoundingSphere))
+                if (frustum == null || frustum.Intersects(subMeshBoundingSphere))
                 {
                     operations.Add(subMesh.Handle, world, subMesh.Material, null, false, CastShadows);
                 }
