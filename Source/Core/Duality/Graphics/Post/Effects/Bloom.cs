@@ -65,10 +65,8 @@ namespace Duality.Graphics.Post.Effects
 			});
 		}
 
-		internal override void LoadResources(Duality.Resources.ResourceManager resourceManager)
+		internal override void LoadResources()
 		{
-			base.LoadResources(resourceManager);
-
 			_highPassShader = resourceManager.Load<Duality.Resources.Shader>("/shaders/post/highpass");
 			_blurHorizontalShader = resourceManager.Load<Duality.Resources.Shader>("/shaders/post/blur", "BLUR_HORIZONTAL");
 			_blurVerticalShader = resourceManager.Load<Duality.Resources.Shader>("/shaders/post/blur", "BLUR_VERTICAL");

@@ -19,9 +19,8 @@ namespace Duality.Graphics.Post.Effects
 		{
 		}
 
-		internal override void LoadResources(Duality.Resources.ResourceManager resourceManager)
+		internal override void LoadResources()
 		{
-			base.LoadResources(resourceManager);
 			_shader = resourceManager.Load<Duality.Resources.Shader>("/shaders/post/gamma");
 		}
 

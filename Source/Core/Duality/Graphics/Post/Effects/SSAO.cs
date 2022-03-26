@@ -91,10 +91,8 @@ namespace Duality.Graphics.Post.Effects
             return arr;
         }
 
-        internal override void LoadResources(ResourceManager resourceManager)
+        internal override void LoadResources()
         {
-            base.LoadResources(resourceManager);
-
             _shader = resourceManager.Load<Duality.Resources.Shader>("/shaders/post/ssao");
             _shaderBlur = resourceManager.Load<Duality.Resources.Shader>("/shaders/post/ssao_blur");
         }

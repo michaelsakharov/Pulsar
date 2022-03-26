@@ -11,26 +11,19 @@ namespace Duality.Graphics.Resources
     public class Mesh : IDisposable
     {
         private Backend _backend;
-        private ResourceManager _resourceManager;
 
         public SubMesh[] SubMeshes { get; set; }
         public SkeletalAnimation.Skeleton Skeleton { get; set; }
 
-        public Mesh(Backend backend, ResourceManager resourceManager)
+        public Mesh(Backend backend)
         {
             _backend = backend;
-            _resourceManager = resourceManager ?? throw new ArgumentNullException(nameof(resourceManager));
 
             SubMeshes = new SubMesh[0];
         }
 
         public void Dispose()
         {
-            if (Skeleton != null)
-            {
-                _resourceManager.Unload(Skeleton);
-            }
-
             foreach (var subMesh in SubMeshes)
             {
                 _backend.RenderSystem.DestroyBuffer(subMesh.VertexBufferHandle);
@@ -39,7 +32,6 @@ namespace Duality.Graphics.Resources
 
                 if (subMesh.Material != null)
                 {
-                    _resourceManager.Unload(subMesh.Material);
                     subMesh.Material = null;
                 }
             }

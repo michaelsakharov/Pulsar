@@ -136,7 +136,7 @@ namespace Duality.Resources
 			}
 
 			if (this.native == null)
-				this.native = DualityApp.GraphicsBackend.CreateShaderPart();
+				this.native = new NativeShaderPart();
 
 			// Preprocess the source code to include builtin shader functions
 			string processedSource = null;

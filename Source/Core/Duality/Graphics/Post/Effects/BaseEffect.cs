@@ -17,7 +17,7 @@ namespace Duality.Graphics.Post.Effects
 			_quadMesh = quadMesh ?? throw new ArgumentNullException("quadMesh");
 		}
 
-		internal virtual void LoadResources(Duality.Resources.ResourceManager resourceManager)
+		internal virtual void LoadResources()
 		{
 		}
 

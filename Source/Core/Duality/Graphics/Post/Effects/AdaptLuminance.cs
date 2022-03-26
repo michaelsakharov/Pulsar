@@ -42,10 +42,8 @@ namespace Duality.Graphics.Post.Effects
 			};
 		}
 
-		internal override void LoadResources(Duality.Resources.ResourceManager resourceManager)
+		internal override void LoadResources()
 		{
-			base.LoadResources(resourceManager);
-
 			_luminanceMapShader = resourceManager.Load<Duality.Resources.Shader>("/shaders/post/luminance_map");
 			_adaptLuminanceShader = resourceManager.Load<Duality.Resources.Shader>("/shaders/post/adapt_luminance");
 		}

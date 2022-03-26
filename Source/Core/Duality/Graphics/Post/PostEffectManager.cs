@@ -117,16 +117,16 @@ namespace Duality.Graphics.Post
 
             DofSettings = new DofSettings { Enable = false, CameraHeight = 720.0f, CocScale = 12.0f, FocusPlane = 1.0f };
 
-            LoadResources(resourceManager);
+            LoadResources();
         }
 
-        void LoadResources(ResourceManager resourceManager)
+        void LoadResources()
         {
             _sprite = _backend.CreateSpriteBatch();
 
             foreach (var effect in _effects)
             {
-                effect.LoadResources(resourceManager);
+                effect.LoadResources();
             }
         }
 
