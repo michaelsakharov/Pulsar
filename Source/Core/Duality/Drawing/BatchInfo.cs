@@ -411,21 +411,21 @@ namespace Duality.Drawing
 					backend.BindShaderVariable(location, ref vec2);
 					break;
 				case ShaderFieldType.Vec3:
-					var vec3 = (Vector2)data;
+					var vec3 = (Vector3)data;
 					backend.BindShaderVariable(location, ref vec3);
 					break;
 				case ShaderFieldType.Vec4:
-					var vec4 = (Vector2)data;
+					var vec4 = (Vector4)data;
 					backend.BindShaderVariable(location, ref vec4);
 					break;
 				case ShaderFieldType.Mat2:
 					break;
 				case ShaderFieldType.Mat3:
-					var mat3 = (Vector2)data;
-					backend.BindShaderVariable(location, ref mat3);
+					//var mat3 = (Matrix3)data;
+					//backend.BindShaderVariable(location, ref mat3);
 					break;
 				case ShaderFieldType.Mat4:
-					var mat2 = (Vector2)data;
+					var mat2 = (Matrix4)data;
 					backend.BindShaderVariable(location, ref mat2);
 					break;
 			}
