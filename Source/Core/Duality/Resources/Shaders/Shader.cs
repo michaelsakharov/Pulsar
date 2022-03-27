@@ -61,7 +61,6 @@ namespace Duality.Resources
 		[DontSerialize] private NativeShaderPart native   = null;
 		[DontSerialize] private bool              compiled = false;
 		[DontSerialize] private ShaderFieldInfo[] fields   = null;
-		[DontSerialize] private int[] fieldLocations = null;
 
 
 		/// <summary>
@@ -209,29 +208,6 @@ namespace Duality.Resources
 				try
 				{
 					this.native.LoadSource(processedSource, this.Type);
-
-					// Get Field Locations
-					List<int> validLocations = new List<int>();
-					foreach (ShaderFieldInfo field in fields)
-					{
-						int location;
-						if (field.Scope == ShaderFieldScope.Uniform)
-							location = GL.GetUniformLocation(this.native.Handle, field.Name);
-						else if (field.Scope == ShaderFieldScope.Attribute)
-							location = GL.GetAttribLocation(this.native.Handle, field.Name);
-						else
-							location = GL.GetAttribLocation(this.native.Handle, field.Name);
-
-						if (location >= 0)
-						{
-							validLocations.Add(location);
-						}
-						else
-						{
-							validLocations.Add(-1);
-						}
-					}
-					this.fieldLocations = validLocations.ToArray();
 				}
 				catch (Exception e)
 				{
@@ -243,38 +219,6 @@ namespace Duality.Resources
 
 			this.compiled = true;
 			Logs.Core.PopIndent();
-		}
-
-		public int GetUniform(HashedString name)
-		{
-			for(int i=0; i < DeclaredFields.Count; i++)
-			{
-				if (DeclaredFields[i].Name == name)
-					return fieldLocations[i];
-			}
-			return -1;
-		}
-
-		[DontSerialize] private object _mutex = new object();
-		public void BindUniformLocations<T>(T handles) where T : class
-		{
-			lock (_mutex)
-			{
-				var type = typeof(T);
-				foreach (var field in type.GetFields())
-				{
-					if (field.FieldType != typeof(int))
-						continue;
-
-					var fieldName = field.Name;
-					var uniformName = fieldName.Replace("Handle", "");
-					uniformName = char.ToLower(uniformName[0]) + uniformName.Substring(1);
-
-					int uniformLocation = GetUniform(uniformName);
-
-					field.SetValue(handles, uniformLocation);
-				}
-			}
 		}
 
 		protected override void OnLoaded()
