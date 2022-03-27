@@ -12,7 +12,6 @@ namespace Duality.Graphics.Post.Effects
 		private DrawTechnique _shader;
 		private GammaShaderParams _shaderParams;
 
-        public Duality.Resources.Texture ColorCorrectLUT { get; set; }
         public bool EnableColorCorrection { get; set; } = false;
 
         public Gamma(Backend backend, BatchBuffer quadMesh)
@@ -35,7 +34,7 @@ namespace Duality.Graphics.Post.Effects
 			}
 
 			_backend.BeginPass(output, new Vector4(0.0f, 0.0f, 0.0f, 1.0f));
-			_backend.BeginInstance(_shader.Handle, new int[] { input.Textures[0].Handle, ColorCorrectLUT.Handle },
+			_backend.BeginInstance(_shader.Handle, new int[] { input.Textures[0].Handle, Texture.ColorCorrectLUT.Res.Handle },
 				samplers: new int[] { _backend.DefaultSamplerNoFiltering, _backend.DefaultSamplerNoFiltering });
 			_backend.BindShaderVariable(_shaderParams.SamplerScene, 0);
 			_backend.BindShaderVariable(_shaderParams.SamplerColorCorrect, 1);

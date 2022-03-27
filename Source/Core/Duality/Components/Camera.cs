@@ -23,12 +23,12 @@ namespace Duality.Components
 
 		public Matrix4? CustomViewMatrix = null;
 
-		public float NearClipDistance;
-		public float FarClipDistance;
+		public float NearClipDistance = 0.1f;
+		public float FarClipDistance = 1000f;
 
-		public float Fov;
+		public float Fov = 70;
 
-		public Rect Viewport;
+		public Rect Viewport = new Rect(0, 0, 1f, 1f);
 
 		[DontSerialize] private BoundingFrustum Frustum = new BoundingFrustum(Matrix4.Identity);
 
@@ -264,7 +264,7 @@ namespace Duality.Components
 			if (Orthographic)
 				Matrix4.CreateOrthographicOffCenter(0.0f, Viewport.X, Viewport.Y, 0.0f, NearClipDistance, FarClipDistance, out projectionMatrix);
 			else
-				Matrix4.CreatePerspectiveFieldOfView(MathF.DegToRad(Fov), Viewport.X / Viewport.Y, NearClipDistance, FarClipDistance, out projectionMatrix);
+				Matrix4.CreatePerspectiveFieldOfView(MathF.DegToRad(Fov), Viewport.W / Viewport.H, NearClipDistance, FarClipDistance, out projectionMatrix);
 		}
 
 		public BoundingFrustum GetFrustum()

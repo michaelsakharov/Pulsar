@@ -42,18 +42,6 @@ namespace Duality.Graphics.Post
 
         private List<BaseEffect> _effects = new List<BaseEffect>();
 
-        public Duality.Resources.Texture ColorCorrectLUT
-		{
-			get
-			{
-				return _gamma.ColorCorrectLUT;
-			}
-
-			set
-			{
-				_gamma.ColorCorrectLUT = value;
-			}
-		}
 
 		public bool EnableAtmosphere { get; set; } = false;
 

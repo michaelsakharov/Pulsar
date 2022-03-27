@@ -148,7 +148,8 @@ namespace Duality.Graphics.Deferred
 			}
             
             //_specularIntegarion = _resourceManager.Load<Duality.Resources.Texture>("/textures/specular_integartion");
-			_specularIntegarion = ContentProvider.RequestContent<Texture>("textures/specular_integartion").Res;
+			//_specularIntegarion = ContentProvider.RequestContent<Texture>("textures/specular_integartion").Res;
+			_specularIntegarion = Texture.SpecularIntegartion.Res;
 
 			_quadMesh = _backend.CreateBatchBuffer();
             _quadMesh.Begin();

@@ -184,16 +184,16 @@ namespace Duality.Graphics.Post.Effects
 			}
 
 			// Combine blurs
-			//Backend.BeginPass(_blurTargets[0][0]);
-			//Backend.BeginInstance(_blurCombineShader.Handle, new int[] { _blurTargets[0][1].Textures[0].Handle, _blurTargets[1][1].Textures[0].Handle, _blurTargets[2][1].Textures[0].Handle, _blurTargets[3][1].Textures[0].Handle },
-			//	samplers: new int[] { Backend.DefaultSamplerNoFiltering, Backend.DefaultSamplerNoFiltering, Backend.DefaultSamplerNoFiltering, Backend.DefaultSamplerNoFiltering });
-			//Backend.BindShaderVariable(_blurCombineParams.SamplerBlur0, 0);
-			//Backend.BindShaderVariable(_blurCombineParams.SamplerBlur1, 1);
-			//Backend.BindShaderVariable(_blurCombineParams.SamplerBlur2, 2);
-			//Backend.BindShaderVariable(_blurCombineParams.SamplerBlur3, 3);
-
-			//Backend.DrawMesh(QuadMesh.MeshHandle);
-			//Backend.EndPass();
+			//_backend.BeginPass(_blurTargets[0][0]);
+			//_backend.BeginInstance(_blurCombineShader.Handle, new int[] { _blurTargets[0][1].Textures[0].Handle, _blurTargets[1][1].Textures[0].Handle, _blurTargets[2][1].Textures[0].Handle, _blurTargets[3][1].Textures[0].Handle },
+			//	samplers: new int[] { _backend.DefaultSamplerNoFiltering, _backend.DefaultSamplerNoFiltering, _backend.DefaultSamplerNoFiltering, _backend.DefaultSamplerNoFiltering });
+			//_backend.BindShaderVariable(_blurCombineParams.SamplerBlur0, 0);
+			//_backend.BindShaderVariable(_blurCombineParams.SamplerBlur1, 1);
+			//_backend.BindShaderVariable(_blurCombineParams.SamplerBlur2, 2);
+			//_backend.BindShaderVariable(_blurCombineParams.SamplerBlur3, 3);
+			//
+			//_backend.DrawMesh(_quadMesh.MeshHandle);
+			//_backend.EndPass();
 
 			return _blurTargets[0][1];
 		}

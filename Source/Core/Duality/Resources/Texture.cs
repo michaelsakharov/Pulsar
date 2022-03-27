@@ -47,6 +47,11 @@ namespace Duality.Resources
 		/// [GET] A 256x256 black and white checkerboard texture.
 		/// </summary>
 		public static ContentRef<Texture> Checkerboard		{ get; private set; }
+		/// <summary>
+		/// [GET] Specular Integartion
+		/// </summary>
+		public static ContentRef<Texture> SpecularIntegartion { get; private set; }
+		public static ContentRef<Texture> ColorCorrectLUT { get; private set; }
 
 		internal static void InitDefaultContent()
 		{
@@ -60,6 +65,20 @@ namespace Duality.Resources
 				{ "White", new Texture(Pixmap.White) },
 				{ "Checkerboard", new Texture(
 					Pixmap.Checkerboard, 
+					TextureSizeMode.Default,
+					TextureMagFilter.Nearest,
+					TextureMinFilter.Nearest,
+					TextureWrapMode.Repeat,
+					TextureWrapMode.Repeat) },
+				{ "SpecularIntegartion", new Texture(
+					Pixmap.SpecularIntegartion, 
+					TextureSizeMode.Default,
+					TextureMagFilter.Nearest,
+					TextureMinFilter.Nearest,
+					TextureWrapMode.Repeat,
+					TextureWrapMode.Repeat) },
+				{ "ColorCorrectLUT", new Texture(
+					Pixmap.ColorCorrectLUT, 
 					TextureSizeMode.Default,
 					TextureMagFilter.Nearest,
 					TextureMinFilter.Nearest,

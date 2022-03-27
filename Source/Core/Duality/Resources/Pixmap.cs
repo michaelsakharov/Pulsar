@@ -49,6 +49,11 @@ namespace Duality.Resources
 		/// [GET] A 256x256 black and white checkerboard image.
 		/// </summary>
 		public static ContentRef<Pixmap> Checkerboard      { get; private set; }
+		/// <summary>
+		/// [GET] Specular Integartion
+		/// </summary>
+		public static ContentRef<Pixmap> SpecularIntegartion { get; private set; }
+		public static ContentRef<Pixmap> ColorCorrectLUT { get; private set; }
 
 		internal static void InitDefaultContent()
 		{
