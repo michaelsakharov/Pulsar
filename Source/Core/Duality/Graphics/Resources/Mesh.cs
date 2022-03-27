@@ -52,6 +52,7 @@ namespace Duality.Graphics.Resources
 			}
 			// Todo !!!! Mesh Skeleton
 			Skeleton = new SkeletalAnimation.Skeleton();
+			UploadToGPU();
 			//Skeleton.
 		}
 
@@ -67,6 +68,7 @@ namespace Duality.Graphics.Resources
 
 			SubMeshes = null;
 		}
+
 
 		public void UploadToGPU()
 		{
