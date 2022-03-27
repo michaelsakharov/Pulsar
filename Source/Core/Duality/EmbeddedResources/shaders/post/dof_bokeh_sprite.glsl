@@ -4,7 +4,7 @@
 uniform vec4 screenSize;
 uniform sampler2D samplerColorCoc;
 
-#ifdef VERTEX_SHADER
+#ifdef SHADERTYPE_VERTEX
 
 layout(location = ATTRIB_POSITION) in vec3 iPosition;
 layout(location = ATTRIB_TEXCOORD_0) in vec2 iTexCoord;

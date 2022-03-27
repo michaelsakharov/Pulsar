@@ -5,7 +5,7 @@ uniform vec2 uvAnimation;
 
 uniform mat4x4 itWorld;
 
-#ifdef VERTEX_SHADER
+#ifdef SHADERTYPE_VERTEX
 
 layout(location = ATTRIB_POSITION) in vec3 iPosition;
 layout(location = ATTRIB_TEXCOORD_0) in vec2 iTexCoord;

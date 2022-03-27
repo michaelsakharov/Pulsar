@@ -1,5 +1,5 @@
 #include "/shaders/core"
-#ifdef VERTEX_SHADER
+#ifdef SHADERTYPE_VERTEX
 
 #include "/shaders/post/smaa_vert"
 

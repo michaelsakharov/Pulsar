@@ -64,7 +64,9 @@ namespace Duality.Resources
 
 		private static readonly Regex RegexBlockComment = new Regex(@"/\*(.*?)\*/", RegexOptions.Singleline);
 		private static readonly Regex RegexLineComment = new Regex(@"//(.*?)\r?\n", RegexOptions.Singleline);
-		private static readonly Regex RegexVariableDeclaration = new Regex(@"(uniform|varying|attribute|in|out)\s+(\w+)\s+(\w+)\s*;", RegexOptions.Singleline);
+		//private static readonly Regex RegexVariableDeclaration = new Regex(@"(uniform|varying|attribute|in|out)\s+(\w+)\s+(\w+)\s*;", RegexOptions.Singleline);
+		// In | Outs are used in Compound shaders defining the same variable!
+		private static readonly Regex RegexVariableDeclaration = new Regex(@"(uniform|varying|attribute)\s+(\w+)\s+(\w+)\s*;", RegexOptions.Singleline);
 		private static readonly Regex RegexVersionDirective = new Regex(@"#version\s+(\d+)\s+");
 		private static readonly Regex RegexMetadataDirective = new Regex(@"#pragma\s+duality\s+(.+)");
 		private static readonly Regex RegexUniformLine = new Regex(@"^(?:layout\s*\(.+\)|)\s*(uniform)\s.+");

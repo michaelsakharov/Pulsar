@@ -1,6 +1,6 @@
 ﻿// By default, we assume GLSL version 1.3, which corresponds to OpenGL 3.0.
 // You can override this on a per-shader basis by adding your own version directive.
-#version 130
+#version 430
 
 uniform mat4 _viewMatrix;
 uniform mat4 _projectionMatrix;

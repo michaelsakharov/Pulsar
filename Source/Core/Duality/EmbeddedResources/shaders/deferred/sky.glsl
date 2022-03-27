@@ -1,6 +1,6 @@
 #include "/shaders/core"
 
-#ifdef VERTEX_SHADER
+#ifdef SHADERTYPE_VERTEX
 
 layout(location = ATTRIB_POSITION) in vec3 iPosition;
 

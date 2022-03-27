@@ -19,7 +19,7 @@ vec2 roundToIncrement(vec2 value, float increment) {
     return round(value * (1.0 / increment)) * increment;
 }
 
-#ifdef VERTEX_SHADER
+#ifdef SHADERTYPE_VERTEX
 layout(location = ATTRIB_POSITION) in vec3 iPosition;
 
 out vec3 normal;

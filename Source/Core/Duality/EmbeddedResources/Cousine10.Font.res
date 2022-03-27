@@ -26,7 +26,6 @@
   </fontData>
   <kerning dataType="Bool">false</kerning>
   <lineHeightFactor dataType="Float">1</lineHeightFactor>
-  <renderMode dataType="Enum" type="Duality.Resources.FontRenderMode" name="MonochromeBitmap" value="0" />
   <spacing dataType="Float">0</spacing>
 </root>
 <!-- XmlFormatterBase Document Separator -->

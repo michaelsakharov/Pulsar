@@ -217,12 +217,18 @@ namespace Duality.Resources
 						int location;
 						if (field.Scope == ShaderFieldScope.Uniform)
 							location = GL.GetUniformLocation(this.native.Handle, field.Name);
+						else if (field.Scope == ShaderFieldScope.Attribute)
+							location = GL.GetAttribLocation(this.native.Handle, field.Name);
 						else
 							location = GL.GetAttribLocation(this.native.Handle, field.Name);
 
 						if (location >= 0)
 						{
 							validLocations.Add(location);
+						}
+						else
+						{
+							validLocations.Add(-1);
 						}
 					}
 					this.fieldLocations = validLocations.ToArray();
