@@ -72,11 +72,13 @@ namespace Duality.Graphics.Components
             {
                 var subMesh = Mesh.SubMeshes[i];
 
+				if (subMesh.Material.IsAvailable == false) continue;
+
                 Mesh.SubMeshes[i].BoundingSphere.Transform(ref world, out var subMeshBoundingSphere);
 
                 if (frustum == null || frustum.Intersects(subMeshBoundingSphere))
                 {
-                    operations.Add(subMesh.Handle, world, subMesh.Material, null, false, CastShadows);
+                    operations.Add(subMesh.Handle, world, subMesh.Material.Res, null, false, CastShadows);
                 }
             }
         }

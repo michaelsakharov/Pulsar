@@ -9,7 +9,7 @@ namespace Duality.Graphics.Particles.Renderers
 {
     public class MeshRenderer : IParticleRenderer
     {
-        [DataMember] public Resources.Mesh Mesh { get; set; }
+        public Resources.Mesh Mesh { get; set; }
 
         public void PrepareRenderOperations(ParticleSystem particleSystem, RenderOperations operations, Matrix4 worldOffset)
         {
@@ -27,8 +27,9 @@ namespace Duality.Graphics.Particles.Renderers
                 Matrix4.Multiply(ref worldOffset, ref translation, out var world);
 
                 foreach (var subMesh in Mesh.SubMeshes)
-                {
-                    operations.Add(subMesh.Handle, world, subMesh.Material, null);
+				{
+					if (subMesh.Material.IsAvailable == false) continue;
+					operations.Add(subMesh.Handle, world, subMesh.Material.Res, null);
                 }
             }
         }

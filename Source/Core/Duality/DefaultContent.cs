@@ -37,6 +37,7 @@ namespace Duality
 			Font.InitDefaultContent();
 			AudioData.InitDefaultContent();
 			Sound.InitDefaultContent();
+			Duality.Graphics.Resources.Mesh.InitDefaultContent();
 
 			Logs.Core.Write("...done!");
 			Logs.Core.PopIndent();
@@ -62,11 +63,11 @@ namespace Duality
 		/// The file extension to be added to the property name in order to retrieve a matching embedded resource stream.
 		/// </param>
 		/// <param name="resourceCreator">A method that can create a new <see cref="Resource"/> from a specified stream.</param>
-		public static void InitType<T>(string embeddedNameExt, Func<Stream, T> resourceCreator) where T : Resource
+		public static void InitType<T>(string embeddedNameExt, Func<Stream, T> resourceCreator, string path = "") where T : Resource
 		{
 			InitType<T>(name =>
 			{
-				using (Stream stream = GetEmbeddedResourceStream(name + embeddedNameExt))
+				using (Stream stream = GetEmbeddedResourceStream(path + "." + name + embeddedNameExt))
 				{
 					if (stream == null) return null;
 					return resourceCreator(stream);

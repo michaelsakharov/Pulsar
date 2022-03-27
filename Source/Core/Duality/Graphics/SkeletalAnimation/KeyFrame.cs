@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace Duality.Graphics.SkeletalAnimation
 {
+	[Serializable]
 	struct KeyFrame
 	{
 		public float Time;

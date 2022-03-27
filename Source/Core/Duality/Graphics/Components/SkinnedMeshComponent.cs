@@ -62,7 +62,8 @@ namespace Duality.Graphics.Components
 			for (var i = 0; i < Mesh.SubMeshes.Length; i++)
             {
                 var subMesh = Mesh.SubMeshes[i];
-                operations.Add(subMesh.Handle, world, subMesh.Material, _skeletonInstance, false, CastShadows);
+				if (subMesh.Material.IsAvailable == false) continue;
+				operations.Add(subMesh.Handle, world, subMesh.Material.Res, _skeletonInstance, false, CastShadows);
             }
         }
     }

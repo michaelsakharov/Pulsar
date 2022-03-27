@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace Duality.Graphics.SkeletalAnimation
 {
+	[Serializable]
 	public struct Transform
 	{
 		public Vector3 Position;

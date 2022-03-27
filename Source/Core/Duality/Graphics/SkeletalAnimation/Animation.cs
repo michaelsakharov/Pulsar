@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace Duality.Graphics.SkeletalAnimation
 {
+	[Serializable]
 	public class Animation
 	{
 		public readonly string Name;
