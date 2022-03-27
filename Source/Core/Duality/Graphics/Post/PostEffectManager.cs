@@ -193,7 +193,7 @@ namespace Duality.Graphics.Post
 
             if (EnablePostEffects)
             {
-                if (EnableAtmosphere)
+                //if (EnableAtmosphere)
                 {
                     ApplyAtmosphere(camera, gbuffer, stage);
                 }

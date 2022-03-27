@@ -60,19 +60,6 @@ namespace Duality.Renderer.Textures
 
             _activeTextures[textureUnit] = handle;
 			GLWrapper.BindMultiTexture(TextureUnit.Texture0 + textureUnit, OGL.TextureTarget.Texture2D, handle);
-
-			//OGL.TextureTarget target;
-			//var openGLHandle = GetOpenGLHande(handle, out target);
-
-			//GLWrapper.BindMultiTexture(TextureUnit.Texture0 + textureUnit, target, openGLHandle);
 		}
-
-        struct TextureData
-        {
-            public int OpenGLHandle;
-            public short Id;
-            public bool Initialized;
-            public OGL.TextureTarget Target;
-        }
     }
 }

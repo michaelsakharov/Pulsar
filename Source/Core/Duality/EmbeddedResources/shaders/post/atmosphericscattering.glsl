@@ -149,7 +149,7 @@ void main() {
     vec3 P = cameraPosition + vec3(0, earthRadius, 0);
 
 	if (gbuffer1.w == 0) {
-        oColor.xyz = computeIncidentLight(P, V, 0, 9999999999.0);
+        oColor.xyz = computeIncidentLight(P, vec3(0, 0, 1), 0, 9999999999.0);
 	} else {
         float tmax = length(position);
         
@@ -158,7 +158,7 @@ void main() {
 		
         oColor.xyz = color;
 	}
-
+	
     oColor.w = 1.0;
 }
 #endif

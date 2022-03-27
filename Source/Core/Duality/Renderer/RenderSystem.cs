@@ -380,26 +380,18 @@ namespace Duality.Renderer
             _renderStateManager.ApplyRenderState(id);
         }
 
-        public int CreateRenderTarget(RenderTargets.Definition definition, out int[] textureHandles, OnLoadedCallback loadedCallback)
+        public int CreateRenderTarget(RenderTargets.Definition definition, out Duality.Resources.Texture[] textureHandles, OnLoadedCallback loadedCallback)
         {
-            var internalTextureHandles = new List<int>();
+            var internalTextureHandles = new List<Duality.Resources.Texture>();
 
             foreach (var attachment in definition.Attachments)
             {
                 if (attachment.AttachmentPoint == RenderTargets.Definition.AttachmentPoint.Color || definition.RenderDepthToTexture)
                 {
-					var nativeTex = new NativeTexture();
-					nativeTex.SetupEmpty(
-						ToOpenTKPixelFormat(attachment.PixelInternalFormat),
-						definition.Width, definition.Height,
-						Duality.Drawing.TextureMinFilter.LinearMipmapLinear, Duality.Drawing.TextureMagFilter.Linear,
-						Duality.Drawing.TextureWrapMode.Clamp, Duality.Drawing.TextureWrapMode.Clamp,
-						//this.anisoFilter ? 4 : 0,
-						0,
-						attachment.MipMaps);
-					internalTextureHandles.Add(nativeTex.Handle);
-                    attachment.TextureHandle = nativeTex.Handle;
-                }
+					var tex = new Duality.Resources.Texture(definition.Width, definition.Height, format: ToOpenTKPixelFormat(attachment.PixelInternalFormat));
+                    attachment.TextureHandle = tex.Handle;
+					internalTextureHandles.Add(tex);
+				}
             }
 
             textureHandles = internalTextureHandles.ToArray();

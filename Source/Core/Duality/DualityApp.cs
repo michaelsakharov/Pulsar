@@ -689,33 +689,34 @@ namespace Duality
 				var gbuffer = DeferredRenderer.RenderGBuffer(Scene.Stage, Scene.Camera);
 				var sunLight = Scene.Stage.GetSunLight();
 				
-				//// Prepare shadow buffer for sunlight
-				//List<RenderTarget> csm = null; RenderTarget shadows = null;
-				//if (sunLight != null && sunLight.CastShadows)
-				//{
-				//	//GraphicsBackend.ProfileBeginSection(Profiler.ShadowsGeneration);
-				//	csm = ShadowRenderer.RenderCSM(gbuffer, sunLight, Scene.Stage, Scene.Camera, out var viewProjections, out var clipDistances);
-				//	//GraphicsBackend.ProfileEndSection(Profiler.ShadowsGeneration);
-				//
-				//	ShadowBufferRenderer.DebugCascades = PostEffectManager.VisualizationMode == Graphics.Post.VisualizationMode.CSM;
-				//
-				//	//GraphicsBackend.ProfileBeginSection(Profiler.ShadowsRender);
-				//	shadows = ShadowBufferRenderer.Render(Scene.Camera, gbuffer, csm, viewProjections, clipDistances, DeferredRenderer.Settings.ShadowQuality);
-				//	//GraphicsBackend.ProfileEndSection(Profiler.ShadowsRender);
-				//}
-				//
-				//// Light + post, ssao needed for ambient so we render it first
-				////GraphicsBackend.ProfileBeginSection(Profiler.SSAO);
-				//var ssao = PostEffectManager.RenderSSAO(Scene.Camera, gbuffer);
-				////GraphicsBackend.ProfileEndSection(Profiler.SSAO);
-				//var lightOutput = DeferredRenderer.RenderLighting(Scene.Stage, Scene.Camera, shadows, ssao);
-				//var postProcessedResult = PostEffectManager.Render(Scene.Camera, Scene.Stage, gbuffer, lightOutput, shadows, deltaTime);
+				// Prepare shadow buffer for sunlight
+				List<RenderTarget> csm = null; RenderTarget shadows = null;
+				if (sunLight != null && sunLight.CastShadows)
+				{
+					//GraphicsBackend.ProfileBeginSection(Profiler.ShadowsGeneration);
+					csm = ShadowRenderer.RenderCSM(gbuffer, sunLight, Scene.Stage, Scene.Camera, out var viewProjections, out var clipDistances);
+					//GraphicsBackend.ProfileEndSection(Profiler.ShadowsGeneration);
+				
+					ShadowBufferRenderer.DebugCascades = PostEffectManager.VisualizationMode == Graphics.Post.VisualizationMode.CSM;
+				
+					//GraphicsBackend.ProfileBeginSection(Profiler.ShadowsRender);
+					shadows = ShadowBufferRenderer.Render(Scene.Camera, gbuffer, csm, viewProjections, clipDistances, DeferredRenderer.Settings.ShadowQuality);
+					//GraphicsBackend.ProfileEndSection(Profiler.ShadowsRender);
+				}
+				
+				// Light + post, ssao needed for ambient so we render it first
+				//GraphicsBackend.ProfileBeginSection(Profiler.SSAO);
+				var ssao = PostEffectManager.RenderSSAO(Scene.Camera, gbuffer);
+				//GraphicsBackend.ProfileEndSection(Profiler.SSAO);
+				var lightOutput = DeferredRenderer.RenderLighting(Scene.Stage, Scene.Camera, shadows, ssao);
+				var postProcessedResult = PostEffectManager.Render(Scene.Camera, Scene.Stage, gbuffer, lightOutput, shadows, deltaTime);
 
 
 				GraphicsBackend.BeginPass(null, Vector4.Zero, ClearFlags.Color);
 
-				SpriteRenderer.RenderQuad(gbuffer.Textures[0], Vector2.Zero, new Vector2(WindowSize.X, WindowSize.Y));
-				//SpriteRenderer.RenderQuad(postProcessedResult.Textures[0], Vector2.Zero, new Vector2(WindowSize.X, WindowSize.Y));
+				SpriteRenderer.RenderQuad(postProcessedResult.Textures[0], Vector2.Zero, new Vector2(WindowSize.X, WindowSize.Y));
+				//SpriteRenderer.RenderQuad(gbuffer.Textures[0], Vector2.Zero, new Vector2(WindowSize.X, WindowSize.Y));
+				//SpriteRenderer.RenderQuad(Texture.DualityLogoMedium.Res, Vector2.Zero, new Vector2(WindowSize.X, WindowSize.Y));
 				SpriteRenderer.Render(WindowSize.X, WindowSize.Y);
 
 				//if ((DebugFlags & DebugFlags.ShadowMaps) == DebugFlags.ShadowMaps)

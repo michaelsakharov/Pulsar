@@ -899,7 +899,7 @@ namespace Duality.Graphics
             if (definition == null)
                 throw new ArgumentNullException("definition");
 
-            int[] textureHandles;
+			Duality.Resources.Texture[] textureHandles;
 
             var renderTarget = new RenderTarget(definition.Width, definition.Height);
 
@@ -908,21 +908,7 @@ namespace Duality.Graphics
                 renderTarget.IsReady = true;
             });
 
-            var textures = new Duality.Resources.Texture[textureHandles.Length];
-            for (var i = 0; i < textureHandles.Length; i++)
-            {
-                //var texture = new Duality.Resources.Texture(this)
-                //{
-                //    Handle = textureHandles[i],
-                //    Width = definition.Width,
-                //    Height = definition.Height
-                //};
-
-				var texture = new Duality.Resources.Texture(definition.Width, definition.Height);
-                textures[i] = texture;
-            }
-
-            renderTarget.Textures = textures;
+            renderTarget.Textures = textureHandles;
 
             return renderTarget;
         }

@@ -29,9 +29,9 @@ namespace Duality.Graphics.Post.Effects
 
         public bool Render(Duality.Components.Camera camera, Stage stage, RenderTarget gbuffer, RenderTarget input, RenderTarget output)
         {
-            var light = stage.GetSunLight();
-            if (light == null)
-                return false;
+            //var light = stage.GetSunLight();
+            //if (light == null)
+            //    return false;
 
             if (_shaderParams == null)
             {
@@ -46,9 +46,10 @@ namespace Duality.Graphics.Post.Effects
             _textures[2] = gbuffer.Textures[1].Handle;
 
             Vector3 unitZ = Vector3.UnitZ;
-			var ori = light.GameObj.Transform.Quaternion;
-			Vector3.Transform(ref unitZ, ref ori, out var lightDirWS);
-            lightDirWS = -lightDirWS.Normalized;
+            Vector3 lightDirWS = -Vector3.Up;
+			//var ori = light.GameObj.Transform.Quaternion;
+			//Vector3.Transform(ref unitZ, ref ori, out var lightDirWS);
+            //lightDirWS = -lightDirWS.Normalized;
 
             camera.GetViewMatrix(out var view);
             camera.GetProjectionMatrix(out var projection);
