@@ -19,6 +19,9 @@ using OpenTK.Graphics;
 using OpenTK;
 using Duality.Renderer;
 using Duality.Graphics;
+using OpenTK.Graphics.OpenGL;
+using System.Runtime.InteropServices;
+using System.Diagnostics;
 
 namespace Duality
 {
@@ -389,7 +392,7 @@ namespace Duality
 			Logs.Core.PopIndent();
 
 			InitPostWindow();
-			
+
 			return window;
 		}
 		/// <summary>
@@ -400,11 +403,13 @@ namespace Duality
 		public static void InitPostWindow()
 		{
 			DefaultContent.Init();
-			ShadowRenderer = new Graphics.Deferred.ShadowRenderer(GraphicsBackend);
-			DeferredRenderer = new Graphics.Deferred.DeferredRenderer(GraphicsBackend, ShadowRenderer, GraphicsBackend.Width, GraphicsBackend.Height);
-			ShadowBufferRenderer = new Graphics.Deferred.ShadowBufferRenderer(GraphicsBackend, GraphicsBackend.Width, GraphicsBackend.Height);
-			PostEffectManager = new Graphics.Post.PostEffectManager(GraphicsBackend, GraphicsBackend.Width, GraphicsBackend.Height);
-			SpriteRenderer = GraphicsBackend.CreateSpriteBatch();
+
+			// OpenGL Error Handling
+			_debugProcCallbackHandle = GCHandle.Alloc(_debugProcCallback);
+
+			GL.DebugMessageCallback(_debugProcCallback, IntPtr.Zero);
+			GL.Enable(EnableCap.DebugOutput);
+			GL.Enable(EnableCap.DebugOutputSynchronous);
 
 			// Post-Window init is the last thing that happens before loading game
 			// content and entering simulation. When done in a game context, notify
@@ -634,8 +639,9 @@ namespace Duality
 		public static void Render()
 		{
 			RenderScene(Time.DeltaTime);
-			if (!GraphicsBackend.Process())
-				return;
+			GraphicsBackend.Process();
+			//if (!GraphicsBackend.Process())
+			//	return;
 		}
 
 		public static Graphics.Deferred.DeferredRenderer DeferredRenderer { get; private set; }
@@ -644,44 +650,72 @@ namespace Duality
 		public static Graphics.Post.PostEffectManager PostEffectManager { get; private set; }
 		public static Graphics.SpriteBatch SpriteRenderer;
 
+		private static DebugProc _debugProcCallback = DebugCallback;
+		private static GCHandle _debugProcCallbackHandle;
+		private static void DebugCallback(DebugSource source,
+								  DebugType type,
+								  int id,
+								  DebugSeverity severity,
+								  int length,
+								  IntPtr message,
+								  IntPtr userParam)
+		{
+			string messageString = Marshal.PtrToStringAnsi(message, length);
+
+			Logs.Core.Write($"OpenGL Error: {severity} {type} | {messageString}");
+
+			if (type == DebugType.DebugTypeError)
+			{
+				throw new Exception(messageString);
+			}
+		}
+
 		/// <summary>
 		/// Feed render commands to the graphics backend.
 		/// Only override this method if you wish to customize the rendering pipeline.
 		/// </summary>
 		public static void RenderScene(float deltaTime)
 		{
+			if (ShadowRenderer == null) ShadowRenderer = new Graphics.Deferred.ShadowRenderer(GraphicsBackend);
+			if(DeferredRenderer == null) DeferredRenderer = new Graphics.Deferred.DeferredRenderer(GraphicsBackend, ShadowRenderer, GraphicsBackend.Width, GraphicsBackend.Height);
+			if(ShadowBufferRenderer == null) ShadowBufferRenderer = new Graphics.Deferred.ShadowBufferRenderer(GraphicsBackend, GraphicsBackend.Width, GraphicsBackend.Height);
+			if(PostEffectManager == null) PostEffectManager = new Graphics.Post.PostEffectManager(GraphicsBackend, GraphicsBackend.Width, GraphicsBackend.Height);
+			if(SpriteRenderer == null) SpriteRenderer = GraphicsBackend.CreateSpriteBatch();
+
 			GraphicsBackend.BeginScene();
 
 			if (Scene.Camera != null)
 			{
 				var gbuffer = DeferredRenderer.RenderGBuffer(Scene.Stage, Scene.Camera);
 				var sunLight = Scene.Stage.GetSunLight();
+				
+				//// Prepare shadow buffer for sunlight
+				//List<RenderTarget> csm = null; RenderTarget shadows = null;
+				//if (sunLight != null && sunLight.CastShadows)
+				//{
+				//	//GraphicsBackend.ProfileBeginSection(Profiler.ShadowsGeneration);
+				//	csm = ShadowRenderer.RenderCSM(gbuffer, sunLight, Scene.Stage, Scene.Camera, out var viewProjections, out var clipDistances);
+				//	//GraphicsBackend.ProfileEndSection(Profiler.ShadowsGeneration);
+				//
+				//	ShadowBufferRenderer.DebugCascades = PostEffectManager.VisualizationMode == Graphics.Post.VisualizationMode.CSM;
+				//
+				//	//GraphicsBackend.ProfileBeginSection(Profiler.ShadowsRender);
+				//	shadows = ShadowBufferRenderer.Render(Scene.Camera, gbuffer, csm, viewProjections, clipDistances, DeferredRenderer.Settings.ShadowQuality);
+				//	//GraphicsBackend.ProfileEndSection(Profiler.ShadowsRender);
+				//}
+				//
+				//// Light + post, ssao needed for ambient so we render it first
+				////GraphicsBackend.ProfileBeginSection(Profiler.SSAO);
+				//var ssao = PostEffectManager.RenderSSAO(Scene.Camera, gbuffer);
+				////GraphicsBackend.ProfileEndSection(Profiler.SSAO);
+				//var lightOutput = DeferredRenderer.RenderLighting(Scene.Stage, Scene.Camera, shadows, ssao);
+				//var postProcessedResult = PostEffectManager.Render(Scene.Camera, Scene.Stage, gbuffer, lightOutput, shadows, deltaTime);
 
-				// Prepare shadow buffer for sunlight
-				List<RenderTarget> csm = null; RenderTarget shadows = null;
-				if (sunLight != null && sunLight.CastShadows)
-				{
-					//GraphicsBackend.ProfileBeginSection(Profiler.ShadowsGeneration);
-					csm = ShadowRenderer.RenderCSM(gbuffer, sunLight, Scene.Stage, Scene.Camera, out var viewProjections, out var clipDistances);
-					//GraphicsBackend.ProfileEndSection(Profiler.ShadowsGeneration);
-
-					ShadowBufferRenderer.DebugCascades = PostEffectManager.VisualizationMode == Graphics.Post.VisualizationMode.CSM;
-
-					//GraphicsBackend.ProfileBeginSection(Profiler.ShadowsRender);
-					shadows = ShadowBufferRenderer.Render(Scene.Camera, gbuffer, csm, viewProjections, clipDistances, DeferredRenderer.Settings.ShadowQuality);
-					//GraphicsBackend.ProfileEndSection(Profiler.ShadowsRender);
-				}
-
-				// Light + post, ssao needed for ambient so we render it first
-				//GraphicsBackend.ProfileBeginSection(Profiler.SSAO);
-				var ssao = PostEffectManager.RenderSSAO(Scene.Camera, gbuffer);
-				//GraphicsBackend.ProfileEndSection(Profiler.SSAO);
-				var lightOutput = DeferredRenderer.RenderLighting(Scene.Stage, Scene.Camera, shadows, ssao);
-				var postProcessedResult = PostEffectManager.Render(Scene.Camera, Scene.Stage, gbuffer, lightOutput, shadows, deltaTime);
 
 				GraphicsBackend.BeginPass(null, Vector4.Zero, ClearFlags.Color);
 
-				SpriteRenderer.RenderQuad(postProcessedResult.Textures[0], Vector2.Zero, new Vector2(WindowSize.X, WindowSize.Y));
+				SpriteRenderer.RenderQuad(gbuffer.Textures[0], Vector2.Zero, new Vector2(WindowSize.X, WindowSize.Y));
+				//SpriteRenderer.RenderQuad(postProcessedResult.Textures[0], Vector2.Zero, new Vector2(WindowSize.X, WindowSize.Y));
 				SpriteRenderer.Render(WindowSize.X, WindowSize.Y);
 
 				//if ((DebugFlags & DebugFlags.ShadowMaps) == DebugFlags.ShadowMaps)
@@ -710,7 +744,7 @@ namespace Duality
 				//}
 
 				//DoRenderUI(deltaTime);
-				//SpriteRenderer.Render(_window.Width, _window.Height);
+				//SpriteRenderer.Render(WindowSize.X, WindowSize.Y);
 			}
 
 			GraphicsBackend.EndScene();
