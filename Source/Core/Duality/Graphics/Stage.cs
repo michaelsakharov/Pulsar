@@ -12,7 +12,7 @@ namespace Duality.Graphics
         /// Fallback ambient color if no ambient light is set
         /// </summary>
         public Vector3 AmbientColor = new Vector3(0.2f, 0.2f, 0.2f);
-        public Vector4 ClearColor = Vector4.Zero;
+        public Vector4 ClearColor = new Vector4(1f, 0f, 0f, 1f);
 
         private BoundingFrustum _frustum = new BoundingFrustum(Matrix4.Identity);
 

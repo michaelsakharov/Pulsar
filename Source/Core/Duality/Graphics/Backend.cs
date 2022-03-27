@@ -929,8 +929,6 @@ namespace Duality.Graphics
 
         public void ResizeRenderTarget(RenderTarget renderTarget, int width, int height)
         {
-
-
             foreach (var texture in renderTarget.Textures)
             {
 				texture.Size = new Point2(width, height);

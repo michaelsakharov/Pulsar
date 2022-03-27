@@ -10,6 +10,7 @@ using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
 using Duality.Renderer.Meshes;
 using Duality;
+using Duality.Backend;
 
 namespace Duality.Renderer
 {
@@ -116,7 +117,6 @@ namespace Duality.Renderer
                 return;
 
             _samplerManager.Dispose();
-            _textureManager.Dispose();
             _meshManager.Dispose();
             _bufferManager.Dispose();
             _renderTargetManager.Dispose();
@@ -136,34 +136,29 @@ namespace Duality.Renderer
             }
         }
 
-        public void DestroyTexture(int handle)
-        {
-            _addToWorkQueue(() => _textureManager.Destroy(handle));
-        }
-
         public void BindTexture(int handle, int textureUnit)
         {
             _textureManager.Bind(textureUnit, handle);
-        }
+		}
 
         public void GenreateMips(int handle)
         {
-            OGL.TextureTarget target;
-            var openGLHandle = _textureManager.GetOpenGLHande(handle, out target);
+            //OGL.TextureTarget target;
+            //var openGLHandle = _textureManager.GetOpenGLHande(handle, out target);
 
             if (GLWrapper.ExtDirectStateAccess)
             {
-                GL.Ext.GenerateTextureMipmap(openGLHandle, target);
+                GL.Ext.GenerateTextureMipmap(handle, OGL.TextureTarget.Texture2D);
             }
             else
             {
                 var current = _textureManager.GetActiveTexture(0);
 
                 GL.ActiveTexture(TextureUnit.Texture0);
-                GL.BindTexture(target, openGLHandle);
-                GL.GenerateMipmap((OGL.GenerateMipmapTarget)(int)target);
+                GL.BindTexture(OGL.TextureTarget.Texture2D, handle);
+                GL.GenerateMipmap((OGL.GenerateMipmapTarget)(int)OGL.TextureTarget.Texture2D);
 
-                GL.BindTexture(target, current);
+                GL.BindTexture(OGL.TextureTarget.Texture2D, current);
             }
         }
 
@@ -341,8 +336,8 @@ namespace Duality.Renderer
 
         public void BindImageTexture(int unit, int texture, TextureAccess access, SizedInternalFormat format)
         {
-            var glHandle = _textureManager.GetOpenGLHande(texture);
-            GL.BindImageTexture(unit, glHandle, 0, false, 0, access, format);
+            //var glHandle = _textureManager.GetOpenGLHande(texture);
+            GL.BindImageTexture(unit, texture, 0, false, 0, access, format);
         }
 
         public void BindBufferBase(int index, int handle)
@@ -393,9 +388,17 @@ namespace Duality.Renderer
             {
                 if (attachment.AttachmentPoint == RenderTargets.Definition.AttachmentPoint.Color || definition.RenderDepthToTexture)
                 {
-                    var textureHandle = _textureManager.Create();
-                    internalTextureHandles.Add(textureHandle);
-                    attachment.TextureHandle = textureHandle;
+					var nativeTex = new NativeTexture();
+					nativeTex.SetupEmpty(
+						ToOpenTKPixelFormat(attachment.PixelInternalFormat),
+						definition.Width, definition.Height,
+						Duality.Drawing.TextureMinFilter.LinearMipmapLinear, Duality.Drawing.TextureMagFilter.Linear,
+						Duality.Drawing.TextureWrapMode.Clamp, Duality.Drawing.TextureWrapMode.Clamp,
+						//this.anisoFilter ? 4 : 0,
+						0,
+						attachment.MipMaps);
+					internalTextureHandles.Add(nativeTex.Handle);
+                    attachment.TextureHandle = nativeTex.Handle;
                 }
             }
 
@@ -410,15 +413,34 @@ namespace Duality.Renderer
                     if (attachment.AttachmentPoint == RenderTargets.Definition.AttachmentPoint.Color || definition.RenderDepthToTexture)
                     {
                         var target = TextureTarget.Texture2D;
-
+				
                         if (definition.RenderToCubeMap)
                         {
                             target = TextureTarget.TextureCubeMap;
                         }
 
-                        _textureManager.SetPixelData<byte>(attachment.TextureHandle, target, definition.Width, definition.Height, null, attachment.PixelFormat, attachment.PixelInternalFormat, attachment.PixelType, attachment.MipMaps);
-                        // Replace with gl handle
-                        attachment.TextureHandle = _textureManager.GetOpenGLHande(attachment.TextureHandle);
+						// Upload texture data to OpenGL
+						//GL.BindTexture(target, attachment.TextureHandle);
+						//
+						//if (target == OGL.TextureTarget.TextureCubeMap)
+						//{
+						//	for (var i = 0; i < 6; i++)
+						//	{
+						//		GL.TexImage2D(OGL.TextureTarget.TextureCubeMapPositiveX + i, 0, (OGL.PixelInternalFormat)(int)attachment.PixelInternalFormat, definition.Width, definition.Height, 0, (OGL.PixelFormat)(int)attachment.PixelFormat, (OGL.PixelType)(int)attachment.PixelType, default(byte[]));
+						//	}
+						//	if (attachment.MipMaps)
+						//		GL.GenerateMipmap(GenerateMipmapTarget.TextureCubeMap);
+						//}
+						//else
+						//{
+						//	GL.TexImage2D(target, 0, (OGL.PixelInternalFormat)(int)attachment.PixelInternalFormat, definition.Width, definition.Height, 0, (OGL.PixelFormat)(int)attachment.PixelFormat, (OGL.PixelType)(int)attachment.PixelType, default(byte[]));
+						//	if (attachment.MipMaps)
+						//		GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
+						//
+						//	GL.TexParameter(target, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Nearest);
+						//	GL.TexParameter(target, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Nearest);
+						//}
+						_textureManager.SetPixelData<byte>(attachment.TextureHandle, target, definition.Width, definition.Height, null, attachment.PixelFormat, attachment.PixelInternalFormat, attachment.PixelType, attachment.MipMaps);
                     }
                 }
 
@@ -429,9 +451,31 @@ namespace Duality.Renderer
             });
 
             return renderTargetHandle;
-        }
-        
-        public void ResizeRenderTarget(int handle, int width, int height)
+		}
+		private Drawing.TexturePixelFormat ToOpenTKPixelFormat(PixelInternalFormat format)
+		{
+			switch (format)
+			{
+				case PixelInternalFormat.R8: return Drawing.TexturePixelFormat.Single;
+				case PixelInternalFormat.Rg8: return Drawing.TexturePixelFormat.Dual;
+				case PixelInternalFormat.Rgb: return Drawing.TexturePixelFormat.Rgb;
+				case PixelInternalFormat.Rgba: return Drawing.TexturePixelFormat.Rgba;
+
+				case PixelInternalFormat.R16f: return Drawing.TexturePixelFormat.FloatSingle;
+				case PixelInternalFormat.Rg16f: return Drawing.TexturePixelFormat.FloatDual;
+				case PixelInternalFormat.Rgb16f: return Drawing.TexturePixelFormat.FloatRgb;
+				case PixelInternalFormat.Rgba16f: return Drawing.TexturePixelFormat.FloatRgba;
+
+				case PixelInternalFormat.CompressedRed: return Drawing.TexturePixelFormat.CompressedSingle;
+				case PixelInternalFormat.CompressedRg: return Drawing.TexturePixelFormat.CompressedDual;
+				case PixelInternalFormat.CompressedRgb: return Drawing.TexturePixelFormat.CompressedRgb;
+				case PixelInternalFormat.CompressedRgba: return Drawing.TexturePixelFormat.CompressedRgba;
+			}
+
+			return Drawing.TexturePixelFormat.Rgba;
+		}
+
+		public void ResizeRenderTarget(int handle, int width, int height)
         {
             _addToWorkQueue(() =>
             {
@@ -534,16 +578,16 @@ namespace Duality.Renderer
 
         public void ReadTexture<T>(int handle, PixelFormat format, PixelType type, ref T pixels) where T : struct
         {
-            OGL.TextureTarget target;
-            var glHandle = _textureManager.GetOpenGLHande(handle, out target);
-            GL.Ext.GetTextureImage<T>(glHandle, target, 0, (OGL.PixelFormat)format, (OGL.PixelType)type, ref pixels);
+            //OGL.TextureTarget target;
+            //var glHandle = _textureManager.GetOpenGLHande(handle, out target);
+            GL.Ext.GetTextureImage<T>(handle, OGL.TextureTarget.Texture2D, 0, (OGL.PixelFormat)format, (OGL.PixelType)type, ref pixels);
         }
 
         public void ReadTexture<T>(int handle, PixelFormat format, PixelType type, T[] pixels) where T : struct
         {
-            OGL.TextureTarget target;
-            var glHandle = _textureManager.GetOpenGLHande(handle, out target);
-            GL.Ext.GetTextureImage<T>(glHandle, target, 0, (OGL.PixelFormat)format, (OGL.PixelType)type, pixels);
+            //OGL.TextureTarget target;
+            //var glHandle = _textureManager.GetOpenGLHande(handle, out target);
+            GL.Ext.GetTextureImage<T>(handle, OGL.TextureTarget.Texture2D, 0, (OGL.PixelFormat)format, (OGL.PixelType)type, pixels);
         }
     }
 }
