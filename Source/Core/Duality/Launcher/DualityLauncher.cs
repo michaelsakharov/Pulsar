@@ -204,11 +204,11 @@ namespace Duality.Launcher
 			DualityApp.CalculateGameViewport(this.Size, out viewportRect, out imageSize);
 
 			DualityApp.Render();
-			Profile.TimeRender.BeginMeasure();
-			Profile.TimeSwapBuffers.BeginMeasure();
-			this.window.SwapBuffers();
-			Profile.TimeSwapBuffers.EndMeasure();
-			Profile.TimeRender.EndMeasure();
+			//Profile.TimeRender.BeginMeasure();
+			//Profile.TimeSwapBuffers.BeginMeasure();
+			//this.window.SwapBuffers();
+			//Profile.TimeSwapBuffers.EndMeasure();
+			//Profile.TimeRender.EndMeasure();
 		}
 
 		public void Dispose()
