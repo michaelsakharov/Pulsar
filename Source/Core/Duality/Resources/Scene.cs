@@ -147,8 +147,8 @@ namespace Duality.Resources
 
 		static Scene()
 		{
-			Current = new Scene();
 			stage = new Stage();
+			Current = new Scene();
 		}
 
 		/// <summary>
@@ -178,8 +178,8 @@ namespace Duality.Resources
 			}
 			else
 			{
-				Scene.Current = scene.Res;
 				stage = new Stage();
+				Scene.Current = scene.Res;
 			}
 		}
 		/// <summary>
@@ -220,8 +220,8 @@ namespace Duality.Resources
 			switchToScheduled = false;
 
 			// Perform the scheduled switch
-			Scene.Current = target;
 			stage = new Stage();
+			Scene.Current = target;
 
 			// If we now end up with another scheduled switch, we might be
 			// caught up in a redirect loop, where a Scene, when activated,

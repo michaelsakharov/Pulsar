@@ -10,39 +10,34 @@ namespace Duality.Graphics.Components
 {
     public class MeshComponent : RenderableComponent, ICmpUpdatable
 	{
-        protected bool _meshDirty = false;
+		[DontSerialize] protected bool _meshDirty = false;
 
-        // Used for world space transform
-        private BoundingSphere _boundingSphereLocalSpace;
+		// Used for world space transform
+		[DontSerialize] private BoundingSphere _boundingSphereLocalSpace;
 
-        protected Mesh _mesh;
-        [DataMember]
-        public Mesh Mesh
+		public ContentRef<Mesh> _mesh = null;
+
+		/// <summary>
+		/// [GET / SET] The <see cref="Mesh"/> that is to be rendered by this component.
+		/// </summary>
+		public ContentRef<Mesh> Mesh
 		{
-			get
-			{
-				return _mesh;
-			}
-
-			set
-			{
-				_mesh = value;
-				_meshDirty = true;
-			}
+			get { return this._mesh; }
+			set { this._mesh = value; }
 		}
 
-        protected virtual void UpdateDerviedMeshSettings()
+		protected virtual void UpdateDerviedMeshSettings()
         {
-            if (_mesh == null)
+            if (Mesh.IsAvailable == false)
                 return;
 
-            BoundingBox = _mesh.SubMeshes[0].BoundingBox;
-            BoundingSphere = _mesh.SubMeshes[0].BoundingSphere;
+            BoundingBox = Mesh.Res.SubMeshes[0].BoundingBox;
+            BoundingSphere = Mesh.Res.SubMeshes[0].BoundingSphere;
 
-            for (var i = 1; i < _mesh.SubMeshes.Length; i++)
+            for (var i = 1; i < Mesh.Res.SubMeshes.Length; i++)
             {
-                BoundingSphere = BoundingSphere.CreateMerged(BoundingSphere, _mesh.SubMeshes[i].BoundingSphere);
-                BoundingBox = BoundingBox.CreateMerged(BoundingBox, _mesh.SubMeshes[i].BoundingBox);
+                BoundingSphere = BoundingSphere.CreateMerged(BoundingSphere, Mesh.Res.SubMeshes[i].BoundingSphere);
+                BoundingBox = BoundingBox.CreateMerged(BoundingBox, Mesh.Res.SubMeshes[i].BoundingBox);
             }
 
             _boundingSphereLocalSpace = BoundingSphere;
@@ -62,19 +57,19 @@ namespace Duality.Graphics.Components
         }
 
         public override void PrepareRenderOperations(BoundingFrustum frustum, RenderOperations operations)
-        {
-            if (_mesh == null)
-                return;
+		{
+			if (Mesh.IsAvailable == false)
+				return;
 
 			var world = gameobj.Transform.WorldMatrix;
 
-			for (var i = 0; i < Mesh.SubMeshes.Length; i++)
+			for (var i = 0; i < Mesh.Res.SubMeshes.Length; i++)
             {
-                var subMesh = Mesh.SubMeshes[i];
+                var subMesh = Mesh.Res.SubMeshes[i];
 
 				if (subMesh.Material.IsAvailable == false) continue;
 
-                Mesh.SubMeshes[i].BoundingSphere.Transform(ref world, out var subMeshBoundingSphere);
+				Mesh.Res.SubMeshes[i].BoundingSphere.Transform(ref world, out var subMeshBoundingSphere);
 
                 if (frustum == null || frustum.Intersects(subMeshBoundingSphere))
                 {

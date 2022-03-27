@@ -19,10 +19,10 @@ namespace Duality.Graphics.Resources
 
 		internal static void InitDefaultContent()
 		{
-			DefaultContent.InitType<Mesh>(".dae", stream => new Mesh(stream), "meshes");
-			DefaultContent.InitType<Mesh>(".fbx", stream => new Mesh(stream), "meshes");
-			DefaultContent.InitType<Mesh>(".x", stream => new Mesh(stream), "meshes");
-			DefaultContent.InitType<Mesh>(".obj", stream => new Mesh(stream), "meshes");
+			DefaultContent.InitType<Mesh>(".dae", stream => new Mesh(stream), "meshes.");
+			DefaultContent.InitType<Mesh>(".fbx", stream => new Mesh(stream), "meshes.");
+			DefaultContent.InitType<Mesh>(".x", stream => new Mesh(stream), "meshes.");
+			DefaultContent.InitType<Mesh>(".obj", stream => new Mesh(stream), "meshes.");
 		}
 
 		[EditorHintFlags(MemberFlags.Invisible)]
@@ -87,6 +87,26 @@ namespace Duality.Graphics.Resources
 		}
 
 		// PLaced these here due to how many there is
+		public static ContentRef<Mesh> TriangleOnesided { get; private set; }
+		public static ContentRef<Mesh> TriangleDoublesided { get; private set; }
+		public static ContentRef<Mesh> Torus { get; private set; }
+		public static ContentRef<Mesh> Sphere32x32 { get; private set; }
+		public static ContentRef<Mesh> Sphere16x16 { get; private set; }
+		public static ContentRef<Mesh> RingQuarterDoublesided { get; private set; }
+		public static ContentRef<Mesh> RingHalfDoublesided { get; private set; }
+		public static ContentRef<Mesh> RingDoublesided { get; private set; }
+		public static ContentRef<Mesh> Plane { get; private set; }
+		public static ContentRef<Mesh> HalfPipe { get; private set; }
+		public static ContentRef<Mesh> HalfPipeEnd { get; private set; }
+		public static ContentRef<Mesh> DomeQuarter { get; private set; }
+		public static ContentRef<Mesh> DomeHalf { get; private set; }
+		public static ContentRef<Mesh> Dome { get; private set; }
+		public static ContentRef<Mesh> DiskHole { get; private set; }
+		public static ContentRef<Mesh> Disk { get; private set; }
+		public static ContentRef<Mesh> Cylinder { get; private set; }
+		public static ContentRef<Mesh> Cone16 { get; private set; }
+		public static ContentRef<Mesh> Cone4 { get; private set; }
+		public static ContentRef<Mesh> Barrel { get; private set; }
 		public static ContentRef<Mesh> Cube { get; private set; }
 	}
 

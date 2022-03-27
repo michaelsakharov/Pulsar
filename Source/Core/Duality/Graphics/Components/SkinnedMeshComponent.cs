@@ -9,6 +9,7 @@ namespace Duality.Graphics.Components
 {
     public class SkinnedMeshComponent : MeshComponent, ICmpUpdatable, ICmpInitializable
 	{
+		[DontSerialize]
         public SkeletonInstance _skeletonInstance = null;
 
 		void ICmpInitializable.OnDeactivate()
@@ -41,9 +42,9 @@ namespace Duality.Graphics.Components
         {
             base.UpdateDerviedMeshSettings();
 
-            if (_mesh != null)
-            {
-                _skeletonInstance = new SkeletonInstance(_mesh);
+			if (Mesh.IsAvailable)
+			{
+                _skeletonInstance = new SkeletonInstance(Mesh.Res);
             }
         }
 
@@ -53,15 +54,15 @@ namespace Duality.Graphics.Components
         }
 
         public override void PrepareRenderOperations(BoundingFrustum frustum, RenderOperations operations)
-        {
-            if (_mesh == null)
-                return;
+		{
+			if (Mesh.IsAvailable == false)
+				return;
 
 			var world = gameobj.Transform.WorldMatrix;
 
-			for (var i = 0; i < Mesh.SubMeshes.Length; i++)
+			for (var i = 0; i < Mesh.Res.SubMeshes.Length; i++)
             {
-                var subMesh = Mesh.SubMeshes[i];
+                var subMesh = Mesh.Res.SubMeshes[i];
 				if (subMesh.Material.IsAvailable == false) continue;
 				operations.Add(subMesh.Handle, world, subMesh.Material.Res, _skeletonInstance, false, CastShadows);
             }

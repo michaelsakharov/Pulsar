@@ -1,17 +1,8 @@
-﻿#pragma duality description "The main texture of the material."
-uniform sampler2D mainTex;
+﻿#include "/shaders/core"
 
-in vec4 programColor;
-in vec2 programTexCoord;
-
-out vec4 fragColor;
+layout(location = 0) out vec4 oColor;
 
 void main()
 {
-	vec4 texClr = texture(mainTex, programTexCoord);
-	vec4 result = programColor * texClr;
-	
-	AlphaTest(result.a);
-	
-	fragColor = result;
+	oColor = vec4(1.0, 1.0, 1.0, 1.0);
 }

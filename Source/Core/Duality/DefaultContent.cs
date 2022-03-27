@@ -67,7 +67,7 @@ namespace Duality
 		{
 			InitType<T>(name =>
 			{
-				using (Stream stream = GetEmbeddedResourceStream(path + "." + name + embeddedNameExt))
+				using (Stream stream = GetEmbeddedResourceStream(path + name + embeddedNameExt))
 				{
 					if (stream == null) return null;
 					return resourceCreator(stream);
