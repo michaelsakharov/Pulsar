@@ -115,7 +115,7 @@ namespace Duality.Graphics.Deferred
                     }));
 
             //_ambientLightShader = _resourceManager.Load<Duality.Resources.Shader>("/shaders/deferred/ambient");
-			_ambientLightShader = new DrawTechnique(ContentProvider.RequestContent<CompoundShader>("shaders/deferred/ambient"), "");
+			_ambientLightShader = new DrawTechnique(Shader.LoadEmbeddedShaderSource("shaders/deferred/ambient.glsl"), "");
 
 			// Init light shaders
 			var lightTypes = new string[] { "DIRECTIONAL_LIGHT" };
@@ -133,7 +133,7 @@ namespace Duality.Graphics.Deferred
                     var defines = lightType + ";" + lightPermutations[p];
 
                     //_lightShaders[index] = _resourceManager.Load<Duality.Resources.Shader>("/shaders/deferred/light", defines);
-					_lightShaders[index] = new DrawTechnique(ContentProvider.RequestContent<CompoundShader>("shaders/deferred/light"), defines);
+					_lightShaders[index] = new DrawTechnique(Shader.LoadEmbeddedShaderSource("shaders/deferred/light.glsl"), defines);
 					_lightParams[index] = new LightParams();
                 }
             }
@@ -144,7 +144,7 @@ namespace Duality.Graphics.Deferred
             for (var i = 0; i < _lightComputeShader.Length; i++)
             {
                 //_lightComputeShader[i] = _resourceManager.Load<Duality.Resources.Shader>("/shaders/deferred/light_cs", shadowQualities[i]);
-				_lightComputeShader[i] = ContentProvider.RequestContent<ComputeShader>("shaders/deferred/light_cs").Res;
+				_lightComputeShader[i] = new ComputeShader(Shader.LoadEmbeddedShaderSource("shaders/deferred/light_cs.glsl"));
 			}
             
             //_specularIntegarion = _resourceManager.Load<Duality.Resources.Texture>("/textures/specular_integartion");

@@ -184,6 +184,9 @@ namespace Duality.Editor
 			// Need to load editor plugins before initializing the graphics context, so the backend is available
 			pluginManager.LoadPlugins();
 
+			// Load Game Content here
+			DefaultContent.Init();
+
 			// Need to initialize graphics context and default content before instantiating anything that could require any of them
 			InitMainGraphicsContext();
 			DualityApp.InitPostWindow();

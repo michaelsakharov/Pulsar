@@ -86,7 +86,7 @@ namespace Duality.Backend
 			{
 				case ShaderType.Vertex:   return GLShaderType.VertexShader;
 				case ShaderType.Fragment: return GLShaderType.FragmentShader;
-				case ShaderType.ComputeShader: return GLShaderType.ComputeShader;
+				case ShaderType.Compute: return GLShaderType.ComputeShader;
 			}
 			return GLShaderType.VertexShader;
 		}

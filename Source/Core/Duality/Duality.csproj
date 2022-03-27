@@ -8,6 +8,57 @@
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
 	  <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 	</PropertyGroup>
+	<ItemGroup>
+	  <None Remove="EmbeddedResources\shaders\brdf.glsl" />
+	  <None Remove="EmbeddedResources\shaders\core.glsl" />
+	  <None Remove="EmbeddedResources\shaders\deferred\ambient.glsl" />
+	  <None Remove="EmbeddedResources\shaders\deferred\combine.glsl" />
+	  <None Remove="EmbeddedResources\shaders\deferred\csm.glsl" />
+	  <None Remove="EmbeddedResources\shaders\deferred\fog.glsl" />
+	  <None Remove="EmbeddedResources\shaders\deferred\gbuffer.glsl" />
+	  <None Remove="EmbeddedResources\shaders\deferred\gbuffer_splat.glsl" />
+	  <None Remove="EmbeddedResources\shaders\deferred\gbuffer_terrain_geomipmap.glsl" />
+	  <None Remove="EmbeddedResources\shaders\deferred\light.glsl" />
+	  <None Remove="EmbeddedResources\shaders\deferred\light_cs.glsl" />
+	  <None Remove="EmbeddedResources\shaders\deferred\render_shadows.glsl" />
+	  <None Remove="EmbeddedResources\shaders\deferred\render_shadows_cube.glsl" />
+	  <None Remove="EmbeddedResources\shaders\deferred\shadows.glsl" />
+	  <None Remove="EmbeddedResources\shaders\deferred\sky.glsl" />
+	  <None Remove="EmbeddedResources\shaders\deferred\ssao.glsl" />
+	  <None Remove="EmbeddedResources\shaders\imgui.glsl" />
+	  <None Remove="EmbeddedResources\shaders\physic_debug_drawer.glsl" />
+	  <None Remove="EmbeddedResources\shaders\post\adapt_luminance.glsl" />
+	  <None Remove="EmbeddedResources\shaders\post\ambientlight.glsl" />
+	  <None Remove="EmbeddedResources\shaders\post\atmosphericscattering.glsl" />
+	  <None Remove="EmbeddedResources\shaders\post\blur.glsl" />
+	  <None Remove="EmbeddedResources\shaders\post\combine_blur.glsl" />
+	  <None Remove="EmbeddedResources\shaders\post\dof_bokeh_resolve.glsl" />
+	  <None Remove="EmbeddedResources\shaders\post\dof_bokeh_sprite.glsl" />
+	  <None Remove="EmbeddedResources\shaders\post\dof_downscale_coc.glsl" />
+	  <None Remove="EmbeddedResources\shaders\post\fog.glsl" />
+	  <None Remove="EmbeddedResources\shaders\post\fxaa.glsl" />
+	  <None Remove="EmbeddedResources\shaders\post\gamma.glsl" />
+	  <None Remove="EmbeddedResources\shaders\post\godrays.glsl" />
+	  <None Remove="EmbeddedResources\shaders\post\godrays_composite.glsl" />
+	  <None Remove="EmbeddedResources\shaders\post\godrays_mask.glsl" />
+	  <None Remove="EmbeddedResources\shaders\post\highpass.glsl" />
+	  <None Remove="EmbeddedResources\shaders\post\lensflares.glsl" />
+	  <None Remove="EmbeddedResources\shaders\post\luminance_map.glsl" />
+	  <None Remove="EmbeddedResources\shaders\post\postcommon.glsl" />
+	  <None Remove="EmbeddedResources\shaders\post\quad.glsl" />
+	  <None Remove="EmbeddedResources\shaders\post\screenspacereflections.glsl" />
+	  <None Remove="EmbeddedResources\shaders\post\smaa.glsl" />
+	  <None Remove="EmbeddedResources\shaders\post\smaa_blend.glsl" />
+	  <None Remove="EmbeddedResources\shaders\post\smaa_edge.glsl" />
+	  <None Remove="EmbeddedResources\shaders\post\smaa_frag.glsl" />
+	  <None Remove="EmbeddedResources\shaders\post\smaa_neighborhood.glsl" />
+	  <None Remove="EmbeddedResources\shaders\post\smaa_vert.glsl" />
+	  <None Remove="EmbeddedResources\shaders\post\ssao.glsl" />
+	  <None Remove="EmbeddedResources\shaders\post\ssao_blur.glsl" />
+	  <None Remove="EmbeddedResources\shaders\post\tonemap.glsl" />
+	  <None Remove="EmbeddedResources\shaders\post\visualize.glsl" />
+	  <None Remove="EmbeddedResources\shaders\sprite.glsl" />
+	</ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="NVorbis" Version="0.10.1" GeneratePathProperty="true" />
@@ -26,6 +77,55 @@
 		<EmbeddedResource Include="EmbeddedResources\DualityLogoSmall.png" />
 		<EmbeddedResource Include="EmbeddedResources\DualityIcon.png" />
 		<EmbeddedResource Include="EmbeddedResources\DualityIconB.png" />
+		<EmbeddedResource Include="EmbeddedResources\shaders\brdf.glsl" />
+		<EmbeddedResource Include="EmbeddedResources\shaders\core.glsl" />
+		<EmbeddedResource Include="EmbeddedResources\shaders\deferred\ambient.glsl" />
+		<EmbeddedResource Include="EmbeddedResources\shaders\deferred\combine.glsl" />
+		<EmbeddedResource Include="EmbeddedResources\shaders\deferred\csm.glsl" />
+		<EmbeddedResource Include="EmbeddedResources\shaders\deferred\fog.glsl" />
+		<EmbeddedResource Include="EmbeddedResources\shaders\deferred\gbuffer.glsl" />
+		<EmbeddedResource Include="EmbeddedResources\shaders\deferred\gbuffer_splat.glsl" />
+		<EmbeddedResource Include="EmbeddedResources\shaders\deferred\gbuffer_terrain_geomipmap.glsl" />
+		<EmbeddedResource Include="EmbeddedResources\shaders\deferred\light.glsl" />
+		<EmbeddedResource Include="EmbeddedResources\shaders\deferred\light_cs.glsl" />
+		<EmbeddedResource Include="EmbeddedResources\shaders\deferred\render_shadows.glsl" />
+		<EmbeddedResource Include="EmbeddedResources\shaders\deferred\render_shadows_cube.glsl" />
+		<EmbeddedResource Include="EmbeddedResources\shaders\deferred\shadows.glsl" />
+		<EmbeddedResource Include="EmbeddedResources\shaders\deferred\sky.glsl" />
+		<EmbeddedResource Include="EmbeddedResources\shaders\deferred\ssao.glsl" />
+		<EmbeddedResource Include="EmbeddedResources\shaders\imgui.glsl" />
+		<EmbeddedResource Include="EmbeddedResources\shaders\physic_debug_drawer.glsl" />
+		<EmbeddedResource Include="EmbeddedResources\shaders\post\adapt_luminance.glsl" />
+		<EmbeddedResource Include="EmbeddedResources\shaders\post\ambientlight.glsl" />
+		<EmbeddedResource Include="EmbeddedResources\shaders\post\atmosphericscattering.glsl" />
+		<EmbeddedResource Include="EmbeddedResources\shaders\post\blur.glsl" />
+		<EmbeddedResource Include="EmbeddedResources\shaders\post\combine_blur.glsl" />
+		<EmbeddedResource Include="EmbeddedResources\shaders\post\dof_bokeh_resolve.glsl" />
+		<EmbeddedResource Include="EmbeddedResources\shaders\post\dof_bokeh_sprite.glsl" />
+		<EmbeddedResource Include="EmbeddedResources\shaders\post\dof_downscale_coc.glsl" />
+		<EmbeddedResource Include="EmbeddedResources\shaders\post\fog.glsl" />
+		<EmbeddedResource Include="EmbeddedResources\shaders\post\fxaa.glsl" />
+		<EmbeddedResource Include="EmbeddedResources\shaders\post\gamma.glsl" />
+		<EmbeddedResource Include="EmbeddedResources\shaders\post\godrays.glsl" />
+		<EmbeddedResource Include="EmbeddedResources\shaders\post\godrays_composite.glsl" />
+		<EmbeddedResource Include="EmbeddedResources\shaders\post\godrays_mask.glsl" />
+		<EmbeddedResource Include="EmbeddedResources\shaders\post\highpass.glsl" />
+		<EmbeddedResource Include="EmbeddedResources\shaders\post\lensflares.glsl" />
+		<EmbeddedResource Include="EmbeddedResources\shaders\post\luminance_map.glsl" />
+		<EmbeddedResource Include="EmbeddedResources\shaders\post\postcommon.glsl" />
+		<EmbeddedResource Include="EmbeddedResources\shaders\post\quad.glsl" />
+		<EmbeddedResource Include="EmbeddedResources\shaders\post\screenspacereflections.glsl" />
+		<EmbeddedResource Include="EmbeddedResources\shaders\post\smaa.glsl" />
+		<EmbeddedResource Include="EmbeddedResources\shaders\post\smaa_blend.glsl" />
+		<EmbeddedResource Include="EmbeddedResources\shaders\post\smaa_edge.glsl" />
+		<EmbeddedResource Include="EmbeddedResources\shaders\post\smaa_frag.glsl" />
+		<EmbeddedResource Include="EmbeddedResources\shaders\post\smaa_neighborhood.glsl" />
+		<EmbeddedResource Include="EmbeddedResources\shaders\post\smaa_vert.glsl" />
+		<EmbeddedResource Include="EmbeddedResources\shaders\post\ssao.glsl" />
+		<EmbeddedResource Include="EmbeddedResources\shaders\post\ssao_blur.glsl" />
+		<EmbeddedResource Include="EmbeddedResources\shaders\post\tonemap.glsl" />
+		<EmbeddedResource Include="EmbeddedResources\shaders\post\visualize.glsl" />
+		<EmbeddedResource Include="EmbeddedResources\shaders\sprite.glsl" />
 		<EmbeddedResource Include="EmbeddedResources\SharpAlpha.frag" />
 		<EmbeddedResource Include="EmbeddedResources\Cousine10.Font.res" />
 		<EmbeddedResource Include="EmbeddedResources\Cousine8.Font.res" />
@@ -82,10 +182,6 @@
 
 	<ItemGroup>
 		<Content Include="EmbeddedResources\CousineLicense.txt" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Folder Include="EmbeddedResources\Shaders\" />
 	</ItemGroup>
 
 	<Target Name="AggregateOutput" BeforeTargets="AfterBuild">

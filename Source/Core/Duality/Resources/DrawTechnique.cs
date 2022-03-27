@@ -170,6 +170,12 @@ namespace Duality.Resources
 			this.fragmentShader = new FragmentShader(libraryShader.Res.Source);
 			this.paremeters = paremeters;
 		}
+		public DrawTechnique(string libraryShader, string paremeters)
+		{
+			this.vertexShader = new VertexShader(libraryShader);
+			this.fragmentShader = new FragmentShader(libraryShader);
+			this.paremeters = paremeters;
+		}
 
 		/// <summary>
 		/// Compiles the internal shader program of this <see cref="DrawTechnique"/>. This is 

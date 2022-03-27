@@ -42,12 +42,16 @@ namespace Duality.Resources
 			}
 		}
 
-		private static string LoadEmbeddedShaderSource(string name)
+		public static string LoadEmbeddedShaderSource(string name)
 		{
-			using (Stream stream = DefaultContent.GetEmbeddedResourceStream(name))
-			using (StreamReader reader = new StreamReader(stream))
+			using (Stream stream = DefaultContent.GetEmbeddedResourceStream(name.Replace("/", ".")))
 			{
-				return reader.ReadToEnd();
+				if (stream == null)
+					return "";
+				using (StreamReader reader = new StreamReader(stream))
+				{
+					return reader.ReadToEnd();
+				}
 			}
 		}
 
@@ -66,7 +70,12 @@ namespace Duality.Resources
 		[EditorHintFlags(MemberFlags.Invisible)]
 		public NativeShaderPart Native
 		{
-			get { return this.native; }
+			get
+			{
+				if (!this.compiled)
+					this.Compile(); 
+				return this.native; 
+			}
 		}
 
 		/// <summary>
@@ -75,7 +84,12 @@ namespace Duality.Resources
 		[EditorHintFlags(MemberFlags.Invisible)]
 		public int Handle
 		{
-			get { return this.native.Handle; }
+			get
+			{
+				if (!this.compiled)
+					this.Compile(); 
+				return this.native.Handle; 
+			}
 		}
 		/// <summary>
 		/// The shader stage at which this shader will be used.
@@ -176,7 +190,7 @@ namespace Duality.Resources
 				Preprocessor processer = new Preprocessor();
 				try
 				{
-					processer.Process(processedSource);
+					processedSource = processer.Process(processedSource);
 					if (processer.Failed)
 					{
 						processedSource = null; // No valid shader
@@ -227,9 +241,9 @@ namespace Duality.Resources
 
 		public int GetUniform(HashedString name)
 		{
-			for(int i=0; i < fields.Length; i++)
+			for(int i=0; i < DeclaredFields.Count; i++)
 			{
-				if (fields[i].Name == name)
+				if (DeclaredFields[i].Name == name)
 					return fieldLocations[i];
 			}
 			return -1;

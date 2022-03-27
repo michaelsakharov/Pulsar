@@ -22,7 +22,7 @@ namespace Duality.Graphics.Post.Effects
         internal override void LoadResources()
         {
             //_shader = resourceManager.Load<Duality.Resources.Shader>("/shaders/post/visualize");
-			_shader = new DrawTechnique(ContentProvider.RequestContent<CompoundShader>("shaders/post/visualize"), "");
+			_shader = new DrawTechnique(Shader.LoadEmbeddedShaderSource("shaders/post/visualize.glsl"), "");
 		}
 
         public void Render(VisualizationMode mode, Duality.Components.Camera camera, RenderTarget gbuffer, RenderTarget ssao, RenderTarget csmShadowBuffer, RenderTarget input, RenderTarget output)

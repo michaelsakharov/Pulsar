@@ -33,7 +33,7 @@ namespace Duality.Graphics.Post.Effects
 		internal override void LoadResources()
 		{
 			//_shader = resourceManager.Load<Duality.Resources.Shader>("/shaders/post/tonemap");
-			_shader = new DrawTechnique(ContentProvider.RequestContent<CompoundShader>("shaders/post/tonemap"), "");
+			_shader = new DrawTechnique(Shader.LoadEmbeddedShaderSource("shaders/post/tonemap.glsl"), "");
 		}
 
 		public void Render(HDRSettings settings, RenderTarget input, RenderTarget output, RenderTarget bloom, RenderTarget lensFlares, RenderTarget luminance)

@@ -55,7 +55,7 @@ namespace Duality.Graphics
 
             //_shader = resourceManager.Load<Duality.Resources.Shader>("/shaders/sprite");
             //_shader = ContentProvider.RequestContent<Duality.Resources.Shader>("shaders/sprite").Res;
-			_shader = new DrawTechnique(ContentProvider.RequestContent<CompoundShader>("shaders/post/fxaa"), "");
+			_shader = new DrawTechnique(Shader.LoadEmbeddedShaderSource("shaders/post/fxaa.glsl"), "");
 
 			_quads = new List<QuadInfo>();
             for (var i = 0; i < 32; i++)

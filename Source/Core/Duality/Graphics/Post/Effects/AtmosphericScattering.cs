@@ -24,7 +24,7 @@ namespace Duality.Graphics.Post.Effects
         internal override void LoadResources()
         {
             //_shader = resourceManager.Load<Duality.Resources.Shader>("/shaders/post/atmosphericscattering");
-			_shader = new DrawTechnique(ContentProvider.RequestContent<CompoundShader>("shaders/post/atmosphericscattering"), "");
+			_shader = new DrawTechnique(Shader.LoadEmbeddedShaderSource("shaders/post/atmosphericscattering.glsl"), "");
 		}
 
         public bool Render(Duality.Components.Camera camera, Stage stage, RenderTarget gbuffer, RenderTarget input, RenderTarget output)

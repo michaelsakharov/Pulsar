@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Text.RegularExpressions;
+using Duality.Resources;
 
 namespace Duality.Graphics.Shaders
 {
@@ -28,21 +29,41 @@ namespace Duality.Graphics.Shaders
 			if (Failed)
 				return string.Empty;
 
-			var path = match.Groups[1].Value + ".glsl";
+			var name = match.Groups[1].Value.TrimStart('/');
+			var nameWithExtension = name + ".glsl";
 
-			Dependencies.Add(path);
+			Dependencies.Add(nameWithExtension);
 
-			var shader = ContentProvider.RequestContent<Duality.Resources.Shader>(match.Groups[1].Value);
-			if (shader.IsAvailable)
+			if (ContentProvider.HasContent(name))
 			{
-				return Process(shader.Res.Source);
+				var shader = ContentProvider.RequestContent<Duality.Resources.Shader>(name);
+				if (shader.IsAvailable)
+				{
+					return Process(shader.Res.Source);
+				}
+				else
+				{
+					// A dependancy isnt available to load
+					Failed = true;
+					Error = "Dependancy Shader " + name + " Could not be found in the project!";
+					return Error;
+				}
 			}
 			else
 			{
-				// A dependancy isnt available to load
-				Failed = true;
-				Error = "Dependancy " +  match.Groups[1].Value + ".glsl" + " Could not be found in the project!";
-				return Error;
+				// Maybe a Resource
+				string embedded = Shader.LoadEmbeddedShaderSource(nameWithExtension);
+				if (string.IsNullOrEmpty(embedded) == false)
+				{
+					return Process(embedded);
+				}
+				else
+				{
+					// A dependancy isnt available to load
+					Failed = true;
+					Error = "Dependancy Shader " + name + " Could not be found in the project!";
+					return Error;
+				}
 			}
 		}
     }

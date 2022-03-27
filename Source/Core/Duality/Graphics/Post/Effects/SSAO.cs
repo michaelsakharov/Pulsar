@@ -95,8 +95,8 @@ namespace Duality.Graphics.Post.Effects
         {
             //_shader = resourceManager.Load<Duality.Resources.Shader>("/shaders/post/ssao");
             //_shaderBlur = resourceManager.Load<Duality.Resources.Shader>("/shaders/post/ssao_blur");
-			_shader = new DrawTechnique(ContentProvider.RequestContent<CompoundShader>("shaders/post/ssao"), "");
-			_shaderBlur = new DrawTechnique(ContentProvider.RequestContent<CompoundShader>("shaders/post/ssao_blur"), "");
+			_shader = new DrawTechnique(Shader.LoadEmbeddedShaderSource("shaders/post/ssao.glsl"), "");
+			_shaderBlur = new DrawTechnique(Shader.LoadEmbeddedShaderSource("shaders/post/ssao_blur.glsl"), "");
 		}
 
         public RenderTarget Render(Duality.Components.Camera camera, RenderTarget gbuffer)

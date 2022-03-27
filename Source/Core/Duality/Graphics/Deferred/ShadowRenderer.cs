@@ -77,18 +77,24 @@ namespace Duality.Graphics.Deferred
                 //resourceManager.Load<Duality.Resources.Shader>("/shaders/deferred/render_shadows", "POINT"),
                 //resourceManager.Load<Duality.Resources.Shader>("/shaders/deferred/render_shadows", "SPOT"),
                 //resourceManager.Load<Duality.Resources.Shader>("/shaders/deferred/render_shadows", "DIRECTIONAL"),
-				new DrawTechnique(ContentProvider.RequestContent<CompoundShader>("shaders/deferred/render_shadows"), "POINT"),
-				new DrawTechnique(ContentProvider.RequestContent<CompoundShader>("shaders/deferred/render_shadows"), "SPOT"),
-				new DrawTechnique(ContentProvider.RequestContent<CompoundShader>("shaders/deferred/render_shadows"), "DIRECTIONAL")
+				//new DrawTechnique(ContentProvider.RequestContent<CompoundShader>("shaders/deferred/render_shadows.glsl"), "POINT"),
+				//new DrawTechnique(ContentProvider.RequestContent<CompoundShader>("shaders/deferred/render_shadows.glsl"), "SPOT"),
+				//new DrawTechnique(ContentProvider.RequestContent<CompoundShader>("shaders/deferred/render_shadows.glsl"), "DIRECTIONAL")
+				new DrawTechnique(Shader.LoadEmbeddedShaderSource("shaders/deferred/render_shadows.glsl"), "POINT"),
+				new DrawTechnique(Shader.LoadEmbeddedShaderSource("shaders/deferred/render_shadows.glsl"), "SPOT"),
+				new DrawTechnique(Shader.LoadEmbeddedShaderSource("shaders/deferred/render_shadows.glsl"), "DIRECTIONAL")
 			};
             _renderShadowsSkinnedShaders = new DrawTechnique[]
             {
                 //resourceManager.Load<Duality.Resources.Shader>("/shaders/deferred/render_shadows", "SKINNED;POINT"),
                 //resourceManager.Load<Duality.Resources.Shader>("/shaders/deferred/render_shadows", "SKINNED;SPOT"),
                 //resourceManager.Load<Duality.Resources.Shader>("/shaders/deferred/render_shadows", "SKINNED;DIRECTIONAL")
-				new DrawTechnique(ContentProvider.RequestContent<CompoundShader>("shaders/deferred/render_shadows"), "SKINNED;POINT"),
-				new DrawTechnique(ContentProvider.RequestContent<CompoundShader>("shaders/deferred/render_shadows"), "SKINNED;SPOT"),
-				new DrawTechnique(ContentProvider.RequestContent<CompoundShader>("shaders/deferred/render_shadows"), "SKINNED;DIRECTIONAL")
+				//new DrawTechnique(ContentProvider.RequestContent<CompoundShader>("shaders/deferred/render_shadows"), "SKINNED;POINT"),
+				//new DrawTechnique(ContentProvider.RequestContent<CompoundShader>("shaders/deferred/render_shadows"), "SKINNED;SPOT"),
+				//new DrawTechnique(ContentProvider.RequestContent<CompoundShader>("shaders/deferred/render_shadows"), "SKINNED;DIRECTIONAL")
+				new DrawTechnique(Shader.LoadEmbeddedShaderSource("shaders/deferred/render_shadows.glsl"), "SKINNED;POINT"),
+				new DrawTechnique(Shader.LoadEmbeddedShaderSource("shaders/deferred/render_shadows.glsl"), "SKINNED;SPOT"),
+				new DrawTechnique(Shader.LoadEmbeddedShaderSource("shaders/deferred/render_shadows.glsl"), "SKINNED;DIRECTIONAL")
 			};
 
             _perFrameDataBuffer = _backend.RenderSystem.CreateBuffer(BufferTarget.UniformBuffer, true);

@@ -29,7 +29,7 @@ namespace Duality.Resources
 
 		protected override ShaderType Type
 		{
-			get { return ShaderType.ComputeShader; }
+			get { return ShaderType.Compute; }
 		}
 		
 		public ComputeShader() : base(string.Empty) {}

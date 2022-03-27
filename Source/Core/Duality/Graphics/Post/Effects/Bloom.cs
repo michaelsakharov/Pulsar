@@ -73,11 +73,11 @@ namespace Duality.Graphics.Post.Effects
 			//_blurVerticalShader = resourceManager.Load<Duality.Resources.Shader>("/shaders/post/blur", "BLUR_VERTICAL");
 			//_quadShader = resourceManager.Load<Duality.Resources.Shader>("/shaders/post/quad");
 			//_blurCombineShader = resourceManager.Load<Duality.Resources.Shader>("/shaders/post/combine_blur");
-			_highPassShader = new DrawTechnique(ContentProvider.RequestContent<CompoundShader>("shaders/post/highpass"), "");
-			_blurHorizontalShader = new DrawTechnique(ContentProvider.RequestContent<CompoundShader>("shaders/post/blur"), "BLUR_HORIZONTAL");
-			_blurVerticalShader = new DrawTechnique(ContentProvider.RequestContent<CompoundShader>("shaders/post/blur"), "BLUR_VERTICAL");
-			_quadShader = new DrawTechnique(ContentProvider.RequestContent<CompoundShader>("shaders/post/quad"), "");
-			_blurCombineShader = new DrawTechnique(ContentProvider.RequestContent<CompoundShader>("shaders/post/combine_blur"), "");
+			_highPassShader = new DrawTechnique(Shader.LoadEmbeddedShaderSource("shaders/post/highpass.glsl"), "");
+			_blurHorizontalShader = new DrawTechnique(Shader.LoadEmbeddedShaderSource("shaders/post/blur.glsl"), "BLUR_HORIZONTAL");
+			_blurVerticalShader = new DrawTechnique(Shader.LoadEmbeddedShaderSource("shaders/post/blur.glsl"), "BLUR_VERTICAL");
+			_quadShader = new DrawTechnique(Shader.LoadEmbeddedShaderSource("shaders/post/quad.glsl"), "");
+			_blurCombineShader = new DrawTechnique(Shader.LoadEmbeddedShaderSource("shaders/post/combine_blur.glsl"), "");
 		}
 
 		private RenderTarget Downsample(RenderTarget source, RenderTarget destination)

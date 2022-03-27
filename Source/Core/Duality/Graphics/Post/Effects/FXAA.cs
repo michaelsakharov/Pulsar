@@ -20,7 +20,7 @@ namespace Duality.Graphics.Post.Effects
 		internal override void LoadResources()
 		{
 			//_shader = resourceManager.Load<Duality.Resources.Shader>("shaders/post/fxaavert");
-			_shader = new DrawTechnique(ContentProvider.RequestContent<CompoundShader>("shaders/post/fxaa"), "");
+			_shader = new DrawTechnique(Shader.LoadEmbeddedShaderSource("shaders/post/fxaa.glsl"), "");
 		}
 
 		public void Render(RenderTarget input, RenderTarget output)

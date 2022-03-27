@@ -53,7 +53,7 @@ namespace Duality.Graphics.Deferred
             for (var i = 0; i < _renderShadowsCSMShader.Length; i++)
             {
                 //_renderShadowsCSMShader[i] = resourceManager.Load<Duality.Resources.Shader>("/shaders/deferred/csm", shadowQualities[i]);
-                _renderShadowsCSMShader[i] = new DrawTechnique(ContentProvider.RequestContent<CompoundShader>("shaders/deferred/csm"), shadowQualities[i]);
+                _renderShadowsCSMShader[i] = new DrawTechnique(Shader.LoadEmbeddedShaderSource("shaders/deferred/csm.glsl"), shadowQualities[i]);
             }
         }
 

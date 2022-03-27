@@ -47,8 +47,8 @@ namespace Duality.Graphics.Post.Effects
 		{
 			//_luminanceMapShader = resourceManager.Load<Duality.Resources.Shader>("/shaders/post/luminance_map");
 			//_adaptLuminanceShader = resourceManager.Load<Duality.Resources.Shader>("/shaders/post/adapt_luminance");
-			_luminanceMapShader = new DrawTechnique(ContentProvider.RequestContent<CompoundShader>("shaders/post/luminance_map"), "");
-			_adaptLuminanceShader = new DrawTechnique(ContentProvider.RequestContent<CompoundShader>("shaders/post/adapt_luminance"), "");
+			_luminanceMapShader = new DrawTechnique(Shader.LoadEmbeddedShaderSource("shaders/post/luminance_map.glsl"), "");
+			_adaptLuminanceShader = new DrawTechnique(Shader.LoadEmbeddedShaderSource("shaders/post/adapt_luminance.glsl"), "");
 		}
 
 		public RenderTarget Render(HDRSettings settings, RenderTarget input, float deltaTime)

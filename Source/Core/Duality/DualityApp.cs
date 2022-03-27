@@ -94,8 +94,6 @@ namespace Duality
 		private static ExecutionContext         execContext        = ExecutionContext.Terminated;
 		private static List<object>             disposeSchedule    = new List<object>();
 
-		public static int RequestedWidth { get; set; }
-		public static int RequestedHeight { get; set; }
 		public static float ResolutionScale { get; set; }
 		public static bool CursorVisible { get; set; } = true;
 
@@ -365,7 +363,7 @@ namespace Duality
 			Logs.Core.PushIndent();
 
 			var graphicsMode = new GraphicsMode(new ColorFormat(32), 24, 0, 0);
-			var window = new OpenTK.GameWindow(RequestedWidth, RequestedHeight, graphicsMode, "Game Window", GameWindowFlags.Default, DisplayDevice.Default)
+			var window = new OpenTK.GameWindow(options.Size.X, options.Size.Y, graphicsMode, "Game Window", GameWindowFlags.Default, DisplayDevice.Default)
 			{
 				Visible = true,
 				CursorVisible = CursorVisible
@@ -388,12 +386,6 @@ namespace Duality
 
 			Logs.Core.PopIndent();
 
-			ShadowRenderer = new Graphics.Deferred.ShadowRenderer(GraphicsBackend);
-			DeferredRenderer = new Graphics.Deferred.DeferredRenderer(GraphicsBackend, ShadowRenderer, GraphicsBackend.Width, GraphicsBackend.Height);
-			ShadowBufferRenderer = new Graphics.Deferred.ShadowBufferRenderer(GraphicsBackend, GraphicsBackend.Width, GraphicsBackend.Height);
-			PostEffectManager = new Graphics.Post.PostEffectManager(GraphicsBackend, GraphicsBackend.Width, GraphicsBackend.Height);
-			SpriteRenderer = GraphicsBackend.CreateSpriteBatch();
-
 			InitPostWindow();
 			
 			return window;
@@ -406,6 +398,11 @@ namespace Duality
 		public static void InitPostWindow()
 		{
 			DefaultContent.Init();
+			ShadowRenderer = new Graphics.Deferred.ShadowRenderer(GraphicsBackend);
+			DeferredRenderer = new Graphics.Deferred.DeferredRenderer(GraphicsBackend, ShadowRenderer, GraphicsBackend.Width, GraphicsBackend.Height);
+			ShadowBufferRenderer = new Graphics.Deferred.ShadowBufferRenderer(GraphicsBackend, GraphicsBackend.Width, GraphicsBackend.Height);
+			PostEffectManager = new Graphics.Post.PostEffectManager(GraphicsBackend, GraphicsBackend.Width, GraphicsBackend.Height);
+			SpriteRenderer = GraphicsBackend.CreateSpriteBatch();
 
 			// Post-Window init is the last thing that happens before loading game
 			// content and entering simulation. When done in a game context, notify

@@ -8,7 +8,7 @@ namespace Duality.Resources
 	{
 		Vertex,
 		Fragment,
-		ComputeShader,
+		Compute,
 		Compound
 	}
 }
