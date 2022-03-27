@@ -30,8 +30,6 @@ namespace Duality
 		public static readonly PropertyInfo	Property_Transform_IgnoreParent;
 
 		public static readonly PropertyInfo	Property_SoundEmitter_Sources;
-		
-		public static readonly PropertyInfo	Property_DrawTechnique_PreferredVertexFormat;
 
 		public static readonly PropertyInfo	Property_Resource_AssetInfo;
 
@@ -64,9 +62,6 @@ namespace Duality
 			Property_Transform_Angle			= GetProperty(transform, "Rotation");
 			Property_Transform_Scale			= GetProperty(transform, "Scale");
 			Property_Transform_IgnoreParent		= GetProperty(transform, "IgnoreParent");
-
-			Type drawTech = typeof(DrawTechnique);
-			Property_DrawTechnique_PreferredVertexFormat	= GetProperty(drawTech, "PreferredVertexFormat");
 			
 			Type resource = typeof(Resource);
 			Property_Resource_AssetInfo		= GetProperty(resource, "AssetInfo");
