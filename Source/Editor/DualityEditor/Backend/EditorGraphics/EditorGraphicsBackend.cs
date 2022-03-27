@@ -8,7 +8,7 @@ using Duality.Backend;
 using OpenTK;
 using OpenTK.Graphics;
 
-namespace Duality.Editor.Backend.DefaultOpenTK
+namespace Duality.Editor.Backend
 {
 	public class EditorGraphicsBackend : IDualityBackend
 	{
@@ -36,7 +36,7 @@ namespace Duality.Editor.Backend.DefaultOpenTK
 		}
 		void IDualityBackend.Shutdown() { }
 
-		public INativeEditorGraphicsContext CreateContext(AAQuality antialiasingQuality)
+		public NativeEditorGraphicsContext CreateContext(AAQuality antialiasingQuality)
 		{
 			return new NativeEditorGraphicsContext(antialiasingQuality);
 		}

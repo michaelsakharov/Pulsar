@@ -179,7 +179,7 @@ namespace Duality.Editor.Plugins.CamView
 
 		private	int						runtimeId					= 0;
 		private	bool					isHiddenDocument			= false;
-		private	INativeRenderableSite	graphicsControl				= null;
+		private	NativeRenderableSite	graphicsControl				= null;
 		private	GameObject				camObj						= null;
 		private	Camera					camComp						= null;
 		private	CamViewState			activeState					= null;
@@ -276,7 +276,7 @@ namespace Duality.Editor.Plugins.CamView
 		{
 			get { return this.camObj; }
 		}
-		public INativeRenderableSite RenderableSite
+		public NativeRenderableSite RenderableSite
 		{
 			get { return this.graphicsControl; }
 		}

@@ -18,6 +18,7 @@ using Duality.Editor.UndoRedoActions;
 using Duality.Editor.AssetManagement;
 
 using Duality.Launcher;
+using Duality.Renderer;
 
 namespace Duality.Editor
 {
@@ -34,8 +35,8 @@ namespace Duality.Editor
 
 		private	static EditorPluginManager			pluginManager		= new EditorPluginManager();
 		private	static MainForm						mainForm			= null;
-		private	static IEditorGraphicsBackend		graphicsBack		= null;
-		private	static INativeEditorGraphicsContext	mainGraphicsContext	= null;
+		private	static EditorGraphicsBackend		graphicsBack		= null;
+		private	static NativeEditorGraphicsContext	mainGraphicsContext	= null;
 		private	static List<IEditorAction>			editorActions		= new List<IEditorAction>();
 		private	static ReloadCorePluginDialog		corePluginReloader	= null;
 		private	static bool							needsRecovery		= false;
@@ -184,11 +185,9 @@ namespace Duality.Editor
 			// Need to load editor plugins before initializing the graphics context, so the backend is available
 			pluginManager.LoadPlugins();
 
-			// Load Game Content here
-			DefaultContent.Init();
-
 			// Need to initialize graphics context and default content before instantiating anything that could require any of them
 			InitMainGraphicsContext();
+
 			DualityApp.InitPostWindow();
 
 			// Load editor app data / project settings, and user data (such as window layouts)
@@ -385,6 +384,7 @@ namespace Duality.Editor
 		{
 			if (mainGraphicsContext != null) return;
 
+			//graphicsBack = new Duality.Graphics.Backend(window.Width, window.Height, ctx);
 			if (graphicsBack == null)
 				DualityApp.InitBackend(out graphicsBack, GetAvailDualityEditorTypes);
 
@@ -398,6 +398,14 @@ namespace Duality.Editor
 					DualityApp.AppData.Instance.MultisampleBackBuffer ?
 					DualityApp.UserData.Instance.AntialiasingQuality :
 					AAQuality.Off);
+
+				var ctx = new ContextReference
+				{
+					Context = mainGraphicsContext.GLContext,
+					SwapBuffers = mainGraphicsContext.GLContext.SwapBuffers
+				};
+
+				DualityApp.GraphicsBackend = new Duality.Graphics.Backend(512, 512, ctx);
 			}
 			catch (Exception e)
 			{
@@ -411,7 +419,7 @@ namespace Duality.Editor
 			if (mainGraphicsContext == null) return;
 			mainGraphicsContext.PerformBufferSwap();
 		}
-		public static INativeRenderableSite CreateRenderableSite()
+		public static NativeRenderableSite CreateRenderableSite()
 		{
 			if (mainGraphicsContext == null) return null;
 			return mainGraphicsContext.CreateRenderableSite();

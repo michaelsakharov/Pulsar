@@ -5,15 +5,14 @@ using System.Windows.Forms;
 
 using Duality.Drawing;
 using Duality.Backend;
-using Duality.Backend.DefaultOpenTK;
 
 using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Platform;
 
-namespace Duality.Editor.Backend.DefaultOpenTK
+namespace Duality.Editor.Backend
 {
-	public class NativeEditorGraphicsContext : INativeEditorGraphicsContext
+	public class NativeEditorGraphicsContext : IDisposable
 	{
 		private AAQuality antialiasingQuality;
 		private GLControl mainContextControl;
@@ -74,11 +73,11 @@ namespace Duality.Editor.Backend.DefaultOpenTK
 			this.swapSchedule.Add(control.WindowInfo);
 		}
 
-		INativeRenderableSite INativeEditorGraphicsContext.CreateRenderableSite()
+		public NativeRenderableSite CreateRenderableSite()
 		{
 			return new NativeRenderableSite(this);
 		}
-		void INativeEditorGraphicsContext.PerformBufferSwap()
+		public void PerformBufferSwap()
 		{
 			// Perform a buffer swap
 			if (this.swapSchedule.Count > 0)

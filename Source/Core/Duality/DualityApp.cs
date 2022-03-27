@@ -148,10 +148,12 @@ namespace Duality
 		}
 		/// <summary>
 		/// [GET] The graphics backend that is used by Duality. Don't use this unless you know exactly what you're doing.
+		/// ESPECIALLY dont Set it, it WILL break things!
 		/// </summary>
 		public static Duality.Graphics.Backend GraphicsBackend
 		{
 			get { return graphicsBack; }
+			set { graphicsBack = value; }
 		}
 		/// <summary>
 		/// [GET] The audio backend that is used by Duality. Don't use this unless you know exactly what you're doing.

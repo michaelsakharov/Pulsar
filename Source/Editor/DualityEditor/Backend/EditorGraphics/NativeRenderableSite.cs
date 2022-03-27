@@ -9,9 +9,9 @@ using Duality.Backend;
 using OpenTK;
 using OpenTK.Graphics;
 
-namespace Duality.Editor.Backend.DefaultOpenTK
+namespace Duality.Editor.Backend
 {
-	public class NativeRenderableSite : INativeRenderableSite
+	public class NativeRenderableSite : IDisposable
 	{
 		private NativeEditorGraphicsContext context;
 		private GLControl control;
@@ -43,11 +43,11 @@ namespace Duality.Editor.Backend.DefaultOpenTK
 			this.control.HandleCreated += this.control_HandleCreated;
 		}
 
-		void INativeRenderableSite.MakeCurrent()
+		public void MakeCurrent()
 		{
 			this.context.GLContext.MakeCurrent(this.control.WindowInfo);
 		}
-		void INativeRenderableSite.SwapBuffers()
+		public void SwapBuffers()
 		{
 			this.context.ScheduleSwap(this.control);
 		}
