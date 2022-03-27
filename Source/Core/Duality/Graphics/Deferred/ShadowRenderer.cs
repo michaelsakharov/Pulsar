@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Duality.Renderer;
 using Duality.Renderer.Meshes;
 using Duality.Renderer.RenderTargets;
+using Duality.Resources;
 
 namespace Duality.Graphics.Deferred
 {
@@ -29,8 +30,8 @@ namespace Duality.Graphics.Deferred
 
         private readonly int _shadowsRenderState;
 
-        private Duality.Resources.Shader[] _renderShadowsShaders = new Duality.Resources.Shader[3];
-        private Duality.Resources.Shader[] _renderShadowsSkinnedShaders = new Duality.Resources.Shader[3];
+        private DrawTechnique[] _renderShadowsShaders = new DrawTechnique[3];
+        private DrawTechnique[] _renderShadowsSkinnedShaders = new DrawTechnique[3];
 
         private bool _handlesInitialized = false;
 
@@ -71,18 +72,24 @@ namespace Duality.Graphics.Deferred
             });
 
             // Load shaders
-            _renderShadowsShaders = new Duality.Resources.Shader[]
+            _renderShadowsShaders = new DrawTechnique[]
             {
-                resourceManager.Load<Duality.Resources.Shader>("/shaders/deferred/render_shadows", "POINT"),
-                resourceManager.Load<Duality.Resources.Shader>("/shaders/deferred/render_shadows", "SPOT"),
-                resourceManager.Load<Duality.Resources.Shader>("/shaders/deferred/render_shadows", "DIRECTIONAL")
-            };
-            _renderShadowsSkinnedShaders = new Duality.Resources.Shader[]
+                //resourceManager.Load<Duality.Resources.Shader>("/shaders/deferred/render_shadows", "POINT"),
+                //resourceManager.Load<Duality.Resources.Shader>("/shaders/deferred/render_shadows", "SPOT"),
+                //resourceManager.Load<Duality.Resources.Shader>("/shaders/deferred/render_shadows", "DIRECTIONAL"),
+				new DrawTechnique(ContentProvider.RequestContent<CompoundShader>("shaders/deferred/render_shadows"), "POINT"),
+				new DrawTechnique(ContentProvider.RequestContent<CompoundShader>("shaders/deferred/render_shadows"), "SPOT"),
+				new DrawTechnique(ContentProvider.RequestContent<CompoundShader>("shaders/deferred/render_shadows"), "DIRECTIONAL")
+			};
+            _renderShadowsSkinnedShaders = new DrawTechnique[]
             {
-                resourceManager.Load<Duality.Resources.Shader>("/shaders/deferred/render_shadows", "SKINNED;POINT"),
-                resourceManager.Load<Duality.Resources.Shader>("/shaders/deferred/render_shadows", "SKINNED;SPOT"),
-                resourceManager.Load<Duality.Resources.Shader>("/shaders/deferred/render_shadows", "SKINNED;DIRECTIONAL")
-            };
+                //resourceManager.Load<Duality.Resources.Shader>("/shaders/deferred/render_shadows", "SKINNED;POINT"),
+                //resourceManager.Load<Duality.Resources.Shader>("/shaders/deferred/render_shadows", "SKINNED;SPOT"),
+                //resourceManager.Load<Duality.Resources.Shader>("/shaders/deferred/render_shadows", "SKINNED;DIRECTIONAL")
+				new DrawTechnique(ContentProvider.RequestContent<CompoundShader>("shaders/deferred/render_shadows"), "SKINNED;POINT"),
+				new DrawTechnique(ContentProvider.RequestContent<CompoundShader>("shaders/deferred/render_shadows"), "SKINNED;SPOT"),
+				new DrawTechnique(ContentProvider.RequestContent<CompoundShader>("shaders/deferred/render_shadows"), "SKINNED;DIRECTIONAL")
+			};
 
             _perFrameDataBuffer = _backend.RenderSystem.CreateBuffer(BufferTarget.UniformBuffer, true);
             _backend.RenderSystem.SetBufferData(_perFrameDataBuffer, _perFrameData, true, true);

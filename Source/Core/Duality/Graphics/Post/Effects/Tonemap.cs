@@ -4,12 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Duality.Renderer;
+using Duality.Resources;
 
 namespace Duality.Graphics.Post.Effects
 {
 	public class Tonemap : BaseEffect
 	{
-		private Duality.Resources.Shader _shader;
+		private DrawTechnique _shader;
 		private TonemapShaderParams _shaderParams;
 
 		private readonly int[] _textures = new int[4];
@@ -31,7 +32,8 @@ namespace Duality.Graphics.Post.Effects
 
 		internal override void LoadResources()
 		{
-			_shader = resourceManager.Load<Duality.Resources.Shader>("/shaders/post/tonemap");
+			//_shader = resourceManager.Load<Duality.Resources.Shader>("/shaders/post/tonemap");
+			_shader = new DrawTechnique(ContentProvider.RequestContent<CompoundShader>("shaders/post/tonemap"), "");
 		}
 
 		public void Render(HDRSettings settings, RenderTarget input, RenderTarget output, RenderTarget bloom, RenderTarget lensFlares, RenderTarget luminance)

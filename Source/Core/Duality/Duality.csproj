@@ -84,6 +84,10 @@
 		<Content Include="EmbeddedResources\CousineLicense.txt" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="EmbeddedResources\Shaders\" />
+	</ItemGroup>
+
 	<Target Name="AggregateOutput" BeforeTargets="AfterBuild">
 		<Copy SourceFiles="$(OutputPath)$(AssemblyName).dll" DestinationFolder="$(RootFolder)Build\Output\" />
 		<Copy SourceFiles="$(OutputPath)$(AssemblyName).pdb" DestinationFolder="$(RootFolder)Build\Output\" />

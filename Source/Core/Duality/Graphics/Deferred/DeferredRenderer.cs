@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Duality.Graphics.Resources;
 using Duality.Renderer;
 using Duality.Renderer.RenderTargets;
+using Duality.Resources;
 
 namespace Duality.Graphics.Deferred
 {
@@ -34,9 +35,9 @@ namespace Duality.Graphics.Deferred
 
         private BatchBuffer _quadMesh;
 
-        private Duality.Resources.Shader _ambientLightShader;
-        private Duality.Resources.Shader[] _lightShaders;
-        private Duality.Resources.Shader[] _lightComputeShader = new Duality.Resources.Shader[(int)ShadowQuality.High + 1];
+        private DrawTechnique _ambientLightShader;
+        private DrawTechnique[] _lightShaders;
+        private ComputeShader[] _lightComputeShader = new ComputeShader[(int)ShadowQuality.High + 1];
 
         private const int NumLightInstances = 1024;
         private readonly PointLightDataCS[] _pointLightDataCS = new PointLightDataCS[NumLightInstances];
@@ -85,7 +86,6 @@ namespace Duality.Graphics.Deferred
             Settings.EnableShadows = true;
             Settings.ShadowRenderDistance = 128.0f;
 
-            _resourceManager = resourceManager ?? throw new ArgumentNullException("resourceManager");
             _backend = backend ?? throw new ArgumentNullException("backend");
             _shadowRenderer = shadowRenderer ?? throw new ArgumentNullException(nameof(shadowRenderer));
 
@@ -114,13 +114,14 @@ namespace Duality.Graphics.Deferred
 						new Definition.Attachment(Definition.AttachmentPoint.Depth, Renderer.PixelFormat.DepthComponent, Renderer.PixelInternalFormat.DepthComponent16, Renderer.PixelType.Float, 0)
                     }));
 
-            _ambientLightShader = _resourceManager.Load<Duality.Resources.Shader>("/shaders/deferred/ambient");
+            //_ambientLightShader = _resourceManager.Load<Duality.Resources.Shader>("/shaders/deferred/ambient");
+			_ambientLightShader = new DrawTechnique(ContentProvider.RequestContent<CompoundShader>("shaders/deferred/ambient"), "");
 
-            // Init light shaders
-            var lightTypes = new string[] { "DIRECTIONAL_LIGHT" };
+			// Init light shaders
+			var lightTypes = new string[] { "DIRECTIONAL_LIGHT" };
             var lightPermutations = new string[] { "NO_SHADOWS", "SHADOWS" };
 
-            _lightShaders = new Duality.Resources.Shader[lightTypes.Length * lightPermutations.Length];
+            _lightShaders = new DrawTechnique[lightTypes.Length * lightPermutations.Length];
             _lightParams = new LightParams[lightTypes.Length * lightPermutations.Length];
 
             for (var l = 0; l < lightTypes.Length; l++)
@@ -131,8 +132,9 @@ namespace Duality.Graphics.Deferred
                     var index = l * lightPermutations.Length + p;
                     var defines = lightType + ";" + lightPermutations[p];
 
-                    _lightShaders[index] = _resourceManager.Load<Duality.Resources.Shader>("/shaders/deferred/light", defines);
-                    _lightParams[index] = new LightParams();
+                    //_lightShaders[index] = _resourceManager.Load<Duality.Resources.Shader>("/shaders/deferred/light", defines);
+					_lightShaders[index] = new DrawTechnique(ContentProvider.RequestContent<CompoundShader>("shaders/deferred/light"), defines);
+					_lightParams[index] = new LightParams();
                 }
             }
 
@@ -141,12 +143,14 @@ namespace Duality.Graphics.Deferred
             var shadowQualities = new string[] { "SHADOW_QUALITY_LOWEST", "SHADOW_QUALITY_LOW", "SHADOW_QUALITY_MEDIUM", "SHADOW_QUALITY_HIGH" };
             for (var i = 0; i < _lightComputeShader.Length; i++)
             {
-                _lightComputeShader[i] = _resourceManager.Load<Duality.Resources.Shader>("/shaders/deferred/light_cs", shadowQualities[i]);
-            }
+                //_lightComputeShader[i] = _resourceManager.Load<Duality.Resources.Shader>("/shaders/deferred/light_cs", shadowQualities[i]);
+				_lightComputeShader[i] = ContentProvider.RequestContent<ComputeShader>("shaders/deferred/light_cs").Res;
+			}
             
-            _specularIntegarion = _resourceManager.Load<Duality.Resources.Texture>("/textures/specular_integartion");
+            //_specularIntegarion = _resourceManager.Load<Duality.Resources.Texture>("/textures/specular_integartion");
+			_specularIntegarion = ContentProvider.RequestContent<Texture>("textures/specular_integartion").Res;
 
-            _quadMesh = _backend.CreateBatchBuffer();
+			_quadMesh = _backend.CreateBatchBuffer();
             _quadMesh.Begin();
             _quadMesh.AddQuad(new Vector2(-1, -1), new Vector2(2, 2), Vector2.Zero, new Vector2(1, 1));
             _quadMesh.End();

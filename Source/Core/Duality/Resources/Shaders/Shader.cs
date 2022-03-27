@@ -9,6 +9,7 @@ using Duality.Editor;
 using Duality.Cloning;
 using Duality.Backend;
 using OpenTK.Graphics.OpenGL;
+using Duality.Graphics.Shaders;
 
 namespace Duality.Resources
 {
@@ -18,6 +19,8 @@ namespace Duality.Resources
 	[ExplicitResourceReference()]
 	public abstract class Shader : Resource
 	{
+		public static ContentRef<Shader> DualityIcon { get; private set; }
+
 		private static readonly ShaderFieldInfo[] EmptyFields = new ShaderFieldInfo[0];
 
 		private static List<string> commonChunks = null;
@@ -124,7 +127,7 @@ namespace Duality.Resources
 		/// Compiles the shader. This is done automatically when loading the shader
 		/// or attaching it to a <see cref="DrawTechnique"/>.
 		/// </summary>
-		public void Compile()
+		public void Compile(string parameters = "")
 		{
 			Logs.Core.Write("Compiling {0} shader '{1}'...", this.Type, this.FullName);
 			Logs.Core.PushIndent();
@@ -146,6 +149,14 @@ namespace Duality.Resources
 				ShaderSourceBuilder builder = new ShaderSourceBuilder();
 				string typeConditional = string.Format("SHADERTYPE_{0}", this.Type).ToUpperInvariant();
 				builder.SetConditional(typeConditional, true);
+				if (!string.IsNullOrWhiteSpace(parameters))
+				{
+					foreach (var param in parameters.Split(';'))
+					{
+						// #define param
+						builder.SetConditional(param, true);
+					}
+				}
 				builder.SetMainChunk(this.source);
 				foreach (string sharedChunk in CommonSourceChunks)
 				{
@@ -157,6 +168,25 @@ namespace Duality.Resources
 			catch (Exception e)
 			{
 				Logs.Core.WriteError("Failed to preprocess shader:{1}{0}", LogFormat.Exception(e), Environment.NewLine);
+			}
+
+			// Process Dependancies
+			if (processedSource != null)
+			{
+				Preprocessor processer = new Preprocessor();
+				try
+				{
+					processer.Process(processedSource);
+					if (processer.Failed)
+					{
+						processedSource = null; // No valid shader
+						Logs.Core.WriteError(processer.Error, Environment.NewLine);
+					}
+				}
+				catch (Exception e)
+				{
+					Logs.Core.WriteError("Failed to load dependencies shader:{1}{0}", LogFormat.Exception(e), Environment.NewLine);
+				}
 			}
 
 			// Load the shader on the backend side

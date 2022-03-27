@@ -4,13 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Duality.Renderer.RenderTargets;
+using Duality.Resources;
 
 namespace Duality.Graphics.Post.Effects
 {
 	public class AdaptLuminance : BaseEffect
 	{
-		private Duality.Resources.Shader _luminanceMapShader;
-		private Duality.Resources.Shader _adaptLuminanceShader;
+		private DrawTechnique _luminanceMapShader;
+		private DrawTechnique _adaptLuminanceShader;
 
 		private LuminanceMapShaderParams _luminanceMapParams;
 		private AdaptLuminanceShaderParams _adaptLuminanceParams;
@@ -44,8 +45,10 @@ namespace Duality.Graphics.Post.Effects
 
 		internal override void LoadResources()
 		{
-			_luminanceMapShader = resourceManager.Load<Duality.Resources.Shader>("/shaders/post/luminance_map");
-			_adaptLuminanceShader = resourceManager.Load<Duality.Resources.Shader>("/shaders/post/adapt_luminance");
+			//_luminanceMapShader = resourceManager.Load<Duality.Resources.Shader>("/shaders/post/luminance_map");
+			//_adaptLuminanceShader = resourceManager.Load<Duality.Resources.Shader>("/shaders/post/adapt_luminance");
+			_luminanceMapShader = new DrawTechnique(ContentProvider.RequestContent<CompoundShader>("shaders/post/luminance_map"), "");
+			_adaptLuminanceShader = new DrawTechnique(ContentProvider.RequestContent<CompoundShader>("shaders/post/adapt_luminance"), "");
 		}
 
 		public RenderTarget Render(HDRSettings settings, RenderTarget input, float deltaTime)

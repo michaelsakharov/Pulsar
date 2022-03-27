@@ -5,16 +5,17 @@ using System.Text;
 using System.Threading.Tasks;
 using Duality.Renderer;
 using Duality.Renderer.RenderTargets;
+using Duality.Resources;
 
 namespace Duality.Graphics.Post.Effects
 {
 	public class Bloom : BaseEffect
 	{
-		private Duality.Resources.Shader _highPassShader;
-		private Duality.Resources.Shader _blurCombineShader;
-		private Duality.Resources.Shader _blurHorizontalShader;
-		private Duality.Resources.Shader _blurVerticalShader;
-		private Duality.Resources.Shader _quadShader;
+		private DrawTechnique _highPassShader;
+		private DrawTechnique _blurCombineShader;
+		private DrawTechnique _blurHorizontalShader;
+		private DrawTechnique _blurVerticalShader;
+		private DrawTechnique _quadShader;
 
 		private HighPassShaderParams _highPassParams;
 		private QuadShaderParams _quadParams;
@@ -67,11 +68,16 @@ namespace Duality.Graphics.Post.Effects
 
 		internal override void LoadResources()
 		{
-			_highPassShader = resourceManager.Load<Duality.Resources.Shader>("/shaders/post/highpass");
-			_blurHorizontalShader = resourceManager.Load<Duality.Resources.Shader>("/shaders/post/blur", "BLUR_HORIZONTAL");
-			_blurVerticalShader = resourceManager.Load<Duality.Resources.Shader>("/shaders/post/blur", "BLUR_VERTICAL");
-			_quadShader = resourceManager.Load<Duality.Resources.Shader>("/shaders/post/quad");
-			_blurCombineShader = resourceManager.Load<Duality.Resources.Shader>("/shaders/post/combine_blur");
+			//_highPassShader = resourceManager.Load<Duality.Resources.Shader>("/shaders/post/highpass");
+			//_blurHorizontalShader = resourceManager.Load<Duality.Resources.Shader>("/shaders/post/blur", "BLUR_HORIZONTAL");
+			//_blurVerticalShader = resourceManager.Load<Duality.Resources.Shader>("/shaders/post/blur", "BLUR_VERTICAL");
+			//_quadShader = resourceManager.Load<Duality.Resources.Shader>("/shaders/post/quad");
+			//_blurCombineShader = resourceManager.Load<Duality.Resources.Shader>("/shaders/post/combine_blur");
+			_highPassShader = new DrawTechnique(ContentProvider.RequestContent<CompoundShader>("shaders/post/highpass"), "");
+			_blurHorizontalShader = new DrawTechnique(ContentProvider.RequestContent<CompoundShader>("shaders/post/blur"), "BLUR_HORIZONTAL");
+			_blurVerticalShader = new DrawTechnique(ContentProvider.RequestContent<CompoundShader>("shaders/post/blur"), "BLUR_VERTICAL");
+			_quadShader = new DrawTechnique(ContentProvider.RequestContent<CompoundShader>("shaders/post/quad"), "");
+			_blurCombineShader = new DrawTechnique(ContentProvider.RequestContent<CompoundShader>("shaders/post/combine_blur"), "");
 		}
 
 		private RenderTarget Downsample(RenderTarget source, RenderTarget destination)

@@ -11,8 +11,8 @@ namespace Duality.Graphics.Post.Effects
 {
     public class SSAO : BaseEffect
     {
-        private Duality.Resources.Shader _shader;
-        private Duality.Resources.Shader _shaderBlur;
+        private DrawTechnique _shader;
+        private DrawTechnique _shaderBlur;
         private SSAOShaderParams _shaderParams;
         private RenderTarget _renderTarget;
         private RenderTarget _renderTargetBlur;
@@ -93,9 +93,11 @@ namespace Duality.Graphics.Post.Effects
 
         internal override void LoadResources()
         {
-            _shader = resourceManager.Load<Duality.Resources.Shader>("/shaders/post/ssao");
-            _shaderBlur = resourceManager.Load<Duality.Resources.Shader>("/shaders/post/ssao_blur");
-        }
+            //_shader = resourceManager.Load<Duality.Resources.Shader>("/shaders/post/ssao");
+            //_shaderBlur = resourceManager.Load<Duality.Resources.Shader>("/shaders/post/ssao_blur");
+			_shader = new DrawTechnique(ContentProvider.RequestContent<CompoundShader>("shaders/post/ssao"), "");
+			_shaderBlur = new DrawTechnique(ContentProvider.RequestContent<CompoundShader>("shaders/post/ssao_blur"), "");
+		}
 
         public RenderTarget Render(Duality.Components.Camera camera, RenderTarget gbuffer)
         {

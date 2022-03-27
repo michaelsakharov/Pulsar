@@ -29,11 +29,11 @@ namespace Duality
 
 			VertexShader.InitDefaultContent();
 			FragmentShader.InitDefaultContent();
+			CompoundShader.InitDefaultContent();
 			DrawTechnique.InitDefaultContent();
 			Pixmap.InitDefaultContent();
 			Texture.InitDefaultContent();
 			Material.InitDefaultContent();
-			RenderSetup.InitDefaultContent();
 			Font.InitDefaultContent();
 			AudioData.InitDefaultContent();
 			Sound.InitDefaultContent();

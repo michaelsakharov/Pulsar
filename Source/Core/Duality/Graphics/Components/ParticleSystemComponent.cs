@@ -30,7 +30,7 @@ namespace Duality.Graphics.Components
                 ParticleSystem.Orientation = gameobj.Transform.Quaternion;
 
                 ParticleSystem.Update(Time.DeltaTime);
-                ParticleSystem.Renderer?.Update(ParticleSystem, Stage, Time.DeltaTime);
+                ParticleSystem.Renderer?.Update(ParticleSystem, Duality.Resources.Scene.Stage, Time.DeltaTime);
             }
         }
     }

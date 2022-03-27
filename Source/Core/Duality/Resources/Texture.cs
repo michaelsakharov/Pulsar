@@ -289,7 +289,7 @@ namespace Duality.Resources
 		/// <param name="sizeMode">Specifies behaviour in case the source data has non-power-of-two dimensions.</param>
 		public void LoadData(ContentRef<Pixmap> basePixmap, TextureSizeMode sizeMode)
 		{
-			if (this.nativeTex == null) this.nativeTex = DualityApp.GraphicsBackend.CreateTexture();
+			if (this.nativeTex == null) this.nativeTex = new NativeTexture();
 			this.needsReload = false;
 			this.basePixmap = basePixmap;
 			this.texSizeMode = sizeMode;
@@ -454,7 +454,7 @@ namespace Duality.Resources
 		/// </summary>
 		protected void SetupNativeRes()
 		{
-			if (this.nativeTex == null) this.nativeTex = DualityApp.GraphicsBackend.CreateTexture();
+			if (this.nativeTex == null) this.nativeTex = new NativeTexture();
 
 			this.nativeTex.SetupEmpty(
 				this.pixelformat,

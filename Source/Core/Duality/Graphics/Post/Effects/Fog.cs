@@ -5,12 +5,13 @@ using System.Text;
 using System.Threading.Tasks;
 using Duality.Graphics.Resources;
 using Duality.Renderer.RenderTargets;
+using Duality.Resources;
 
 namespace Duality.Graphics.Post.Effects
 {
 	public class Fog : BaseEffect
 	{
-		private Duality.Resources.Shader _shader;
+		private DrawTechnique _shader;
 		private ShaderParams _shaderParams;
 
 		public Fog(Backend backend, BatchBuffer quadMesh)
@@ -20,7 +21,8 @@ namespace Duality.Graphics.Post.Effects
 
 		internal override void LoadResources()
 		{
-			_shader = resourceManager.Load<Duality.Resources.Shader>("/shaders/post/fog");
+			//_shader = resourceManager.Load<Duality.Resources.Shader>("/shaders/post/fog");
+			_shader = new DrawTechnique(ContentProvider.RequestContent<CompoundShader>("shaders/post/fog"), "");
 		}
 
 		public void Render(Duality.Components.Camera camera, Stage stage, RenderTarget gbuffer, RenderTarget input, RenderTarget output)
@@ -40,7 +42,7 @@ namespace Duality.Graphics.Post.Effects
 			var inverseViewProjectionMatrix = Matrix4.Invert(view * projection);
 
 			var itView = Matrix4.Invert(Matrix4.Transpose(view));
-			_backend.BeginInstance(_shader.Native.Handle,
+			_backend.BeginInstance(_shader.Handle,
 				new int[] { gbuffer.Textures[3].Handle, input.Textures[0].Handle },
 				new int[] { _backend.DefaultSamplerNoFiltering, _backend.DefaultSamplerNoFiltering });
 			_backend.BindShaderVariable(_shaderParams.SamplerDepth, 0);

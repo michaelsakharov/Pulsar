@@ -5,12 +5,13 @@ using System.Text;
 using System.Threading.Tasks;
 using Duality.Graphics.Resources;
 using Duality.Renderer.RenderTargets;
+using Duality.Resources;
 
 namespace Duality.Graphics.Post.Effects
 {
     public class Visualize : BaseEffect
     {
-        private Duality.Resources.Shader _shader;
+		private DrawTechnique _shader;
         private ShaderParams _shaderParams;
 
         public Visualize(Backend backend, BatchBuffer quadMesh)
@@ -20,8 +21,9 @@ namespace Duality.Graphics.Post.Effects
 
         internal override void LoadResources()
         {
-            _shader = resourceManager.Load<Duality.Resources.Shader>("/shaders/post/visualize");
-        }
+            //_shader = resourceManager.Load<Duality.Resources.Shader>("/shaders/post/visualize");
+			_shader = new DrawTechnique(ContentProvider.RequestContent<CompoundShader>("shaders/post/visualize"), "");
+		}
 
         public void Render(VisualizationMode mode, Duality.Components.Camera camera, RenderTarget gbuffer, RenderTarget ssao, RenderTarget csmShadowBuffer, RenderTarget input, RenderTarget output)
         {

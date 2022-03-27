@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Duality.Resources;
 
 namespace Duality.Graphics.Post.Effects
 {
     public class AtmosphericScattering : BaseEffect
     {
-        private Duality.Resources.Shader _shader;
+        private DrawTechnique _shader;
         private ShaderParams _shaderParams;
 
         private readonly int[] _textures = new int[3];
@@ -22,8 +23,9 @@ namespace Duality.Graphics.Post.Effects
 
         internal override void LoadResources()
         {
-            _shader = resourceManager.Load<Duality.Resources.Shader>("/shaders/post/atmosphericscattering");
-        }
+            //_shader = resourceManager.Load<Duality.Resources.Shader>("/shaders/post/atmosphericscattering");
+			_shader = new DrawTechnique(ContentProvider.RequestContent<CompoundShader>("shaders/post/atmosphericscattering"), "");
+		}
 
         public bool Render(Duality.Components.Camera camera, Stage stage, RenderTarget gbuffer, RenderTarget input, RenderTarget output)
         {

@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Duality.Resources;
 
 namespace Duality.Graphics.Post.Effects
 {
 	public class FXAA : BaseEffect
 	{
-		private Duality.Resources.Shader _shader;
+		private DrawTechnique _shader;
 		private FXAAShaderParams _shaderParams;
 
 		public FXAA(Backend backend, BatchBuffer quadMesh)
@@ -18,7 +19,8 @@ namespace Duality.Graphics.Post.Effects
 
 		internal override void LoadResources()
 		{
-			_shader = resourceManager.Load<Duality.Resources.Shader>("/shaders/post/fxaa");
+			//_shader = resourceManager.Load<Duality.Resources.Shader>("shaders/post/fxaavert");
+			_shader = new DrawTechnique(ContentProvider.RequestContent<CompoundShader>("shaders/post/fxaa"), "");
 		}
 
 		public void Render(RenderTarget input, RenderTarget output)

@@ -10,6 +10,8 @@ using OpenTK.Audio;
 using OpenTK.Audio.OpenAL;
 
 using Duality.Audio;
+using Duality.IO;
+using OpenTK;
 
 namespace Duality.Backend.DefaultOpenTK
 {
@@ -34,6 +36,7 @@ namespace Duality.Backend.DefaultOpenTK
 		private List<NativeAudioSource> streamWorkerQueue       = null;
 		private AutoResetEvent          streamWorkerQueueEvent  = null;
 		private bool                    streamWorkerEnd         = false;
+		private static bool openTKInitialized;
 
 
 		public EffectsExtension EffectsExtension
@@ -71,7 +74,7 @@ namespace Duality.Backend.DefaultOpenTK
 			AudioLibraryLoader.LoadAudioLibrary();
 
 			// Initialize OpenTK, if not done yet
-			DefaultOpenTKBackendPlugin.InitOpenTK();
+			InitOpenTK();
 			
 			Logs.Core.Write("Available devices:" + Environment.NewLine + "{0}", 
 				AudioContext.AvailableDevices.ToString(d => "  " + d + (d == AudioContext.DefaultDevice ? " (Default)" : ""), Environment.NewLine));
@@ -117,6 +120,44 @@ namespace Duality.Backend.DefaultOpenTK
 			this.streamWorker.IsBackground = true;
 			this.streamWorker.Start();
 		}
+		public static void InitOpenTK()
+		{
+			if (openTKInitialized) return;
+			openTKInitialized = true;
+
+			Assembly execAssembly = Assembly.GetEntryAssembly() ?? typeof(DualityApp).Assembly;
+			string execAssemblyDir = PathOp.GetFullPath(PathOp.GetDirectoryName(execAssembly.Location));
+
+			bool inEditor = DualityApp.ExecEnvironment == DualityApp.ExecutionEnvironment.Editor;
+			bool isWindows =
+				Environment.OSVersion.Platform == PlatformID.Win32NT ||
+				Environment.OSVersion.Platform == PlatformID.Win32S ||
+				Environment.OSVersion.Platform == PlatformID.Win32Windows ||
+				Environment.OSVersion.Platform == PlatformID.WinCE;
+			bool genericFolderSDL = isWindows && !FileOp.Exists("SDL2.dll") && !FileOp.Exists(PathOp.Combine(execAssemblyDir, "SDL2.dll"));
+
+			ToolkitOptions options = new ToolkitOptions
+			{
+				// Prefer the native backend in the editor, because it supports GLControl. SDL doesn't.
+				// Also, never use SDL if it isn't in the local game folder, because it might be in PATH on some machines.
+				Backend = (inEditor || genericFolderSDL) ? PlatformBackend.PreferNative : PlatformBackend.Default,
+				// Disable High Resolution support in the editor, because it's not DPI-Aware
+				EnableHighResolution = !inEditor
+			};
+
+			Logs.Core.Write("Initializing OpenTK...");
+			Logs.Core.PushIndent();
+			Logs.Core.Write(
+				"Platform Backend: {0}" + Environment.NewLine +
+				"EnableHighResolution: {1}",
+				options.Backend,
+				options.EnableHighResolution);
+
+			Toolkit.Init(options);
+
+			Logs.Core.PopIndent();
+		}
+
 		void IDualityBackend.Shutdown()
 		{
 			// Shut down the streaming thread

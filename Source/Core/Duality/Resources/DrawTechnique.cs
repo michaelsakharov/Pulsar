@@ -44,6 +44,7 @@ namespace Duality.Resources
 
 		private ContentRef<VertexShader>   vertexShader      = VertexShader.Minimal;
 		private ContentRef<FragmentShader> fragmentShader    = FragmentShader.Minimal;
+		private string paremeters = "";
 
 		[DontSerialize] private ShaderParameterCollection defaultParameters = null;
 		[DontSerialize] private NativeShaderProgram      nativeShader      = null;
@@ -157,6 +158,18 @@ namespace Duality.Resources
 			this.vertexShader = vertexShader;
 			this.fragmentShader = fragmentShader;
 		}
+		public DrawTechnique(ContentRef<VertexShader> vertexShader, ContentRef<FragmentShader> fragmentShader, string paremeters) 
+		{
+			this.vertexShader = vertexShader;
+			this.fragmentShader = fragmentShader;
+			this.paremeters = paremeters;
+		}
+		public DrawTechnique(ContentRef<CompoundShader> libraryShader, string paremeters)
+		{
+			this.vertexShader = new VertexShader(libraryShader.Res.Source);
+			this.fragmentShader = new FragmentShader(libraryShader.Res.Source);
+			this.paremeters = paremeters;
+		}
 
 		/// <summary>
 		/// Compiles the internal shader program of this <see cref="DrawTechnique"/>. This is 
@@ -180,7 +193,7 @@ namespace Duality.Resources
 			List<NativeShaderPart> nativeParts = new List<NativeShaderPart>();
 			foreach (Shader part in parts)
 			{
-				if (!part.Compiled) part.Compile();
+				if (!part.Compiled) part.Compile(paremeters);
 				nativeParts.Add(part.Native);
 			}
 

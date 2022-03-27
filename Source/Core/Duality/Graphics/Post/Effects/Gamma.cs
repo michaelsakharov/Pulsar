@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Duality.Resources;
 
 namespace Duality.Graphics.Post.Effects
 {
 	public class Gamma : BaseEffect
 	{
-		private Duality.Resources.Shader _shader;
+		private DrawTechnique _shader;
 		private GammaShaderParams _shaderParams;
 
         public Duality.Resources.Texture ColorCorrectLUT { get; set; }
@@ -21,7 +22,8 @@ namespace Duality.Graphics.Post.Effects
 
 		internal override void LoadResources()
 		{
-			_shader = resourceManager.Load<Duality.Resources.Shader>("/shaders/post/gamma");
+			//_shader = resourceManager.Load<Duality.Resources.Shader>("/shaders/post/gamma");
+			_shader = new DrawTechnique(ContentProvider.RequestContent<CompoundShader>("shaders/post/gamma"), "");
 		}
 
 		public void Render(RenderTarget input, RenderTarget output)

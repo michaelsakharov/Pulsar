@@ -22,7 +22,7 @@ namespace Duality.Graphics.Particles
                 generator.Generate(deltaTime, particles, startId, endId);
             }
 
-            Matrix4.Rotate(ref orientation, out var rotation);
+            Matrix4.CreateFromQuaternion(ref orientation, out var rotation);
             Matrix4.CreateTranslation(ref position, out var translation);
             Matrix4.Multiply(ref rotation, ref translation, out var world);
 

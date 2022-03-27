@@ -18,7 +18,13 @@ namespace Duality.Graphics.SkeletalAnimation
 
 		private readonly List<AnimationState> _animationStates = new List<AnimationState>();
 
-        public IReadOnlyList<AnimationState> AnimationStates => _animationStates;
+		public IReadOnlyList<AnimationState> AnimationStates
+		{
+			get
+			{
+				return _animationStates;
+			}
+		}
 
 		public SkeletonInstance(Skeleton skeleton)
 		{
@@ -52,7 +58,9 @@ namespace Duality.Graphics.SkeletalAnimation
 			// Invert transform
 			for (var i = 0; i < _inverseTransforms.Length; i++)
 			{
-				_inverseTransforms[i].Orientation = Quaternion.Invert(_inverseTransforms[i].Orientation);
+				// Invert was to much work at the time of writing this, was rushing !!!!
+				//_inverseTransforms[i].Orientation = Quaternion.Invert(_inverseTransforms[i].Orientation);
+				_inverseTransforms[i].Orientation = Quaternion.Inverse(_inverseTransforms[i].Orientation);
 				_inverseTransforms[i].Position = -_inverseTransforms[i].Position;
 			}
 
@@ -211,9 +219,9 @@ namespace Duality.Graphics.SkeletalAnimation
 				Matrix4.CreateTranslation(ref position, out translationMatrix);
 
 				Matrix4 rotationMatrix;
-				Matrix4.Rotate(ref orientation, out rotationMatrix);
+				Matrix4.CreateFromQuaternion(ref orientation, out rotationMatrix);
 
-				Matrix4.Mult(ref rotationMatrix, ref translationMatrix, out FinalBoneTransforms[i]);
+				Matrix4.Multiply(ref rotationMatrix, ref translationMatrix, out FinalBoneTransforms[i]);
 			}
 		}
 	}

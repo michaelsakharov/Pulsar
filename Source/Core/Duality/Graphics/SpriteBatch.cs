@@ -20,7 +20,7 @@ namespace Duality.Graphics
     public class SpriteBatch
     {
         private readonly BatchBuffer _buffer;
-        private readonly Duality.Resources.Shader _shader;
+        private readonly DrawTechnique _shader;
         private ShaderParams _params;
         private readonly Backend _backend;
         private readonly List<QuadInfo> _quads = new List<QuadInfo>();
@@ -53,9 +53,11 @@ namespace Duality.Graphics
                     new Renderer.VertexFormatElement(Renderer.VertexFormatSemantic.Color, Renderer.VertexPointerType.Float, 4, sizeof(float) * 5),
                 }), 32);
 
-            _shader = resourceManager.Load<Duality.Resources.Shader>("/shaders/sprite");
+            //_shader = resourceManager.Load<Duality.Resources.Shader>("/shaders/sprite");
+            //_shader = ContentProvider.RequestContent<Duality.Resources.Shader>("shaders/sprite").Res;
+			_shader = new DrawTechnique(ContentProvider.RequestContent<CompoundShader>("shaders/post/fxaa"), "");
 
-            _quads = new List<QuadInfo>();
+			_quads = new List<QuadInfo>();
             for (var i = 0; i < 32; i++)
             {
                 _quads.Add(new QuadInfo());

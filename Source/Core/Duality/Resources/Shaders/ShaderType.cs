@@ -7,6 +7,8 @@ namespace Duality.Resources
 	public enum ShaderType
 	{
 		Vertex,
-		Fragment
+		Fragment,
+		ComputeShader,
+		Compound
 	}
 }
