@@ -119,7 +119,6 @@ namespace Duality.Renderer
             _textureManager.Dispose();
             _meshManager.Dispose();
             _bufferManager.Dispose();
-            _shaderManager.Dispose();
             _renderTargetManager.Dispose();
 
             if (_ownsContext)
@@ -285,21 +284,6 @@ namespace Duality.Renderer
             _context.SwapBuffers();
         }
 
-        public int CreateShader()
-        {
-            return _shaderManager.Create();
-        }
-
-        public void DestroyShader(int handle)
-        {
-            _addToWorkQueue(() => _shaderManager.Destroy(handle));
-        }
-
-        public bool SetShaderData(int handle, Dictionary<ShaderType, string> sources, out string errors)
-        {
-            return _shaderManager.SetShaderData(handle, sources, out errors);
-        }
-
         public void BindShader(int handle)
         {
             _shaderManager.Bind(handle);
@@ -308,17 +292,6 @@ namespace Duality.Renderer
         public void DispatchCompute(int numGroupsX, int numGroupsY, int numGroupsZ)
         {
             GL.DispatchCompute(numGroupsX, numGroupsY, numGroupsZ);
-        }
-
-        public int GetUniformLocation(int handle, string name)
-        {
-            var programHandle = _shaderManager.GetOpenGLHande(handle);
-            return GL.GetUniformLocation(programHandle, name);
-        }
-
-        public Dictionary<HashedString, int> GetUniforms(int handle)
-        {
-            return _shaderManager.GetUniforms(handle);
         }
 
         public void SetUniformFloat(int handle, float value)
