@@ -189,7 +189,7 @@ namespace Duality.Graphics
 
                 _primaryProfiler.Reset();
 
-                ExecuteCommandStream();
+                ExecuteCommandStream(false);
 
                 _contextReference.SwapBuffers();
 
@@ -210,7 +210,7 @@ namespace Duality.Graphics
             return true;
         }
 
-        unsafe void ExecuteCommandStream()
+        unsafe void ExecuteCommandStream(bool log = false)
         {
             DrawCalls = 0;
 
@@ -227,7 +227,9 @@ namespace Duality.Graphics
                 ptr += sizeof(PacketHeader);
                 position += sizeof(PacketHeader);
 
-                switch (header.OpCode)
+				if (log) Logs.Core.Write("[Render OpCode] " + header.OpCode.ToString());
+				
+				switch (header.OpCode)
                 {
                     case OpCode.BeginPass:
                         {
@@ -241,8 +243,8 @@ namespace Duality.Graphics
                         }
                         break;
                     case OpCode.BeginPass2:
-                        {
-                            var packet = (PacketBeginPass2*)(ptr);
+						{
+							var packet = (PacketBeginPass2*)(ptr);
 
                             RenderSystem.BeginScene(packet->Handle, packet->X, packet->Y, packet->W, packet->H);
                             if (packet->ClearFlags != ClearFlags.None)
@@ -254,8 +256,8 @@ namespace Duality.Graphics
                         }
                         break;
                     case OpCode.BeginInstance:
-                        {
-                            var packet = *(PacketBeginInstance*)(ptr);
+						{
+							var packet = *(PacketBeginInstance*)(ptr);
                             var data = (int*)(ptr + sizeof(PacketBeginInstance));
 
                             RenderSystem.BindShader(packet.ShaderHandle);
