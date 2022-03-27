@@ -156,28 +156,6 @@ namespace Duality.Renderer.Textures
             _handles[index].Initialized = true;
         }
 
-        public void LoadDDS(int handle, byte[] data, out int width, out int height)
-        {
-            ExtractHandle(handle, out int index, out int id);
-
-            width = height = 0;
-
-            if (id == -1 || _handles[index].Id != id)
-                return;
-
-            if (_handles[index].Initialized)
-                return; // TODO ?
-
-            OGL.TextureTarget target;
-            DDS.LoaderDDS.LoadFromStream(data, out _handles[index].OpenGLHandle, out target, out width, out height);
-
-            _handles[index].Target = target;
-
-            GL.Finish();
-
-            _handles[index].Initialized = true;
-        }
-
         public int GetActiveTexture(int textureUnit)
         {
             int index, id;
