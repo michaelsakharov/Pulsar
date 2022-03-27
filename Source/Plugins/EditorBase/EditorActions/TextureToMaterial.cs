@@ -30,7 +30,7 @@ namespace Duality.Editor.Plugins.Base.EditorActions
 		public override void Perform(Texture obj)
 		{
 			string resPath = PathHelper.GetFreePath(obj.FullName, Resource.GetFileExtByType<Material>());
-			Material res = new Material(DrawTechnique.Mask, obj);
+			Material res = new Material(DrawTechnique.Solid, obj);
 			res.Save(resPath);
 		}
 	}

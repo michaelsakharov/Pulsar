@@ -61,7 +61,7 @@ namespace Duality.Editor.Plugins.Base.EditorActions
 				nameTemp += "Program";
 
 			string programPath = PathHelper.GetFreePath(Path.Combine(dirTemp, nameTemp), Resource.GetFileExtByType<DrawTechnique>());
-			DrawTechnique tech = new DrawTechnique(BlendMode.Mask, vert, frag);
+			DrawTechnique tech = new DrawTechnique(vert, frag);
 			tech.Save(programPath);
 		}
 	}

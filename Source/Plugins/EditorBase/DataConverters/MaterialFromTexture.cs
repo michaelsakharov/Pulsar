@@ -6,7 +6,6 @@ using System.IO;
 using Duality;
 using Duality.IO;
 using Duality.Components;
-using Duality.Components.Renderers;
 using Duality.Resources;
 using Duality.Drawing;
 using Duality.Editor;
@@ -55,7 +54,7 @@ namespace Duality.Editor.Plugins.Base.DataConverters
 				if (targetRes == null && convert.AllowedOperations.HasFlag(ConvertOperation.Operation.CreateRes))
 				{
 					string resPath = PathHelper.GetFreePath(baseRes.FullName, Resource.GetFileExtByType<Material>());
-					targetRes = new Material(DrawTechnique.Mask, baseRes);
+					targetRes = new Material(DrawTechnique.Solid, baseRes);
 					targetRes.Save(resPath);
 				}
 

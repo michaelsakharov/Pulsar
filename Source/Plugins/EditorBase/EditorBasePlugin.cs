@@ -9,7 +9,6 @@ using AdamsLair.WinForms.ItemModels;
 using Duality;
 using Duality.IO;
 using Duality.Resources;
-using TextRenderer = Duality.Components.Renderers.TextRenderer;
 
 using Duality.Editor;
 using Duality.Editor.Forms;
@@ -174,14 +173,14 @@ namespace Duality.Editor.Plugins.Base
 			// If a font has been modified, reload it and update all TextRenderers
 			if (resRef.Is<Font>())
 			{
-				foreach (TextRenderer r in Scene.Current.AllObjects.GetComponents<TextRenderer>())
-				{
-					if (r.Text.Fonts.Contains(resRef.As<Font>()))
-					{
-						r.Text.ApplySource();
-						modifiedObjects.Add(r);
-					}
-				}
+				//foreach (TextRenderer r in Scene.Current.AllObjects.GetComponents<TextRenderer>())
+				//{
+				//	if (r.Text.Fonts.Contains(resRef.As<Font>()))
+				//	{
+				//		r.Text.ApplySource();
+				//		modifiedObjects.Add(r);
+				//	}
+				//}
 			}
 			// If its a Pixmap, reload all associated Textures
 			else if (resRef.Is<Pixmap>())
@@ -212,16 +211,16 @@ namespace Duality.Editor.Plugins.Base
 						tex.ReloadData();
 				}
 
-				ContentRef<Texture> texRef = resRef.As<Texture>();
-				foreach (ContentRef<RenderTarget> rt in ContentProvider.GetLoadedContent<RenderTarget>())
-				{
-					if (!rt.IsAvailable) continue;
-					if (rt.Res.Targets.Contains(texRef))
-					{
-						rt.Res.SetupTarget();
-						modifiedObjects.Add(rt.Res);
-					}
-				}
+				//ContentRef<Texture> texRef = resRef.As<Texture>();
+				//foreach (ContentRef<RenderTarget> rt in ContentProvider.GetLoadedContent<RenderTarget>())
+				//{
+				//	if (!rt.IsAvailable) continue;
+				//	if (rt.Res.Targets.Contains(texRef))
+				//	{
+				//		rt.Res.SetupTarget();
+				//		modifiedObjects.Add(rt.Res);
+				//	}
+				//}
 			}
 			// If its some kind of shader, update all associated techniques
 			else if (resRef.Is<Shader>())

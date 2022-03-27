@@ -5,7 +5,6 @@ using System.IO;
 
 using Duality;
 using Duality.Components;
-using Duality.Components.Renderers;
 using Duality.Resources;
 using Duality.Drawing;
 using Duality.Editor;
