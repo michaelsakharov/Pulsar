@@ -128,7 +128,9 @@ namespace Duality.Backend
 			}
 
 			// If needed, care for Mipmaps
-			GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.GenerateMipmap, mipmaps ? 1 : 0);
+			//GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.GenerateMipmap, mipmaps ? 1 : 0);
+			if(mipmaps)
+				GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
 
 			// Setup pixel format
 			GL.TexImage2D(TextureTarget.Texture2D, 0,
