@@ -66,12 +66,13 @@ namespace Duality.MeshImporter.Meshes.Converters
 
 			byte[] buffer = ReadStreamFully(stream, 0);
 
-			IntPtr bufferPtr = Marshal.AllocHGlobal(buffer.Length);
-			Marshal.Copy(buffer, 0, bufferPtr, buffer.Length);
+			//IntPtr bufferPtr = Marshal.AllocHGlobal(buffer.Length);
+			//Marshal.Copy(buffer, 0, bufferPtr, buffer.Length);
 
-			Silk.NET.Assimp.Scene* model = api.ImportFileFromMemory((byte*)bufferPtr, (uint)buffer.Length, (uint)(Silk.NET.Assimp.PostProcessSteps.CalculateTangentSpace | Silk.NET.Assimp.PostProcessSteps.LimitBoneWeights | Silk.NET.Assimp.PostProcessSteps.FlipUVs), "fbx");
+			//Silk.NET.Assimp.Scene* model = api.ImportFileFromMemory((byte*)bufferPtr, (uint)buffer.Length, (uint)(Silk.NET.Assimp.PostProcessSteps.CalculateTangentSpace | Silk.NET.Assimp.PostProcessSteps.LimitBoneWeights | Silk.NET.Assimp.PostProcessSteps.FlipUVs), "fbx");
+			Silk.NET.Assimp.Scene* model = api.ImportFileFromMemory(ref buffer[0], (uint)buffer.Length, (uint)(Silk.NET.Assimp.PostProcessSteps.CalculateTangentSpace | Silk.NET.Assimp.PostProcessSteps.LimitBoneWeights | Silk.NET.Assimp.PostProcessSteps.FlipUVs), "fbx");
 
-			Marshal.FreeHGlobal(bufferPtr);
+			//Marshal.FreeHGlobal(bufferPtr);
 
 			var mesh = new Mesh();
 
