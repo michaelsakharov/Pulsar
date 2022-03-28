@@ -274,11 +274,6 @@ namespace Duality.Renderer
             GL.Viewport(x, y, width, height);
         }
 
-        public void SwapBuffers()
-        {
-            _context.SwapBuffers();
-        }
-
         public void BindShader(int handle)
         {
             _shaderManager.Bind(handle);
