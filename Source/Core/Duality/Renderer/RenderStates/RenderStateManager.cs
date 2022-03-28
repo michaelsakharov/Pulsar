@@ -66,8 +66,8 @@ namespace Duality.Renderer.RenderStates
 
         public void ApplyRenderState(int id)
         {
-            if (_currentStateIndex == id || id >= _states.Count)
-                return;
+            //if (_currentStateIndex == id || id >= _states.Count)
+            //    return;
 
             StateData oldState = _currentStateIndex >= 0 ? _states[_currentStateIndex] : null;
 

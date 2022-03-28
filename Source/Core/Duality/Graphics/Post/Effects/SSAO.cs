@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using Duality.Drawing;
 using Duality.Renderer.RenderTargets;
 using Duality.Resources;
 
@@ -35,23 +36,25 @@ namespace Duality.Graphics.Post.Effects
                     new Definition.Attachment(Definition.AttachmentPoint.Color, Renderer.PixelFormat.Rgba, Renderer.PixelInternalFormat.Rgba8, Renderer.PixelType.Float, 0),
                 }));
 
-            var noise = new Vector3[16];
 			var rnd = new System.Random();
-            for (var i = 0; i < noise.Length; i++)
+			var noise = new Vector3[16];
+			for (var i = 0; i < noise.Length; i++)
             {
                 noise[i] = new Vector3(
                     rnd.NextFloat(-1.0f, 2.0f),
 					rnd.NextFloat(-1.0f, 2.0f),
                     0.0f
                     );
-
+			
                 noise[i] = noise[i].Normalized;
             }
 
             var noiseData = GetBytes(noise);
-            //_noiseTexture = _backend.CreateTexture("ssao_noise", 4, 4, Renderer.PixelFormat.Rgb, Renderer.PixelInternalFormat.Rgb16f, Renderer.PixelType.Float, noiseData, false);
+			//_noiseTexture = _backend.CreateTexture("ssao_noise", 4, 4, Renderer.PixelFormat.Rgb, Renderer.PixelInternalFormat.Rgb16f, Renderer.PixelType.Float, noiseData, false);
+			_noiseTexture = new Texture(new Pixmap(new PixelData(4, 4, noiseData)));
 
-            _noiseSampler = _backend.RenderSystem.CreateSampler(new Dictionary<Renderer.SamplerParameterName, int>
+
+			_noiseSampler = _backend.RenderSystem.CreateSampler(new Dictionary<Renderer.SamplerParameterName, int>
             {
                 { Renderer.SamplerParameterName.TextureMinFilter, (int)Renderer.TextureMinFilter.Nearest },
                 { Renderer.SamplerParameterName.TextureMagFilter, (int)Renderer.TextureMagFilter.Nearest },
@@ -74,20 +77,16 @@ namespace Duality.Graphics.Post.Effects
             }
         }
 
-        private byte[] GetBytes(Vector3[] data)
+        private ColorRgba[] GetBytes(Vector3[] data)
         {
-            int size = Marshal.SizeOf(data[0]);
-            byte[] arr = new byte[size * data.Length];
-
-            IntPtr ptr = Marshal.AllocHGlobal(size);
+			ColorRgba[] arr = new ColorRgba[data.Length];
 
             for (var i = 0; i < data.Length; i++)
             {
-                Marshal.StructureToPtr(data[i], ptr, true);
-                Marshal.Copy(ptr, arr, i * size, size);
-            }
+				arr[i] = new ColorRgba(data[i].X, data[i].Y, data[i].Z);
 
-            Marshal.FreeHGlobal(ptr);
+			}
+
             return arr;
         }
 
@@ -101,7 +100,6 @@ namespace Duality.Graphics.Post.Effects
 
         public RenderTarget Render(Duality.Components.Camera camera, RenderTarget gbuffer)
         {
-			return gbuffer;
             if (_shaderParams == null)
             {
                 _shaderParams = new SSAOShaderParams();

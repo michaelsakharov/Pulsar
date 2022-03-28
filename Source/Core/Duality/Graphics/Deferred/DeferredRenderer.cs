@@ -316,7 +316,7 @@ namespace Duality.Graphics.Deferred
         {
             var frustum = camera.GetFrustum();
 
-            RenderTiledLights(camera, frustum, ref view, ref projection, stage, lights);
+            //RenderTiledLights(camera, frustum, ref view, ref projection, stage, lights);
 
             _backend.ProfileBeginSection(Profiler.DirectionaLight);
             foreach (var light in lights)
@@ -387,11 +387,13 @@ namespace Duality.Graphics.Deferred
 			_backend.BindShaderVariable(shaderParams.CameraPosition, ref Pos);
 
             Vector3 unitZ = Vector3.UnitZ;
-			var quat = light.GameObj.Transform.Quaternion;
-			Vector3.Transform(ref unitZ, ref quat, out var lightDirWS);
-            lightDirWS = lightDirWS.Normalized;
+			//var quat = light.GameObj.Transform.Quaternion;
+			//Vector3.Transform(ref unitZ, ref quat, out var lightDirWS);
+			//lightDirWS = lightDirWS.Normalized;
+			//var lightDirWS = unitZ;
+			var lightDirWS = light.GameObj.Transform.Forward;
 
-            _backend.BindShaderVariable(shaderParams.LightDirection, ref lightDirWS);
+			_backend.BindShaderVariable(shaderParams.LightDirection, ref lightDirWS);
 
             var inverseViewProjectionMatrix = Matrix4.Invert(view * projection);
             _backend.BindShaderVariable(shaderParams.InvViewProjection, ref inverseViewProjectionMatrix);

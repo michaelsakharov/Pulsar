@@ -22,6 +22,7 @@ using Duality.Graphics;
 using OpenTK.Graphics.OpenGL;
 using System.Runtime.InteropServices;
 using System.Diagnostics;
+using Duality.Graphics.Components;
 
 namespace Duality
 {
@@ -712,11 +713,14 @@ namespace Duality
 				var postProcessedResult = PostEffectManager.Render(Scene.Camera, Scene.Stage, gbuffer, lightOutput, shadows, deltaTime);
 
 
+
 				GraphicsBackend.BeginPass(null, Vector4.Zero, ClearFlags.Color);
 
 				SpriteRenderer.RenderQuad(postProcessedResult.Textures[0], Vector2.Zero, new Vector2(WindowSize.X, WindowSize.Y));
 				//SpriteRenderer.RenderQuad(gbuffer.Textures[0], Vector2.Zero, new Vector2(WindowSize.X, WindowSize.Y));
-				//SpriteRenderer.RenderQuad(Texture.DualityLogoMedium.Res, Vector2.Zero, new Vector2(WindowSize.X, WindowSize.Y));
+				//SpriteRenderer.RenderQuad(ssao.Textures[0], Vector2.Zero, new Vector2(WindowSize.X, WindowSize.Y));
+				//SpriteRenderer.RenderQuad(lightOutput.Textures[0], Vector2.Zero, new Vector2(WindowSize.X, WindowSize.Y));
+				//SpriteRenderer.RenderQuad(Texture.Checkerboard.Res, Vector2.Zero, new Vector2(WindowSize.X / 2f, WindowSize.Y / 2f));
 				SpriteRenderer.Render(WindowSize.X, WindowSize.Y);
 
 				//if ((DebugFlags & DebugFlags.ShadowMaps) == DebugFlags.ShadowMaps)

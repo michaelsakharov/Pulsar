@@ -186,20 +186,21 @@ namespace Duality.Graphics.Post
             // We always start by rendering the input texture to a temporary render target
             _backend.BeginPass(_temporaryRenderTargets[1], Vector4.Zero);
 
-            _sprite.RenderQuad(input.Textures[0], Vector2.Zero);
-            _sprite.Render(_temporaryRenderTargets[1].Width, _temporaryRenderTargets[1].Height);
+            //_sprite.RenderQuad(input.Textures[0], Vector2.Zero);
+			_sprite.RenderQuad(input.Textures[0], Vector2.Zero, new Vector2(_temporaryRenderTargets[1].Width, _temporaryRenderTargets[1].Height));
+			_sprite.Render(_temporaryRenderTargets[1].Width, _temporaryRenderTargets[1].Height);
 
             SwapRenderTargets();
 
-            if (EnablePostEffects)
-            {
-                //if (EnableAtmosphere)
-                {
-                    ApplyAtmosphere(camera, gbuffer, stage);
-                }
-                ApplyLumianceBloomAndTonemap(deltaTime);
-                ApplyAA();
-            }
+            //if (EnablePostEffects)
+            //{
+            //    if (EnableAtmosphere)
+            //    {
+            //        ApplyAtmosphere(camera, gbuffer, stage);
+            //    }
+            //    ApplyLumianceBloomAndTonemap(deltaTime);
+            //    ApplyAA();
+            //}
 
             // linear -> to gamma space
             _gamma.Render(_temporaryRenderTargets[0], _temporaryRenderTargets[1]);

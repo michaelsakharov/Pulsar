@@ -56,12 +56,23 @@ namespace Duality.Graphics.Components
 			_boundingSphereLocalSpace.Transform(ref world, out BoundingSphere);
         }
 
-        public override void PrepareRenderOperations(BoundingFrustum frustum, RenderOperations operations)
+		public void GetWorldMatrix(out Matrix4 world)
+		{
+			var scale = Matrix4.CreateScale(gameobj.Transform.Scale);
+			var rotation = Matrix4.Rotate(gameobj.Transform.Quaternion);
+			var translation = Matrix4.CreateTranslation(gameobj.Transform.Pos);
+
+			Matrix4.Multiply(ref scale, ref rotation, out var rotationScale);
+			Matrix4.Multiply(ref rotationScale, ref translation, out world);
+		}
+
+		public override void PrepareRenderOperations(BoundingFrustum frustum, RenderOperations operations)
 		{
 			if (Mesh.IsAvailable == false)
 				return;
 
 			var world = gameobj.Transform.WorldMatrix;
+			//GetWorldMatrix(out var world);
 
 			for (var i = 0; i < Mesh.Res.SubMeshes.Length; i++)
             {

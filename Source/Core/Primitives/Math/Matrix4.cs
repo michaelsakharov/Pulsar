@@ -693,6 +693,14 @@ namespace Duality
 			result.M44 = 1f;
 		}
 
+		public static Matrix4 Rotate(Quaternion q)
+		{
+			Vector3 axis;
+			float angle;
+			q.ToAxisAngle(out axis, out angle);
+			return CreateFromAxisAngle(axis, angle);
+		}
+
 		/// <summary>
 		/// Creates a new rotation <see cref="Matrix4"/> from the specified yaw, pitch and roll values.
 		/// </summary>

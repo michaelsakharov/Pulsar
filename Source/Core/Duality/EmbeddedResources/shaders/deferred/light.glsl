@@ -53,8 +53,9 @@ void main()
 	float depth = texture(samplerDepth, project).x;
 	vec3 position = decodeWorldPosition(project, depth);
 	
-	vec3 lightDir = -normalize(lightDirection);
-	vec3 lightVec = lightDir;
+	//vec3 lightDir = -normalize(lightDirection);
+	//vec3 lightVec = lightDir;
+	vec3 lightDir = -lightDirection;
 	
 	float attenuation = 1.0;
 
@@ -83,10 +84,12 @@ void main()
 		vec3 F0 = vec3(0.08);
 		F0 = mix(F0, diffuse, metallic);
 		
-		lighting = brdf(normal, eyeDir, lightDir, roughness, metallic, lightColor * attenuationNdotL, diffuse, F0);
+		//lighting = brdf(normal, eyeDir, lightDir, roughness, metallic, lightColor * attenuationNdotL, diffuse, F0);
+		lighting = lightColor * attenuationNdotL;
 	}
 
 	oColor.xyz = lighting.xyz;
+	//oColor.xyz = normal;
 	oColor.w = 1.0;
 }
 #endif

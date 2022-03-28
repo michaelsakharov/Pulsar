@@ -9,6 +9,7 @@
 	  <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 	</PropertyGroup>
 	<ItemGroup>
+	  <None Remove="EmbeddedResources\ColorCorrectLUT.png" />
 	  <None Remove="EmbeddedResources\meshes\Barrel.fbx" />
 	  <None Remove="EmbeddedResources\meshes\Cone16.fbx" />
 	  <None Remove="EmbeddedResources\meshes\Cone4.fbx" />
@@ -239,6 +240,7 @@
 	  <None Remove="EmbeddedResources\shaders\post\tonemap.glsl" />
 	  <None Remove="EmbeddedResources\shaders\post\visualize.glsl" />
 	  <None Remove="EmbeddedResources\shaders\sprite.glsl" />
+	  <None Remove="EmbeddedResources\SpecularIntegartion.png" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -256,6 +258,7 @@
 
 	<ItemGroup>
 		<EmbeddedResource Include="EmbeddedResources\Checkerboard.png" />
+		<EmbeddedResource Include="EmbeddedResources\ColorCorrectLUT.png" />
 		<EmbeddedResource Include="EmbeddedResources\DualityLogoBig.png" />
 		<EmbeddedResource Include="EmbeddedResources\DualityLogoMedium.png" />
 		<EmbeddedResource Include="EmbeddedResources\DualityLogoSmall.png" />
@@ -377,6 +380,7 @@
 		<EmbeddedResource Include="EmbeddedResources\EditorSupport\Field.png" />
 		<EmbeddedResource Include="EmbeddedResources\EditorSupport\Property.png" />
 		<EmbeddedResource Include="EmbeddedResources\EditorSupport\iconCmpProfileRenderer.png" />
+		<EmbeddedResource Include="EmbeddedResources\SpecularIntegartion.png" />
 		<EmbeddedResource Include="EmbeddedResources\White.png" />
 		<EmbeddedResource Include="EmbeddedResources\EditorSupport\iconCmpVelocityTracker.png" />
 		<EmbeddedResource Include="EmbeddedResources\EditorSupport\iconResRenderSetup.png" />

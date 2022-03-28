@@ -281,8 +281,21 @@ namespace Duality.Components
 			if (tracker != null)
 				tracker.ResetVelocity(this.Pos);
 		}
+
+		public void GetWorldMatrix(out Matrix4 world)
+		{
+			var scale = Matrix4.CreateScale(gameobj.Transform.Scale);
+			var rotation = Matrix4.Rotate(gameobj.Transform.Quaternion);
+			var translation = Matrix4.CreateTranslation(gameobj.Transform.Pos);
+
+			Matrix4.Multiply(ref scale, ref rotation, out var rotationScale);
+			Matrix4.Multiply(ref rotationScale, ref translation, out world);
+		}
+
 		public void UpdateWorldMatrix()
 		{
+			//GetWorldMatrix(out var test);
+			//this._worldMatrix = test;
 			this._worldMatrix = Matrix4.Identity;
 			this._worldMatrix *= Matrix4.CreateScale(this.scale);
 			this._worldMatrix *= Matrix4.CreateFromYawPitchRoll(this.rotation.Y, this.rotation.X, this.rotation.Z);
