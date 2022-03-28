@@ -223,6 +223,7 @@ namespace Duality.Graphics.Post
             _gamma.Resize(width, height);
             _fxaa.Resize(width, height);
             _tonemap.Resize(width, height);
-        }
-    }
+		}
+		
+	}
 }

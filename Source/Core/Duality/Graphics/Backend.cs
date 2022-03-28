@@ -949,7 +949,7 @@ namespace Duality.Graphics
         {
             Width = width;
             Height = height;
-        }
+		}
 
         /// <summary>
         /// Op codes used in the rendering instructions

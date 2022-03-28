@@ -755,6 +755,21 @@ namespace Duality
 			GraphicsBackend.EndScene();
 		}
 
+		public static void Resize(int width, int height)
+		{
+			DualityApp.WindowSize = new Point2(width, height);
+
+			// Destroy the current Rendering system
+			GraphicsBackend.Resize(width, height);
+			//if (ShadowRenderer != null) ShadowRenderer.Resize(width, height);
+			if (DeferredRenderer != null) DeferredRenderer.Resize(width, height);
+			if (ShadowBufferRenderer != null) ShadowBufferRenderer.Resize(width, height);
+			//if (SpriteRenderer != null) SpriteRenderer.Resize(width, height);
+
+			// The Post Processing system can handle Dynamic Resizing!
+			if (PostEffectManager != null) PostEffectManager.Resize(width, height);
+		}
+
 		/// <summary>
 		/// Given the specified window size, this method calculates the window rectangle of the rendered
 		/// viewport, as well as the game's rendered image size while taking into account application settings

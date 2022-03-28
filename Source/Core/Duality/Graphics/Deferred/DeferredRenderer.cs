@@ -111,7 +111,7 @@ namespace Duality.Graphics.Deferred
 						new Definition.Attachment(Definition.AttachmentPoint.Depth, Renderer.PixelFormat.DepthComponent, Renderer.PixelInternalFormat.DepthComponent16, Renderer.PixelType.Float, 0)
                     }));
 
-            //_ambientLightShader = _resourceManager.Load<Duality.Resources.Shader>("/shaders/deferred/ambient");
+			//_ambientLightShader = _resourceManager.Load<Duality.Resources.Shader>("/shaders/deferred/ambient");
 			_ambientLightShader = new DrawTechnique(Shader.LoadEmbeddedShaderSource("shaders/deferred/ambient.glsl"), "");
 
 			// Init light shaders
@@ -168,6 +168,14 @@ namespace Duality.Graphics.Deferred
             _lightToShadowIndexCSBuffer = DualityApp.GraphicsBackend.RenderSystem.CreateBuffer(BufferTarget.ShaderStorageBuffer, true);
 			DualityApp.GraphicsBackend.RenderSystem.SetBufferData(_lightToShadowIndexCSBuffer, _lightToShadowIndex, true, true);
         }
+
+		public void Resize(int width, int height)
+		{
+
+			_screenSize = new Vector2(width, height);
+			DualityApp.GraphicsBackend.ResizeRenderTarget(_gbuffer, width, height);
+			DualityApp.GraphicsBackend.ResizeRenderTarget(_lightAccumulationTarget, width, height);
+		}
 
         public void InitializeHandles()
         {

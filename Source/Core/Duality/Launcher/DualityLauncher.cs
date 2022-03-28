@@ -167,7 +167,14 @@ namespace Duality.Launcher
 
 		private void Window_Resize(object sender, EventArgs e)
 		{
-			DualityApp.WindowSize = this.Size;
+			DualityApp.Resize(Size.X, Size.Y);
+			//DualityApp.GraphicsBackend.Resize(Size.X, Size.Y);
+
+			//if(DualityApp.ShadowRenderer != null) DualityApp.ShadowRenderer.Resize(Size.X, Size.Y);
+			//if(DualityApp.DeferredRenderer != null) DualityApp.DeferredRenderer.Resize(Size.X, Size.Y);
+			//if (DualityApp.ShadowBufferRenderer != null) DualityApp.ShadowBufferRenderer.Resize(Size.X, Size.Y);
+			//if (DualityApp.PostEffectManager != null) DualityApp.PostEffectManager.Resize(Size.X, Size.Y);
+			//if(DualityApp.SpriteRenderer != null) DualityApp.SpriteRenderer.Resize(Size.X, Size.Y);
 			//DrawDevice.RenderVoid(new Rect(this.Size));
 		}
 

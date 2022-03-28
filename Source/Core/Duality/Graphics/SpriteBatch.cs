@@ -181,6 +181,12 @@ namespace Duality.Graphics
 			DualityApp.GraphicsBackend.EndInstance();
         }
 
+		public void Dispose()
+		{
+			_buffer.Dispose();
+			_shader.Dispose();
+		}
+
         class ShaderParams
         {
             public int HandleModelViewProjection = 0;
