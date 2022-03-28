@@ -21,7 +21,7 @@ namespace Duality.Components
 	{
 		public bool Orthographic = false;
 
-		public Matrix4? CustomViewMatrix = null;
+		[DontSerialize] public Matrix4? CustomViewMatrix = null;
 
 		public float NearClipDistance = 0.1f;
 		public float FarClipDistance = 1000f;
@@ -32,7 +32,7 @@ namespace Duality.Components
 
 		[DontSerialize] private BoundingFrustum Frustum = new BoundingFrustum(Matrix4.Identity);
 
-
+		[EditorHintFlags(MemberFlags.Invisible)]
 		public Quaternion Orientation
 		{
 			get
