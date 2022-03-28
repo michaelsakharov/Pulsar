@@ -38,9 +38,9 @@ namespace Duality.Graphics.Particles.Renderers
 
         private readonly BatchBuffer _buffer;
 
-        public BillboardRenderer(Backend backend)
+        public BillboardRenderer()
         {
-            _buffer = new BatchBuffer(backend.RenderSystem, new Renderer.VertexFormat(new Renderer.VertexFormatElement[]
+            _buffer = new BatchBuffer(DualityApp.GraphicsBackend.RenderSystem, new Renderer.VertexFormat(new Renderer.VertexFormatElement[]
                 {
                     new Renderer.VertexFormatElement(Renderer.VertexFormatSemantic.Position, Renderer.VertexPointerType.Float, 3, 0),
                     new Renderer.VertexFormatElement(Renderer.VertexFormatSemantic.TexCoord, Renderer.VertexPointerType.Float, 2, sizeof(float) * 3),

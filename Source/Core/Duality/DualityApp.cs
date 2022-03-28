@@ -677,10 +677,10 @@ namespace Duality
 		/// </summary>
 		public static void RenderScene(float deltaTime)
 		{
-			if (ShadowRenderer == null) ShadowRenderer = new Graphics.Deferred.ShadowRenderer(GraphicsBackend);
-			if(DeferredRenderer == null) DeferredRenderer = new Graphics.Deferred.DeferredRenderer(GraphicsBackend, ShadowRenderer, GraphicsBackend.Width, GraphicsBackend.Height);
-			if(ShadowBufferRenderer == null) ShadowBufferRenderer = new Graphics.Deferred.ShadowBufferRenderer(GraphicsBackend, GraphicsBackend.Width, GraphicsBackend.Height);
-			if(PostEffectManager == null) PostEffectManager = new Graphics.Post.PostEffectManager(GraphicsBackend, GraphicsBackend.Width, GraphicsBackend.Height);
+			if (ShadowRenderer == null) ShadowRenderer = new Graphics.Deferred.ShadowRenderer();
+			if(DeferredRenderer == null) DeferredRenderer = new Graphics.Deferred.DeferredRenderer(ShadowRenderer, GraphicsBackend.Width, GraphicsBackend.Height);
+			if(ShadowBufferRenderer == null) ShadowBufferRenderer = new Graphics.Deferred.ShadowBufferRenderer(GraphicsBackend.Width, GraphicsBackend.Height);
+			if(PostEffectManager == null) PostEffectManager = new Graphics.Post.PostEffectManager(GraphicsBackend.Width, GraphicsBackend.Height);
 			if(SpriteRenderer == null) SpriteRenderer = GraphicsBackend.CreateSpriteBatch();
 
 			GraphicsBackend.BeginScene();

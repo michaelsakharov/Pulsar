@@ -14,8 +14,8 @@ namespace Duality.Graphics.Post.Effects
 		private DrawTechnique _shader;
         private ShaderParams _shaderParams;
 
-        public Visualize(Backend backend, BatchBuffer quadMesh)
-            : base(backend, quadMesh)
+        public Visualize(BatchBuffer quadMesh)
+            : base(quadMesh)
         {
         }
 
@@ -33,29 +33,29 @@ namespace Duality.Graphics.Post.Effects
                 _shader.BindUniformLocations(_shaderParams);
             }
 
-            _backend.BeginPass(output, Vector4.Zero);
+			DualityApp.GraphicsBackend.BeginPass(output, Vector4.Zero);
 
             int ssaoHandle = 0;
             if (ssao != null)
                 ssaoHandle = ssao.Textures[0].Handle;
 
-            _backend.BeginInstance(_shader.Handle,
+			DualityApp.GraphicsBackend.BeginInstance(_shader.Handle,
                 new int[] { gbuffer.Textures[0].Handle, gbuffer.Textures[1].Handle, gbuffer.Textures[2].Handle, gbuffer.Textures[3].Handle, ssaoHandle, csmShadowBuffer.Textures[0].Handle },
-                new int[] { _backend.DefaultSamplerNoFiltering, _backend.DefaultSamplerNoFiltering, _backend.DefaultSamplerNoFiltering, _backend.DefaultSamplerNoFiltering, _backend.DefaultSamplerNoFiltering, _backend.DefaultSamplerNoFiltering });
-            _backend.BindShaderVariable(_shaderParams.SamplerGBuffer0, 0);
-            _backend.BindShaderVariable(_shaderParams.SamplerGBuffer1, 1);
-            _backend.BindShaderVariable(_shaderParams.SamplerGBuffer2, 2);
-            _backend.BindShaderVariable(_shaderParams.SamplerGBuffer3, 3);
-            _backend.BindShaderVariable(_shaderParams.SamplerSSAO, 4);
-            _backend.BindShaderVariable(_shaderParams.SamplerCSM, 7);
-            _backend.BindShaderVariable(_shaderParams.VisualizationMode, (int)mode);
+                new int[] { DualityApp.GraphicsBackend.DefaultSamplerNoFiltering, DualityApp.GraphicsBackend.DefaultSamplerNoFiltering, DualityApp.GraphicsBackend.DefaultSamplerNoFiltering, DualityApp.GraphicsBackend.DefaultSamplerNoFiltering, DualityApp.GraphicsBackend.DefaultSamplerNoFiltering, DualityApp.GraphicsBackend.DefaultSamplerNoFiltering });
+			DualityApp.GraphicsBackend.BindShaderVariable(_shaderParams.SamplerGBuffer0, 0);
+            DualityApp.GraphicsBackend.BindShaderVariable(_shaderParams.SamplerGBuffer1, 1);
+            DualityApp.GraphicsBackend.BindShaderVariable(_shaderParams.SamplerGBuffer2, 2);
+            DualityApp.GraphicsBackend.BindShaderVariable(_shaderParams.SamplerGBuffer3, 3);
+            DualityApp.GraphicsBackend.BindShaderVariable(_shaderParams.SamplerSSAO, 4);
+            DualityApp.GraphicsBackend.BindShaderVariable(_shaderParams.SamplerCSM, 7);
+            DualityApp.GraphicsBackend.BindShaderVariable(_shaderParams.VisualizationMode, (int)mode);
 
             var clipPlanes = new Vector2(camera.NearClipDistance, camera.FarClipDistance);
-            _backend.BindShaderVariable(_shaderParams.CameraClipPlanes, ref clipPlanes);
+			DualityApp.GraphicsBackend.BindShaderVariable(_shaderParams.CameraClipPlanes, ref clipPlanes);
 
-            _backend.DrawMesh(_quadMesh.MeshHandle);
+			DualityApp.GraphicsBackend.DrawMesh(_quadMesh.MeshHandle);
 
-            _backend.EndPass();
+			DualityApp.GraphicsBackend.EndPass();
         }
 
         class ShaderParams

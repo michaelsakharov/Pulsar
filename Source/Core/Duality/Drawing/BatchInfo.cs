@@ -315,7 +315,7 @@ namespace Duality.Drawing
 		[NonSerialized] private int[] _samplers;
 		[NonSerialized] private bool Initialized;
 
-		public void Initialize(Duality.Graphics.Backend backend)
+		public void Initialize()
 		{
 			Initialized = true;
 			_handles = new ShaderHandles();
@@ -333,25 +333,25 @@ namespace Duality.Drawing
 			foreach (var samplerInfo in Textures)
 			{
 				_textureHandles[i] = samplerInfo.Item2.Res.Handle;
-				_samplers[i] = backend.DefaultSampler;
+				_samplers[i] = DualityApp.GraphicsBackend.DefaultSampler;
 				_samplerToTexture[i] = tech.GetUniform(samplerInfo.Item1);
 				i++;
 			}
 		}
 
-		public void BeginInstance(Duality.Graphics.Backend backend, Camera camera, int renderStateId)
+		public void BeginInstance(Camera camera, int renderStateId)
 		{
 			if (!Initialized)
 			{
-				Initialize(backend);
+				Initialize();
 			}
 
 			DrawTechnique tech = this.technique.Res ?? DrawTechnique.Solid.Res;
 
-			backend.BeginInstance(tech.Handle, _textureHandles, samplers: _samplers, renderStateId: renderStateId);
+			DualityApp.GraphicsBackend.BeginInstance(tech.Handle, _textureHandles, samplers: _samplers, renderStateId: renderStateId);
 			for (var i = 0; i < _samplerToTexture.Length; i++)
 			{
-				backend.BindShaderVariable(_samplerToTexture[i], i);
+				DualityApp.GraphicsBackend.BindShaderVariable(_samplerToTexture[i], i);
 			}
 
 			// Bind Shader
@@ -362,9 +362,9 @@ namespace Duality.Drawing
 			ShaderFieldInfo[] varInfo = nativeShader.Fields;
 			int[] locations = nativeShader.FieldLocations;
 
-			backend.BindShaderVariable(_handles.Time, backend.ElapsedTime);
+			DualityApp.GraphicsBackend.BindShaderVariable(_handles.Time, DualityApp.GraphicsBackend.ElapsedTime);
 			Vector3 camPos = camera.GameObj.Transform.Pos;
-			backend.BindShaderVariable(_handles.CameraPosition, ref camPos);
+			DualityApp.GraphicsBackend.BindShaderVariable(_handles.CameraPosition, ref camPos);
 
 			// Setup sampler bindings and uniform data
 			for (int i = 0; i < varInfo.Length; i++)
@@ -387,13 +387,13 @@ namespace Duality.Drawing
 					object data = GetValue(field.Name, field.Type);
 					if (data == null)
 						continue;
-					SetUniform(backend, field, location, data);
+					SetUniform(field, location, data);
 				}
 			}
 			//NativeTexture.ResetBinding(curSamplerIndex);
 		}
 
-		public static void SetUniform(Duality.Graphics.Backend backend, ShaderFieldInfo field, int location, object data)
+		public static void SetUniform(ShaderFieldInfo field, int location, object data)
 		{
 			if (field.Scope != ShaderFieldScope.Uniform) return;
 			if (location == -1) return;
@@ -401,32 +401,32 @@ namespace Duality.Drawing
 			{
 				case ShaderFieldType.Bool:
 				case ShaderFieldType.Int:
-					backend.BindShaderVariable(location, (int)data);
+					DualityApp.GraphicsBackend.BindShaderVariable(location, (int)data);
 					break;
 				case ShaderFieldType.Float:
-					backend.BindShaderVariable(location, (float)data);
+					DualityApp.GraphicsBackend.BindShaderVariable(location, (float)data);
 					break;
 				case ShaderFieldType.Vec2:
 					var vec2 = (Vector2)data;
-					backend.BindShaderVariable(location, ref vec2);
+					DualityApp.GraphicsBackend.BindShaderVariable(location, ref vec2);
 					break;
 				case ShaderFieldType.Vec3:
 					var vec3 = (Vector3)data;
-					backend.BindShaderVariable(location, ref vec3);
+					DualityApp.GraphicsBackend.BindShaderVariable(location, ref vec3);
 					break;
 				case ShaderFieldType.Vec4:
 					var vec4 = (Vector4)data;
-					backend.BindShaderVariable(location, ref vec4);
+					DualityApp.GraphicsBackend.BindShaderVariable(location, ref vec4);
 					break;
 				case ShaderFieldType.Mat2:
 					break;
 				case ShaderFieldType.Mat3:
 					//var mat3 = (Matrix3)data;
-					//backend.BindShaderVariable(location, ref mat3);
+					//DualityApp.GraphicsBackend.BindShaderVariable(location, ref mat3);
 					break;
 				case ShaderFieldType.Mat4:
 					var mat2 = (Matrix4)data;
-					backend.BindShaderVariable(location, ref mat2);
+					DualityApp.GraphicsBackend.BindShaderVariable(location, ref mat2);
 					break;
 			}
 		}
@@ -435,21 +435,20 @@ namespace Duality.Drawing
 		/// Bind the material, this will call BeginInstance on the backend
 		/// It is up to the caller to call EndInstance
 		/// </summary>
-		/// <param name="backend"></param>
 		/// <param name="world"></param>
 		/// <param name="worldView"></param>
 		/// <param name="itWorldView"></param>
 		/// <param name="modelViewProjection"></param>
-		public void BindPerObject(Duality.Graphics.Backend backend, ref Matrix4 world, ref Matrix4 worldView, ref Matrix4 itWorld, ref Matrix4 modelViewProjection, Graphics.SkeletalAnimation.SkeletonInstance skeleton)
+		public void BindPerObject(ref Matrix4 world, ref Matrix4 worldView, ref Matrix4 itWorld, ref Matrix4 modelViewProjection, Graphics.SkeletalAnimation.SkeletonInstance skeleton)
 		{
-			backend.BindShaderVariable(_handles.ModelViewProjection, ref modelViewProjection);
-			backend.BindShaderVariable(_handles.World, ref world);
-			backend.BindShaderVariable(_handles.WorldView, ref worldView);
-			backend.BindShaderVariable(_handles.ItWorld, ref itWorld);
+			DualityApp.GraphicsBackend.BindShaderVariable(_handles.ModelViewProjection, ref modelViewProjection);
+			DualityApp.GraphicsBackend.BindShaderVariable(_handles.World, ref world);
+			DualityApp.GraphicsBackend.BindShaderVariable(_handles.WorldView, ref worldView);
+			DualityApp.GraphicsBackend.BindShaderVariable(_handles.ItWorld, ref itWorld);
 
 			if (skeleton != null)
 			{
-				backend.BindShaderVariable(_handles.Bones, ref skeleton.FinalBoneTransforms);
+				DualityApp.GraphicsBackend.BindShaderVariable(_handles.Bones, ref skeleton.FinalBoneTransforms);
 			}
 		}
 

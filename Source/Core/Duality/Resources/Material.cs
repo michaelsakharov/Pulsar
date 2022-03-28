@@ -231,14 +231,14 @@ namespace Duality.Resources
 			return this.info.GetTexture(name);
 		}
 
-		public void BeginInstance(Duality.Graphics.Backend backend, Camera camera, int renderStateId)
+		public void BeginInstance(Camera camera, int renderStateId)
 		{
-			info.BeginInstance(backend, camera, renderStateId);
+			info.BeginInstance(camera, renderStateId);
 		}
 
-		public void BindPerObject(Duality.Graphics.Backend backend, ref Matrix4 world, ref Matrix4 worldView, ref Matrix4 itWorld, ref Matrix4 modelViewProjection, Graphics.SkeletalAnimation.SkeletonInstance skeleton)
+		public void BindPerObject(ref Matrix4 world, ref Matrix4 worldView, ref Matrix4 itWorld, ref Matrix4 modelViewProjection, Graphics.SkeletalAnimation.SkeletonInstance skeleton)
 		{
-			info.BindPerObject(backend, ref world, ref worldView, ref itWorld, ref modelViewProjection, skeleton);
+			info.BindPerObject(ref world, ref worldView, ref itWorld, ref modelViewProjection, skeleton);
 		}
 
 		protected override void OnLoaded()

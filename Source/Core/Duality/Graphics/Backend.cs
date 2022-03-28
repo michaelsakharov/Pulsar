@@ -937,7 +937,7 @@ namespace Duality.Graphics
 
         public SpriteBatch CreateSpriteBatch()
         {
-            return new SpriteBatch(this, RenderSystem);
+            return new SpriteBatch(RenderSystem);
         }
 
         public int CreateRenderState(bool enableAlphaBlend = false, bool enableDepthWrite = true, bool enableDepthTest = true, BlendingFactorSrc src = BlendingFactorSrc.Zero, BlendingFactorDest dest = BlendingFactorDest.One, CullFaceMode cullFaceMode = CullFaceMode.Back, bool enableCullFace = true, DepthFunction depthFunction = DepthFunction.Less, bool wireFrame = false)

@@ -22,7 +22,6 @@ namespace Duality.Graphics
         private readonly BatchBuffer _buffer;
         private readonly DrawTechnique _shader;
         private ShaderParams _params;
-        private readonly Backend _backend;
         private readonly List<QuadInfo> _quads = new List<QuadInfo>();
         private int _lastQuad = 0;
 
@@ -37,14 +36,12 @@ namespace Duality.Graphics
         /// <summary>
         /// Should always be created through Backend.CreateSpriteBatch
         /// </summary>
-        internal SpriteBatch(Backend backend, Renderer.RenderSystem renderSystem)
+        internal SpriteBatch(Renderer.RenderSystem renderSystem)
         {
-            if (backend == null)
+            if (DualityApp.GraphicsBackend == null)
                 throw new ArgumentNullException("backend");
             if (renderSystem == null)
                 throw new ArgumentNullException("renderSystem");
-
-            _backend = backend;
 
             _buffer = new BatchBuffer(renderSystem, new Renderer.VertexFormat(new Renderer.VertexFormatElement[]
                 {
@@ -63,10 +60,10 @@ namespace Duality.Graphics
                 _quads.Add(new QuadInfo());
             }
 
-            _renderStateAlphaBlend = _backend.CreateRenderState(true, false, false, Renderer.BlendingFactorSrc.SrcAlpha, Renderer.BlendingFactorDest.OneMinusSrcAlpha, Renderer.CullFaceMode.Front);
-            _renderStateNoAlphaBlend = _backend.CreateRenderState(false, false, false, Renderer.BlendingFactorSrc.Zero, Renderer.BlendingFactorDest.One, Renderer.CullFaceMode.Front);
+            _renderStateAlphaBlend = DualityApp.GraphicsBackend.CreateRenderState(true, false, false, Renderer.BlendingFactorSrc.SrcAlpha, Renderer.BlendingFactorDest.OneMinusSrcAlpha, Renderer.CullFaceMode.Front);
+            _renderStateNoAlphaBlend = DualityApp.GraphicsBackend.CreateRenderState(false, false, false, Renderer.BlendingFactorSrc.Zero, Renderer.BlendingFactorDest.One, Renderer.CullFaceMode.Front);
 
-            _samplerDistanceField = _backend.RenderSystem.CreateSampler(new Dictionary<SamplerParameterName, int>
+            _samplerDistanceField = DualityApp.GraphicsBackend.RenderSystem.CreateSampler(new Dictionary<SamplerParameterName, int>
             {
                 { SamplerParameterName.TextureMinFilter, (int)TextureMinFilter.LinearMipmapNearest },
                 { SamplerParameterName.TextureMagFilter, (int)TextureMagFilter.Linear }
@@ -137,7 +134,7 @@ namespace Duality.Graphics
                 {
                     if (lastTexture != null)
                     {
-                        _buffer.EndInline(_backend);
+                        _buffer.EndInline();
                         SubmitBatch(lastTexture, lastFlags, lastSmoothing, ref projectionMatrix);
                     }
 
@@ -150,7 +147,7 @@ namespace Duality.Graphics
                 _buffer.AddQuadInverseUV(quad.Position, quad.Size, quad.UvPositon, quad.UvSize, quad.Color);
             }
 
-            _buffer.EndInline(_backend);
+            _buffer.EndInline();
             SubmitBatch(lastTexture, lastFlags, lastSmoothing, ref projectionMatrix);
 
             _lastQuad = 0;
@@ -167,7 +164,7 @@ namespace Duality.Graphics
             }
             else
             {
-                _samplers[0] = _backend.DefaultSamplerNoFiltering;
+                _samplers[0] = DualityApp.GraphicsBackend.DefaultSamplerNoFiltering;
                 _shaderSettings.Y = 0;
             }
 
@@ -176,12 +173,12 @@ namespace Duality.Graphics
 
             var renderStateId = alphaBlend ? _renderStateAlphaBlend : _renderStateNoAlphaBlend;
 
-            _backend.BeginInstance(_shader.Handle, new int[] { texture.Handle }, _samplers, renderStateId);
-            _backend.BindShaderVariable(_params.HandleDiffuseTexture, 0);
-            _backend.BindShaderVariable(_params.Settings, ref _shaderSettings);
-            _backend.BindShaderVariable(_params.HandleModelViewProjection, ref projectionMatrix);
-            _backend.DrawMesh(_buffer.MeshHandle);
-            _backend.EndInstance();
+            DualityApp.GraphicsBackend.BeginInstance(_shader.Handle, new int[] { texture.Handle }, _samplers, renderStateId);
+            DualityApp.GraphicsBackend.BindShaderVariable(_params.HandleDiffuseTexture, 0);
+            DualityApp.GraphicsBackend.BindShaderVariable(_params.Settings, ref _shaderSettings);
+            DualityApp.GraphicsBackend.BindShaderVariable(_params.HandleModelViewProjection, ref projectionMatrix);
+            DualityApp.GraphicsBackend.DrawMesh(_buffer.MeshHandle);
+			DualityApp.GraphicsBackend.EndInstance();
         }
 
         class ShaderParams

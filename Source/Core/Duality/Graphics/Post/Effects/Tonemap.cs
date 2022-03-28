@@ -16,10 +16,10 @@ namespace Duality.Graphics.Post.Effects
 		private readonly int[] _textures = new int[4];
 		private readonly int[] _samplers;
 
-		public Tonemap(Backend backend, BatchBuffer quadMesh)
-			: base(backend, quadMesh)
+		public Tonemap(BatchBuffer quadMesh)
+			: base(quadMesh)
 		{
-			int blurSampler = _backend.RenderSystem.CreateSampler(new Dictionary<SamplerParameterName, int>
+			int blurSampler = DualityApp.GraphicsBackend.RenderSystem.CreateSampler(new Dictionary<SamplerParameterName, int>
 			{
 				{ SamplerParameterName.TextureMinFilter, (int)TextureMinFilter.Linear },
 				{ SamplerParameterName.TextureMagFilter, (int)TextureMagFilter.Linear },
@@ -27,7 +27,7 @@ namespace Duality.Graphics.Post.Effects
 				{ SamplerParameterName.TextureWrapT, (int)TextureWrapMode.ClampToEdge }
 			});
 
-			_samplers = new int[] { _backend.DefaultSamplerNoFiltering, _backend.DefaultSampler, blurSampler, blurSampler };
+			_samplers = new int[] { DualityApp.GraphicsBackend.DefaultSamplerNoFiltering, DualityApp.GraphicsBackend.DefaultSampler, blurSampler, blurSampler };
 		}
 
 		internal override void LoadResources()
@@ -44,7 +44,7 @@ namespace Duality.Graphics.Post.Effects
 				_shader.BindUniformLocations(_shaderParams);
 			}
 
-			_backend.BeginPass(output, new Vector4(0.0f, 0.0f, 0.0f, 1.0f));
+			DualityApp.GraphicsBackend.BeginPass(output, new Vector4(0.0f, 0.0f, 0.0f, 1.0f));
 
 			_textures[0] = input.Textures[0].Handle;
 			_textures[1] = luminance.Textures[0].Handle;
@@ -53,19 +53,19 @@ namespace Duality.Graphics.Post.Effects
 			if (settings.EnableBloom)
 				_textures[activeTexture++] = bloom.Textures[0].Handle;
 
-			_backend.BeginInstance(_shader.Handle, _textures, samplers: _samplers);
-			_backend.BindShaderVariable(_shaderParams.SamplerScene, 0);
-			_backend.BindShaderVariable(_shaderParams.SamplerBloom, 2);
-			_backend.BindShaderVariable(_shaderParams.SamplerLensFlares, 3);
-			_backend.BindShaderVariable(_shaderParams.SamplerLuminance, 1);
-			_backend.BindShaderVariable(_shaderParams.KeyValue, settings.KeyValue);
-            _backend.BindShaderVariable(_shaderParams.AutoKey, settings.AutoKey ? 1 : 0);
-            _backend.BindShaderVariable(_shaderParams.EnableBloom, settings.EnableBloom ? 1 : 0);
-			_backend.BindShaderVariable(_shaderParams.BloomStrength, settings.BloomStrength);
-            _backend.BindShaderVariable(_shaderParams.TonemapOperator, (int)settings.TonemapOperator);
+			DualityApp.GraphicsBackend.BeginInstance(_shader.Handle, _textures, samplers: _samplers);
+			DualityApp.GraphicsBackend.BindShaderVariable(_shaderParams.SamplerScene, 0);
+			DualityApp.GraphicsBackend.BindShaderVariable(_shaderParams.SamplerBloom, 2);
+			DualityApp.GraphicsBackend.BindShaderVariable(_shaderParams.SamplerLensFlares, 3);
+			DualityApp.GraphicsBackend.BindShaderVariable(_shaderParams.SamplerLuminance, 1);
+			DualityApp.GraphicsBackend.BindShaderVariable(_shaderParams.KeyValue, settings.KeyValue);
+            DualityApp.GraphicsBackend.BindShaderVariable(_shaderParams.AutoKey, settings.AutoKey ? 1 : 0);
+            DualityApp.GraphicsBackend.BindShaderVariable(_shaderParams.EnableBloom, settings.EnableBloom ? 1 : 0);
+			DualityApp.GraphicsBackend.BindShaderVariable(_shaderParams.BloomStrength, settings.BloomStrength);
+			DualityApp.GraphicsBackend.BindShaderVariable(_shaderParams.TonemapOperator, (int)settings.TonemapOperator);
 
-			_backend.DrawMesh(_quadMesh.MeshHandle);
-			_backend.EndPass();
+			DualityApp.GraphicsBackend.DrawMesh(_quadMesh.MeshHandle);
+			DualityApp.GraphicsBackend.EndPass();
 		}
 
 		class TonemapShaderParams

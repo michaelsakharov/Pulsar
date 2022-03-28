@@ -43,8 +43,6 @@ namespace Duality.Graphics.Deferred
         public readonly float[] SplitBiases = new float[5] { 0.015f, 0.0015f, 0.0015f, 0.0015f, 0.0015f };
         public bool StabilizeCascades = true;
 
-        private Backend _backend;
-
         private readonly PerFrameData[] _perFrameData = new PerFrameData[1];
         private int _perFrameDataBuffer;
 
@@ -53,15 +51,13 @@ namespace Duality.Graphics.Deferred
         private Matrix4[] _worldMatrices = new Matrix4[4096];
         private DrawMeshMultiData[] _drawMeshMultiData = new DrawMeshMultiData[4096];
         
-        public ShadowRenderer(Backend backend, int cascadeCount = MaxCascadeCount, int resolution = DefaultResolution)
+        public ShadowRenderer(int cascadeCount = MaxCascadeCount, int resolution = DefaultResolution)
         {
-            _backend = backend ?? throw new ArgumentNullException(nameof(backend));
-
             // Create cascade render targets
             SetCascadeCountAndResolution(cascadeCount, DefaultResolution);
 
             // Setup render states
-            _shadowsRenderState = _backend.CreateRenderState(false, true, true, enableCullFace: false);
+            _shadowsRenderState = DualityApp.GraphicsBackend.CreateRenderState(false, true, true, enableCullFace: false);
 
             var vertexFormat = new VertexFormat(new VertexFormatElement[]
             {
@@ -97,13 +93,13 @@ namespace Duality.Graphics.Deferred
 				new DrawTechnique(Shader.LoadEmbeddedShaderSource("shaders/deferred/render_shadows.glsl"), "SKINNED;DIRECTIONAL")
 			};
 
-            _perFrameDataBuffer = _backend.RenderSystem.CreateBuffer(BufferTarget.UniformBuffer, true);
-            _backend.RenderSystem.SetBufferData(_perFrameDataBuffer, _perFrameData, true, true);
+            _perFrameDataBuffer = DualityApp.GraphicsBackend.RenderSystem.CreateBuffer(BufferTarget.UniformBuffer, true);
+			DualityApp.GraphicsBackend.RenderSystem.SetBufferData(_perFrameDataBuffer, _perFrameData, true, true);
 
             for (var i = 0; i < _perObjectDataBuffers.Length; i++)
             {
-                _perObjectDataBuffers[i] = _backend.RenderSystem.CreateBuffer(BufferTarget.ShaderStorageBuffer, true);
-                _backend.RenderSystem.SetBufferData(_perObjectDataBuffers[i], new Matrix4[0], true, true);
+                _perObjectDataBuffers[i] = DualityApp.GraphicsBackend.RenderSystem.CreateBuffer(BufferTarget.ShaderStorageBuffer, true);
+				DualityApp.GraphicsBackend.RenderSystem.SetBufferData(_perObjectDataBuffers[i], new Matrix4[0], true, true);
             }
         }
 
@@ -119,7 +115,7 @@ namespace Duality.Graphics.Deferred
                 while (_renderTargets.Count > count)
                 {
                     var renderTarget = _renderTargets[_renderTargets.Count - 1];
-                    _backend.RenderSystem.DestroyRenderTarget(renderTarget.Handle);
+					DualityApp.GraphicsBackend.RenderSystem.DestroyRenderTarget(renderTarget.Handle);
                     _renderTargets.Remove(renderTarget);
                 }
             }
@@ -128,7 +124,7 @@ namespace Duality.Graphics.Deferred
             {
                 if (renderTarget.Width != resolution)
                 {
-                    _backend.ResizeRenderTarget(renderTarget, resolution, resolution);
+					DualityApp.GraphicsBackend.ResizeRenderTarget(renderTarget, resolution, resolution);
                 }
             }
 
@@ -136,7 +132,7 @@ namespace Duality.Graphics.Deferred
             {
                 for (var i = _renderTargets.Count; i < count; i++)
                 {
-                    _renderTargets.Add(_backend.CreateRenderTarget("directional_shadows", new Definition(resolution, resolution, true, new List<Definition.Attachment>()
+                    _renderTargets.Add(DualityApp.GraphicsBackend.CreateRenderTarget("directional_shadows", new Definition(resolution, resolution, true, new List<Definition.Attachment>()
                     {
                         new Definition.Attachment(Definition.AttachmentPoint.Depth, Renderer.PixelFormat.DepthComponent, Renderer.PixelInternalFormat.DepthComponent16, Renderer.PixelType.Float, 0)
                     })));
@@ -298,9 +294,9 @@ namespace Duality.Graphics.Deferred
 
             shadowViewProjection = shadowView * shadowProjection;
 
-            _backend.BeginPass(renderTarget, new Vector4(0, 0, 0, 0), ClearFlags.All);
+			DualityApp.GraphicsBackend.BeginPass(renderTarget, new Vector4(0, 0, 0, 0), ClearFlags.All);
             RenderShadowMap(light, stage, lightDir, shadowView, shadowProjection);
-            _backend.EndPass();
+			DualityApp.GraphicsBackend.EndPass();
         }
 
         public unsafe void RenderShadowMap(Components.LightComponent light, Stage stage, Vector3 lightDir, Matrix4 view, Matrix4 projection)
@@ -335,9 +331,9 @@ namespace Duality.Graphics.Deferred
 
             fixed (PerFrameData* data = _perFrameData)
             {
-                _backend.UpdateBufferInline(_perFrameDataBuffer, sizeof(PerFrameData), (byte*)data);
+				DualityApp.GraphicsBackend.UpdateBufferInline(_perFrameDataBuffer, sizeof(PerFrameData), (byte*)data);
             }
-            _backend.BindBufferBase(0, _perFrameDataBuffer);
+			DualityApp.GraphicsBackend.BindBufferBase(0, _perFrameDataBuffer);
 
             // Prepare world matrices
             for (var i = 0; i < count; i++)
@@ -348,9 +344,9 @@ namespace Duality.Graphics.Deferred
             // Upload world matrices!
             fixed (Matrix4* worldMatrices = _worldMatrices)
             {
-                _backend.UpdateBufferInline(_perObjectDataBuffers[_currentPerObjectDataBuffer], sizeof(Matrix4) * count, (byte*)worldMatrices);
+				DualityApp.GraphicsBackend.UpdateBufferInline(_perObjectDataBuffers[_currentPerObjectDataBuffer], sizeof(Matrix4) * count, (byte*)worldMatrices);
             }
-            _backend.BindBufferBase(1, _perObjectDataBuffers[_currentPerObjectDataBuffer]);
+			DualityApp.GraphicsBackend.BindBufferBase(1, _perObjectDataBuffers[_currentPerObjectDataBuffer]);
 
             _currentPerObjectDataBuffer = ++_currentPerObjectDataBuffer % _perObjectDataBuffers.Length;
 
@@ -360,7 +356,7 @@ namespace Duality.Graphics.Deferred
             var program = _renderShadowsShaders[lightTypeIndex];
             var shadowParams = _renderShadowsParams[lightTypeIndex];
 
-            _backend.BeginInstance(program.Handle, textures, samplers, _shadowsRenderState);
+			DualityApp.GraphicsBackend.BeginInstance(program.Handle, textures, samplers, _shadowsRenderState);
 
             var drawCount = 0;
             for (var i = 0; i < count; i++)
@@ -375,22 +371,22 @@ namespace Duality.Graphics.Deferred
 
             if (drawCount > 0)
             {
-                _backend.DrawMesh(_drawMeshMultiData, drawCount);
+				DualityApp.GraphicsBackend.DrawMesh(_drawMeshMultiData, drawCount);
             }
 
             program = _renderShadowsSkinnedShaders[lightTypeIndex];
             shadowParams = _renderShadowsSkinnedParams[lightTypeIndex];
 
-            // Render skeletal meshes
-            _backend.BeginInstance(program.Handle, textures, samplers, _shadowsRenderState);
+			// Render skeletal meshes
+			DualityApp.GraphicsBackend.BeginInstance(program.Handle, textures, samplers, _shadowsRenderState);
             for (var i = 0; i < count; i++)
             {
                 if (operations[i].Skeleton == null)
                     continue;
 
-                _backend.BindShaderVariable(shadowParams.World, ref operations[i].WorldMatrix);
-                _backend.BindShaderVariable(shadowParams.Bones, ref operations[i].Skeleton.FinalBoneTransforms);
-                _backend.DrawMesh(operations[i].MeshHandle);
+				DualityApp.GraphicsBackend.BindShaderVariable(shadowParams.World, ref operations[i].WorldMatrix);
+				DualityApp.GraphicsBackend.BindShaderVariable(shadowParams.Bones, ref operations[i].Skeleton.FinalBoneTransforms);
+				DualityApp.GraphicsBackend.DrawMesh(operations[i].MeshHandle);
             }
         }
 

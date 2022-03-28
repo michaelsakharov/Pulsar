@@ -15,10 +15,10 @@ namespace Duality.Graphics.Post.Effects
         private readonly int[] _textures = new int[3];
         private readonly int[] _samplers;
 
-        public AtmosphericScattering(Backend backend, BatchBuffer quadMesh)
-            : base(backend, quadMesh)
+        public AtmosphericScattering(BatchBuffer quadMesh)
+            : base(quadMesh)
         {
-            _samplers = new int[] { _backend.DefaultSamplerNoFiltering, _backend.DefaultSamplerNoFiltering, _backend.DefaultSamplerNoFiltering };
+            _samplers = new int[] { DualityApp.GraphicsBackend.DefaultSamplerNoFiltering, DualityApp.GraphicsBackend.DefaultSamplerNoFiltering, DualityApp.GraphicsBackend.DefaultSamplerNoFiltering };
         }
 
         internal override void LoadResources()
@@ -39,7 +39,7 @@ namespace Duality.Graphics.Post.Effects
                 _shader.BindUniformLocations(_shaderParams);
             }
 
-            _backend.BeginPass(output, new Vector4(0.0f, 0.0f, 0.0f, 1.0f));
+			DualityApp.GraphicsBackend.BeginPass(output, new Vector4(0.0f, 0.0f, 0.0f, 1.0f));
 
             _textures[0] = input.Textures[0].Handle;
             _textures[1] = gbuffer.Textures[3].Handle;
@@ -54,18 +54,18 @@ namespace Duality.Graphics.Post.Effects
             camera.GetViewMatrix(out var view);
             camera.GetProjectionMatrix(out var projection);
             var inverseViewProjectionMatrix = Matrix4.Invert(view * projection);
-            
-            _backend.BeginInstance(_shader.Handle, _textures, samplers: _samplers);
-            _backend.BindShaderVariable(_shaderParams.SamplerScene, 0);
-            _backend.BindShaderVariable(_shaderParams.SamplerDepth, 1);
-            _backend.BindShaderVariable(_shaderParams.SamplerGBuffer1, 2);
-            _backend.BindShaderVariable(_shaderParams.SunDirection, ref lightDirWS);
-            _backend.BindShaderVariable(_shaderParams.InvViewProjection, ref inverseViewProjectionMatrix);
-			var Pos = camera.GameObj.Transform.Pos;
-			_backend.BindShaderVariable(_shaderParams.CameraPosition, ref Pos);
 
-            _backend.DrawMesh(_quadMesh.MeshHandle);
-            _backend.EndPass();
+			DualityApp.GraphicsBackend.BeginInstance(_shader.Handle, _textures, samplers: _samplers);
+            DualityApp.GraphicsBackend.BindShaderVariable(_shaderParams.SamplerScene, 0);
+            DualityApp.GraphicsBackend.BindShaderVariable(_shaderParams.SamplerDepth, 1);
+            DualityApp.GraphicsBackend.BindShaderVariable(_shaderParams.SamplerGBuffer1, 2);
+            DualityApp.GraphicsBackend.BindShaderVariable(_shaderParams.SunDirection, ref lightDirWS);
+            DualityApp.GraphicsBackend.BindShaderVariable(_shaderParams.InvViewProjection, ref inverseViewProjectionMatrix);
+			var Pos = camera.GameObj.Transform.Pos;
+			DualityApp.GraphicsBackend.BindShaderVariable(_shaderParams.CameraPosition, ref Pos);
+
+			DualityApp.GraphicsBackend.DrawMesh(_quadMesh.MeshHandle);
+			DualityApp.GraphicsBackend.EndPass();
 
             return true;
         }

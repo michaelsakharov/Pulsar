@@ -14,8 +14,8 @@ namespace Duality.Graphics.Post.Effects
 
         public bool EnableColorCorrection { get; set; } = false;
 
-        public Gamma(Backend backend, BatchBuffer quadMesh)
-			: base(backend, quadMesh)
+        public Gamma(BatchBuffer quadMesh)
+			: base(quadMesh)
 		{
 		}
 
@@ -33,15 +33,15 @@ namespace Duality.Graphics.Post.Effects
 				_shader.BindUniformLocations(_shaderParams);
 			}
 
-			_backend.BeginPass(output, new Vector4(0.0f, 0.0f, 0.0f, 1.0f));
-			_backend.BeginInstance(_shader.Handle, new int[] { input.Textures[0].Handle, Texture.ColorCorrectLUT.Res.Handle },
-				samplers: new int[] { _backend.DefaultSamplerNoFiltering, _backend.DefaultSamplerNoFiltering });
-			_backend.BindShaderVariable(_shaderParams.SamplerScene, 0);
-			_backend.BindShaderVariable(_shaderParams.SamplerColorCorrect, 1);
-			_backend.BindShaderVariable(_shaderParams.EnableColorCorrection, EnableColorCorrection ? 1 : 0);
+			DualityApp.GraphicsBackend.BeginPass(output, new Vector4(0.0f, 0.0f, 0.0f, 1.0f));
+			DualityApp.GraphicsBackend.BeginInstance(_shader.Handle, new int[] { input.Textures[0].Handle, Texture.ColorCorrectLUT.Res.Handle },
+				samplers: new int[] { DualityApp.GraphicsBackend.DefaultSamplerNoFiltering, DualityApp.GraphicsBackend.DefaultSamplerNoFiltering });
+			DualityApp.GraphicsBackend.BindShaderVariable(_shaderParams.SamplerScene, 0);
+			DualityApp.GraphicsBackend.BindShaderVariable(_shaderParams.SamplerColorCorrect, 1);
+			DualityApp.GraphicsBackend.BindShaderVariable(_shaderParams.EnableColorCorrection, EnableColorCorrection ? 1 : 0);
 
-            _backend.DrawMesh(_quadMesh.MeshHandle);
-			_backend.EndPass();
+			DualityApp.GraphicsBackend.DrawMesh(_quadMesh.MeshHandle);
+			DualityApp.GraphicsBackend.EndPass();
 		}
 
 		class GammaShaderParams

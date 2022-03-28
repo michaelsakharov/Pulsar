@@ -21,17 +21,17 @@ namespace Duality.Graphics.Post.Effects
         private Duality.Resources.Texture _noiseTexture;
         private int _noiseSampler;
 
-        public SSAO(Backend backend, BatchBuffer quadMesh) : base(backend, quadMesh)
+        public SSAO(BatchBuffer quadMesh) : base(quadMesh)
         {
-            var width = backend.Width;
-            var height = backend.Height;
+            var width = DualityApp.GraphicsBackend.Width;
+            var height = DualityApp.GraphicsBackend.Height;
 
-            _renderTarget = _backend.CreateRenderTarget("ssao", new Definition(width, height, false, new List<Definition.Attachment>()
+            _renderTarget = DualityApp.GraphicsBackend.CreateRenderTarget("ssao", new Definition(width, height, false, new List<Definition.Attachment>()
                 {
                     new Definition.Attachment(Definition.AttachmentPoint.Color, Renderer.PixelFormat.Rgba, Renderer.PixelInternalFormat.Rgba8, Renderer.PixelType.Float, 0),
                 }));
 
-            _renderTargetBlur = _backend.CreateRenderTarget("ssao_blur", new Definition(width, height, false, new List<Definition.Attachment>()
+            _renderTargetBlur = DualityApp.GraphicsBackend.CreateRenderTarget("ssao_blur", new Definition(width, height, false, new List<Definition.Attachment>()
                 {
                     new Definition.Attachment(Definition.AttachmentPoint.Color, Renderer.PixelFormat.Rgba, Renderer.PixelInternalFormat.Rgba8, Renderer.PixelType.Float, 0),
                 }));
@@ -54,7 +54,7 @@ namespace Duality.Graphics.Post.Effects
 			_noiseTexture = new Texture(new Pixmap(new PixelData(4, 4, noiseData)));
 
 
-			_noiseSampler = _backend.RenderSystem.CreateSampler(new Dictionary<Renderer.SamplerParameterName, int>
+			_noiseSampler = DualityApp.GraphicsBackend.RenderSystem.CreateSampler(new Dictionary<Renderer.SamplerParameterName, int>
             {
                 { Renderer.SamplerParameterName.TextureMinFilter, (int)Renderer.TextureMinFilter.Nearest },
                 { Renderer.SamplerParameterName.TextureMagFilter, (int)Renderer.TextureMagFilter.Nearest },
@@ -113,41 +113,41 @@ namespace Duality.Graphics.Post.Effects
             var invProjectionMatrix = Matrix4.Invert(projectionMatrix);
             var itViewMatrix = Matrix4.Invert(Matrix4.Transpose(viewMatrix));
 
-            _backend.BeginPass(_renderTarget, new Vector4(0.0f, 0.0f, 0.0f, 1.0f));
-            _backend.BeginInstance(_shader.Handle, new int[] { gbuffer.Textures[1].Handle, gbuffer.Textures[3].Handle, _noiseTexture.Handle },
-                samplers: new int[] { _backend.DefaultSamplerNoFiltering, _backend.DefaultSamplerNoFiltering, _noiseSampler });
-            _backend.BindShaderVariable(_shaderParams.SamplerDepth, 1);
-            _backend.BindShaderVariable(_shaderParams.SamplerGBuffer1, 0);
-            _backend.BindShaderVariable(_shaderParams.SamplerNoise, 2);
-            _backend.BindShaderVariable(_shaderParams.InvViewProjection, ref invViewProjectionMatrix);
-            _backend.BindShaderVariable(_shaderParams.InvProjection, ref invProjectionMatrix);
-            _backend.BindShaderVariable(_shaderParams.View, ref viewMatrix);
-            _backend.BindShaderVariable(_shaderParams.ItView, ref itViewMatrix);
-            _backend.BindShaderVariable(_shaderParams.Proj, ref projectionMatrix);
-            _backend.BindShaderVariable(_shaderParams.SampleKernel, ref _sampleKernel);
+			DualityApp.GraphicsBackend.BeginPass(_renderTarget, new Vector4(0.0f, 0.0f, 0.0f, 1.0f));
+			DualityApp.GraphicsBackend.BeginInstance(_shader.Handle, new int[] { gbuffer.Textures[1].Handle, gbuffer.Textures[3].Handle, _noiseTexture.Handle },
+                samplers: new int[] { DualityApp.GraphicsBackend.DefaultSamplerNoFiltering, DualityApp.GraphicsBackend.DefaultSamplerNoFiltering, _noiseSampler });
+            DualityApp.GraphicsBackend.BindShaderVariable(_shaderParams.SamplerDepth, 1);
+            DualityApp.GraphicsBackend.BindShaderVariable(_shaderParams.SamplerGBuffer1, 0);
+            DualityApp.GraphicsBackend.BindShaderVariable(_shaderParams.SamplerNoise, 2);
+            DualityApp.GraphicsBackend.BindShaderVariable(_shaderParams.InvViewProjection, ref invViewProjectionMatrix);
+            DualityApp.GraphicsBackend.BindShaderVariable(_shaderParams.InvProjection, ref invProjectionMatrix);
+            DualityApp.GraphicsBackend.BindShaderVariable(_shaderParams.View, ref viewMatrix);
+            DualityApp.GraphicsBackend.BindShaderVariable(_shaderParams.ItView, ref itViewMatrix);
+            DualityApp.GraphicsBackend.BindShaderVariable(_shaderParams.Proj, ref projectionMatrix);
+			DualityApp.GraphicsBackend.BindShaderVariable(_shaderParams.SampleKernel, ref _sampleKernel);
 			var Pos = camera.GameObj.Transform.Pos;
-			_backend.BindShaderVariable(_shaderParams.CameraPosition, ref Pos);
+			DualityApp.GraphicsBackend.BindShaderVariable(_shaderParams.CameraPosition, ref Pos);
 
             var tanHalfFov = (float)System.Math.Tan(camera.Fov / 2.0f);
             var aspectRatio = camera.Viewport.X / camera.Viewport.Y;
 
-            _backend.BindShaderVariable(_shaderParams.TanHalfFov, tanHalfFov);
-            _backend.BindShaderVariable(_shaderParams.AspectRatio, aspectRatio);
+            DualityApp.GraphicsBackend.BindShaderVariable(_shaderParams.TanHalfFov, tanHalfFov);
+			DualityApp.GraphicsBackend.BindShaderVariable(_shaderParams.AspectRatio, aspectRatio);
 
             var clipPlanes = new Vector2(camera.NearClipDistance, camera.FarClipDistance);
-            _backend.BindShaderVariable(_shaderParams.CameraClipPlanes, ref clipPlanes);
+			DualityApp.GraphicsBackend.BindShaderVariable(_shaderParams.CameraClipPlanes, ref clipPlanes);
 
             var size = new Vector2(gbuffer.Width, gbuffer.Height);
-            _backend.BindShaderVariable(_shaderParams.ViewportResolution, ref size);
+			DualityApp.GraphicsBackend.BindShaderVariable(_shaderParams.ViewportResolution, ref size);
 
-            _backend.DrawMesh(_quadMesh.MeshHandle);
-            _backend.EndPass();
+            DualityApp.GraphicsBackend.DrawMesh(_quadMesh.MeshHandle);
+			DualityApp.GraphicsBackend.EndPass();
 
-            _backend.BeginPass(_renderTargetBlur, new Vector4(0.0f, 0.0f, 0.0f, 1.0f));
-            _backend.BeginInstance(_shaderBlur.Handle, new int[] { _renderTarget.Textures[0].Handle }, samplers: new int[] { _backend.DefaultSamplerNoFiltering });
+            DualityApp.GraphicsBackend.BeginPass(_renderTargetBlur, new Vector4(0.0f, 0.0f, 0.0f, 1.0f));
+			DualityApp.GraphicsBackend.BeginInstance(_shaderBlur.Handle, new int[] { _renderTarget.Textures[0].Handle }, samplers: new int[] { DualityApp.GraphicsBackend.DefaultSamplerNoFiltering });
 
-            _backend.DrawMesh(_quadMesh.MeshHandle);
-            _backend.EndPass();
+            DualityApp.GraphicsBackend.DrawMesh(_quadMesh.MeshHandle);
+			DualityApp.GraphicsBackend.EndPass();
 
             return _renderTargetBlur;
         }

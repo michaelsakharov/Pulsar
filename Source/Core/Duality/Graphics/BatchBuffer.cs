@@ -104,9 +104,9 @@ namespace Duality.Graphics
 			RenderSystem.SetBufferData(IndexBufferHandle, IndexData, true, true);
 		}
 
-		public void EndInline(Backend backend)
+		public void EndInline()
 		{
-			backend.UpdateMeshInline(MeshHandle, IndexCount / 3, DataCount, IndexCount, VertexData, IndexData, true);
+			DualityApp.GraphicsBackend.UpdateMeshInline(MeshHandle, IndexCount / 3, DataCount, IndexCount, VertexData, IndexData, true);
 		}
 
 		public void AddVector2(float x, float y)

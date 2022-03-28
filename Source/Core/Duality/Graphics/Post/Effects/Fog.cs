@@ -14,8 +14,8 @@ namespace Duality.Graphics.Post.Effects
 		private DrawTechnique _shader;
 		private ShaderParams _shaderParams;
 
-		public Fog(Backend backend, BatchBuffer quadMesh)
-			: base(backend, quadMesh)
+		public Fog(BatchBuffer quadMesh)
+			: base(quadMesh)
 		{
 		}
 
@@ -37,19 +37,19 @@ namespace Duality.Graphics.Post.Effects
 			camera.GetViewMatrix(out view);
 			camera.GetProjectionMatrix(out projection);
 
-			_backend.BeginPass(output, Vector4.Zero);
+			DualityApp.GraphicsBackend.BeginPass(output, Vector4.Zero);
 
 			var inverseViewProjectionMatrix = Matrix4.Invert(view * projection);
 
 			var itView = Matrix4.Invert(Matrix4.Transpose(view));
-			_backend.BeginInstance(_shader.Handle,
+			DualityApp.GraphicsBackend.BeginInstance(_shader.Handle,
 				new int[] { gbuffer.Textures[3].Handle, input.Textures[0].Handle },
-				new int[] { _backend.DefaultSamplerNoFiltering, _backend.DefaultSamplerNoFiltering });
-			_backend.BindShaderVariable(_shaderParams.SamplerDepth, 0);
-			_backend.BindShaderVariable(_shaderParams.SamplerScene, 1);
-			_backend.BindShaderVariable(_shaderParams.InvViewProjection, ref inverseViewProjectionMatrix);
+				new int[] { DualityApp.GraphicsBackend.DefaultSamplerNoFiltering, DualityApp.GraphicsBackend.DefaultSamplerNoFiltering });
+			DualityApp.GraphicsBackend.BindShaderVariable(_shaderParams.SamplerDepth, 0);
+			DualityApp.GraphicsBackend.BindShaderVariable(_shaderParams.SamplerScene, 1);
+			DualityApp.GraphicsBackend.BindShaderVariable(_shaderParams.InvViewProjection, ref inverseViewProjectionMatrix);
 			var Pos = camera.GameObj.Transform.Pos;
-			_backend.BindShaderVariable(_shaderParams.CameraPosition, ref Pos);
+			DualityApp.GraphicsBackend.BindShaderVariable(_shaderParams.CameraPosition, ref Pos);
 
 			var sunLight = stage.GetSunLight();
             if (sunLight != null)
@@ -59,12 +59,12 @@ namespace Duality.Graphics.Post.Effects
 				Vector3.Transform(ref unitZ, ref orient, out var lightDirWS);
 				lightDirWS.Normalize();
 
-                _backend.BindShaderVariable(_shaderParams.SunDir, ref lightDirWS);
+				DualityApp.GraphicsBackend.BindShaderVariable(_shaderParams.SunDir, ref lightDirWS);
             }
 
-			_backend.DrawMesh(_quadMesh.MeshHandle);
+			DualityApp.GraphicsBackend.DrawMesh(_quadMesh.MeshHandle);
 
-			_backend.EndPass();
+			DualityApp.GraphicsBackend.EndPass();
 		}
 
 		class ShaderParams

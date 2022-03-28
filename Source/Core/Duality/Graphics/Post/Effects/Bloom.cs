@@ -27,12 +27,12 @@ namespace Duality.Graphics.Post.Effects
 
 		private readonly int _blurSampler;
 
-		public Bloom(Backend backend, BatchBuffer quadMesh)
-			: base(backend, quadMesh)
+		public Bloom(BatchBuffer quadMesh)
+			: base(quadMesh)
 		{
 			// Setup rendertargets
-			var width = backend.Width;
-			var height = backend.Height;
+			var width = DualityApp.GraphicsBackend.Width;
+			var height = DualityApp.GraphicsBackend.Height;
 
 			_blurTargets = new RenderTarget[5][];
 			for (var i = 0; i < _blurTargets.Length; i++)
@@ -48,7 +48,7 @@ namespace Duality.Graphics.Post.Effects
 					var w = width / n;
 					var h = height / n;
 
-					_blurTargets[i][j] = _backend.CreateRenderTarget("bloom_blur_" + n + "_" + j, new Definition(w, h, false, new List<Definition.Attachment>()
+					_blurTargets[i][j] = DualityApp.GraphicsBackend.CreateRenderTarget("bloom_blur_" + n + "_" + j, new Definition(w, h, false, new List<Definition.Attachment>()
 					{
 						new Definition.Attachment(Definition.AttachmentPoint.Color, Renderer.PixelFormat.Rgba, Renderer.PixelInternalFormat.Rgba16f, Renderer.PixelType.Float, 0),
 					}));
@@ -57,7 +57,7 @@ namespace Duality.Graphics.Post.Effects
 				n *= 2;
 			}
 
-			_blurSampler = _backend.RenderSystem.CreateSampler(new Dictionary<SamplerParameterName, int>
+			_blurSampler = DualityApp.GraphicsBackend.RenderSystem.CreateSampler(new Dictionary<SamplerParameterName, int>
 			{
 				{ SamplerParameterName.TextureMinFilter, (int)TextureMinFilter.Linear },
 				{ SamplerParameterName.TextureMagFilter, (int)TextureMagFilter.Linear },
@@ -82,26 +82,26 @@ namespace Duality.Graphics.Post.Effects
 
 		private RenderTarget Downsample(RenderTarget source, RenderTarget destination)
 		{
-			_backend.BeginPass(destination);
-			_backend.BeginInstance(_quadShader.Handle, new int[] { source.Textures[0].Handle },
+			DualityApp.GraphicsBackend.BeginPass(destination);
+			DualityApp.GraphicsBackend.BeginInstance(_quadShader.Handle, new int[] { source.Textures[0].Handle },
 				samplers: new int[] { _blurSampler });
-			_backend.BindShaderVariable(_quadParams.SamplerScene, 0);
+			DualityApp.GraphicsBackend.BindShaderVariable(_quadParams.SamplerScene, 0);
 
-			_backend.DrawMesh(_quadMesh.MeshHandle);
-			_backend.EndPass();
+			DualityApp.GraphicsBackend.DrawMesh(_quadMesh.MeshHandle);
+			DualityApp.GraphicsBackend.EndPass();
 
 			return destination;
 		}
 
 		private RenderTarget Upsample(RenderTarget source, RenderTarget destination)
 		{
-			_backend.BeginPass(destination);
-			_backend.BeginInstance(_quadShader.Handle, new int[] { source.Textures[0].Handle },
+			DualityApp.GraphicsBackend.BeginPass(destination);
+			DualityApp.GraphicsBackend.BeginInstance(_quadShader.Handle, new int[] { source.Textures[0].Handle },
 				samplers: new int[] { _blurSampler });
-			_backend.BindShaderVariable(_quadParams.SamplerScene, 0);
+			DualityApp.GraphicsBackend.BindShaderVariable(_quadParams.SamplerScene, 0);
 
-			_backend.DrawMesh(_quadMesh.MeshHandle);
-			_backend.EndPass();
+			DualityApp.GraphicsBackend.DrawMesh(_quadMesh.MeshHandle);
+			DualityApp.GraphicsBackend.EndPass();
 
 			return destination;
 		}
@@ -114,26 +114,26 @@ namespace Duality.Graphics.Post.Effects
 			Vector2 blurTextureSize = new Vector2(source.Width, source.Height);
 
 			// Blur horizontal
-			_backend.BeginPass(blurTargetX);
-			_backend.BeginInstance(_blurHorizontalShader.Handle, new int[] { source.Textures[0].Handle },
-				samplers: new int[] { _backend.DefaultSamplerNoFiltering });
-			_backend.BindShaderVariable(_blurHorizontalParams.SamplerScene, 0);
-			_backend.BindShaderVariable(_blurHorizontalParams.BlurSigma, settings.BlurSigma);
-			_backend.BindShaderVariable(_blurHorizontalParams.TextureSize, ref blurTextureSize);
+			DualityApp.GraphicsBackend.BeginPass(blurTargetX);
+			DualityApp.GraphicsBackend.BeginInstance(_blurHorizontalShader.Handle, new int[] { source.Textures[0].Handle },
+				samplers: new int[] { DualityApp.GraphicsBackend.DefaultSamplerNoFiltering });
+			DualityApp.GraphicsBackend.BindShaderVariable(_blurHorizontalParams.SamplerScene, 0);
+			DualityApp.GraphicsBackend.BindShaderVariable(_blurHorizontalParams.BlurSigma, settings.BlurSigma);
+			DualityApp.GraphicsBackend.BindShaderVariable(_blurHorizontalParams.TextureSize, ref blurTextureSize);
 
-			_backend.DrawMesh(_quadMesh.MeshHandle);
-			_backend.EndPass();
+			DualityApp.GraphicsBackend.DrawMesh(_quadMesh.MeshHandle);
+			DualityApp.GraphicsBackend.EndPass();
 
 			// Blur vertical
-			_backend.BeginPass(blurTargetY);
-			_backend.BeginInstance(_blurVerticalShader.Handle, new int[] { blurTargetX.Textures[0].Handle },
-				samplers: new int[] { _backend.DefaultSamplerNoFiltering });
-			_backend.BindShaderVariable(_blurVerticalParams.SamplerScene, 0);
-			_backend.BindShaderVariable(_blurVerticalParams.BlurSigma, settings.BlurSigma);
-			_backend.BindShaderVariable(_blurVerticalParams.TextureSize, ref blurTextureSize);
+			DualityApp.GraphicsBackend.BeginPass(blurTargetY);
+			DualityApp.GraphicsBackend.BeginInstance(_blurVerticalShader.Handle, new int[] { blurTargetX.Textures[0].Handle },
+				samplers: new int[] { DualityApp.GraphicsBackend.DefaultSamplerNoFiltering });
+			DualityApp.GraphicsBackend.BindShaderVariable(_blurVerticalParams.SamplerScene, 0);
+			DualityApp.GraphicsBackend.BindShaderVariable(_blurVerticalParams.BlurSigma, settings.BlurSigma);
+			DualityApp.GraphicsBackend.BindShaderVariable(_blurVerticalParams.TextureSize, ref blurTextureSize);
 
-			_backend.DrawMesh(_quadMesh.MeshHandle);
-			_backend.EndPass();
+			DualityApp.GraphicsBackend.DrawMesh(_quadMesh.MeshHandle);
+			DualityApp.GraphicsBackend.EndPass();
 
 			return blurTargetY;
 		}
@@ -156,18 +156,18 @@ namespace Duality.Graphics.Post.Effects
 			}
 
 			// High pass
-			_backend.BeginPass(_blurTargets[0][1]);
-			_backend.BeginInstance(_highPassShader.Handle, new int[] { input.Textures[0].Handle, luminance.Textures[0].Handle },
-				samplers: new int[] { _backend.DefaultSamplerNoFiltering, _backend.DefaultSampler });
-			_backend.BindShaderVariable(_highPassParams.SamplerScene, 0);
-			_backend.BindShaderVariable(_highPassParams.SamplerLuminance, 1);
-			_backend.BindShaderVariable(_highPassParams.BloomThreshold, settings.BloomThreshold);
-			_backend.BindShaderVariable(_highPassParams.KeyValue, settings.KeyValue);
-			_backend.BindShaderVariable(_highPassParams.AutoKey, settings.AutoKey ? 1 : 0);
-            _backend.BindShaderVariable(_highPassParams.TonemapOperator, (int)settings.TonemapOperator);
+			DualityApp.GraphicsBackend.BeginPass(_blurTargets[0][1]);
+			DualityApp.GraphicsBackend.BeginInstance(_highPassShader.Handle, new int[] { input.Textures[0].Handle, luminance.Textures[0].Handle },
+				samplers: new int[] { DualityApp.GraphicsBackend.DefaultSamplerNoFiltering, DualityApp.GraphicsBackend.DefaultSampler });
+			DualityApp.GraphicsBackend.BindShaderVariable(_highPassParams.SamplerScene, 0);
+			DualityApp.GraphicsBackend.BindShaderVariable(_highPassParams.SamplerLuminance, 1);
+			DualityApp.GraphicsBackend.BindShaderVariable(_highPassParams.BloomThreshold, settings.BloomThreshold);
+			DualityApp.GraphicsBackend.BindShaderVariable(_highPassParams.KeyValue, settings.KeyValue);
+			DualityApp.GraphicsBackend.BindShaderVariable(_highPassParams.AutoKey, settings.AutoKey ? 1 : 0);
+			DualityApp.GraphicsBackend.BindShaderVariable(_highPassParams.TonemapOperator, (int)settings.TonemapOperator);
 
-			_backend.DrawMesh(_quadMesh.MeshHandle);
-			_backend.EndPass();
+			DualityApp.GraphicsBackend.DrawMesh(_quadMesh.MeshHandle);
+			DualityApp.GraphicsBackend.EndPass();
 
 			Blur(settings, _blurTargets[0][1], _blurTargets[0]);
 

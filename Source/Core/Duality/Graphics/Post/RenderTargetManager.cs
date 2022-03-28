@@ -14,15 +14,10 @@ namespace Duality.Graphics.Post
 	public class RenderTargetManager
 	{
 		private static int Counter = 0;
-		private readonly Backend Backend;
 		private readonly List<RenderTargetWrapper> TemporaryRenderTargets = new List<RenderTargetWrapper>();
 
-		public RenderTargetManager(Backend backend)
+		public RenderTargetManager()
 		{
-			if (backend == null)
-				throw new ArgumentNullException("backend");
-
-			Backend = backend;
 		}
 
 		public RenderTargetWrapper Allocate(int width, int height, Renderer.PixelInternalFormat pixelInternalFormat)
@@ -39,7 +34,7 @@ namespace Duality.Graphics.Post
 			return new RenderTargetWrapper(
 				width, height, pixelInternalFormat,
 				this,
-				Backend.CreateRenderTarget("tmp_" + (Counter++).ToString(), new Definition(width, height, false, new List<Definition.Attachment>()
+				DualityApp.GraphicsBackend.CreateRenderTarget("tmp_" + (Counter++).ToString(), new Definition(width, height, false, new List<Definition.Attachment>()
 				{
 					new Definition.Attachment(Definition.AttachmentPoint.Color, Renderer.PixelFormat.Rgba, Renderer.PixelInternalFormat.Rgba16f, Renderer.PixelType.Float, 0)
 				}))

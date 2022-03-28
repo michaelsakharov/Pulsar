@@ -13,7 +13,6 @@ namespace Duality.Graphics.Post
     {
         private readonly RenderTarget[] _temporaryRenderTargets = new RenderTarget[2];
         private readonly RenderTargetManager _renderTargetManager;
-        private readonly Backend _backend;
 
         private readonly BatchBuffer _quadMesh;
         private SpriteBatch _sprite;
@@ -45,37 +44,35 @@ namespace Duality.Graphics.Post
 
 		public bool EnableAtmosphere { get; set; } = false;
 
-        public PostEffectManager(Backend backend, int width, int height)
+        public PostEffectManager(int width, int height)
         {
-            _backend = backend ?? throw new ArgumentNullException("backend");
+            _renderTargetManager = new Post.RenderTargetManager();
 
-            _renderTargetManager = new Post.RenderTargetManager(_backend);
-
-            _temporaryRenderTargets[0] = _backend.CreateRenderTarget("post_0", new Definition(width, height, false, new List<Definition.Attachment>()
+            _temporaryRenderTargets[0] = DualityApp.GraphicsBackend.CreateRenderTarget("post_0", new Definition(width, height, false, new List<Definition.Attachment>()
             {
                 new Definition.Attachment(Definition.AttachmentPoint.Color, Renderer.PixelFormat.Rgba, Renderer.PixelInternalFormat.Rgba16f, Renderer.PixelType.Float, 0)
             }));
 
-            _temporaryRenderTargets[1] = _backend.CreateRenderTarget("post_1", new Definition(width, height, false, new List<Definition.Attachment>()
+            _temporaryRenderTargets[1] = DualityApp.GraphicsBackend.CreateRenderTarget("post_1", new Definition(width, height, false, new List<Definition.Attachment>()
             {
                 new Definition.Attachment(Definition.AttachmentPoint.Color, Renderer.PixelFormat.Rgba, Renderer.PixelInternalFormat.Rgba16f, Renderer.PixelType.Float, 0)
             }));
 
-            _quadMesh = _backend.CreateBatchBuffer();
+            _quadMesh = DualityApp.GraphicsBackend.CreateBatchBuffer();
             _quadMesh.Begin();
             _quadMesh.AddQuad(new Vector2(-1, -1), new Vector2(2, 2), Vector2.Zero, new Vector2(1, 1));
             _quadMesh.End();
 
             // Setup effects
-            _adaptLuminance = new Effects.AdaptLuminance(_backend, _quadMesh);
-            _bloom = new Effects.Bloom(_backend, _quadMesh);
-            _tonemap = new Effects.Tonemap(_backend, _quadMesh);
-            _gamma = new Effects.Gamma(_backend, _quadMesh);
-            _fxaa = new Effects.FXAA(_backend, _quadMesh);
-            _fog = new Fog(_backend, _quadMesh);
-            _visualize = new Visualize(_backend, _quadMesh);
-            _ssao = new SSAO(_backend, _quadMesh);
-            _atmosphericScattering = new AtmosphericScattering(_backend, _quadMesh);
+            _adaptLuminance = new Effects.AdaptLuminance(_quadMesh);
+            _bloom = new Effects.Bloom(_quadMesh);
+            _tonemap = new Effects.Tonemap(_quadMesh);
+            _gamma = new Effects.Gamma(_quadMesh);
+            _fxaa = new Effects.FXAA(_quadMesh);
+            _fog = new Fog(_quadMesh);
+            _visualize = new Visualize(_quadMesh);
+            _ssao = new SSAO(_quadMesh);
+            _atmosphericScattering = new AtmosphericScattering(_quadMesh);
 
             _effects.Add(_adaptLuminance);
             _effects.Add(_bloom);
@@ -110,7 +107,7 @@ namespace Duality.Graphics.Post
 
         void LoadResources()
         {
-            _sprite = _backend.CreateSpriteBatch();
+            _sprite = DualityApp.GraphicsBackend.CreateSpriteBatch();
 
             foreach (var effect in _effects)
             {
@@ -127,7 +124,7 @@ namespace Duality.Graphics.Post
 
         private void ApplyAA()
         {
-            _backend.ProfileBeginSection(Profiler.AntiAliasing);
+			DualityApp.GraphicsBackend.ProfileBeginSection(Profiler.AntiAliasing);
             switch (AntiAliasing)
             {
                 case AntiAliasing.FXAA:
@@ -138,39 +135,39 @@ namespace Duality.Graphics.Post
                 default:
                     break;
             }
-            _backend.ProfileEndSection(Profiler.AntiAliasing);
+			DualityApp.GraphicsBackend.ProfileEndSection(Profiler.AntiAliasing);
         }
 
         private void ApplyLumianceBloomAndTonemap(float deltaTime)
         {
             RenderTarget bloom = null, lensFlares = null;
 
-            _backend.ProfileBeginSection(Profiler.LuminanceAdaptation);
+			DualityApp.GraphicsBackend.ProfileBeginSection(Profiler.LuminanceAdaptation);
             var luminance = _adaptLuminance.Render(HDRSettings, _temporaryRenderTargets[0], deltaTime);
-            _backend.ProfileEndSection(Profiler.LuminanceAdaptation);
+			DualityApp.GraphicsBackend.ProfileEndSection(Profiler.LuminanceAdaptation);
 
             if (HDRSettings.EnableBloom)
             {
-                _backend.ProfileBeginSection(Profiler.Bloom);
+				DualityApp.GraphicsBackend.ProfileBeginSection(Profiler.Bloom);
                 bloom = _bloom.Render(HDRSettings, _temporaryRenderTargets[0], luminance);
-                _backend.ProfileEndSection(Profiler.Bloom);
+				DualityApp.GraphicsBackend.ProfileEndSection(Profiler.Bloom);
             }
 
-            _backend.ProfileBeginSection(Profiler.Tonemap);
+			DualityApp.GraphicsBackend.ProfileBeginSection(Profiler.Tonemap);
             _tonemap.Render(HDRSettings, _temporaryRenderTargets[0], _temporaryRenderTargets[1], bloom, lensFlares, luminance);
-            _backend.ProfileEndSection(Profiler.Tonemap);
+			DualityApp.GraphicsBackend.ProfileEndSection(Profiler.Tonemap);
 
             SwapRenderTargets();
         }
 
         private void ApplyAtmosphere(Duality.Components.Camera camera, RenderTarget gbuffer, Stage stage)
         {
-            _backend.ProfileBeginSection(Profiler.AtmosphericScattering);
+			DualityApp.GraphicsBackend.ProfileBeginSection(Profiler.AtmosphericScattering);
             if (_atmosphericScattering.Render(camera, stage, gbuffer, _temporaryRenderTargets[0], _temporaryRenderTargets[1]))
             {
                 SwapRenderTargets();
             }
-            _backend.ProfileEndSection(Profiler.AtmosphericScattering);
+			DualityApp.GraphicsBackend.ProfileEndSection(Profiler.AtmosphericScattering);
         }
 
         public RenderTarget RenderSSAO(Duality.Components.Camera camera, RenderTarget gbuffer)
@@ -181,10 +178,10 @@ namespace Duality.Graphics.Post
 
         public RenderTarget Render(Duality.Components.Camera camera, Stage stage, RenderTarget gbuffer, RenderTarget input, RenderTarget csmShadowBuffer, float deltaTime)
         {
-            _backend.ProfileBeginSection(Profiler.Post);
+			DualityApp.GraphicsBackend.ProfileBeginSection(Profiler.Post);
 
-            // We always start by rendering the input texture to a temporary render target
-            _backend.BeginPass(_temporaryRenderTargets[1], Vector4.Zero);
+			// We always start by rendering the input texture to a temporary render target
+			DualityApp.GraphicsBackend.BeginPass(_temporaryRenderTargets[1], Vector4.Zero);
 
             //_sprite.RenderQuad(input.Textures[0], Vector2.Zero);
 			_sprite.RenderQuad(input.Textures[0], Vector2.Zero, new Vector2(_temporaryRenderTargets[1].Width, _temporaryRenderTargets[1].Height));
@@ -213,14 +210,14 @@ namespace Duality.Graphics.Post
                 SwapRenderTargets();
             }
 
-            _backend.ProfileEndSection(Profiler.Post);
+			DualityApp.GraphicsBackend.ProfileEndSection(Profiler.Post);
             return _temporaryRenderTargets[0];
         }
 
         public void Resize(int width, int height)
         {
-            _backend.ResizeRenderTarget(_temporaryRenderTargets[0], width, height);
-            _backend.ResizeRenderTarget(_temporaryRenderTargets[1], width, height);
+			DualityApp.GraphicsBackend.ResizeRenderTarget(_temporaryRenderTargets[0], width, height);
+			DualityApp.GraphicsBackend.ResizeRenderTarget(_temporaryRenderTargets[1], width, height);
             _bloom.Resize(width, height);
             _adaptLuminance.Resize(width, height);
             _gamma.Resize(width, height);

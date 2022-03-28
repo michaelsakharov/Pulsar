@@ -11,8 +11,6 @@ namespace Duality.Graphics.Deferred
 {
     public class ShadowBufferRenderer
     {
-        private readonly Backend _backend;
-
         private Vector2 _screenSize;
         private readonly RenderTarget _renderTarget;
         private readonly BatchBuffer _quadMesh;
@@ -25,22 +23,20 @@ namespace Duality.Graphics.Deferred
 
         public bool DebugCascades = false;
 
-        public ShadowBufferRenderer(Backend backend, int width, int height)
+        public ShadowBufferRenderer(int width, int height)
         {
-            _backend = backend ?? throw new ArgumentNullException("backend");
-
             _screenSize = new Vector2(width, height);
-            _renderTarget = _backend.CreateRenderTarget("shadow_buffer", new Definition(width, height, false, new List<Definition.Attachment>()
+            _renderTarget = DualityApp.GraphicsBackend.CreateRenderTarget("shadow_buffer", new Definition(width, height, false, new List<Definition.Attachment>()
             {
                 new Definition.Attachment(Definition.AttachmentPoint.Color, Renderer.PixelFormat.Rgba, Renderer.PixelInternalFormat.Rgba8, Renderer.PixelType.Float, 0)
             }));
 
-            _quadMesh = _backend.CreateBatchBuffer();
+            _quadMesh = DualityApp.GraphicsBackend.CreateBatchBuffer();
             _quadMesh.Begin();
             _quadMesh.AddQuad(new Vector2(-1, -1), new Vector2(2, 2), Vector2.Zero, new Vector2(1, 1));
             _quadMesh.End();
 
-            _shadowSampler = _backend.RenderSystem.CreateSampler(new Dictionary<SamplerParameterName, int>
+            _shadowSampler = DualityApp.GraphicsBackend.RenderSystem.CreateSampler(new Dictionary<SamplerParameterName, int>
             {
                 { SamplerParameterName.TextureMinFilter, (int)TextureMinFilter.Linear },
                 { SamplerParameterName.TextureMagFilter, (int)TextureMagFilter.Linear },
@@ -60,7 +56,7 @@ namespace Duality.Graphics.Deferred
         internal void Resize(int width, int height)
         {
             _screenSize = new Vector2(width, height);
-            _backend.ResizeRenderTarget(_renderTarget, width, height);
+			DualityApp.GraphicsBackend.ResizeRenderTarget(_renderTarget, width, height);
         }
 
         public RenderTarget Render(Duality.Components.Camera camera, RenderTarget gbuffer, List<RenderTarget> csmRenderTargets, Matrix4[] shadowViewProjections, float[] clipDistances, ShadowQuality quality)
@@ -76,7 +72,7 @@ namespace Duality.Graphics.Deferred
             camera.GetProjectionMatrix(out projection);
             var inverseViewProjectionMatrix = Matrix4.Invert(view * projection);
 
-            _backend.BeginPass(_renderTarget, Vector4.One);
+			DualityApp.GraphicsBackend.BeginPass(_renderTarget, Vector4.One);
 
             // Setup textures and samplers
             var textures = new int[] { gbuffer.Textures[3].Handle,
@@ -86,33 +82,33 @@ namespace Duality.Graphics.Deferred
             var samplers = new int[textures.Length];
             for (var i = 0; i < samplers.Length; i++)
             {
-                samplers[i] = i == 0 ? _backend.DefaultSamplerNoFiltering : _backend.DefaultSamplerNoFiltering;
+                samplers[i] = i == 0 ? DualityApp.GraphicsBackend.DefaultSamplerNoFiltering : DualityApp.GraphicsBackend.DefaultSamplerNoFiltering;
             }
 
-            // Render shadows
-            _backend.BeginInstance(_renderShadowsCSMShader[(int)quality].Handle, textures, samplers);
+			// Render shadows
+			DualityApp.GraphicsBackend.BeginInstance(_renderShadowsCSMShader[(int)quality].Handle, textures, samplers);
 
-            _backend.BindShaderVariable(_renderShadowsCSMParams.SamplerDepth, 0);
+			DualityApp.GraphicsBackend.BindShaderVariable(_renderShadowsCSMParams.SamplerDepth, 0);
 
             var shadowSamplers = new int[] { 1, 2, 3, 4, 5 };
-            _backend.BindShaderVariable(_renderShadowsCSMParams.SamplerShadowCsm, ref shadowSamplers);
-            _backend.BindShaderVariable(_renderShadowsCSMParams.ShadowViewProjCsm, ref shadowViewProjections);
-            _backend.BindShaderVariable(_renderShadowsCSMParams.ShadowClipDistances, ref clipDistances);
+            DualityApp.GraphicsBackend.BindShaderVariable(_renderShadowsCSMParams.SamplerShadowCsm, ref shadowSamplers);
+            DualityApp.GraphicsBackend.BindShaderVariable(_renderShadowsCSMParams.ShadowViewProjCsm, ref shadowViewProjections);
+			DualityApp.GraphicsBackend.BindShaderVariable(_renderShadowsCSMParams.ShadowClipDistances, ref clipDistances);
 
             var cameraClipPlane = new Vector2(camera.NearClipDistance, camera.FarClipDistance);
-            _backend.BindShaderVariable(_renderShadowsCSMParams.CameraClipPlane, ref cameraClipPlane);
+			DualityApp.GraphicsBackend.BindShaderVariable(_renderShadowsCSMParams.CameraClipPlane, ref cameraClipPlane);
 
-            _backend.BindShaderVariable(_renderShadowsCSMParams.ScreenSize, ref _screenSize);
+			DualityApp.GraphicsBackend.BindShaderVariable(_renderShadowsCSMParams.ScreenSize, ref _screenSize);
             var texelSize = 1.0f / (float)csmRenderTargets[0].Width;
-            _backend.BindShaderVariable(_renderShadowsCSMParams.TexelSize, texelSize);
+			DualityApp.GraphicsBackend.BindShaderVariable(_renderShadowsCSMParams.TexelSize, texelSize);
 
-            _backend.BindShaderVariable(_renderShadowsCSMParams.InvViewProjection, ref inverseViewProjectionMatrix);
-            _backend.BindShaderVariable(_renderShadowsCSMParams.DebugCascades, DebugCascades ? 1 : 0);
+            DualityApp.GraphicsBackend.BindShaderVariable(_renderShadowsCSMParams.InvViewProjection, ref inverseViewProjectionMatrix);
+			DualityApp.GraphicsBackend.BindShaderVariable(_renderShadowsCSMParams.DebugCascades, DebugCascades ? 1 : 0);
 
 
-            _backend.DrawMesh(_quadMesh.MeshHandle);
+			DualityApp.GraphicsBackend.DrawMesh(_quadMesh.MeshHandle);
 
-            _backend.EndPass();
+			DualityApp.GraphicsBackend.EndPass();
 
             return _renderTarget;
         }

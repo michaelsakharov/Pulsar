@@ -8,12 +8,10 @@ namespace Duality.Graphics.Post.Effects
 {
 	public class BaseEffect
 	{
-		protected readonly Backend _backend;
 		protected readonly BatchBuffer _quadMesh;
 
-		public BaseEffect(Backend backend, BatchBuffer quadMesh)
+		public BaseEffect(BatchBuffer quadMesh)
 		{
-            _backend = backend ?? throw new ArgumentNullException("backend");
 			_quadMesh = quadMesh ?? throw new ArgumentNullException("quadMesh");
 		}
 
