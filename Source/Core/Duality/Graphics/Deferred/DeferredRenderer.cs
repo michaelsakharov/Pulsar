@@ -316,7 +316,7 @@ namespace Duality.Graphics.Deferred
         {
             var frustum = camera.GetFrustum();
 
-            //RenderTiledLights(camera, frustum, ref view, ref projection, stage, lights);
+            RenderTiledLights(camera, frustum, ref view, ref projection, stage, lights);
 
             _backend.ProfileBeginSection(Profiler.DirectionaLight);
             foreach (var light in lights)

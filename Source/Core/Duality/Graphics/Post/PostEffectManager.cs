@@ -192,15 +192,15 @@ namespace Duality.Graphics.Post
 
             SwapRenderTargets();
 
-            //if (EnablePostEffects)
-            //{
-            //    if (EnableAtmosphere)
-            //    {
-            //        ApplyAtmosphere(camera, gbuffer, stage);
-            //    }
-            //    ApplyLumianceBloomAndTonemap(deltaTime);
-            //    ApplyAA();
-            //}
+            if (EnablePostEffects)
+            {
+                if (EnableAtmosphere)
+                {
+                    ApplyAtmosphere(camera, gbuffer, stage);
+                }
+                ApplyLumianceBloomAndTonemap(deltaTime);
+                ApplyAA();
+            }
 
             // linear -> to gamma space
             _gamma.Render(_temporaryRenderTargets[0], _temporaryRenderTargets[1]);

@@ -10,7 +10,7 @@ namespace Duality.Graphics.Components
 {
     public class MeshComponent : RenderableComponent, ICmpUpdatable
 	{
-		[DontSerialize] protected bool _meshDirty = false;
+		[DontSerialize] protected bool _meshDirty = true; // Start Dirty
 
 		// Used for world space transform
 		[DontSerialize] private BoundingSphere _boundingSphereLocalSpace;

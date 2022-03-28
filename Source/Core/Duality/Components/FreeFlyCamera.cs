@@ -49,15 +49,15 @@ namespace Duality.Components
 
 				Vector3 movement = (GameObj.Transform.Forward * forward) + (GameObj.Transform.Right * right) + (GameObj.Transform.Up * up);
 
-				camVel += movement * 0.1f;
+				camVel = movement * 1f;
 				//GameObj.Transform.Pos = camVel;
-				GameObj.Transform.MoveByLocal(camVel * Time.DeltaTime);
 				//camVel = movement * 0.1f;
 			}
 			else
 			{
-				//camVel *= 0.998f;
+				camVel *= 0.98f;
 			}
+			GameObj.Transform.MoveByLocal(camVel * Time.DeltaTime);
 			//GameObj.Transform.Pos += camVel;
 		}
 	}

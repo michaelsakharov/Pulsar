@@ -53,9 +53,9 @@ void main()
 	float depth = texture(samplerDepth, project).x;
 	vec3 position = decodeWorldPosition(project, depth);
 	
-	//vec3 lightDir = -normalize(lightDirection);
+	vec3 lightDir = -normalize(lightDirection);
 	//vec3 lightVec = lightDir;
-	vec3 lightDir = -lightDirection;
+	//vec3 lightDir = lightDirection;
 	
 	float attenuation = 1.0;
 

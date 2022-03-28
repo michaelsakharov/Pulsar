@@ -56,8 +56,8 @@ void main() {
 
 	float roughness = get_roughness();
 	
-	//oColor = vec4(encodeDiffuse(diffuse), 1);
-	oColor = vec4(1, 1, 1, 1);
+	oColor = vec4(encodeDiffuse(diffuse), 1);
+	//oColor = vec4(1, 1, 1, 1);
 	oNormal = vec4(encodeNormals(normals), 1);
 	oSpecular = vec4(metallic, roughness, specular, 0);
 	
