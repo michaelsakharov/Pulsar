@@ -47,11 +47,12 @@ namespace Duality.Graphics.Post.Effects
 
             Vector3 unitZ = Vector3.UnitZ;
             //Vector3 lightDirWS = -Vector3.Up;
-			var ori = light.GameObj.Transform.Quaternion;
-			Vector3.Transform(ref unitZ, ref ori, out var lightDirWS);
-            lightDirWS = -lightDirWS.Normalized;
+			//var ori = light.GameObj.Transform.Quaternion;
+			//Vector3.Transform(ref unitZ, ref ori, out var lightDirWS);
+            //lightDirWS = -lightDirWS.Normalized;
+			var lightDirWS = -light.GameObj.Transform.Forward;
 
-            camera.GetViewMatrix(out var view);
+			camera.GetViewMatrix(out var view);
             camera.GetProjectionMatrix(out var projection);
             var inverseViewProjectionMatrix = Matrix4.Invert(view * projection);
 
@@ -61,6 +62,8 @@ namespace Duality.Graphics.Post.Effects
             DualityApp.GraphicsBackend.BindShaderVariable(_shaderParams.SamplerGBuffer1, 2);
             DualityApp.GraphicsBackend.BindShaderVariable(_shaderParams.SunDirection, ref lightDirWS);
             DualityApp.GraphicsBackend.BindShaderVariable(_shaderParams.InvViewProjection, ref inverseViewProjectionMatrix);
+			var Rot = Matrix4.Rotate(camera.GameObj.Transform.Quaternion);
+			DualityApp.GraphicsBackend.BindShaderVariable(_shaderParams.cameraRotation, ref Rot);
 			var Pos = camera.GameObj.Transform.Pos;
 			DualityApp.GraphicsBackend.BindShaderVariable(_shaderParams.CameraPosition, ref Pos);
 
@@ -78,6 +81,7 @@ namespace Duality.Graphics.Post.Effects
             public int SamplerGBuffer1 = 0;
             public int CameraPosition = 0;
             public int InvViewProjection = 0;
+            public int cameraRotation = 0;
         }
     }
 }

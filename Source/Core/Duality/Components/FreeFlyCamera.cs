@@ -22,10 +22,17 @@ namespace Duality.Components
 
 		private float _currentYaw;
 		private float _currentPitch;
+		private float normalSpeed = 1;
+		private float fastSpeed = 10;
+		private float veryfastSpeed = 100;
 		private Vector3 camVel;
 
 		void ICmpUpdatable.OnUpdate()
 		{
+			float speed = normalSpeed;
+			if (DualityApp.Keyboard.KeyPressed(Input.Key.ShiftLeft)) speed = fastSpeed;
+			if (DualityApp.Keyboard.KeyPressed(Input.Key.ControlLeft)) speed = veryfastSpeed;
+
 			if (DualityApp.Mouse.ButtonPressed(Input.MouseButton.Right))
 			{
 				this._currentYaw += DualityApp.Mouse.Vel.X * 0.01f;
@@ -49,7 +56,7 @@ namespace Duality.Components
 
 				Vector3 movement = (GameObj.Transform.Forward * forward) + (GameObj.Transform.Right * right) + (GameObj.Transform.Up * up);
 
-				camVel = movement * 1f;
+				camVel = movement * speed;
 				//GameObj.Transform.Pos = camVel;
 				//camVel = movement * 0.1f;
 			}

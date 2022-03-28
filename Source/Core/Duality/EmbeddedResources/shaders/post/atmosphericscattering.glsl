@@ -11,6 +11,7 @@ out vec3 position;
 
 void main() {
 	texCoord = iTexCoord;
+	position = iPosition;
 	gl_Position = vec4(iPosition, 1);
 }
 
@@ -26,6 +27,7 @@ uniform sampler2D samplerGBuffer1;
 
 uniform vec3 cameraPosition;
 uniform vec3 sunDirection = vec3(0.0249974, 0.8549658, -0.5180817);
+uniform mat4 cameraRotation;
 
 const float earthRadius = 6360000;
 const float atmosphereRadius = 6400000;
@@ -140,21 +142,26 @@ vec3 computeIncidentLight(vec3 orig, vec3 dir, float tmin, float tmax) {
 
 void main() {
     vec4 gbuffer1 = texture2D(samplerGBuffer1, texCoord);
-
-	float depth = texture(samplerDepth, texCoord).x;
-	vec3 position = decodeWorldPosition(texCoord, depth);
 	
-    vec3 V = normalize(position - cameraPosition);
+    //vec3 V = normalize(position - cameraPosition);
+
+	vec3 screenRayDir = vec3(position);
+    screenRayDir.x = (screenRayDir.x / 1.425f) * 1.6f / 0.9f;
+	screenRayDir.y = (screenRayDir.y / 1.425f);
+    screenRayDir.z = -1.0f;
+    vec3 V = normalize(mat3(cameraRotation) * (screenRayDir));
 
     vec3 P = cameraPosition + vec3(0, earthRadius, 0);
 
 	if (gbuffer1.w == 0) {
-        oColor.xyz = computeIncidentLight(P, vec3(0, 0, 1), 0, 9999999999.0);
+        oColor.xyz = computeIncidentLight(P, V, 0, 9999999999.0);
 	} else {
-        float tmax = length(position);
+		//float depth = texture(samplerDepth, texCoord).x;
+		//vec3 wposition = decodeWorldPosition(texCoord, depth);
+        //float tmax = length(wposition);
         
         vec3 color = texture(samplerScene, texCoord).xyz;
-        color += computeIncidentLight(P, V, 0, tmax);
+        //color += computeIncidentLight(P, V, 0, tmax) * 0.2f;
 		
         oColor.xyz = color;
 	}

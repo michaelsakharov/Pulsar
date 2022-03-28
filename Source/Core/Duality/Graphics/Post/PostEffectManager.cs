@@ -42,7 +42,7 @@ namespace Duality.Graphics.Post
         private List<BaseEffect> _effects = new List<BaseEffect>();
 
 
-		public bool EnableAtmosphere { get; set; } = false;
+		public bool EnableAtmosphere { get; set; } = true;
 
         public PostEffectManager(int width, int height)
         {
