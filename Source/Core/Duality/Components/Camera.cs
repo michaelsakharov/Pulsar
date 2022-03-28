@@ -249,8 +249,13 @@ namespace Duality.Components
 				return;
 			}
 			Vector3 position = noTranslation ? Vector3.Zero : GameObj.Transform.Pos;
-			viewMatrix = Matrix4.CreateLookAt(position, position + GameObj.Transform.Forward, GameObj.Transform.Up);
+			////viewMatrix = Matrix4.CreateLookAt(position, position + GameObj.Transform.Forward, GameObj.Transform.Up);
 			//viewMatrix = Matrix4.CreateLookAt(position, position + GameObj.Transform.Forward, Vector3.Up);
+
+			var matrix = Matrix4.CreateFromYawPitchRoll(GameObj.Transform.Rotation.Y, this.GameObj.Transform.Rotation.X, this.GameObj.Transform.Rotation.Z);
+			var target = (position) + Vector3.Transform(Vector3.Forward, matrix);
+
+			viewMatrix = Matrix4.CreateLookAt(position, target, Vector3.Up);
 		}
 
 		public Matrix4 GetProjectionMatrix()
@@ -262,18 +267,18 @@ namespace Duality.Components
 		public void GetProjectionMatrix(out Matrix4 projectionMatrix)
 		{
 			if (Orthographic)
-				Matrix4.CreateOrthographicOffCenter(0.0f, Viewport.X, Viewport.Y, 0.0f, NearClipDistance, FarClipDistance, out projectionMatrix);
+				Matrix4.CreateOrthographicOffCenter(0.0f, Viewport.X, Viewport.Y, 0.0f, MathF.Max(NearClipDistance, 0.01f), FarClipDistance, out projectionMatrix);
 			else
-				Matrix4.CreatePerspectiveFieldOfView(MathF.DegToRad(Fov), Viewport.W / Viewport.H, NearClipDistance, FarClipDistance, out projectionMatrix);
+				Matrix4.CreatePerspectiveFieldOfView(MathF.DegToRad(Fov), Viewport.W / Viewport.H, MathF.Max(NearClipDistance, 0.01f), FarClipDistance, out projectionMatrix);
 		}
 
 		public BoundingFrustum GetFrustum()
 		{
 			Matrix4 view, projection;
-
+			
 			GetViewMatrix(out view);
 			GetProjectionMatrix(out projection);
-
+			
 			Frustum.Matrix = view * projection;
 
 			return Frustum;
