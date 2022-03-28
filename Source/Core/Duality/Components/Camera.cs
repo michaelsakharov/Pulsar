@@ -28,7 +28,6 @@ namespace Duality.Components
 
 		public float Fov = 70;
 
-		public Rect Viewport = new Rect(0, 0, 1f, 1f);
 
 		[DontSerialize] private BoundingFrustum Frustum = new BoundingFrustum(Matrix4.Identity);
 
@@ -38,6 +37,15 @@ namespace Duality.Components
 			get
 			{
 				return this.GameObj.Transform.Quaternion;
+			}
+		}
+
+		[EditorHintFlags(MemberFlags.Invisible)]
+		public Rect Viewport
+		{
+			get
+			{
+				return new Rect(0, 0, DualityApp.WindowSize.X, DualityApp.WindowSize.Y);
 			}
 		}
 
