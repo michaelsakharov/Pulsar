@@ -452,6 +452,8 @@ namespace Duality.Graphics
 							GLContextQueue.TryDequeue(out var GLContext);
 							if (GLContext.Item1 != null)
 								GLContext.Item1.MakeCurrent(GLContext.Item2);
+							else
+								Logs.Core.WriteError("GL Context is null!");
 						}
 						break;
 					case OpCode.Barrier:

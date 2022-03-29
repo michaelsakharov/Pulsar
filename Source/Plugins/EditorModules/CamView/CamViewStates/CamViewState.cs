@@ -405,6 +405,7 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 		protected virtual void OnRenderState()
 		{
 			// Render here!
+			CameraComponent.useCustomViewPort = false;
 			deferredPipeline.RenderStage(Time.DeltaTime, Scene.Stage, CameraComponent);
 		}
 
@@ -518,6 +519,7 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 			// frame.
 			if (this.renderFrameScheduled && this.renderFrameLast != Time.FrameCount)
 				this.Invalidate();
+			this.Invalidate();
 		}
 
 		protected virtual void OnSceneChanged()

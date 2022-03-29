@@ -545,6 +545,7 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 			if (deferredPipeline == null)
 				deferredPipeline = new DeferredPipeline(TargetRenderSize.X, TargetRenderSize.Y);
 			CameraComponent.useCustomViewPort = true;
+			//viewportRect.Pos += TargetRenderSize / 2f;
 			CameraComponent.CustomViewport = viewportRect;
 			deferredPipeline.RenderStage(Time.DeltaTime, Scene.Stage, CameraComponent);
 		}

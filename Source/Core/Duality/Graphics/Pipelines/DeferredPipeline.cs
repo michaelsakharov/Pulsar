@@ -68,7 +68,8 @@ namespace Duality.Graphics.Pipelines
 
 				DualityApp.GraphicsBackend.BeginPass(null, Vector4.Zero, ClearFlags.Color);
 
-				SpriteRenderer.RenderQuad(postProcessedResult.Textures[0], Vector2.Zero, new Vector2(Width, Height));
+				//SpriteRenderer.RenderQuad(postProcessedResult.Textures[0], Vector2.Zero, new Vector2(Width, Height));
+				SpriteRenderer.RenderQuad(postProcessedResult.Textures[0], camera.Viewport.Pos, camera.Viewport.Size);
 				SpriteRenderer.Render(Width, Height);
 
 				//DoRenderUI(deltaTime);
