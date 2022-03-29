@@ -40,11 +40,16 @@ namespace Duality.Components
 			}
 		}
 
+		public bool useCustomViewPort = false;
+		public Rect CustomViewport = new Rect(0, 0, 800, 600);
+
 		[EditorHintFlags(MemberFlags.Invisible)]
 		public Rect Viewport
 		{
 			get
 			{
+				if (useCustomViewPort)
+					return CustomViewport;
 				return new Rect(0, 0, DualityApp.WindowSize.X, DualityApp.WindowSize.Y);
 			}
 		}
