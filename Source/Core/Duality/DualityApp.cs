@@ -640,6 +640,9 @@ namespace Duality
 			isUpdating = false;
 
 			if (terminateScheduled) Terminate();
+
+			// Execute Command List
+			DualityApp.GraphicsBackend.Process();
 		}
 
 		/// <summary>

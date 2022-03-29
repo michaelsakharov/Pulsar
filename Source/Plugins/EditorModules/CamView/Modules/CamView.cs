@@ -619,14 +619,7 @@ namespace Duality.Editor.Plugins.CamView
 
 			// Add "null" item to default to application settings
 			{
-				MenuModelItem setupItem = this.renderSetupMenuModel.RequestItem("AppData Setting");
-				setupItem.Checkable = true;
-				setupItem.Checked = true;
-				setupItem.ActionHandler = this.renderSetupSelector_ItemPerformAction;
-			}
-			// Render Depth
-			{
-				MenuModelItem setupItem = this.renderSetupMenuModel.RequestItem("Depth");
+				MenuModelItem setupItem = this.renderSetupMenuModel.RequestItem("Null");
 				setupItem.Checkable = true;
 				setupItem.Checked = true;
 				setupItem.ActionHandler = this.renderSetupSelector_ItemPerformAction;
@@ -974,7 +967,6 @@ namespace Duality.Editor.Plugins.CamView
 			this.camSelector.Visible = value;
 			this.showBgColorDialog.Visible = value;
 			this.renderSetupSelector.Visible = value;
-			this.buttonResetZoom.Visible = value;
 			this.renderToPerspectiveSeparator.Visible = value;
 		}
 
@@ -1231,6 +1223,7 @@ namespace Duality.Editor.Plugins.CamView
 			{
 				DualityApp.WindowSize = this.activeState.RenderedImageSize;
 			}
+			DualityApp.GraphicsBackend.Resize(RenderableSite.Control.Width, RenderableSite.Control.Height);
 
 			this.RenderableControl.Invalidate();
 		}

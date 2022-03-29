@@ -247,7 +247,6 @@
 		private System.Windows.Forms.ToolStripComboBox camSelector;
 		private System.Windows.Forms.ToolStrip toolbarCamera;
 		private System.Windows.Forms.ToolStripDropDownButton layerSelector;
-		private System.Windows.Forms.ToolStripButton buttonResetZoom;
 		private System.Windows.Forms.ToolStripDropDownButton perspectiveDropDown;
 		private System.Windows.Forms.ToolStripDropDownButton snapToGridSelector;
 		private System.Windows.Forms.ToolStripMenuItem snapToGridInactiveItem;

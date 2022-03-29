@@ -406,9 +406,6 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 		{
 			// Render here!
 			deferredPipeline.RenderStage(Time.DeltaTime, Scene.Stage, CameraComponent);
-
-			// Execute Command List
-			DualityApp.GraphicsBackend.Process();
 		}
 
 		private static DeferredPipeline deferredPipeline;
@@ -931,6 +928,9 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 		private void RenderableControl_Resize(object sender, EventArgs e)
 		{
 			if (this.ClientSize == Size.Empty) return;
+
+			if(deferredPipeline != null)
+				deferredPipeline.Resize(ClientSize.Width, ClientSize.Height);
 
 			this.UpdateFormattedTextRenderers();
 			this.OnResize();
