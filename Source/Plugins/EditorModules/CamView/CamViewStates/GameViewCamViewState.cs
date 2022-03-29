@@ -16,7 +16,7 @@ using Duality.Drawing;
 
 using Duality.Editor.Controls.ToolStrip;
 using Duality.Editor.Plugins.CamView.Properties;
-
+using Duality.Graphics.Pipelines;
 
 namespace Duality.Editor.Plugins.CamView.CamViewStates
 {
@@ -542,8 +542,14 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 			//DrawDevice.RenderVoid(new Rect(clientSize), new ColorRgba(64, 64, 64));
 
 			// Render Game view
-			
+			if (deferredPipeline == null)
+				deferredPipeline = new DeferredPipeline(TargetRenderSize.X, TargetRenderSize.Y);
+			CameraComponent.useCustomViewPort = true;
+			CameraComponent.CustomViewport = viewportRect;
+			deferredPipeline.RenderStage(Time.DeltaTime, Scene.Stage, CameraComponent);
 		}
+
+		private static DeferredPipeline deferredPipeline;
 		/// <inheritdoc />
 		protected override void OnResize()
 		{
