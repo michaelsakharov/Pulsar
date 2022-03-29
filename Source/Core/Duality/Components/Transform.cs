@@ -12,7 +12,7 @@ namespace Duality.Components
 	[ManuallyCloned]
 	[EditorHintCategory(CoreResNames.CategoryNone)]
 	[EditorHintImage(CoreResNames.ImageTransform)]
-	public sealed class Transform : Component, ICmpAttachmentListener, ICmpSerializeListener, ICmpUpdatable
+	public sealed class Transform : Component, ICmpAttachmentListener, ICmpSerializeListener, ICmpUpdatable, ICmpEditorUpdatable
 	{
 		private const float MinScale = 0.0000001f;
 
@@ -243,6 +243,16 @@ namespace Duality.Components
 		void ICmpSerializeListener.OnSaving() { }
 
 		void ICmpUpdatable.OnUpdate()
+		{
+			//if (!this._dirty)
+			//	return;
+
+			this.UpdateWorldMatrix();
+
+			this._dirty = false;
+		}
+
+		void ICmpEditorUpdatable.OnUpdate()
 		{
 			//if (!this._dirty)
 			//	return;
