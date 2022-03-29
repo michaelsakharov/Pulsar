@@ -38,6 +38,11 @@ namespace Duality
 		public static readonly TimeCounter TimeProcessDrawcalls;
 		public static readonly TimeCounter TimeLog;
 		public static readonly TimeCounter TimeVisualPicking;
+
+		public static readonly TimeCounter TimeShadowsGeneration;
+		public static readonly TimeCounter TimeShadowsRender;
+		public static readonly TimeCounter TimeSSAO;
+
 		public static readonly TimeCounter TimeUnaccounted;
 
 		public static readonly StatCounter StatNumPlaying2D;
@@ -73,6 +78,11 @@ namespace Duality
 			TimeProcessDrawcalls        = RequestCounter<TimeCounter>(@"Duality\Frame\Render\ProcessDrawcalls");
 			TimeLog                     = RequestCounter<TimeCounter>(@"Duality\Frame\Log");
 			TimeVisualPicking           = RequestCounter<TimeCounter>(@"Duality\Frame\VisualPicking");
+
+			TimeShadowsGeneration = RequestCounter<TimeCounter>(@"Duality\Frame\ShadowsGeneration");
+			TimeShadowsRender = RequestCounter<TimeCounter>(@"Duality\Frame\ShadowsRender");
+			TimeSSAO = RequestCounter<TimeCounter>(@"Duality\Frame\SSAO");
+
 			TimeUnaccounted             = RequestCounter<TimeCounter>(@"Duality\Frame\Unaccounted");
 
 			StatNumPlaying2D            = RequestCounter<StatCounter>(@"Duality\Stats\Audio\NumPlaying2D");

@@ -123,7 +123,13 @@ namespace Duality.Graphics
             ElapsedTime = 0;
         }
 
-        public void Dispose()
+		public void ChangleGLContext(ContextReference ctx)
+		{
+
+		}
+
+
+		public void Dispose()
         {
             Dispose(true);
             GC.SuppressFinalize(this);

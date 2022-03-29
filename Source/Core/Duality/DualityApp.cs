@@ -23,6 +23,7 @@ using OpenTK.Graphics.OpenGL;
 using System.Runtime.InteropServices;
 using System.Diagnostics;
 using Duality.Graphics.Components;
+using Duality.Graphics.Pipelines;
 
 namespace Duality
 {
@@ -97,6 +98,11 @@ namespace Duality
 		private static ExecutionEnvironment     environment        = ExecutionEnvironment.Unknown;
 		private static ExecutionContext         execContext        = ExecutionContext.Terminated;
 		private static List<object>             disposeSchedule    = new List<object>();
+
+		private static DebugProc _debugProcCallback = DebugCallback;
+		private static GCHandle _debugProcCallbackHandle;
+
+		private static DeferredPipeline deferredPipeline;
 
 		public static float ResolutionScale { get; set; }
 		public static bool CursorVisible { get; set; } = true;
@@ -569,6 +575,7 @@ namespace Duality
 
 			if (terminateScheduled) Terminate();
 		}
+
 		internal static void EditorUpdate(IEnumerable<GameObject> updateObjects, bool simulateGame, bool forceFixedStep)
 		{
 			isUpdating = true;
@@ -634,125 +641,29 @@ namespace Duality
 
 			if (terminateScheduled) Terminate();
 		}
+
 		/// <summary>
 		/// Performs a single render cycle.
 		/// </summary>
 		public static void Render()
 		{
-			RenderScene(Time.DeltaTime);
+			if (deferredPipeline == null)
+				deferredPipeline = new DeferredPipeline(WindowSize.X, WindowSize.Y);
+
+			deferredPipeline.RenderStage(Time.DeltaTime, Scene.Stage, Scene.Camera);
+
+			// Execute Command List
 			GraphicsBackend.Process();
-			//if (!GraphicsBackend.Process())
-			//	return;
 		}
 
-		public static Graphics.Deferred.DeferredRenderer DeferredRenderer { get; private set; }
-		public static Graphics.Deferred.ShadowRenderer ShadowRenderer { get; private set; }
-		public static Graphics.Deferred.ShadowBufferRenderer ShadowBufferRenderer { get; private set; }
-		public static Graphics.Post.PostEffectManager PostEffectManager { get; private set; }
-		public static Graphics.SpriteBatch SpriteRenderer;
-
-		private static DebugProc _debugProcCallback = DebugCallback;
-		private static GCHandle _debugProcCallbackHandle;
-		private static void DebugCallback(DebugSource source,
-								  DebugType type,
-								  int id,
-								  DebugSeverity severity,
-								  int length,
-								  IntPtr message,
-								  IntPtr userParam)
+		private static void DebugCallback(DebugSource source, DebugType type, int id, DebugSeverity severity, int length, IntPtr message, IntPtr userParam)
 		{
 			string messageString = Marshal.PtrToStringAnsi(message, length);
 
 			Logs.Core.Write($"OpenGL Error: {severity} {type} | {messageString}");
 
 			if (type == DebugType.DebugTypeError)
-			{
 				throw new Exception(messageString);
-			}
-		}
-
-		/// <summary>
-		/// Feed render commands to the graphics backend.
-		/// Only override this method if you wish to customize the rendering pipeline.
-		/// </summary>
-		public static void RenderScene(float deltaTime)
-		{
-			if (ShadowRenderer == null) ShadowRenderer = new Graphics.Deferred.ShadowRenderer();
-			if(DeferredRenderer == null) DeferredRenderer = new Graphics.Deferred.DeferredRenderer(ShadowRenderer, GraphicsBackend.Width, GraphicsBackend.Height);
-			if(ShadowBufferRenderer == null) ShadowBufferRenderer = new Graphics.Deferred.ShadowBufferRenderer(GraphicsBackend.Width, GraphicsBackend.Height);
-			if(PostEffectManager == null) PostEffectManager = new Graphics.Post.PostEffectManager(GraphicsBackend.Width, GraphicsBackend.Height);
-			if(SpriteRenderer == null) SpriteRenderer = GraphicsBackend.CreateSpriteBatch();
-
-			GraphicsBackend.BeginScene();
-
-			if (Scene.Camera != null)
-			{
-				var gbuffer = DeferredRenderer.RenderGBuffer(Scene.Stage, Scene.Camera);
-				var sunLight = Scene.Stage.GetSunLight();
-				
-				// Prepare shadow buffer for sunlight
-				List<RenderTarget> csm = null; RenderTarget shadows = null;
-				if (sunLight != null && sunLight.CastShadows)
-				{
-					//GraphicsBackend.ProfileBeginSection(Profiler.ShadowsGeneration);
-					csm = ShadowRenderer.RenderCSM(gbuffer, sunLight, Scene.Stage, Scene.Camera, out var viewProjections, out var clipDistances);
-					//GraphicsBackend.ProfileEndSection(Profiler.ShadowsGeneration);
-				
-					ShadowBufferRenderer.DebugCascades = PostEffectManager.VisualizationMode == Graphics.Post.VisualizationMode.CSM;
-				
-					//GraphicsBackend.ProfileBeginSection(Profiler.ShadowsRender);
-					shadows = ShadowBufferRenderer.Render(Scene.Camera, gbuffer, csm, viewProjections, clipDistances, DeferredRenderer.Settings.ShadowQuality);
-					//GraphicsBackend.ProfileEndSection(Profiler.ShadowsRender);
-				}
-				
-				// Light + post, ssao needed for ambient so we render it first
-				//GraphicsBackend.ProfileBeginSection(Profiler.SSAO);
-				var ssao = PostEffectManager.RenderSSAO(Scene.Camera, gbuffer);
-				//GraphicsBackend.ProfileEndSection(Profiler.SSAO);
-				var lightOutput = DeferredRenderer.RenderLighting(Scene.Stage, Scene.Camera, shadows, ssao);
-				var postProcessedResult = PostEffectManager.Render(Scene.Camera, Scene.Stage, gbuffer, lightOutput, shadows, deltaTime);
-
-
-
-				GraphicsBackend.BeginPass(null, Vector4.Zero, ClearFlags.Color);
-
-				SpriteRenderer.RenderQuad(postProcessedResult.Textures[0], Vector2.Zero, new Vector2(WindowSize.X, WindowSize.Y));
-				//SpriteRenderer.RenderQuad(gbuffer.Textures[0], Vector2.Zero, new Vector2(WindowSize.X, WindowSize.Y));
-				//SpriteRenderer.RenderQuad(ssao.Textures[0], Vector2.Zero, new Vector2(WindowSize.X, WindowSize.Y));
-				//SpriteRenderer.RenderQuad(lightOutput.Textures[0], Vector2.Zero, new Vector2(WindowSize.X, WindowSize.Y));
-				//SpriteRenderer.RenderQuad(Texture.Checkerboard.Res, Vector2.Zero, new Vector2(WindowSize.X / 2f, WindowSize.Y / 2f));
-				SpriteRenderer.Render(WindowSize.X, WindowSize.Y);
-
-				//if ((DebugFlags & DebugFlags.ShadowMaps) == DebugFlags.ShadowMaps)
-				//{
-				//	var x = _window.Width - 10 - 256;
-				//	var y = 10;
-				//
-				//	SpriteRenderer.RenderQuad(DeferredRenderer.PointShadowAtlas.Textures[0], new Vector2(x - 256 - 10, y), new Vector2(256, 256));
-				//	SpriteRenderer.RenderQuad(DeferredRenderer.SpotShadowAtlas.Textures[0], new Vector2(x, y), new Vector2(256, 256));
-				//
-				//	if (csm != null)
-				//	{
-				//		x = _window.Width;
-				//		y = RequestedHeight - 256 - 10;
-				//
-				//		var cascadeOffset = 256 + 10;
-				//		var xOffset = csm.Count * (cascadeOffset);
-				//
-				//		for (var i = 0; i < csm.Count; i++)
-				//		{
-				//			SpriteRenderer.RenderQuad(csm[i].Textures[0], new Vector2(x - xOffset + (i * cascadeOffset), y), new Vector2(256, 256));
-				//		}
-				//	}
-				//
-				//	SpriteRenderer.Render(_window.Width, _window.Height);
-				//}
-
-				//DoRenderUI(deltaTime);
-				//SpriteRenderer.Render(WindowSize.X, WindowSize.Y);
-			}
-
-			GraphicsBackend.EndScene();
 		}
 
 		public static void Resize(int width, int height)
@@ -761,13 +672,6 @@ namespace Duality
 
 			// Destroy the current Rendering system
 			GraphicsBackend.Resize(width, height);
-			//if (ShadowRenderer != null) ShadowRenderer.Resize(width, height);
-			if (DeferredRenderer != null) DeferredRenderer.Resize(width, height);
-			if (ShadowBufferRenderer != null) ShadowBufferRenderer.Resize(width, height);
-			//if (SpriteRenderer != null) SpriteRenderer.Resize(width, height);
-
-			// The Post Processing system can handle Dynamic Resizing!
-			if (PostEffectManager != null) PostEffectManager.Resize(width, height);
 		}
 
 		/// <summary>
