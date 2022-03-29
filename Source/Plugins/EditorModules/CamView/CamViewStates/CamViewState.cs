@@ -677,9 +677,6 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 			// Retrieve OpenGL context
 			//try { this.RenderableSite.MakeCurrent(); } catch (Exception) { return; }
 			DualityApp.GraphicsBackend.ChangeGLContext(RenderableSite.Control.Context, RenderableSite.Control.WindowInfo);
-			DualityApp.GraphicsBackend.Resize(RenderableSite.Control.Width, RenderableSite.Control.Height);
-
-			deferredPipeline.Resize(RenderableSite.Control.Width, RenderableSite.Control.Height);
 
 			// Perform rendering
 			try
@@ -688,7 +685,7 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 			}
 			catch (Exception exception)
 			{
-				Logs.Editor.WriteError("An error occurred during CamView {1} rendering. The current DrawDevice state may be compromised. Exception: {0}", LogFormat.Exception(exception), this.CameraComponent.ToString());
+				Logs.Editor.WriteError("An error occurred during CamView {1} rendering. Exception: {0}", LogFormat.Exception(exception), this.CameraComponent.ToString());
 			}
 			
 			// Make sure the rendered result ends up on screen
