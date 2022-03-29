@@ -45,6 +45,11 @@ namespace Duality.Graphics.Components
             _meshDirty = false;
         }
 
+		public override void OnActivate()
+		{
+			this.GameObj.Transform.OnChanged += Transform_OnChanged;
+		}
+
 		void ICmpUpdatable.OnUpdate()
 		{
             if (_meshDirty)
@@ -66,6 +71,11 @@ namespace Duality.Graphics.Components
 			var world = gameobj.Transform.WorldMatrix;
 			_boundingSphereLocalSpace.Transform(ref world, out BoundingSphere);
         }
+
+		private void Transform_OnChanged(object sender, EventArgs e)
+		{
+			_meshDirty = true;
+		}
 
 		public void GetWorldMatrix(out Matrix4 world)
 		{

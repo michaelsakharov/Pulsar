@@ -83,7 +83,7 @@ namespace Duality
 		private static bool                     initialized        = false;
 		private static bool                     isUpdating         = false;
 		private static bool                     runFromEditor      = false;
-		private static bool                     terminateScheduled = false;
+		public static bool                      terminateScheduled = false;
 		private static IAssemblyLoader          assemblyLoader     = null;
 		private static CorePluginManager        pluginManager      = new CorePluginManager();
 		private static ISystemBackend           systemBack         = null;

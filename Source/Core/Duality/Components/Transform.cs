@@ -17,11 +17,13 @@ namespace Duality.Components
 		private const float MinScale = 0.0000001f;
 
 		internal Matrix4 _worldMatrix;
-		private bool _dirty;
+		private bool _dirty = true;
 		private Vector3			pos             = Vector3.Zero;
 		private Vector3			rotation        = Vector3.Zero;
 		private Vector3			scale           = Vector3.One;
 		private bool			ignoreParent    = false;
+
+		public event EventHandler OnChanged;
 
 		public Vector3 Pos
 		{
@@ -34,13 +36,18 @@ namespace Duality.Components
 			{
 				this.UpdateWorldMatrix();
 				this.pos = Vector3.Transform(value, Matrix4.Invert(this._worldMatrix));
+				_dirty = true;
 			}
 		}
 
 		public Vector3 LocalPos
 		{
 			get { return this.pos; }
-			set { this.pos = value; }
+			set 
+			{
+				this.pos = value;
+				_dirty = true;
+			}
 		}
 		public Vector3 Rotation
 		{
@@ -62,6 +69,7 @@ namespace Duality.Components
 				{
 					this.rotation = value;
 				}
+				_dirty = true;
 			}
 		}
 
@@ -81,13 +89,21 @@ namespace Duality.Components
 		public Vector3 LocalRotation
 		{
 			get { return this.rotation; }
-			set { this.rotation = value; }
+			set 
+			{ 
+				this.rotation = value;
+				_dirty = true;
+			}
 		}
 
 		public Vector3 LocalScale
 		{
 			get { return this.scale; }
-			set { this.scale = value; }
+			set 
+			{ 
+				this.scale = value;
+				_dirty = true;
+			}
 		}
 
 		public Vector3 Scale
@@ -103,6 +119,7 @@ namespace Duality.Components
 			{
 				Vector3 parentScale = this.ParentTransform != null ? this.ParentTransform.Scale : Vector3.One;
 				this.scale = value / parentScale;
+				_dirty = true;
 			}
 		}
 
@@ -134,6 +151,7 @@ namespace Duality.Components
 				{
 					this.ignoreParent = value;
 				}
+				_dirty = true;
 			}
 		}
 		private Transform ParentTransform
@@ -146,6 +164,7 @@ namespace Duality.Components
 				GameObject parent = this.gameobj.Parent;
 				if (parent == null) return null;
 
+				_dirty = true;
 				return parent.Transform;
 			}
 		}
@@ -244,21 +263,23 @@ namespace Duality.Components
 
 		void ICmpUpdatable.OnUpdate()
 		{
-			//if (!this._dirty)
-			//	return;
+			if (!this._dirty)
+				return;
 
 			this.UpdateWorldMatrix();
 
+			OnChanged?.Invoke(this, null);
 			this._dirty = false;
 		}
 
 		void ICmpEditorUpdatable.OnUpdate()
 		{
-			//if (!this._dirty)
-			//	return;
+			if (!this._dirty)
+				return;
 
 			this.UpdateWorldMatrix();
 
+			OnChanged?.Invoke(this, null);
 			this._dirty = false;
 		}
 

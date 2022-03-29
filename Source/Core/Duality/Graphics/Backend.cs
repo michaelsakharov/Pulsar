@@ -225,6 +225,9 @@ namespace Duality.Graphics
 
             while (position < length)
             {
+				if (DualityApp.terminateScheduled)
+					return;
+
                 var header = *(PacketHeader*)ptr;
                 ptr += sizeof(PacketHeader);
                 position += sizeof(PacketHeader);

@@ -19,6 +19,12 @@ namespace Duality.Graphics.Components
 		void ICmpInitializable.OnActivate()
 		{
 			Duality.Resources.Scene.Stage.AddRenderableComponent(this);
+			OnActivate();
+		}
+
+		public virtual void OnActivate()
+		{
+
 		}
 
 		void ICmpInitializable.OnDeactivate()
