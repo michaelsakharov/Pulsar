@@ -58,9 +58,7 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 		private SpecialRenderSize targetRenderSizeMode    = SpecialRenderSize.CamView;
 		private List<Point2>      recentTargetRenderSizes = new List<Point2>();
 		private bool              isUpdatingUI            = false;
-		private RenderTarget      outputTarget            = null;
 		private Texture           outputTexture           = null;
-		private DrawDevice        blitDevice              = null;
 
 
 		/// <inheritdoc />
@@ -433,70 +431,6 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 			if (this.recentTargetRenderSizes.Count > 10)
 				this.recentTargetRenderSizes.RemoveRange(10, this.recentTargetRenderSizes.Count - 10);
 		}
-
-		/// <summary>
-		/// Disposes any potentially allocated internal offscreen rendering
-		/// target for rendering the game.
-		/// </summary>
-		private void CleanupRenderTarget()
-		{
-			if (this.outputTarget != null)
-			{
-				this.outputTarget.Dispose();
-				this.outputTarget = null;
-			}
-			if (this.outputTexture != null)
-			{
-				this.outputTexture.Dispose();
-				this.outputTexture = null;
-			}
-		}
-		/// <summary>
-		/// Sets up an offscreen rendering target for rendering the game. If
-		/// one was already available, the existing target is updated to match
-		/// the current rendering size and settings.
-		/// </summary>
-		private void SetupOutputRenderTarget()
-		{
-			if (this.outputTarget == null)
-			{
-				this.outputTexture = new Texture(
-					1, 
-					1, 
-					TextureSizeMode.NonPowerOfTwo, 
-					TextureMagFilter.Nearest, 
-					TextureMinFilter.Linear);
-				this.outputTarget = new RenderTarget();
-				this.outputTarget.DepthBuffer = true;
-				this.outputTarget.Targets = new ContentRef<Texture>[]
-				{
-					this.outputTexture
-				};
-			}
-
-			Point2 outputSize = new Point2(this.TargetRenderSize.X, this.TargetRenderSize.Y);
-			if (this.outputTarget.Size != outputSize || this.outputTarget.Multisampling != this.GameAntialiasingQuality)
-			{
-				this.outputTexture.Size = outputSize;
-				this.outputTexture.ReloadData();
-
-				this.outputTarget.Multisampling = this.GameAntialiasingQuality;
-				this.outputTarget.SetupTarget();
-			}
-		}
-		/// <summary>
-		/// Sets up a <see cref="DrawDevice"/> to be used for blitting an internal
-		/// offscreen rendering target to the actual window surface.
-		/// </summary>
-		private void SetupBlitDevice()
-		{
-			if (this.blitDevice == null)
-			{
-				this.blitDevice = new DrawDevice();
-				this.blitDevice.ClearFlags = ClearFlag.Depth;
-				this.blitDevice.Projection = ProjectionMode.Screen;
-			}
-		}
 		
 		/// <inheritdoc />
 		protected internal override void SaveUserData(XElement node)
@@ -605,44 +539,10 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 			// Render the game view background using a background color matching editor UI,
 			// so users can discern between an area that isn't rendered to and a rendered
 			// area of the game that happens to be black or outside the game viewport.
-			DrawDevice.RenderVoid(new Rect(clientSize), new ColorRgba(64, 64, 64));
+			//DrawDevice.RenderVoid(new Rect(clientSize), new ColorRgba(64, 64, 64));
 
-			if (this.UseOffscreenBuffer)
-			{
-				// Render the scene to an offscreen buffer of matching size first
-				this.SetupOutputRenderTarget();
-				DualityApp.Render(this.outputTarget, viewportRect, imageSize);
-
-				// Blit the offscreen buffer to the window area
-				this.SetupBlitDevice();
-				this.blitDevice.TargetSize = clientSize;
-				this.blitDevice.ViewportRect = new Rect(clientSize);
-
-				BatchInfo blitMaterial = this.blitDevice.RentMaterial();
-				blitMaterial.Technique = DrawTechnique.Solid;
-				blitMaterial.MainTexture = this.outputTexture;
-
-				TargetResize blitResize = this.TargetSizeFitsClientArea ? 
-					TargetResize.None : 
-					TargetResize.Fit;
-
-				this.blitDevice.PrepareForDrawcalls();
-				this.blitDevice.AddFullscreenQuad(blitMaterial, blitResize);
-				this.blitDevice.Render();
-			}
-			else
-			{
-				Rect windowViewportRect = new Rect(
-					windowRect.X + viewportRect.X, 
-					windowRect.Y + viewportRect.Y, 
-					viewportRect.W, 
-					viewportRect.H);
-
-				// Render the scene centered into the designated viewport area
-				this.CleanupRenderTarget();
-				DrawDevice.RenderVoid(windowRect);
-				DualityApp.Render(null, windowViewportRect, imageSize);
-			}
+			// Render Game view
+			
 		}
 		/// <inheritdoc />
 		protected override void OnResize()

@@ -62,7 +62,7 @@ namespace Duality.Graphics
         private readonly ConcurrentQueue<Action> _processQueue = new ConcurrentQueue<Action>();
         private readonly List<Action> _endOfFrameActions = new List<Action>();
 
-        private readonly ContextReference _contextReference;
+        private ContextReference _contextReference;
 
         private bool _isExiting = false;
         public bool Disposed { get; private set; }
@@ -88,7 +88,7 @@ namespace Duality.Graphics
             _contextReference = contextReference;
 
             // Setup the render system
-            RenderSystem = new Renderer.RenderSystem(_processQueue.Enqueue, contextReference);
+            RenderSystem = new Renderer.RenderSystem(_processQueue.Enqueue);
             Watch = new System.Diagnostics.Stopwatch();
 
             DefaultSampler = RenderSystem.CreateSampler(new Dictionary<SamplerParameterName, int>
@@ -122,11 +122,6 @@ namespace Duality.Graphics
 
             ElapsedTime = 0;
         }
-
-		public void ChangleGLContext(ContextReference ctx)
-		{
-
-		}
 
 
 		public void Dispose()
@@ -446,7 +441,13 @@ namespace Duality.Graphics
                             RenderSystem.BindBufferBase(packet.Index, packet.Handle);
                         }
                         break;
-                    case OpCode.Barrier:
+					case OpCode.ChangeGLContext:
+						{
+							//var packet = *(PacketChangeGLContext*)(ptr);
+							//packet.Context.MakeCurrent(packet.WindowInfo);
+						}
+						break;
+					case OpCode.Barrier:
                         {
                             var packet = *(PacketBarrier*)(ptr);
                             OGL.GL.MemoryBarrier(packet.Barrier);
@@ -896,9 +897,16 @@ namespace Duality.Graphics
 
             packet->Index = index;
             packet->Handle = handle;
-        }
+		}
 
-        public RenderTarget CreateRenderTarget(string name, Renderer.RenderTargets.Definition definition)
+		public unsafe void ChangeGLContext(int index, int handle)
+		{
+			//WriteHeader<PacketChangeGLContext>(OpCode.ChangeGLContext, 0, out var packet);
+
+			//packet->Index = index;
+		}
+
+		public RenderTarget CreateRenderTarget(string name, Renderer.RenderTargets.Definition definition)
         {
             if (string.IsNullOrWhiteSpace(name))
                 throw new ArgumentNullException("name");
@@ -991,6 +999,7 @@ namespace Duality.Graphics
             Scissor,
             BindImageTexture,
             BindBufferBase,
+			ChangeGLContext,
             Barrier,
             BeginPass2
         }

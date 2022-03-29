@@ -50,10 +50,6 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 		private bool          camActionAllowed       = true;
 		private bool          camTransformChanged    = false;
 		private bool          camBeginDragScene      = false;
-		private RenderStep    camPassBg              = null;
-		private RenderStep    camPassEdWorld         = null;
-		private RenderStep    camPassEdWorldNoDepth  = null;
-		private RenderStep    camPassEdScreen        = null;
 		private bool          engineUserInput        = false;
 		private UserGuideType snapToUserGuides       = UserGuideType.All;
 		private bool          mouseover              = false;
@@ -157,53 +153,6 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 		{
 			this.RestoreActiveLayers();
 			this.RestoreObjectVisibility();
-
-			// Create re-usable render passes for editor gizmos
-			{
-				// A screen overlay that is rendered behind all following gizmos.
-				// This is used for the "background plate" to grey out or darken
-				// the actual rendered world in order to make custom gizmos more visible.
-				this.camPassBg = new RenderStep
-				{
-					Id = "EditorGizmoBackground",
-					Projection = ProjectionMode.Screen,
-					ClearFlags = ClearFlag.None,
-					VisibilityMask = VisibilityFlag.ScreenOverlay
-				};
-
-				// An in-world rendering step that can make use of the existing depth
-				// buffer values, so gizmos can interact with actual world geometry.
-				this.camPassEdWorld = new RenderStep
-				{
-					Id = "EditorGizmoWorld",
-					DefaultProjection = true,
-					ClearFlags = ClearFlag.None,
-					VisibilityMask = VisibilityFlag.None
-				};
-
-				// An in-world rendering step where the depth buffer has been cleared.
-				// This allows to render gizmos in world coordinates that can occlude
-				// each other, while not interacting with world geometry or previously
-				// rendered gizmos.
-				this.camPassEdWorldNoDepth = new RenderStep
-				{
-					Id = "EditorGizmoWorldOverlay",
-					DefaultProjection = true,
-					ClearFlags = ClearFlag.Depth,
-					VisibilityMask = VisibilityFlag.None
-				};
-
-				// The final screen overlay rendering step after all gizmos have been 
-				// rendered. This is ideal for most text / status overlays, as well as
-				// direct cursor feedback.
-				this.camPassEdScreen = new RenderStep
-				{
-					Id = "EditorGizmoScreenOverlay",
-					Projection = ProjectionMode.Screen,
-					ClearFlags = ClearFlag.None,
-					VisibilityMask = VisibilityFlag.ScreenOverlay
-				};
-			}
 
 			Control control = this.RenderableSite.Control;
 			control.Paint		+= this.RenderableControl_Paint;
@@ -354,17 +303,17 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 			if (this.IsActive) this.RestoreObjectVisibility();
 		}
 
-		protected virtual void OnCollectStateDrawcalls(Canvas canvas)
+		protected virtual void OnCollectStateDrawcalls()
 		{
 			// Collect the views layer drawcalls
-			this.CollectLayerDrawcalls(canvas);
+			this.CollectLayerDrawcalls();
 		}
-		protected virtual void OnCollectStateWorldOverlayDrawcalls(Canvas canvas)
+		protected virtual void OnCollectStateWorldOverlayDrawcalls()
 		{
 			// Collect the views layer drawcalls
-			this.CollectLayerWorldOverlayDrawcalls(canvas);
+			this.CollectLayerWorldOverlayDrawcalls();
 		}
-		protected virtual void OnCollectStateOverlayDrawcalls(Canvas canvas)
+		protected virtual void OnCollectStateOverlayDrawcalls()
 		{
 			// Gather general data
 			Point cursorPos = this.PointToClient(Cursor.Position);
@@ -374,71 +323,64 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 			this.actionText.SourceText = this.UpdateActionText(ref actionTextPos);
 
 			// Collect the views overlay layer drawcalls
-			this.CollectLayerOverlayDrawcalls(canvas);
+			this.CollectLayerOverlayDrawcalls();
 
 			// Collect the states overlay drawcalls
-			canvas.PushState();
-			{
-				// Draw camera movement indicators
-				if (this.camAction != CameraAction.None)
-				{
-					canvas.PushState();
-					canvas.State.ColorTint *= ColorRgba.White.WithAlpha(0.5f);
-					if (this.camAction == CameraAction.DragScene)
-					{
-						// Don't draw anything.
-					}
-					else if (this.camAction == CameraAction.MoveWASD)
-					{
-						// Don't draw anything.
-					}
-					else if (this.camAction == CameraAction.Move)
-					{
-						canvas.FillCircle(this.camActionBeginLoc.X, this.camActionBeginLoc.Y, 3);
-						canvas.DrawLine(this.camActionBeginLoc.X, this.camActionBeginLoc.Y, cursorPos.X, cursorPos.Y);
-					}
-					canvas.PopState();
-				}
-				
-				// Normalize action text position
-				if (this.actionText.Fonts != null && this.actionText.Fonts.Any(r => r.IsAvailable && r.Res.IsPixelGridAligned))
-				{
-					actionTextPos.X = MathF.Round(actionTextPos.X);
-					actionTextPos.Y = MathF.Round(actionTextPos.Y);
-				}
-
-				// Draw current action text
-				if (!this.actionText.IsEmpty)
-				{
-					canvas.DrawText(this.actionText, actionTextPos.X, actionTextPos.Y, drawBackground: true);
-				}
-
-				// Update / Draw current status text
-				{
-					this.statusText.SourceText = this.UpdateStatusText();
-					if (!this.statusText.IsEmpty)
-					{
-						Vector2 statusTextSize = this.statusText.Size;
-						canvas.DrawText(this.statusText, 10, this.ClientSize.Height - statusTextSize.Y - 10, drawBackground: true);
-					}
-				}
-			}
-			canvas.PopState();
-
-			// Draw a focus indicator at the view border
-			canvas.PushState();
-			{
-				ColorRgba focusColor = ColorRgba.Lerp(this.FgColor, this.BgColor, 0.25f).WithAlpha(255);
-				ColorRgba noFocusColor = ColorRgba.Lerp(this.FgColor, this.BgColor, 0.75f).WithAlpha(255);
-				canvas.State.ColorTint *= this.Focused ? focusColor : noFocusColor;
-				canvas.DrawRect(0, 0, canvas.DrawDevice.TargetSize.X, canvas.DrawDevice.TargetSize.Y);
-			}
-			canvas.PopState();
+			//canvas.PushState();
+			//{
+			//	// Draw camera movement indicators
+			//	if (this.camAction != CameraAction.None)
+			//	{
+			//		canvas.PushState();
+			//		canvas.State.ColorTint *= ColorRgba.White.WithAlpha(0.5f);
+			//		if (this.camAction == CameraAction.DragScene)
+			//		{
+			//			// Don't draw anything.
+			//		}
+			//		else if (this.camAction == CameraAction.MoveWASD)
+			//		{
+			//			// Don't draw anything.
+			//		}
+			//		else if (this.camAction == CameraAction.Move)
+			//		{
+			//			canvas.FillCircle(this.camActionBeginLoc.X, this.camActionBeginLoc.Y, 3);
+			//			canvas.DrawLine(this.camActionBeginLoc.X, this.camActionBeginLoc.Y, cursorPos.X, cursorPos.Y);
+			//		}
+			//		canvas.PopState();
+			//	}
+			//
+			//	// Draw current action text
+			//	if (!this.actionText.IsEmpty)
+			//	{
+			//		canvas.DrawText(this.actionText, actionTextPos.X, actionTextPos.Y, drawBackground: true);
+			//	}
+			//
+			//	// Update / Draw current status text
+			//	{
+			//		this.statusText.SourceText = this.UpdateStatusText();
+			//		if (!this.statusText.IsEmpty)
+			//		{
+			//			Vector2 statusTextSize = this.statusText.Size;
+			//			canvas.DrawText(this.statusText, 10, this.ClientSize.Height - statusTextSize.Y - 10, drawBackground: true);
+			//		}
+			//	}
+			//}
+			//canvas.PopState();
+			//
+			//// Draw a focus indicator at the view border
+			//canvas.PushState();
+			//{
+			//	ColorRgba focusColor = ColorRgba.Lerp(this.FgColor, this.BgColor, 0.25f).WithAlpha(255);
+			//	ColorRgba noFocusColor = ColorRgba.Lerp(this.FgColor, this.BgColor, 0.75f).WithAlpha(255);
+			//	canvas.State.ColorTint *= this.Focused ? focusColor : noFocusColor;
+			//	canvas.DrawRect(0, 0, canvas.DrawDevice.TargetSize.X, canvas.DrawDevice.TargetSize.Y);
+			//}
+			//canvas.PopState();
 		}
-		protected virtual void OnCollectStateBackgroundDrawcalls(Canvas canvas)
+		protected virtual void OnCollectStateBackgroundDrawcalls()
 		{
 			// Collect the views overlay layer drawcalls
-			this.CollectLayerBackgroundDrawcalls(canvas);
+			this.CollectLayerBackgroundDrawcalls();
 		}
 		protected virtual string UpdateStatusText()
 		{
@@ -458,27 +400,10 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 		{
 			return null;
 		}
+
 		protected virtual void OnRenderState()
 		{
-			RenderSetup renderSetup = this.CameraComponent.ActiveRenderSetup;
-
-			renderSetup.EventCollectDrawcalls += this.CameraComponent_EventCollectDrawcalls;
-			renderSetup.AddRendererFilter(this.RendererFilter);
-			renderSetup.AddRenderStep(RenderStepPosition.Last, this.camPassBg);
-			renderSetup.AddRenderStep(this.camPassBg.Id, RenderStepPosition.After, this.camPassEdWorld);
-			renderSetup.AddRenderStep(this.camPassEdWorld.Id, RenderStepPosition.After, this.camPassEdWorldNoDepth);
-			renderSetup.AddRenderStep(this.camPassEdWorldNoDepth.Id, RenderStepPosition.After, this.camPassEdScreen);
-			
-			// Render CamView
-			Point2 clientSize = new Point2(this.ClientSize.Width, this.ClientSize.Height);
-			this.CameraComponent.Render(new Rect(clientSize), clientSize);
-
-			renderSetup.Steps.Remove(this.camPassBg);
-			renderSetup.Steps.Remove(this.camPassEdWorld);
-			renderSetup.Steps.Remove(this.camPassEdWorldNoDepth);
-			renderSetup.Steps.Remove(this.camPassEdScreen);
-			renderSetup.RemoveRendererFilter(this.RendererFilter);
-			renderSetup.EventCollectDrawcalls -= this.CameraComponent_EventCollectDrawcalls;
+			// Render here!
 		}
 
 		private float _currentYaw = 0.3f;
@@ -501,8 +426,8 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 				this.camActionBeginLoc = new Point((int)curPos.X, (int)curPos.Y);
 
 				float refZ = (this.HasCameraFocusPosition && camObj.Transform.Pos.Z < this.CameraFocusPosition.Z - cam.NearZ) ? this.CameraFocusPosition.Z : 0.0f;
-				if (camObj.Transform.Pos.Z >= refZ - cam.NearZ)
-					refZ = camObj.Transform.Pos.Z + MathF.Abs(cam.FocusDist);
+				//if (camObj.Transform.Pos.Z >= refZ - cam.NearZ)
+				//	refZ = camObj.Transform.Pos.Z + MathF.Abs(cam.FocusDist);
 
 				Vector2 targetOff = (-(curPos - lastPos) / 1f);
 				Vector2 targetVel = targetOff / unscaledTimeMult;
@@ -664,48 +589,40 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 			this.View.SetObjectVisibility(resolvedTypes);
 		}
 		
-		protected void CollectLayerDrawcalls(Canvas canvas)
+		protected void CollectLayerDrawcalls()
 		{
 			var layers = this.View.ActiveLayers.ToArray();
 			layers.StableSort((a, b) => a.Priority - b.Priority);
 			foreach (var layer in layers)
 			{
-				canvas.PushState();
-				layer.OnCollectDrawcalls(canvas);
-				canvas.PopState();
+				layer.OnCollectDrawcalls();
 			}
 		}
-		protected void CollectLayerWorldOverlayDrawcalls(Canvas canvas)
+		protected void CollectLayerWorldOverlayDrawcalls()
 		{
 			var layers = this.View.ActiveLayers.ToArray();
 			layers.StableSort((a, b) => a.Priority - b.Priority);
 			foreach (var layer in layers)
 			{
-				canvas.PushState();
-				layer.OnCollectWorldOverlayDrawcalls(canvas);
-				canvas.PopState();
+				layer.OnCollectWorldOverlayDrawcalls();
 			}
 		}
-		protected void CollectLayerOverlayDrawcalls(Canvas canvas)
+		protected void CollectLayerOverlayDrawcalls()
 		{
 			var layers = this.View.ActiveLayers.ToArray();
 			layers.StableSort((a, b) => a.Priority - b.Priority);
 			foreach (var layer in layers)
 			{
-				canvas.PushState();
-				layer.OnCollectOverlayDrawcalls(canvas);
-				canvas.PopState();
+				layer.OnCollectOverlayDrawcalls();
 			}
 		}
-		protected void CollectLayerBackgroundDrawcalls(Canvas canvas)
+		protected void CollectLayerBackgroundDrawcalls()
 		{
 			var layers = this.View.ActiveLayers.ToArray();
 			layers.StableSort((a, b) => a.Priority - b.Priority);
 			foreach (var layer in layers)
 			{
-				canvas.PushState();
-				layer.OnCollectBackgroundDrawcalls(canvas);
-				canvas.PopState();
+				layer.OnCollectBackgroundDrawcalls();
 			}
 		}
 
@@ -728,16 +645,6 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 			DualityEditorApp.PerformBufferSwap();
 		}
 		
-		private bool RendererFilter(ICmpRenderer r)
-		{
-			GameObject obj = (r as Component).GameObj;
-
-			if (!this.View.ObjectVisibility.Matches(obj))
-				return false;
-
-			DesignTimeObjectData data = DesignTimeObjectData.Get(obj);
-			return !data.IsHidden;
-		}
 
 		private void RenderableControl_Paint(object sender, PaintEventArgs e)
 		{
@@ -767,11 +674,6 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 			// Perform rendering
 			try
 			{
-				// Update culling info. Since we do not have a real game loop in edit
-				// mode, we'll do this right before rendering rather than once per frame.
-				if (Scene.Current.VisibilityStrategy != null)
-					Scene.Current.VisibilityStrategy.Update();
-
 				this.OnRenderState();
 			}
 			catch (Exception exception)
@@ -852,7 +754,7 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 
 			if (e.Delta != 0)
 			{
-				if (this.View.PerspectiveMode == ProjectionMode.Perspective)
+				if (this.View.Orthographic == false)
 				{
 					GameObject camObj = this.CameraObj;
 					float curVel = this.camVel.Length * MathF.Sign(this.camVel.Z);
@@ -877,7 +779,7 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 				}
 				else
 				{
-					this.View.FocusDist += ((float)e.Delta / 1000f) * Math.Max(this.View.FocusDist, 0.1f);
+					//this.View.FocusDist += ((float)e.Delta / 1000f) * Math.Max(this.View.FocusDist, 0.1f);
 				}
 			}
 
@@ -1045,9 +947,6 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 		private void Scene_Changed(object sender, EventArgs e)
 		{
 			this.OnSceneChanged();
-		}
-		private void CameraComponent_EventCollectDrawcalls(object sender, CollectDrawcallEventArgs e)
-		{
 		}
 
 		public virtual HelpInfo ProvideHoverHelp(Point localPos, ref bool captured)

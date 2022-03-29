@@ -46,18 +46,7 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 		{
 			get
 			{
-				ICmpRenderer renderer = this.gameObj.GetComponent<ICmpRenderer>();
-				if (renderer == null)
-				{
-					if (this.gameObj.Transform != null)
-						return CamView.DefaultDisplayBoundRadius * this.gameObj.Transform.Scale;
-					else
-						return CamView.DefaultDisplayBoundRadius;
-				}
-
-				CullingInfo info;
-				renderer.GetCullingInfo(out info);
-				return info.Radius;
+				return this.gameObj.Transform.Scale;
 			}
 		}
 		public override bool ShowAngle

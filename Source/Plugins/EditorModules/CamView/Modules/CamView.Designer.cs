@@ -31,13 +31,11 @@
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CamView));
 			this.stateSelector = new System.Windows.Forms.ToolStripComboBox();
 			this.viewToEditSeparator = new System.Windows.Forms.ToolStripSeparator();
-			this.focusDist = new Duality.Editor.Controls.ToolStrip.ToolStripNumericUpDown();
 			this.renderToPerspectiveSeparator = new System.Windows.Forms.ToolStripSeparator();
 			this.camSelector = new System.Windows.Forms.ToolStripComboBox();
 			this.toolbarCamera = new System.Windows.Forms.ToolStrip();
 			this.layerSelector = new System.Windows.Forms.ToolStripDropDownButton();
 			this.objectVisibilitySelector = new System.Windows.Forms.ToolStripDropDownButton();
-			this.buttonResetZoom = new System.Windows.Forms.ToolStripButton();
 			this.perspectiveDropDown = new System.Windows.Forms.ToolStripDropDownButton();
 			this.renderSetupSelector = new System.Windows.Forms.ToolStripDropDownButton();
 			this.showBgColorDialog = new System.Windows.Forms.ToolStripButton();
@@ -66,29 +64,6 @@
 			// 
 			this.viewToEditSeparator.Name = "viewToEditSeparator";
 			this.viewToEditSeparator.Size = new System.Drawing.Size(6, 25);
-			// 
-			// focusDist
-			// 
-			this.focusDist.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-			this.focusDist.BackColor = System.Drawing.Color.Transparent;
-			this.focusDist.DecimalPlaces = 2;
-			this.focusDist.Maximum = new decimal(new int[] {
-            100000,
-            0,
-            0,
-            0});
-			this.focusDist.Name = "focusDist";
-			this.focusDist.NumBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(196)))), ((int)(((byte)(196)))), ((int)(((byte)(196)))));
-			this.focusDist.NumericWidth = 75;
-			this.focusDist.Size = new System.Drawing.Size(128, 22);
-			this.focusDist.Text = "RefDist";
-			this.focusDist.ToolTipText = "Adjust the Cameras reference distance";
-			this.focusDist.Value = new decimal(new int[] {
-            500,
-            0,
-            0,
-            0});
-			this.focusDist.ValueChanged += new System.EventHandler(this.focusDist_ValueChanged);
 			// 
 			// renderToPerspectiveSeparator
 			// 
@@ -120,9 +95,7 @@
             this.layerSelector,
             this.objectVisibilitySelector,
             this.viewToEditSeparator,
-            this.buttonResetZoom,
             this.perspectiveDropDown,
-            this.focusDist,
             this.renderToPerspectiveSeparator,
             this.renderSetupSelector,
             this.showBgColorDialog,
@@ -154,17 +127,6 @@
 			this.objectVisibilitySelector.Size = new System.Drawing.Size(29, 22);
 			this.objectVisibilitySelector.Text = "Select visible objects";
 			this.objectVisibilitySelector.DropDownOpening += new System.EventHandler(this.objectVisibilitySelector_DropDownOpening);
-			// 
-			// buttonResetZoom
-			// 
-			this.buttonResetZoom.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-			this.buttonResetZoom.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.buttonResetZoom.Image = global::Duality.Editor.Plugins.CamView.Properties.Resources.magnifier_one;
-			this.buttonResetZoom.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.buttonResetZoom.Name = "buttonResetZoom";
-			this.buttonResetZoom.Size = new System.Drawing.Size(23, 22);
-			this.buttonResetZoom.Text = "Reset Camera Z";
-			this.buttonResetZoom.Click += new System.EventHandler(this.buttonResetZoom_Click);
 			// 
 			// perspectiveDropDown
 			// 

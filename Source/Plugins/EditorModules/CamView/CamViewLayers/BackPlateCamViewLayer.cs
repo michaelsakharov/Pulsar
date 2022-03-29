@@ -27,12 +27,12 @@ namespace Duality.Editor.Plugins.CamView.CamViewLayers
 			get { return base.Priority - 100; }
 		}
 
-		protected internal override void OnCollectBackgroundDrawcalls(Canvas canvas)
+		protected internal override void OnCollectBackgroundDrawcalls()
 		{
-			base.OnCollectBackgroundDrawcalls(canvas);
-			canvas.State.SetMaterial(DrawTechnique.Alpha);
-			canvas.State.ColorTint = this.BgColor.WithAlpha(0.75f);
-			canvas.FillRect(0, 0, canvas.DrawDevice.TargetSize.X, canvas.DrawDevice.TargetSize.Y);
+			base.OnCollectBackgroundDrawcalls();
+			//canvas.State.SetMaterial(DrawTechnique.Alpha);
+			//canvas.State.ColorTint = this.BgColor.WithAlpha(0.75f);
+			//canvas.FillRect(0, 0, canvas.DrawDevice.TargetSize.X, canvas.DrawDevice.TargetSize.Y);
 		}
 	}
 }

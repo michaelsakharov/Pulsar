@@ -51,7 +51,7 @@ namespace Duality.Editor.Backend
 		{
 			this.context.ScheduleSwap(this.control);
 		}
-		void IDisposable.Dispose()
+		public void Dispose()
 		{
 			if (this.control != null)
 			{

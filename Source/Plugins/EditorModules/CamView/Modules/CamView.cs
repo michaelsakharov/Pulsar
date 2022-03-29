@@ -154,23 +154,6 @@ namespace Duality.Editor.Plugins.CamView
 				return this.ComponentName;
 			}
 		}
-		private class RenderSetupEntry
-		{
-			private ContentRef<RenderSetup> renderSetup;
-			public ContentRef<RenderSetup> RenderSetup
-			{
-				get { return this.renderSetup; }
-			}
-
-			public RenderSetupEntry(ContentRef<RenderSetup> renderSetup)
-			{
-				this.renderSetup = renderSetup;
-			}
-			public override string ToString()
-			{
-				return this.renderSetup.Name;
-			}
-		}
 
 
 		public readonly static Vector3 DefaultDisplayBoundRadius = Vector3.One;
@@ -235,15 +218,15 @@ namespace Duality.Editor.Plugins.CamView
 		{
 			get { return activeCamView == this; }
 		}
-		public ColorRgba BgColor
-		{
-			get { return this.camComp.ClearColor; }
-			set { this.camComp.ClearColor = value; }
-		}
-		public ColorRgba FgColor
-		{
-			get { return this.BgColor.GetLuminance() < 0.5f ? ColorRgba.White : ColorRgba.Black; }
-		}
+		//public ColorRgba BgColor
+		//{
+		//	get { return this.camComp.ClearColor; }
+		//	set { this.camComp.ClearColor = value; }
+		//}
+		//public ColorRgba FgColor
+		//{
+		//	get { return this.BgColor.GetLuminance() < 0.5f ? ColorRgba.White : ColorRgba.Black; }
+		//}
 		public float NearZ
 		{
 			get { return this.camComp.NearZ; }
@@ -254,19 +237,10 @@ namespace Duality.Editor.Plugins.CamView
 			get { return this.camComp.FarZ; }
 			set { this.camComp.FarZ = value; }
 		}
-		public float FocusDist
+		public bool Orthographic
 		{
-			get { return (float)this.focusDist.Value; }
-			set { this.focusDist.Value = Math.Min(Math.Max((decimal)value, this.focusDist.Minimum), this.focusDist.Maximum); }
-		}
-		public float FocusDistIncrement
-		{
-			get { return (float)this.focusDist.Increment; }
-		}
-		public ProjectionMode PerspectiveMode
-		{
-			get { return this.camComp.Projection; }
-			set { this.camComp.Projection = value; }
+			get { return this.camComp.Orthographic; }
+			set { this.camComp.Orthographic = value; }
 		}
 		public Camera CameraComponent
 		{
@@ -385,9 +359,7 @@ namespace Duality.Editor.Plugins.CamView
 			this.RegisterEditorEvents();
 
 			// Update Camera values according to GUI (which carries loaded or default settings)
-			this.focusDist_ValueChanged(this.focusDist, null);
-			this.camComp.ClearColor = this.selectedColorDialogColor.ToDualityRgba().WithAlpha(0);
-			this.camComp.RenderingSetup = new ContentRef<RenderSetup>(null, this.loadTempRenderSetup);
+			//this.camComp.ClearColor = this.selectedColorDialogColor.ToDualityRgba().WithAlpha(0);
 			if (this.loadTempPerspective != null)
 			{
 				foreach (var item in this.perspectiveDropDown.DropDownItems.OfType<ToolStripMenuItem>())
@@ -647,26 +619,19 @@ namespace Duality.Editor.Plugins.CamView
 
 			// Add "null" item to default to application settings
 			{
-				RenderSetupEntry entry = new RenderSetupEntry(null);
 				MenuModelItem setupItem = this.renderSetupMenuModel.RequestItem("AppData Setting");
-				setupItem.Tag = entry;
 				setupItem.Checkable = true;
-				setupItem.Checked = this.camComp.RenderingSetup == null;
+				setupItem.Checked = true;
+				setupItem.ActionHandler = this.renderSetupSelector_ItemPerformAction;
+			}
+			// Render Depth
+			{
+				MenuModelItem setupItem = this.renderSetupMenuModel.RequestItem("Depth");
+				setupItem.Checkable = true;
+				setupItem.Checked = true;
 				setupItem.ActionHandler = this.renderSetupSelector_ItemPerformAction;
 			}
 
-			// Add new items
-			var sortedSetups = ContentProvider.GetAvailableContent<RenderSetup>().OrderByDescending(a => a.IsDefaultContent);
-			foreach (var renderSetup in sortedSetups)
-			{
-				RenderSetupEntry entry = new RenderSetupEntry(renderSetup);
-				MenuModelItem setupItem = this.renderSetupMenuModel.RequestItem(renderSetup.Name);
-				setupItem.Tag = entry;
-				setupItem.Checkable = true;
-				setupItem.Checked = this.camComp.RenderingSetup == renderSetup;
-				setupItem.ActionHandler = this.renderSetupSelector_ItemPerformAction;
-			}
-			
 			if (this.renderSetupMenuView == null)
 			{
 				this.renderSetupMenuView = new MenuStripMenuView(this.renderSetupSelector.DropDownItems);
@@ -694,9 +659,8 @@ namespace Duality.Editor.Plugins.CamView
 			this.nativeCamObj.AddComponent<SoundListener>().MakeCurrent();
 
 			Camera c = this.nativeCamObj.AddComponent<Camera>();
-			c.ClearColor = ColorRgba.DarkGrey;
+			//c.ClearColor = ColorRgba.DarkGrey;
 			c.FarZ = 100000.0f;
-			c.RenderingSetup = RenderSetup.Default;
 
 			this.nativeCamObj.Transform.Pos = new Vector3(0.0f, 5.0f, 10);
 			DualityEditorApp.EditorObjects.AddObject(this.nativeCamObj);
@@ -879,17 +843,15 @@ namespace Duality.Editor.Plugins.CamView
 
 			if (nativeCamera != null)
 			{
-				node.SetElementValue("Perspective", nativeCamera.Projection);
-				node.SetElementValue("FocusDist", nativeCamera.FocusDist);
-				node.SetElementValue("RenderSetup", nativeCamera.RenderingSetup.Path);
-				XElement bgColorElement = new XElement("BackgroundColor");
-				{
-					bgColorElement.SetElementValue("R", nativeCamera.ClearColor.R);
-					bgColorElement.SetElementValue("G", nativeCamera.ClearColor.G);
-					bgColorElement.SetElementValue("B", nativeCamera.ClearColor.B);
-					bgColorElement.SetElementValue("A", nativeCamera.ClearColor.A);
-				}
-				node.Add(bgColorElement);
+				node.SetElementValue("Perspective", nativeCamera.Orthographic ? ProjectionMode.Orthographic : ProjectionMode.Perspective);
+				//XElement bgColorElement = new XElement("BackgroundColor");
+				//{
+				//	bgColorElement.SetElementValue("R", nativeCamera.ClearColor.R);
+				//	bgColorElement.SetElementValue("G", nativeCamera.ClearColor.G);
+				//	bgColorElement.SetElementValue("B", nativeCamera.ClearColor.B);
+				//	bgColorElement.SetElementValue("A", nativeCamera.ClearColor.A);
+				//}
+				//node.Add(bgColorElement);
 			}
 
 			XElement snapToGridSizeElement = new XElement("SnapToGridSize");
@@ -928,10 +890,6 @@ namespace Duality.Editor.Plugins.CamView
 		internal void LoadUserData(XElement node)
 		{
 			decimal tryParseDecimal;
-			if (node.GetElementValue("FocusDist", out tryParseDecimal))
-			{
-				this.focusDist.Value = Math.Abs(tryParseDecimal);
-			}
 			XElement bgColorElement = node.Element("BackgroundColor");
 			if (bgColorElement != null)
 			{
@@ -946,7 +904,6 @@ namespace Duality.Editor.Plugins.CamView
 			}
 			this.loadTempPerspective = node.GetElementValue("Perspective", this.loadTempPerspective);
 			this.loadTempState = node.GetElementValue("ActiveState", this.loadTempState);
-			this.loadTempRenderSetup = node.GetElementValue("RenderSetup", RenderSetup.Default.Path);
 
 			XElement snapToGridSizeElement = node.Element("SnapToGridSize");
 			if (snapToGridSizeElement != null)
@@ -1014,7 +971,6 @@ namespace Duality.Editor.Plugins.CamView
 
 			// Camera-specific rendering settings
 			this.perspectiveDropDown.Visible = value;
-			this.focusDist.Visible = value;
 			this.camSelector.Visible = value;
 			this.showBgColorDialog.Visible = value;
 			this.renderSetupSelector.Visible = value;
@@ -1027,15 +983,17 @@ namespace Duality.Editor.Plugins.CamView
 			this.FocusOnPos(Vector3.Zero);
 			this.camObj.Transform.Rotation = Vector3.Zero;
 		}
+
 		public void FocusOnPos(Vector3 targetPos)
 		{
 			if (!this.activeState.CameraActionAllowed) return;
-			targetPos -= Vector3.UnitZ * MathF.Abs(this.camComp.FocusDist);
-			//targetPos.Z = MathF.Min(this.camObj.Transform.Pos.Z, targetPos.Z);
+			//targetPos -= Vector3.UnitZ * MathF.Abs(this.camComp.FocusDist);
+			targetPos.Z = MathF.Min(this.camObj.Transform.Pos.Z, targetPos.Z);
 			this.camObj.Transform.Pos = targetPos;
 			this.OnCamTransformChanged();
 			this.RenderableControl.Invalidate();
 		}
+
 		public void FocusOnObject(GameObject obj)
 		{
 			this.FocusOnPos((obj == null || obj.Transform == null) ? Vector3.Zero : obj.Transform.Pos);
@@ -1051,12 +1009,6 @@ namespace Duality.Editor.Plugins.CamView
 		}
 		private void OnPerspectiveChanged()
 		{
-			if (this.camObj != this.nativeCamObj)
-			{
-				DualityEditorApp.NotifyObjPropChanged(
-					this, new ObjectSelection(this.camComp),
-					ReflectionInfo.Property_Camera_FocusDist);
-			}
 			this.RenderableControl.Invalidate();
 
 			if (this.PerspectiveChanged != null)
@@ -1283,32 +1235,6 @@ namespace Duality.Editor.Plugins.CamView
 			this.RenderableControl.Invalidate();
 		}
 
-		private void focusDist_ValueChanged(object sender, EventArgs e)
-		{
-			if (this.camComp == null) return;
-
-			if (this.focusDist.Value < 30m)
-				this.focusDist.Increment = 1m;
-			else if (this.focusDist.Value < 150m)
-				this.focusDist.Increment = 5m;
-			else if (this.focusDist.Value < 300m)
-				this.focusDist.Increment = 10m;
-			else if (this.focusDist.Value < 1500m)
-				this.focusDist.Increment = 50m;
-			else if (this.focusDist.Value < 3000m)
-				this.focusDist.Increment = 100m;
-			else if (this.focusDist.Value < 15000m)
-				this.focusDist.Increment = 500m;
-			else if (this.focusDist.Value < 30000m)
-				this.focusDist.Increment = 1000m;
-			else if (this.focusDist.Value < 150000m)
-				this.focusDist.Increment = 5000m;
-			else
-				this.focusDist.Increment = 10000m;
-
-			this.camComp.FocusDist = (float)this.focusDist.Value;
-			this.OnPerspectiveChanged();
-		}
 		private void showBgColorDialog_Click(object sender, EventArgs e)
 		{
 			if (this.bgColorDialog == null)
@@ -1322,40 +1248,35 @@ namespace Duality.Editor.Plugins.CamView
 				};
 			}
 
-			this.bgColorDialog.OldColor = Color.FromArgb(
-				255,
-				this.camComp.ClearColor.R,
-				this.camComp.ClearColor.G,
-				this.camComp.ClearColor.B);
+			//this.bgColorDialog.OldColor = Color.FromArgb(
+			//	255,
+			//	this.camComp.ClearColor.R,
+			//	this.camComp.ClearColor.G,
+			//	this.camComp.ClearColor.B);
 			this.bgColorDialog.PrimaryAttribute = ColorPickerDialog.PrimaryAttrib.Hue;
 			if (this.bgColorDialog.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
 				this.bgColorDialog_ValueChanged(this.bgColorDialog, null);
 		}
 		private void bgColorDialog_ValueChanged(object sender, EventArgs e)
 		{
-			if (this.camObj != this.nativeCamObj)
-			{
-				UndoRedoManager.Do(new EditPropertyAction(null,
-					ReflectionInfo.Property_Camera_ClearColor,
-					new[] { this.camComp },
-					new[] { new ColorRgba(
-						this.bgColorDialog.SelectedColor.R,
-						this.bgColorDialog.SelectedColor.G,
-						this.bgColorDialog.SelectedColor.B,
-						0) as object }));
-			}
-			else
-			{
-				this.camComp.ClearColor = this.bgColorDialog.SelectedColor.ToDualityRgba().WithAlpha(0);
-			}
+			//if (this.camObj != this.nativeCamObj)
+			//{
+			//	UndoRedoManager.Do(new EditPropertyAction(null,
+			//		ReflectionInfo.Property_Camera_ClearColor,
+			//		new[] { this.camComp },
+			//		new[] { new ColorRgba(
+			//			this.bgColorDialog.SelectedColor.R,
+			//			this.bgColorDialog.SelectedColor.G,
+			//			this.bgColorDialog.SelectedColor.B,
+			//			0) as object }));
+			//}
+			//else
+			//{
+			//	this.camComp.ClearColor = this.bgColorDialog.SelectedColor.ToDualityRgba().WithAlpha(0);
+			//}
 			this.RenderableControl.Invalidate();
 		}
 
-		private void buttonResetZoom_Click(object sender, EventArgs e)
-		{
-			this.camObj.Transform.Pos = new Vector3(this.camObj.Transform.Pos.Xy, -MathF.Abs(this.camComp.FocusDist));
-			this.RenderableControl.Invalidate();
-		}
 		
 		private void PluginManager_PluginsRemoving(object sender, DualityPluginEventArgs e)
 		{
@@ -1488,18 +1409,9 @@ namespace Duality.Editor.Plugins.CamView
 		private void renderSetupSelector_ItemPerformAction(object sender, EventArgs e)
 		{
 			MenuModelItem item = sender as MenuModelItem;
-			RenderSetupEntry entry = item.Tag as RenderSetupEntry;
-			if (this.camObj != this.nativeCamObj)
-			{
-				UndoRedoManager.Do(new EditPropertyAction(null,
-					ReflectionInfo.Property_Camera_RenderingSetup,
-					new[] { this.camComp },
-					new[] { (object)entry.RenderSetup }));
-			}
-			else
-			{
-				this.camComp.RenderingSetup = entry.RenderSetup;
-			}
+			
+
+
 			this.RenderableControl.Invalidate();
 		}
 		private void snapToGridSelector_DropDownOpening(object sender, EventArgs e)
@@ -1536,7 +1448,15 @@ namespace Duality.Editor.Plugins.CamView
 		{
 			foreach (var item in this.perspectiveDropDown.DropDownItems.OfType<ToolStripMenuItem>())
 			{
-				item.Checked = (item.Text == this.camComp.Projection.ToString());
+				if(item.Text == "Orthographic")
+				{
+					item.Checked = this.camComp.Orthographic;
+				}
+				else if (item.Text == "Perspective")
+				{
+					item.Checked = this.camComp.Orthographic == false;
+				}
+				item.Checked = false;
 			}
 		}
 		private void perspectiveDropDown_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
@@ -1544,7 +1464,7 @@ namespace Duality.Editor.Plugins.CamView
 			ProjectionMode perspective;
 			if (Enum.TryParse(e.ClickedItem.Text, out perspective))
 			{
-				this.camComp.Projection = perspective;
+				this.camComp.Orthographic = perspective == ProjectionMode.Orthographic;
 				this.OnPerspectiveChanged();
 			}
 		}

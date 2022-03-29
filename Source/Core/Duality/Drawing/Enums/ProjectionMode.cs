@@ -19,10 +19,5 @@ namespace Duality.Drawing
 		/// on how far away they are.
 		/// </summary>
 		Perspective,
-		/// <summary>
-		/// Vertices are rendered in screen / pixel coordinates where (0, 0) is in the screens upper left. 
-		/// Z values are used for sorting drawcalls, but no per-pixel depth testing is done.
-		/// </summary>
-		Screen
 	}
 }

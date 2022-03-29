@@ -5,6 +5,8 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using Duality.Renderer;
+using OpenTK.Graphics;
+using OpenTK.Platform;
 
 namespace Duality.Graphics
 {
@@ -192,6 +194,13 @@ namespace Duality.Graphics
         {
             public int Index;
             public int Handle;
-        }
-    }
+		}
+
+		[StructLayout(LayoutKind.Sequential)]
+		private struct PacketChangeGLContext
+		{
+			public IGraphicsContext Context;
+			public IWindowInfo WindowInfo;
+		}
+	}
 }

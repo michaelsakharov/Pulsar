@@ -44,15 +44,15 @@ namespace Duality.Editor.Plugins.CamView
 			get { return this.view.RenderableControl.Cursor; }
 			set { this.view.RenderableControl.Cursor = value; }
 		}
-		public ColorRgba BgColor
-		{
-			get { return this.view.BgColor; }
-			set { this.view.BgColor = value; }
-		}
-		public ColorRgba FgColor
-		{
-			get { return this.view.FgColor; }
-		}
+		//public ColorRgba BgColor
+		//{
+		//	get { return this.view.BgColor; }
+		//	set { this.view.BgColor = value; }
+		//}
+		//public ColorRgba FgColor
+		//{
+		//	get { return this.view.FgColor; }
+		//}
 		public bool Focused
 		{
 			get { return this.view.RenderableControl.Focused; }

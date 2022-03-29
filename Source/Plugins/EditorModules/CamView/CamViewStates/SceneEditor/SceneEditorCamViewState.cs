@@ -52,7 +52,7 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 			base.OnEnterState();
 
 			DualityEditorApp.SelectionChanged      += this.DualityEditorApp_SelectionChanged;
-			DualityEditorApp.ObjectPropertyChanged += this.DualityEditorApp_ObjectPropertyChanged;
+			//DualityEditorApp.ObjectPropertyChanged += this.DualityEditorApp_ObjectPropertyChanged;
 
 			// Initial selection update
 			this.ApplyEditorSelection(DualityEditorApp.Selection);
@@ -67,50 +67,50 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 			this.indirectObjSel.Clear();
 
 			DualityEditorApp.SelectionChanged      -= this.DualityEditorApp_SelectionChanged;
-			DualityEditorApp.ObjectPropertyChanged -= this.DualityEditorApp_ObjectPropertyChanged;
+			//DualityEditorApp.ObjectPropertyChanged -= this.DualityEditorApp_ObjectPropertyChanged;
 		}
 		protected override void OnSceneChanged()
 		{
 			base.OnSceneChanged();
 			this.InvalidateSelectionStats();
 		}
-		protected override void OnCollectStateOverlayDrawcalls(Canvas canvas)
+		protected override void OnCollectStateOverlayDrawcalls()
 		{
-			base.OnCollectStateOverlayDrawcalls(canvas);
-			if (this.ObjAction == ObjectEditorAction.None && this.DragMustWait && !this.dragLastLoc.IsEmpty)
-			{
-				canvas.PushState();
-				canvas.State.SetMaterial(DrawTechnique.Alpha);
-				canvas.State.ColorTint = ColorRgba.White.WithAlpha(this.DragMustWaitProgress);
-				canvas.FillCircle(
-					this.dragLastLoc.X, 
-					this.dragLastLoc.Y, 
-					15.0f);
-				canvas.State.ColorTint = ColorRgba.White;
-				canvas.DrawCircle(
-					this.dragLastLoc.X, 
-					this.dragLastLoc.Y, 
-					15.0f);
-				canvas.PopState();
-			}
+			base.OnCollectStateOverlayDrawcalls();
+			//if (this.ObjAction == ObjectEditorAction.None && this.DragMustWait && !this.dragLastLoc.IsEmpty)
+			//{
+			//	canvas.PushState();
+			//	canvas.State.SetMaterial(DrawTechnique.Alpha);
+			//	canvas.State.ColorTint = ColorRgba.White.WithAlpha(this.DragMustWaitProgress);
+			//	canvas.FillCircle(
+			//		this.dragLastLoc.X, 
+			//		this.dragLastLoc.Y, 
+			//		15.0f);
+			//	canvas.State.ColorTint = ColorRgba.White;
+			//	canvas.DrawCircle(
+			//		this.dragLastLoc.X, 
+			//		this.dragLastLoc.Y, 
+			//		15.0f);
+			//	canvas.PopState();
+			//}
 		}
 
-		public override ObjectEditorSelObj PickSelObjAt(int x, int y)
-		{
-			Component picked = this.PickRendererAt(x, y) as Component;
-			if (picked == null) return null;
-			if (DesignTimeObjectData.Get(picked.GameObj).IsLocked) return null;
-			return new SceneEditorSelGameObj(picked.GameObj);
-		}
-		public override List<ObjectEditorSelObj> PickSelObjIn(int x, int y, int w, int h)
-		{
-			IEnumerable<ICmpRenderer> picked = this.PickRenderersIn(x, y, w, h);
-			return picked
-				.OfType<Component>()
-				.Where(r => !DesignTimeObjectData.Get(r.GameObj).IsLocked)
-				.Select(r => new SceneEditorSelGameObj(r.GameObj) as ObjectEditorSelObj)
-				.ToList();
-		}
+		//public override ObjectEditorSelObj PickSelObjAt(int x, int y)
+		//{
+		//	Component picked = this.PickRendererAt(x, y) as Component;
+		//	if (picked == null) return null;
+		//	if (DesignTimeObjectData.Get(picked.GameObj).IsLocked) return null;
+		//	return new SceneEditorSelGameObj(picked.GameObj);
+		//}
+		//public override List<ObjectEditorSelObj> PickSelObjIn(int x, int y, int w, int h)
+		//{
+		//	IEnumerable<ICmpRenderer> picked = this.PickRenderersIn(x, y, w, h);
+		//	return picked
+		//		.OfType<Component>()
+		//		.Where(r => !DesignTimeObjectData.Get(r.GameObj).IsLocked)
+		//		.Select(r => new SceneEditorSelGameObj(r.GameObj) as ObjectEditorSelObj)
+		//		.ToList();
+		//}
 
 		public override void ClearSelection()
 		{
@@ -247,47 +247,46 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 		}
 		private void DragBeginAction(DragEventArgs e)
 		{
-			DataObject data = e.Data as DataObject;
-			var dragObjQuery = new ConvertOperation(data, ConvertOperation.Operation.All).Perform<GameObject>();
-			if (dragObjQuery != null)
-			{
-				List<GameObject> dragObj = dragObjQuery.ToList();
-
-				bool lockZ = this.CameraComponent.FocusDist <= 0.0f;
-				Point mouseLoc = this.PointToClient(new Point(e.X, e.Y));
-				Vector3 spaceCoord = this.GetWorldPos(new Vector3(
-					mouseLoc.X, 
-					mouseLoc.Y, 
-					lockZ ? 0.0f : this.CameraObj.Transform.Pos.Z + MathF.Abs(this.CameraComponent.FocusDist)));
-				if ((this.SnapToUserGuides & UserGuideType.Position) != UserGuideType.None)
-				{
-					spaceCoord = this.EditingUserGuide.SnapPosition(spaceCoord);
-				}
-
-				// Setup GameObjects
-				CreateGameObjectAction createAction = new CreateGameObjectAction(null, dragObj);
-				DropGameObjectInSceneAction dropAction = new DropGameObjectInSceneAction(dragObj, spaceCoord, this.CameraObj.Transform.Rotation);
-				UndoRedoManager.BeginMacro(dropAction.Name);
-				UndoRedoManager.Do(createAction);
-				UndoRedoManager.Do(dropAction);
-
-				// Select them & begin action
-				this.selBeforeDrag = DualityEditorApp.Selection;
-				this.SelectObjects(createAction.Result.Select(g => new SceneEditorSelGameObj(g) as ObjectEditorSelObj));
-				this.BeginAction(ObjectEditorAction.Move);
-
-				// Get focused
-				this.Focus();
-
-				e.Effect = e.AllowedEffect;
-			}
+			//DataObject data = e.Data as DataObject;
+			//var dragObjQuery = new ConvertOperation(data, ConvertOperation.Operation.All).Perform<GameObject>();
+			//if (dragObjQuery != null)
+			//{
+			//	List<GameObject> dragObj = dragObjQuery.ToList();
+			//
+			//	Point mouseLoc = this.PointToClient(new Point(e.X, e.Y));
+			//	Vector3 spaceCoord = this.GetWorldPos(new Vector3(
+			//		mouseLoc.X, 
+			//		mouseLoc.Y, 
+			//		this.CameraObj.Transform.Pos.Z));
+			//	if ((this.SnapToUserGuides & UserGuideType.Position) != UserGuideType.None)
+			//	{
+			//		spaceCoord = this.EditingUserGuide.SnapPosition(spaceCoord);
+			//	}
+			//
+			//	// Setup GameObjects
+			//	CreateGameObjectAction createAction = new CreateGameObjectAction(null, dragObj);
+			//	DropGameObjectInSceneAction dropAction = new DropGameObjectInSceneAction(dragObj, spaceCoord, this.CameraObj.Transform.Rotation);
+			//	UndoRedoManager.BeginMacro(dropAction.Name);
+			//	UndoRedoManager.Do(createAction);
+			//	UndoRedoManager.Do(dropAction);
+			//
+			//	// Select them & begin action
+			//	this.selBeforeDrag = DualityEditorApp.Selection;
+			//	this.SelectObjects(createAction.Result.Select(g => new SceneEditorSelGameObj(g) as ObjectEditorSelObj));
+			//	this.BeginAction(ObjectEditorAction.Move);
+			//
+			//	// Get focused
+			//	this.Focus();
+			//
+			//	e.Effect = e.AllowedEffect;
+			//}
 		}
 
-		private void DualityEditorApp_ObjectPropertyChanged(object sender, ObjectPropertyChangedEventArgs e)
-		{
-			if (e.Objects.Components.Any(c => c is Transform || c is ICmpRenderer))
-				this.InvalidateSelectionStats();
-		}
+		//private void DualityEditorApp_ObjectPropertyChanged(object sender, ObjectPropertyChangedEventArgs e)
+		//{
+		//	if (e.Objects.Components.Any(c => c is Transform || c is ICmpRenderer))
+		//		this.InvalidateSelectionStats();
+		//}
 		private void DualityEditorApp_SelectionChanged(object sender, SelectionChangedEventArgs e)
 		{
 			if ((e.AffectedCategories & ObjectSelection.Category.GameObjCmp) == ObjectSelection.Category.None)

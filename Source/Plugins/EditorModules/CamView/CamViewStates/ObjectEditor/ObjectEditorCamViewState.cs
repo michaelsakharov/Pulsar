@@ -125,16 +125,16 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 		}
 		public void MoveSelectionToCursor()
 		{
-			Point mousePos = this.PointToClient(Cursor.Position);
-			Vector3 mouseSpaceCoord = this.GetWorldPos(new Vector3(mousePos.X, mousePos.Y, this.selectionCenter.Z));
-
-			// Apply user guide snapping
-			if ((this.SnapToUserGuides & UserGuideType.Position) != UserGuideType.None)
-			{
-				mouseSpaceCoord = this.EditingUserGuide.SnapPosition(mouseSpaceCoord);
-			}
-
-			this.MoveSelectionTo(mouseSpaceCoord);
+			//Point mousePos = this.PointToClient(Cursor.Position);
+			//Vector3 mouseSpaceCoord = this.GetWorldPos(new Vector3(mousePos.X, mousePos.Y, this.selectionCenter.Z));
+			//
+			//// Apply user guide snapping
+			//if ((this.SnapToUserGuides & UserGuideType.Position) != UserGuideType.None)
+			//{
+			//	mouseSpaceCoord = this.EditingUserGuide.SnapPosition(mouseSpaceCoord);
+			//}
+			//
+			//this.MoveSelectionTo(mouseSpaceCoord);
 		}
 		public void RotateSelectionBy(float rotation)
 		{
@@ -163,88 +163,88 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 			this.Invalidate();
 		}
 
-		protected void DrawSelectionMarkers(Canvas canvas, IEnumerable<ObjectEditorSelObj> obj)
-		{
-			Vector3 forward = Vector3.Forward;
-			Vector3 right = Vector3.Right;
-			Vector3 down = Vector3.Up;
-
-			canvas.PushState();
-			canvas.State.DepthOffset = -1.0f;
-			foreach (ObjectEditorSelObj selObj in obj)
-			{
-				if (!selObj.HasTransform) continue;
-				Vector3 posTemp = selObj.Pos;
-				Vector3 radTemp = selObj.BoundRadius;
-
-				if (!canvas.DrawDevice.IsBoundsInView(posTemp, radTemp)) continue;
-
-				// Draw selection marker
-				if (selObj.ShowPos)
-				{
-					canvas.DrawLine(
-						(posTemp - right * 0.5f).X,
-						(posTemp - right * 0.5f).Y,
-						posTemp.Z,
-						(posTemp + right * 0.5f).X,
-						(posTemp + right * 0.5f).Y,
-						posTemp.Z);
-					canvas.DrawLine(
-						(posTemp - down * 0.5f).X,
-						(posTemp - down * 0.5f).Y,
-						posTemp.Z,
-						(posTemp + down * 0.5f).X,
-						(posTemp + down * 0.5f).Y,
-						posTemp.Z);
-					canvas.DrawLine(
-						posTemp.X,
-						posTemp.Y,
-						(posTemp - forward * 0.5f).Z,
-						posTemp.X,
-						posTemp.Y,
-						(posTemp + forward * 0.5f).Z);
-				}
-
-				// Draw angle marker
-				if (selObj.ShowAngle)
-				{
-					//posTemp = selObj.Pos + radTemp * right * MathF.Sin(selObj.Angle - camAngle) - radTemp * down * MathF.Cos(selObj.Angle - camAngle);
-					//canvas.DrawLine(selObj.Pos.X, selObj.Pos.Y, selObj.Pos.Z, posTemp.X, posTemp.Y, posTemp.Z);
-				}
-
-				// Draw boundary
-				if (selObj.ShowBoundRadius && radTemp.Length > 0.0f)
-					canvas.DrawCircle(selObj.Pos.X, selObj.Pos.Y, selObj.Pos.Z, radTemp.Length);
-			}
-			canvas.PopState();
-		}
-		protected void DrawLockedAxes(Canvas canvas, float x, float y, float z, float r)
-		{
-			Vector3 refPos = canvas.DrawDevice.ViewerPos;
-			float nearZ = canvas.DrawDevice.NearZ;
-
-			canvas.PushState();
-			if (this.actionLockedAxis == ObjectEditorAxisLock.X)
-			{
-				canvas.State.SetMaterial(DrawTechnique.Solid);
-				canvas.State.ColorTint = ColorRgba.Lerp(this.FgColor, ColorRgba.Red, 0.5f);
-				canvas.DrawLine(x - r, y, z, x + r, y, z);
-			}
-			if (this.actionLockedAxis == ObjectEditorAxisLock.Y)
-			{
-				canvas.State.SetMaterial(DrawTechnique.Solid);
-				canvas.State.ColorTint = ColorRgba.Lerp(this.FgColor, ColorRgba.Green, 0.5f);
-				canvas.DrawLine(x, y - r, z, x, y + r, z);
-			}
-			if (this.actionLockedAxis == ObjectEditorAxisLock.Z)
-			{
-				canvas.State.SetMaterial(DrawTechnique.Solid);
-				canvas.State.ColorTint = ColorRgba.Lerp(this.FgColor, ColorRgba.Blue, 0.5f);
-				canvas.DrawLine(x, y, MathF.Max(z - r, refPos.Z + nearZ + 10), x, y, z);
-				canvas.DrawLine(x, y, z, x, y, z + r);
-			}
-			canvas.PopState();
-		}
+		//protected void DrawSelectionMarkers(Canvas canvas, IEnumerable<ObjectEditorSelObj> obj)
+		//{
+		//	Vector3 forward = Vector3.Forward;
+		//	Vector3 right = Vector3.Right;
+		//	Vector3 down = Vector3.Up;
+		//
+		//	canvas.PushState();
+		//	canvas.State.DepthOffset = -1.0f;
+		//	foreach (ObjectEditorSelObj selObj in obj)
+		//	{
+		//		if (!selObj.HasTransform) continue;
+		//		Vector3 posTemp = selObj.Pos;
+		//		Vector3 radTemp = selObj.BoundRadius;
+		//
+		//		if (!canvas.DrawDevice.IsBoundsInView(posTemp, radTemp)) continue;
+		//
+		//		// Draw selection marker
+		//		if (selObj.ShowPos)
+		//		{
+		//			canvas.DrawLine(
+		//				(posTemp - right * 0.5f).X,
+		//				(posTemp - right * 0.5f).Y,
+		//				posTemp.Z,
+		//				(posTemp + right * 0.5f).X,
+		//				(posTemp + right * 0.5f).Y,
+		//				posTemp.Z);
+		//			canvas.DrawLine(
+		//				(posTemp - down * 0.5f).X,
+		//				(posTemp - down * 0.5f).Y,
+		//				posTemp.Z,
+		//				(posTemp + down * 0.5f).X,
+		//				(posTemp + down * 0.5f).Y,
+		//				posTemp.Z);
+		//			canvas.DrawLine(
+		//				posTemp.X,
+		//				posTemp.Y,
+		//				(posTemp - forward * 0.5f).Z,
+		//				posTemp.X,
+		//				posTemp.Y,
+		//				(posTemp + forward * 0.5f).Z);
+		//		}
+		//
+		//		// Draw angle marker
+		//		if (selObj.ShowAngle)
+		//		{
+		//			//posTemp = selObj.Pos + radTemp * right * MathF.Sin(selObj.Angle - camAngle) - radTemp * down * MathF.Cos(selObj.Angle - camAngle);
+		//			//canvas.DrawLine(selObj.Pos.X, selObj.Pos.Y, selObj.Pos.Z, posTemp.X, posTemp.Y, posTemp.Z);
+		//		}
+		//
+		//		// Draw boundary
+		//		if (selObj.ShowBoundRadius && radTemp.Length > 0.0f)
+		//			canvas.DrawCircle(selObj.Pos.X, selObj.Pos.Y, selObj.Pos.Z, radTemp.Length);
+		//	}
+		//	canvas.PopState();
+		//}
+		//protected void DrawLockedAxes(Canvas canvas, float x, float y, float z, float r)
+		//{
+		//	Vector3 refPos = canvas.DrawDevice.ViewerPos;
+		//	float nearZ = canvas.DrawDevice.NearZ;
+		//
+		//	canvas.PushState();
+		//	if (this.actionLockedAxis == ObjectEditorAxisLock.X)
+		//	{
+		//		canvas.State.SetMaterial(DrawTechnique.Solid);
+		//		canvas.State.ColorTint = ColorRgba.Lerp(this.FgColor, ColorRgba.Red, 0.5f);
+		//		canvas.DrawLine(x - r, y, z, x + r, y, z);
+		//	}
+		//	if (this.actionLockedAxis == ObjectEditorAxisLock.Y)
+		//	{
+		//		canvas.State.SetMaterial(DrawTechnique.Solid);
+		//		canvas.State.ColorTint = ColorRgba.Lerp(this.FgColor, ColorRgba.Green, 0.5f);
+		//		canvas.DrawLine(x, y - r, z, x, y + r, z);
+		//	}
+		//	if (this.actionLockedAxis == ObjectEditorAxisLock.Z)
+		//	{
+		//		canvas.State.SetMaterial(DrawTechnique.Solid);
+		//		canvas.State.ColorTint = ColorRgba.Lerp(this.FgColor, ColorRgba.Blue, 0.5f);
+		//		canvas.DrawLine(x, y, MathF.Max(z - r, refPos.Z + nearZ + 10), x, y, z);
+		//		canvas.DrawLine(x, y, z, x, y, z + r);
+		//	}
+		//	canvas.PopState();
+		//}
 
 		/// <summary>
 		/// Returns an axis-locked version of the specified vector, if requested by the user. Doesn't
@@ -300,83 +300,83 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 		
 		protected void BeginAction(ObjectEditorAction action)
 		{
-			if (action == ObjectEditorAction.None) return;
-			Point mouseLoc = this.PointToClient(Cursor.Position);
-
-			this.ValidateSelectionStats();
-
-			this.StopCameraMovement();
-
-			this.action = action;
-			this.actionBeginLoc = mouseLoc;
-			this.actionBeginLocSpace = this.GetWorldPos(new Vector3(
-				mouseLoc.X, 
-				mouseLoc.Y, 
-				(this.action == ObjectEditorAction.RectSelect) ? 0.0f : this.selectionCenter.Z));
-
-			if (this.action == ObjectEditorAction.Move)
-				this.actionBeginLocSpace.Z = this.CameraObj.Transform.Pos.Z;
-
-			this.actionLastLocSpace = this.actionBeginLocSpace;
-
-			// Update snap-to-grid settings for this action
-			if (this.actionObjSel.Count > 1)
-			{
-				// When moving multiple objects, snap only relative to the original selection center, so individual grid alignment is retained
-				this.EditingUserGuide.SnapPosOrigin = this.selectionCenter;
-				this.EditingUserGuide.SnapScaleOrigin = Vector3.One;
-			}
-			else
-			{
-				this.EditingUserGuide.SnapPosOrigin = Vector3.Zero;
-				this.EditingUserGuide.SnapScaleOrigin = Vector3.One;
-			}
-
-			if (Sandbox.State == SandboxState.Playing)
-				Sandbox.Freeze();
-
-			this.OnBeginAction(this.action);
+			//if (action == ObjectEditorAction.None) return;
+			//Point mouseLoc = this.PointToClient(Cursor.Position);
+			//
+			//this.ValidateSelectionStats();
+			//
+			//this.StopCameraMovement();
+			//
+			//this.action = action;
+			//this.actionBeginLoc = mouseLoc;
+			//this.actionBeginLocSpace = this.GetWorldPos(new Vector3(
+			//	mouseLoc.X, 
+			//	mouseLoc.Y, 
+			//	(this.action == ObjectEditorAction.RectSelect) ? 0.0f : this.selectionCenter.Z));
+			//
+			//if (this.action == ObjectEditorAction.Move)
+			//	this.actionBeginLocSpace.Z = this.CameraObj.Transform.Pos.Z;
+			//
+			//this.actionLastLocSpace = this.actionBeginLocSpace;
+			//
+			//// Update snap-to-grid settings for this action
+			//if (this.actionObjSel.Count > 1)
+			//{
+			//	// When moving multiple objects, snap only relative to the original selection center, so individual grid alignment is retained
+			//	this.EditingUserGuide.SnapPosOrigin = this.selectionCenter;
+			//	this.EditingUserGuide.SnapScaleOrigin = Vector3.One;
+			//}
+			//else
+			//{
+			//	this.EditingUserGuide.SnapPosOrigin = Vector3.Zero;
+			//	this.EditingUserGuide.SnapScaleOrigin = Vector3.One;
+			//}
+			//
+			//if (Sandbox.State == SandboxState.Playing)
+			//	Sandbox.Freeze();
+			//
+			//this.OnBeginAction(this.action);
 		}
 		protected void EndAction()
 		{
-			if (this.action == ObjectEditorAction.None) return;
-			Point mouseLoc = this.PointToClient(Cursor.Position);
-
-			if (this.action == ObjectEditorAction.RectSelect)
-			{
-				this.activeRectSel = new ObjectSelection();
-			}
-
-			if (Sandbox.State == SandboxState.Playing)
-				Sandbox.UnFreeze();
-
-			this.OnEndAction(this.action);
-			this.action = ObjectEditorAction.None;
-
-			if (this.actionIsClone)
-			{
-				this.actionIsClone = false;
-				UndoRedoManager.EndMacro(UndoRedoManager.MacroDeriveName.FromFirst);
-			}
-			UndoRedoManager.Finish();
+			//if (this.action == ObjectEditorAction.None) return;
+			//Point mouseLoc = this.PointToClient(Cursor.Position);
+			//
+			//if (this.action == ObjectEditorAction.RectSelect)
+			//{
+			//	this.activeRectSel = new ObjectSelection();
+			//}
+			//
+			//if (Sandbox.State == SandboxState.Playing)
+			//	Sandbox.UnFreeze();
+			//
+			//this.OnEndAction(this.action);
+			//this.action = ObjectEditorAction.None;
+			//
+			//if (this.actionIsClone)
+			//{
+			//	this.actionIsClone = false;
+			//	UndoRedoManager.EndMacro(UndoRedoManager.MacroDeriveName.FromFirst);
+			//}
+			//UndoRedoManager.Finish();
 		}
 		protected void UpdateAction()
 		{
-			Point mouseLoc = this.PointToClient(Cursor.Position);
-
-			if (this.action == ObjectEditorAction.RectSelect)
-				this.UpdateRectSelection(mouseLoc);
-			else if (this.action == ObjectEditorAction.Move)
-				this.UpdateObjMove(mouseLoc);
-			else if (this.action == ObjectEditorAction.Rotate)
-				this.UpdateObjRotate(mouseLoc);
-			else if (this.action == ObjectEditorAction.Scale)
-				this.UpdateObjScale(mouseLoc);
-			else
-				this.UpdateMouseover(mouseLoc);
-
-			if (this.action != ObjectEditorAction.None)
-				this.InvalidateSelectionStats();
+			//Point mouseLoc = this.PointToClient(Cursor.Position);
+			//
+			//if (this.action == ObjectEditorAction.RectSelect)
+			//	this.UpdateRectSelection(mouseLoc);
+			//else if (this.action == ObjectEditorAction.Move)
+			//	this.UpdateObjMove(mouseLoc);
+			//else if (this.action == ObjectEditorAction.Rotate)
+			//	this.UpdateObjRotate(mouseLoc);
+			//else if (this.action == ObjectEditorAction.Scale)
+			//	this.UpdateObjScale(mouseLoc);
+			//else
+			//	this.UpdateMouseover(mouseLoc);
+			//
+			//if (this.action != ObjectEditorAction.None)
+			//	this.InvalidateSelectionStats();
 		}
 
 		protected void InvalidateSelectionStats()
@@ -404,82 +404,82 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 
 		protected void UpdateMouseover(Point mouseLoc)
 		{
-			bool lastMouseoverSelect = this.mouseoverSelect;
-			ObjectEditorSelObj lastMouseoverObject = this.mouseoverObject;
-			ObjectEditorAction lastMouseoverAction = this.mouseoverAction;
-
-			if (this.actionAllowed && !this.CamActionRequiresCursor && this.CamAction == CameraAction.None)
-			{
-				this.ValidateSelectionStats();
-
-				// Determine object at mouse position
-				this.mouseoverObject = this.PickSelObjAt(mouseLoc.X, mouseLoc.Y);
-
-				// Determine action variables
-				Vector3 mouseSpaceCoord = this.GetWorldPos(new Vector3(mouseLoc.X, mouseLoc.Y, this.selectionCenter.Z));
-				//float scale = this.GetScaleAtZ(this.selectionCenter.Z);
-				float scale = 1f;
-				const float boundaryThickness = 10.0f;
-				bool tooSmall = this.selectionRadius * scale <= boundaryThickness * 2.0f;
-				bool mouseOverBoundary = MathF.Abs((mouseSpaceCoord - this.selectionCenter).Length - this.selectionRadius) * scale < boundaryThickness;
-				bool mouseInsideBoundary = !mouseOverBoundary && (mouseSpaceCoord - this.selectionCenter).Length < this.selectionRadius;
-				bool mouseAtCenterAxis = 
-					MathF.Abs(mouseSpaceCoord.X - this.selectionCenter.X) * scale < boundaryThickness || 
-					MathF.Abs(mouseSpaceCoord.Y - this.selectionCenter.Y) * scale < boundaryThickness;
-				bool shift = (Control.ModifierKeys & Keys.Shift) != Keys.None;
-				bool ctrl = (Control.ModifierKeys & Keys.Control) != Keys.None;
-
-				bool anySelection = this.actionObjSel.Count > 0;
-				bool canMove = this.actionObjSel.Any(s => s.IsActionAvailable(ObjectEditorAction.Move));
-				bool canRotate = (canMove && this.actionObjSel.Count > 1) || this.actionObjSel.Any(s => s.IsActionAvailable(ObjectEditorAction.Rotate));
-				bool canScale = (canMove && this.actionObjSel.Count > 1) || this.actionObjSel.Any(s => s.IsActionAvailable(ObjectEditorAction.Scale));
-
-				// Select which action to propose
-				this.mouseoverSelect = false;
-				if (ctrl)
-					this.mouseoverAction = ObjectEditorAction.RectSelect;
-				else if (anySelection && !tooSmall && mouseOverBoundary && mouseAtCenterAxis && this.selectionRadius > 0.0f && canScale)
-					this.mouseoverAction = ObjectEditorAction.Scale;
-				else if (anySelection && !tooSmall && mouseOverBoundary && canRotate)
-					this.mouseoverAction = ObjectEditorAction.Rotate;
-				else if (anySelection && mouseInsideBoundary && canMove)
-					this.mouseoverAction = ObjectEditorAction.Move;
-				else if (shift) // Lower prio than Ctrl, because Shift also modifies mouse actions
-					this.mouseoverAction = ObjectEditorAction.RectSelect;
-				else if (this.mouseoverObject != null && this.mouseoverObject.IsActionAvailable(ObjectEditorAction.Move))
-				{
-					this.mouseoverAction = ObjectEditorAction.Move; 
-					this.mouseoverSelect = true;
-				}
-				else
-					this.mouseoverAction = ObjectEditorAction.RectSelect;
-			}
-			else
-			{
-				this.mouseoverObject = null;
-				this.mouseoverSelect = false;
-				this.mouseoverAction = ObjectEditorAction.None;
-			}
-
-			// If mouseover changed..
-			if (this.mouseoverObject != lastMouseoverObject || 
-				this.mouseoverSelect != lastMouseoverSelect ||
-				this.mouseoverAction != lastMouseoverAction)
-			{
-				// Adjust mouse cursor based on proposed action
-				if (this.mouseoverAction == ObjectEditorAction.Move)
-					this.Cursor = CursorHelper.ArrowActionMove;
-				else if (this.mouseoverAction == ObjectEditorAction.Rotate)
-					this.Cursor = CursorHelper.ArrowActionRotate;
-				else if (this.mouseoverAction == ObjectEditorAction.Scale)
-					this.Cursor = CursorHelper.ArrowActionScale;
-				else
-					this.Cursor = CursorHelper.Arrow;
-			}
-			
-			// Redraw if action gizmos might be visible
-			if (this.actionAllowed)
-				this.Invalidate();
+			//bool lastMouseoverSelect = this.mouseoverSelect;
+			//ObjectEditorSelObj lastMouseoverObject = this.mouseoverObject;
+			//ObjectEditorAction lastMouseoverAction = this.mouseoverAction;
+			//
+			//if (this.actionAllowed && !this.CamActionRequiresCursor && this.CamAction == CameraAction.None)
+			//{
+			//	this.ValidateSelectionStats();
+			//
+			//	// Determine object at mouse position
+			//	this.mouseoverObject = this.PickSelObjAt(mouseLoc.X, mouseLoc.Y);
+			//
+			//	// Determine action variables
+			//	Vector3 mouseSpaceCoord = this.GetWorldPos(new Vector3(mouseLoc.X, mouseLoc.Y, this.selectionCenter.Z));
+			//	//float scale = this.GetScaleAtZ(this.selectionCenter.Z);
+			//	float scale = 1f;
+			//	const float boundaryThickness = 10.0f;
+			//	bool tooSmall = this.selectionRadius * scale <= boundaryThickness * 2.0f;
+			//	bool mouseOverBoundary = MathF.Abs((mouseSpaceCoord - this.selectionCenter).Length - this.selectionRadius) * scale < boundaryThickness;
+			//	bool mouseInsideBoundary = !mouseOverBoundary && (mouseSpaceCoord - this.selectionCenter).Length < this.selectionRadius;
+			//	bool mouseAtCenterAxis = 
+			//		MathF.Abs(mouseSpaceCoord.X - this.selectionCenter.X) * scale < boundaryThickness || 
+			//		MathF.Abs(mouseSpaceCoord.Y - this.selectionCenter.Y) * scale < boundaryThickness;
+			//	bool shift = (Control.ModifierKeys & Keys.Shift) != Keys.None;
+			//	bool ctrl = (Control.ModifierKeys & Keys.Control) != Keys.None;
+			//
+			//	bool anySelection = this.actionObjSel.Count > 0;
+			//	bool canMove = this.actionObjSel.Any(s => s.IsActionAvailable(ObjectEditorAction.Move));
+			//	bool canRotate = (canMove && this.actionObjSel.Count > 1) || this.actionObjSel.Any(s => s.IsActionAvailable(ObjectEditorAction.Rotate));
+			//	bool canScale = (canMove && this.actionObjSel.Count > 1) || this.actionObjSel.Any(s => s.IsActionAvailable(ObjectEditorAction.Scale));
+			//
+			//	// Select which action to propose
+			//	this.mouseoverSelect = false;
+			//	if (ctrl)
+			//		this.mouseoverAction = ObjectEditorAction.RectSelect;
+			//	else if (anySelection && !tooSmall && mouseOverBoundary && mouseAtCenterAxis && this.selectionRadius > 0.0f && canScale)
+			//		this.mouseoverAction = ObjectEditorAction.Scale;
+			//	else if (anySelection && !tooSmall && mouseOverBoundary && canRotate)
+			//		this.mouseoverAction = ObjectEditorAction.Rotate;
+			//	else if (anySelection && mouseInsideBoundary && canMove)
+			//		this.mouseoverAction = ObjectEditorAction.Move;
+			//	else if (shift) // Lower prio than Ctrl, because Shift also modifies mouse actions
+			//		this.mouseoverAction = ObjectEditorAction.RectSelect;
+			//	else if (this.mouseoverObject != null && this.mouseoverObject.IsActionAvailable(ObjectEditorAction.Move))
+			//	{
+			//		this.mouseoverAction = ObjectEditorAction.Move; 
+			//		this.mouseoverSelect = true;
+			//	}
+			//	else
+			//		this.mouseoverAction = ObjectEditorAction.RectSelect;
+			//}
+			//else
+			//{
+			//	this.mouseoverObject = null;
+			//	this.mouseoverSelect = false;
+			//	this.mouseoverAction = ObjectEditorAction.None;
+			//}
+			//
+			//// If mouseover changed..
+			//if (this.mouseoverObject != lastMouseoverObject || 
+			//	this.mouseoverSelect != lastMouseoverSelect ||
+			//	this.mouseoverAction != lastMouseoverAction)
+			//{
+			//	// Adjust mouse cursor based on proposed action
+			//	if (this.mouseoverAction == ObjectEditorAction.Move)
+			//		this.Cursor = CursorHelper.ArrowActionMove;
+			//	else if (this.mouseoverAction == ObjectEditorAction.Rotate)
+			//		this.Cursor = CursorHelper.ArrowActionRotate;
+			//	else if (this.mouseoverAction == ObjectEditorAction.Scale)
+			//		this.Cursor = CursorHelper.ArrowActionScale;
+			//	else
+			//		this.Cursor = CursorHelper.Arrow;
+			//}
+			//
+			//// Redraw if action gizmos might be visible
+			//if (this.actionAllowed)
+			//	this.Invalidate();
 		}
 		private void UpdateRectSelection(Point mouseLoc)
 		{
@@ -521,64 +521,64 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 		}
 		private void UpdateObjMove(Point mouseLoc)
 		{
-			this.ValidateSelectionStats();
-
-			// Determine where to move the object
-			float zMovement = this.CameraObj.Transform.Pos.Z - this.actionLastLocSpace.Z;
-			Vector3 mousePosSpace = this.GetWorldPos(new Vector3(mouseLoc.X, mouseLoc.Y, this.selectionCenter.Z + zMovement)); mousePosSpace.Z = 0;
-			Vector3 resetMovement = this.actionBeginLocSpace - this.actionLastLocSpace;
-			Vector3 targetMovement = mousePosSpace - this.actionLastLocSpace; targetMovement.Z = zMovement;
-
-			// Apply user guide snapping
-			if ((this.SnapToUserGuides & UserGuideType.Position) != UserGuideType.None)
-			{
-				Vector3 snappedCenter = this.selectionCenter;
-				Vector3 targetPosSpace = snappedCenter + targetMovement;
-
-				targetPosSpace = this.EditingUserGuide.SnapPosition(targetPosSpace);
-				targetMovement = targetPosSpace - snappedCenter;
-			}
-
-			// Apply user axis locks
-			targetMovement = this.ApplyAxisLock(targetMovement, resetMovement, mousePosSpace - this.actionBeginLocSpace + new Vector3(0.0f, 0.0f, this.CameraObj.Transform.Pos.Z));
-
-			// Move the selected objects accordingly
-			this.MoveSelectionBy(targetMovement);
-
-			this.actionLastLocSpace += targetMovement;
+			//this.ValidateSelectionStats();
+			//
+			//// Determine where to move the object
+			//float zMovement = this.CameraObj.Transform.Pos.Z - this.actionLastLocSpace.Z;
+			//Vector3 mousePosSpace = this.GetWorldPos(new Vector3(mouseLoc.X, mouseLoc.Y, this.selectionCenter.Z + zMovement)); mousePosSpace.Z = 0;
+			//Vector3 resetMovement = this.actionBeginLocSpace - this.actionLastLocSpace;
+			//Vector3 targetMovement = mousePosSpace - this.actionLastLocSpace; targetMovement.Z = zMovement;
+			//
+			//// Apply user guide snapping
+			//if ((this.SnapToUserGuides & UserGuideType.Position) != UserGuideType.None)
+			//{
+			//	Vector3 snappedCenter = this.selectionCenter;
+			//	Vector3 targetPosSpace = snappedCenter + targetMovement;
+			//
+			//	targetPosSpace = this.EditingUserGuide.SnapPosition(targetPosSpace);
+			//	targetMovement = targetPosSpace - snappedCenter;
+			//}
+			//
+			//// Apply user axis locks
+			//targetMovement = this.ApplyAxisLock(targetMovement, resetMovement, mousePosSpace - this.actionBeginLocSpace + new Vector3(0.0f, 0.0f, this.CameraObj.Transform.Pos.Z));
+			//
+			//// Move the selected objects accordingly
+			//this.MoveSelectionBy(targetMovement);
+			//
+			//this.actionLastLocSpace += targetMovement;
 		}
 		private void UpdateObjRotate(Point mouseLoc)
 		{
-			this.ValidateSelectionStats();
-
-			Vector3 spaceCoord = this.GetWorldPos(new Vector3(mouseLoc.X, mouseLoc.Y, this.selectionCenter.Z));
-			float lastAngle = MathF.Angle(this.selectionCenter.X, this.selectionCenter.Y, this.actionLastLocSpace.X, this.actionLastLocSpace.Y);
-			float curAngle = MathF.Angle(this.selectionCenter.X, this.selectionCenter.Y, spaceCoord.X, spaceCoord.Y);
-			float rotation = curAngle - lastAngle;
-
-			this.RotateSelectionBy(rotation);
-
-			this.actionLastLocSpace = spaceCoord;
+			//this.ValidateSelectionStats();
+			//
+			//Vector3 spaceCoord = this.GetWorldPos(new Vector3(mouseLoc.X, mouseLoc.Y, this.selectionCenter.Z));
+			//float lastAngle = MathF.Angle(this.selectionCenter.X, this.selectionCenter.Y, this.actionLastLocSpace.X, this.actionLastLocSpace.Y);
+			//float curAngle = MathF.Angle(this.selectionCenter.X, this.selectionCenter.Y, spaceCoord.X, spaceCoord.Y);
+			//float rotation = curAngle - lastAngle;
+			//
+			//this.RotateSelectionBy(rotation);
+			//
+			//this.actionLastLocSpace = spaceCoord;
 		}
 		private void UpdateObjScale(Point mouseLoc)
 		{
-			this.ValidateSelectionStats();
-			if (this.selectionRadius == 0.0f) return;
-
-			Vector3 spaceCoord = this.GetWorldPos(new Vector3(mouseLoc.X, mouseLoc.Y, this.selectionCenter.Z));
-			float lastRadius = this.selectionRadius;
-			float curRadius = (this.selectionCenter - spaceCoord).Length;
-
-			if ((this.SnapToUserGuides & UserGuideType.Scale) != UserGuideType.None)
-			{
-				curRadius = this.EditingUserGuide.SnapSize(curRadius);
-			}
-
-			float scale = MathF.Clamp(curRadius / lastRadius, 0.0001f, 10000.0f);
-			this.ScaleSelectionBy(scale);
-
-			this.actionLastLocSpace = spaceCoord;
-			this.Invalidate();
+			//this.ValidateSelectionStats();
+			//if (this.selectionRadius == 0.0f) return;
+			//
+			//Vector3 spaceCoord = this.GetWorldPos(new Vector3(mouseLoc.X, mouseLoc.Y, this.selectionCenter.Z));
+			//float lastRadius = this.selectionRadius;
+			//float curRadius = (this.selectionCenter - spaceCoord).Length;
+			//
+			//if ((this.SnapToUserGuides & UserGuideType.Scale) != UserGuideType.None)
+			//{
+			//	curRadius = this.EditingUserGuide.SnapSize(curRadius);
+			//}
+			//
+			//float scale = MathF.Clamp(curRadius / lastRadius, 0.0001f, 10000.0f);
+			//this.ScaleSelectionBy(scale);
+			//
+			//this.actionLastLocSpace = spaceCoord;
+			//this.Invalidate();
 		}
 
 		protected virtual void OnBeginAction(ObjectEditorAction action) {}
@@ -593,135 +593,135 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 			base.OnLeaveState();
 		}
 
-		protected override void OnCollectStateWorldOverlayDrawcalls(Canvas canvas)
+		protected override void OnCollectStateWorldOverlayDrawcalls()
 		{
-			base.OnCollectStateWorldOverlayDrawcalls(canvas);
+			base.OnCollectStateWorldOverlayDrawcalls();
 
 			// Assure we know how to display the current selection
 			this.ValidateSelectionStats();
 
-			List<ObjectEditorSelObj> transformObjSel = this.allObjSel.Where(s => s.HasTransform).ToList();
-			Point cursorPos = this.PointToClient(Cursor.Position);
-			canvas.PushState();
-			canvas.State.DepthOffset = -1.0f;
-			canvas.State.SetMaterial(DrawTechnique.Solid);
-			
-			// Draw indirectly selected object overlay
-			canvas.State.ColorTint = ColorRgba.Lerp(this.FgColor, this.BgColor, 0.75f);
-			this.DrawSelectionMarkers(canvas, this.indirectObjSel);
-			if (this.mouseoverObject != null && (this.mouseoverAction == ObjectEditorAction.RectSelect || this.mouseoverSelect) && !transformObjSel.Contains(this.mouseoverObject)) 
-				this.DrawSelectionMarkers(canvas, new [] { this.mouseoverObject });
-
-			// Draw selected object overlay
-			canvas.State.ColorTint = this.FgColor;
-			this.DrawSelectionMarkers(canvas, transformObjSel);
-
-			// Draw overall selection boundary
-			if (transformObjSel.Count > 1)
-			{
-				float midZ = transformObjSel.Average(t => t.Pos.Z);
-				float maxZDiff = transformObjSel.Max(t => MathF.Abs(t.Pos.Z - midZ));
-				if (maxZDiff > 0.001f)
-				{
-					canvas.State.ColorTint = ColorRgba.Lerp(this.FgColor, this.BgColor, 0.5f);
-					canvas.DrawSphere(
-						this.selectionCenter.X, 
-						this.selectionCenter.Y, 
-						this.selectionCenter.Z, 
-						this.selectionRadius);
-				}
-				else
-				{
-					canvas.State.ColorTint = ColorRgba.Lerp(this.FgColor, this.BgColor, 0.5f);
-					canvas.DrawCircle(
-						this.selectionCenter.X, 
-						this.selectionCenter.Y, 
-						this.selectionCenter.Z, 
-						this.selectionRadius);
-				}
-			}
-
-			// Draw scale action dots
-			bool canMove = this.actionObjSel.Any(s => s.IsActionAvailable(ObjectEditorAction.Move));
-			bool canScale = (canMove && this.actionObjSel.Count > 1) || this.actionObjSel.Any(s => s.IsActionAvailable(ObjectEditorAction.Scale));
-			if (canScale)
-			{
-				//float dotR = 3.0f / this.GetScaleAtZ(this.selectionCenter.Z);
-				float dotR = 3.0f / 1f;
-				canvas.State.DepthOffset -= 0.1f;
-				canvas.State.ColorTint = this.FgColor;
-				canvas.FillCircle(
-					this.selectionCenter.X + this.selectionRadius + 0.5f - 1.0f, 
-					this.selectionCenter.Y + 0.5f - 1.0f, 
-					this.selectionCenter.Z,
-					dotR);
-				canvas.FillCircle(
-					this.selectionCenter.X - this.selectionRadius + 0.5f, 
-					this.selectionCenter.Y + 0.5f, 
-					this.selectionCenter.Z,
-					dotR);
-				canvas.FillCircle(
-					this.selectionCenter.X + 0.5f - 1.0f, 
-					this.selectionCenter.Y + this.selectionRadius + 0.5f - 1.0f, 
-					this.selectionCenter.Z,
-					dotR);
-				canvas.FillCircle(
-					this.selectionCenter.X + 0.5f, 
-					this.selectionCenter.Y - this.selectionRadius + 0.5f, 
-					this.selectionCenter.Z,
-					dotR);
-				canvas.State.DepthOffset += 0.1f;
-			}
-
-			if (this.action != ObjectEditorAction.None)
-			{
-				// Draw action lock axes
-				this.DrawLockedAxes(canvas, this.selectionCenter.X, this.selectionCenter.Y, this.selectionCenter.Z, this.selectionRadius * 4);
-			}
-
-			canvas.PopState();
+			//List<ObjectEditorSelObj> transformObjSel = this.allObjSel.Where(s => s.HasTransform).ToList();
+			//Point cursorPos = this.PointToClient(Cursor.Position);
+			//canvas.PushState();
+			//canvas.State.DepthOffset = -1.0f;
+			//canvas.State.SetMaterial(DrawTechnique.Solid);
+			//
+			//// Draw indirectly selected object overlay
+			//canvas.State.ColorTint = ColorRgba.Lerp(this.FgColor, this.BgColor, 0.75f);
+			//this.DrawSelectionMarkers(canvas, this.indirectObjSel);
+			//if (this.mouseoverObject != null && (this.mouseoverAction == ObjectEditorAction.RectSelect || this.mouseoverSelect) && !transformObjSel.Contains(this.mouseoverObject)) 
+			//	this.DrawSelectionMarkers(canvas, new [] { this.mouseoverObject });
+			//
+			//// Draw selected object overlay
+			//canvas.State.ColorTint = this.FgColor;
+			//this.DrawSelectionMarkers(canvas, transformObjSel);
+			//
+			//// Draw overall selection boundary
+			//if (transformObjSel.Count > 1)
+			//{
+			//	float midZ = transformObjSel.Average(t => t.Pos.Z);
+			//	float maxZDiff = transformObjSel.Max(t => MathF.Abs(t.Pos.Z - midZ));
+			//	if (maxZDiff > 0.001f)
+			//	{
+			//		canvas.State.ColorTint = ColorRgba.Lerp(this.FgColor, this.BgColor, 0.5f);
+			//		canvas.DrawSphere(
+			//			this.selectionCenter.X, 
+			//			this.selectionCenter.Y, 
+			//			this.selectionCenter.Z, 
+			//			this.selectionRadius);
+			//	}
+			//	else
+			//	{
+			//		canvas.State.ColorTint = ColorRgba.Lerp(this.FgColor, this.BgColor, 0.5f);
+			//		canvas.DrawCircle(
+			//			this.selectionCenter.X, 
+			//			this.selectionCenter.Y, 
+			//			this.selectionCenter.Z, 
+			//			this.selectionRadius);
+			//	}
+			//}
+			//
+			//// Draw scale action dots
+			//bool canMove = this.actionObjSel.Any(s => s.IsActionAvailable(ObjectEditorAction.Move));
+			//bool canScale = (canMove && this.actionObjSel.Count > 1) || this.actionObjSel.Any(s => s.IsActionAvailable(ObjectEditorAction.Scale));
+			//if (canScale)
+			//{
+			//	//float dotR = 3.0f / this.GetScaleAtZ(this.selectionCenter.Z);
+			//	float dotR = 3.0f / 1f;
+			//	canvas.State.DepthOffset -= 0.1f;
+			//	canvas.State.ColorTint = this.FgColor;
+			//	canvas.FillCircle(
+			//		this.selectionCenter.X + this.selectionRadius + 0.5f - 1.0f, 
+			//		this.selectionCenter.Y + 0.5f - 1.0f, 
+			//		this.selectionCenter.Z,
+			//		dotR);
+			//	canvas.FillCircle(
+			//		this.selectionCenter.X - this.selectionRadius + 0.5f, 
+			//		this.selectionCenter.Y + 0.5f, 
+			//		this.selectionCenter.Z,
+			//		dotR);
+			//	canvas.FillCircle(
+			//		this.selectionCenter.X + 0.5f - 1.0f, 
+			//		this.selectionCenter.Y + this.selectionRadius + 0.5f - 1.0f, 
+			//		this.selectionCenter.Z,
+			//		dotR);
+			//	canvas.FillCircle(
+			//		this.selectionCenter.X + 0.5f, 
+			//		this.selectionCenter.Y - this.selectionRadius + 0.5f, 
+			//		this.selectionCenter.Z,
+			//		dotR);
+			//	canvas.State.DepthOffset += 0.1f;
+			//}
+			//
+			//if (this.action != ObjectEditorAction.None)
+			//{
+			//	// Draw action lock axes
+			//	this.DrawLockedAxes(canvas, this.selectionCenter.X, this.selectionCenter.Y, this.selectionCenter.Z, this.selectionRadius * 4);
+			//}
+			//
+			//canvas.PopState();
 		}
-		protected override void OnCollectStateOverlayDrawcalls(Canvas canvas)
+		protected override void OnCollectStateOverlayDrawcalls()
 		{
-			base.OnCollectStateOverlayDrawcalls(canvas);
+			base.OnCollectStateOverlayDrawcalls();
 			
-			Point cursorPos = this.PointToClient(Cursor.Position);
-			canvas.PushState();
-			{
-				// Draw rect selection
-				if (this.action == ObjectEditorAction.RectSelect)
-					canvas.DrawRect(this.actionBeginLoc.X, this.actionBeginLoc.Y, cursorPos.X - this.actionBeginLoc.X, cursorPos.Y - this.actionBeginLoc.Y);
-			}
-			canvas.PopState();
+			//Point cursorPos = this.PointToClient(Cursor.Position);
+			//canvas.PushState();
+			//{
+			//	// Draw rect selection
+			//	if (this.action == ObjectEditorAction.RectSelect)
+			//		canvas.DrawRect(this.actionBeginLoc.X, this.actionBeginLoc.Y, cursorPos.X - this.actionBeginLoc.X, cursorPos.Y - this.actionBeginLoc.Y);
+			//}
+			//canvas.PopState();
 		}
 
 		protected override string UpdateActionText(ref Vector2 actionTextPos)
 		{
-			string actionText = null;
-			ObjectEditorAction visibleObjectAction = this.VisibleObjAction;
-			if (visibleObjectAction != ObjectEditorAction.None && ((this.mouseoverObject != null && this.mouseoverSelect) || this.actionObjSel.Count == 1))
-			{
-				ObjectEditorSelObj obj;
-				if (this.mouseoverObject != null || this.mouseoverAction == visibleObjectAction)
-				{
-					obj = (this.mouseoverObject != null && this.mouseoverSelect) ? this.mouseoverObject : this.actionObjSel[0];
-				}
-				else
-				{
-					obj = this.actionObjSel[0];
-					actionTextPos = this.GetScreenPos(this.actionObjSel[0].Pos);
-				}
-
-				// If the SelObj is valid, let it determine the current action text
-				if (obj.ActualObject != null)
-				{
-					actionText = obj.UpdateActionText(visibleObjectAction, this.action != ObjectEditorAction.None);
-				}
-			}
-
-			if (actionText != null)
-				return actionText;
-			
+			//string actionText = null;
+			//ObjectEditorAction visibleObjectAction = this.VisibleObjAction;
+			//if (visibleObjectAction != ObjectEditorAction.None && ((this.mouseoverObject != null && this.mouseoverSelect) || this.actionObjSel.Count == 1))
+			//{
+			//	ObjectEditorSelObj obj;
+			//	if (this.mouseoverObject != null || this.mouseoverAction == visibleObjectAction)
+			//	{
+			//		obj = (this.mouseoverObject != null && this.mouseoverSelect) ? this.mouseoverObject : this.actionObjSel[0];
+			//	}
+			//	else
+			//	{
+			//		obj = this.actionObjSel[0];
+			//		actionTextPos = this.GetScreenPos(this.actionObjSel[0].Pos);
+			//	}
+			//
+			//	// If the SelObj is valid, let it determine the current action text
+			//	if (obj.ActualObject != null)
+			//	{
+			//		actionText = obj.UpdateActionText(visibleObjectAction, this.action != ObjectEditorAction.None);
+			//	}
+			//}
+			//
+			//if (actionText != null)
+			//	return actionText;
+			//
 			return base.UpdateActionText(ref actionTextPos);
 		}
 		protected override string UpdateStatusText()

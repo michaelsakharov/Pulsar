@@ -16,11 +16,8 @@ namespace Duality.Renderer
 {
     public class ContextReference
     {
-        public OpenTK.ContextHandle Handle;
-        public GraphicsContext.GetAddressDelegate GetAddress;
-        public GraphicsContext.GetCurrentContextDelegate GetCurrent;
         public Action SwapBuffers;
-        public OpenTK.Graphics.IGraphicsContext Context; // We can also provide the opentk context instance directly if we so desire
+        public OpenTK.Graphics.IGraphicsContext Context;
     }
 
     /// <summary>
@@ -40,9 +37,6 @@ namespace Duality.Renderer
     /// </summary>
     public class RenderSystem : IDisposable
     {
-        private readonly IGraphicsContext _context;
-        private readonly bool _ownsContext = false;
-
         private readonly Textures.TextureManager _textureManager;
         private readonly Meshes.MeshManager _meshManager;
         private readonly Meshes.BufferManager _bufferManager;
@@ -58,29 +52,15 @@ namespace Duality.Renderer
 
         public delegate void OnLoadedCallback(int handle, bool success, string errors);
 
-        public RenderSystem(Action<Action> addToWorkQueue, ContextReference ctx)
+        public RenderSystem(Action<Action> addToWorkQueue)
         {
-            if (ctx == null) throw new ArgumentNullException(nameof(ctx));
             _addToWorkQueue = addToWorkQueue ?? throw new ArgumentNullException(nameof(addToWorkQueue));
 
             var graphicsMode = new GraphicsMode(32, 24, 0, 0);
 
-            if (ctx.Context != null)
-            {
-                _ownsContext = false;
-                _context = ctx.Context;
-            }
-            else
-            {
-                // We dont actually own this context but I am pretty sure that we should dispose the calls so we let _ownsContext be false
-                _context = new GraphicsContext(ctx.Handle, ctx.GetAddress, ctx.GetCurrent);
-                _context.LoadAll();
-            }
 
             var major = GL.GetInteger(GetPName.MajorVersion);
             var minor = GL.GetInteger(GetPName.MinorVersion);
-
-            //Log.Information("OpenGL Context {Major}.{Minor}", major, minor);
 
             GLWrapper.Initialize();
 
@@ -120,9 +100,6 @@ namespace Duality.Renderer
             _meshManager.Dispose();
             _bufferManager.Dispose();
             _renderTargetManager.Dispose();
-
-            if (_ownsContext)
-                _context.Dispose();
 
             _disposed = true;
         }
