@@ -17,6 +17,7 @@ using Duality.Utility;
 using Duality.IO;
 using System.Runtime.CompilerServices;
 using Duality.Renderer.Meshes;
+using OpenTK.Platform;
 
 namespace Duality.Graphics
 {
@@ -443,8 +444,11 @@ namespace Duality.Graphics
                         break;
 					case OpCode.ChangeGLContext:
 						{
-							//var packet = *(PacketChangeGLContext*)(ptr);
-							//packet.Context.MakeCurrent(packet.WindowInfo);
+							var packet = *(PacketChangeGLContext*)(ptr);
+							   
+							GLContextQueue.TryDequeue(out var GLContext);
+							if (GLContext.Item1 != null)
+								GLContext.Item1.MakeCurrent(GLContext.Item2);
 						}
 						break;
 					case OpCode.Barrier:
@@ -458,7 +462,10 @@ namespace Duality.Graphics
                 ptr += header.Size;
                 position += header.Size;
             }
-        }
+
+		}
+
+		public static ConcurrentQueue<(IGraphicsContext, IWindowInfo)> GLContextQueue = new ConcurrentQueue<(IGraphicsContext, IWindowInfo)>();
 
         /// <summary>
         /// Begin a new scene, this will reset the primary commnad buffer
@@ -899,11 +906,15 @@ namespace Duality.Graphics
             packet->Handle = handle;
 		}
 
-		public unsafe void ChangeGLContext(int index, int handle)
+		public unsafe void ChangeGLContext(IGraphicsContext context, IWindowInfo window)
 		{
-			//WriteHeader<PacketChangeGLContext>(OpCode.ChangeGLContext, 0, out var packet);
+			WriteHeader<PacketChangeGLContext>(OpCode.ChangeGLContext, 0, out var packet);
+			GLContextQueue.Enqueue((context, window));
+		}
 
-			//packet->Index = index;
+		public unsafe void ResetGLContext(IGraphicsContext context, IWindowInfo window)
+		{
+			_contextReference.Context.MakeCurrent(_contextReference.Window);
 		}
 
 		public RenderTarget CreateRenderTarget(string name, Renderer.RenderTargets.Definition definition)

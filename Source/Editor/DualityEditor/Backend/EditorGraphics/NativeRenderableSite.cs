@@ -20,7 +20,7 @@ namespace Duality.Editor.Backend
 		{
 			get { return this.context.AntialiasingQuality; }
 		}
-		public Control Control
+		public GLControl Control
 		{
 			get { return this.control; }
 		}

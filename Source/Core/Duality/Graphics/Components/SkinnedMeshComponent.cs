@@ -7,7 +7,7 @@ using Duality.Graphics.SkeletalAnimation;
 
 namespace Duality.Graphics.Components
 {
-    public class SkinnedMeshComponent : MeshComponent, ICmpUpdatable, ICmpInitializable
+    public class SkinnedMeshComponent : MeshComponent, ICmpUpdatable, ICmpEditorUpdatable, ICmpInitializable
 	{
 		[DontSerialize]
         public SkeletonInstance _skeletonInstance = null;
@@ -49,6 +49,11 @@ namespace Duality.Graphics.Components
         }
 
 		void ICmpUpdatable.OnUpdate()
+		{
+            _skeletonInstance?.Update();
+        }
+
+		void ICmpEditorUpdatable.OnUpdate()
 		{
             _skeletonInstance?.Update();
         }

@@ -15,6 +15,7 @@ using Duality.Editor.Forms;
 using Duality.Editor.Plugins.CamView.CamViewLayers;
 using Duality.Editor.Plugins.CamView.Properties;
 using Duality.Editor.Plugins.CamView.UndoRedoActions;
+using Duality.Graphics.Pipelines;
 
 namespace Duality.Editor.Plugins.CamView.CamViewStates
 {
@@ -404,8 +405,13 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 		protected virtual void OnRenderState()
 		{
 			// Render here!
+			deferredPipeline.RenderStage(Time.DeltaTime, Scene.Stage, CameraComponent);
+
+			// Execute Command List
+			DualityApp.GraphicsBackend.Process();
 		}
 
+		private static DeferredPipeline deferredPipeline;
 		private float _currentYaw = 0.3f;
 		private float _currentPitch = 0.3f;
 
@@ -668,8 +674,15 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 			this.renderFrameLast = Time.FrameCount;
 			this.renderedGameTime = Time.GameTimer;
 
+
+			if (deferredPipeline == null)
+				deferredPipeline = new DeferredPipeline(RenderableControl.Width, RenderableControl.Height);
 			// Retrieve OpenGL context
-			try { this.RenderableSite.MakeCurrent(); } catch (Exception) { return; }
+			//try { this.RenderableSite.MakeCurrent(); } catch (Exception) { return; }
+			DualityApp.GraphicsBackend.ChangeGLContext(RenderableSite.Control.Context, RenderableSite.Control.WindowInfo);
+			DualityApp.GraphicsBackend.Resize(RenderableSite.Control.Width, RenderableSite.Control.Height);
+
+			deferredPipeline.Resize(RenderableSite.Control.Width, RenderableSite.Control.Height);
 
 			// Perform rendering
 			try

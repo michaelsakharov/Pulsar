@@ -11,6 +11,7 @@ using System.Runtime.CompilerServices;
 using Duality.Renderer.Meshes;
 using Duality;
 using Duality.Backend;
+using OpenTK.Platform;
 
 namespace Duality.Renderer
 {
@@ -18,6 +19,7 @@ namespace Duality.Renderer
     {
         public Action SwapBuffers;
         public OpenTK.Graphics.IGraphicsContext Context;
+        public IWindowInfo Window;
     }
 
     /// <summary>

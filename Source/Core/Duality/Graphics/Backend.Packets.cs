@@ -199,8 +199,6 @@ namespace Duality.Graphics
 		[StructLayout(LayoutKind.Sequential)]
 		private struct PacketChangeGLContext
 		{
-			public IGraphicsContext Context;
-			public IWindowInfo WindowInfo;
 		}
 	}
 }

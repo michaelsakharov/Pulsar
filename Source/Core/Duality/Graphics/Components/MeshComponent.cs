@@ -8,7 +8,7 @@ using Duality.Graphics.Resources;
 
 namespace Duality.Graphics.Components
 {
-    public class MeshComponent : RenderableComponent, ICmpUpdatable
+    public class MeshComponent : RenderableComponent, ICmpUpdatable, ICmpEditorUpdatable
 	{
 		[DontSerialize] protected bool _meshDirty = true; // Start Dirty
 
@@ -46,6 +46,17 @@ namespace Duality.Graphics.Components
         }
 
 		void ICmpUpdatable.OnUpdate()
+		{
+            if (_meshDirty)
+            {
+                UpdateDerviedMeshSettings();
+            }
+
+			var world = gameobj.Transform.WorldMatrix;
+			_boundingSphereLocalSpace.Transform(ref world, out BoundingSphere);
+        }
+
+		void ICmpEditorUpdatable.OnUpdate()
 		{
             if (_meshDirty)
             {
