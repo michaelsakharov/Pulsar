@@ -276,7 +276,7 @@ namespace Duality.Graphics.Deferred
                 }
 
                 operations[i].Material.BindPerObject(ref world, ref worldView, ref itWorld, ref worldViewProjection, operations[i].Skeleton);
-				DualityApp.GraphicsBackend.DrawMesh(operations[i].MeshHandle);
+				DualityApp.GraphicsBackend.DrawMesh(operations[i].MeshHandle, OpenTK.Graphics.OpenGL.PrimitiveType.Triangles);
             }
         }
 

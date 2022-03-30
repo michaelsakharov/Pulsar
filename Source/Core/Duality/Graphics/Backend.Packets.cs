@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Duality.Renderer;
 using OpenTK.Graphics;
+using OpenTK.Graphics.OpenGL;
 using OpenTK.Platform;
 
 namespace Duality.Graphics
@@ -111,6 +112,7 @@ namespace Duality.Graphics
         private struct PacketDrawMesh
         {
             public int MeshHandle;
+            public PrimitiveType PrimitiveType;
         }
 
         [StructLayout(LayoutKind.Sequential)]

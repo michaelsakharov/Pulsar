@@ -364,7 +364,7 @@ namespace Duality.Graphics
                         {
                             DrawCalls++;
                             var packet = *(PacketDrawMesh*)(ptr);
-                            RenderSystem.RenderMesh(packet.MeshHandle, OGL.PrimitiveType.Triangles);
+                            RenderSystem.RenderMesh(packet.MeshHandle, packet.PrimitiveType);
                         }
                         break;
                     case OpCode.DrawMeshMulti:
@@ -775,9 +775,20 @@ namespace Duality.Graphics
             WriteHeader<PacketDrawMesh>(OpCode.DrawMesh, 0, out var packet);
 
             packet->MeshHandle = handle;
-        }
+			packet->PrimitiveType = OGL.PrimitiveType.Triangles;
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+		}
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public unsafe void DrawMesh(int handle, OGL.PrimitiveType primitiveType)
+		{
+			WriteHeader<PacketDrawMesh>(OpCode.DrawMesh, 0, out var packet);
+
+			packet->MeshHandle = handle;
+			packet->PrimitiveType = primitiveType;
+
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
         public unsafe void DrawMesh(DrawMeshMultiData[] drawData, int count)
         {
             WriteHeader<PacketDrawMeshMulti>(OpCode.DrawMeshMulti, sizeof(DrawMeshMultiData) * count, out var packet);
