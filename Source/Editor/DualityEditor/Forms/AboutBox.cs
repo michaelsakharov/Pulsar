@@ -29,14 +29,6 @@ namespace Duality.Editor.Forms
 			this.Close();
 		}
 
-		private void linkLabelWebsite_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-		{
-			Process.Start(this.linkLabelWebsite.Text);
-		}
-		private void linkLabelDevWebsite_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-		{
-			Process.Start(this.linkLabelDevWebsite.Text);
-		}
 		private void labelVersion_Click(object sender, EventArgs e)
 		{
 			System.Media.SystemSounds.Asterisk.Play();

@@ -419,12 +419,18 @@ namespace Duality.Editor.Forms
 
 		private void ApplyDockPanelSkin()
 		{
-			Color bgColor = Color.FromArgb(255, 162, 162, 162);
-			Color fgColor = Color.FromArgb(255, 196, 196, 196);
-			Color inactiveTab = Color.FromArgb(255, 192, 192, 192);
-			Color inactiveTab2 = Color.FromArgb(255, 224, 224, 224);
-			Color activeTab = Color.FromArgb(255, 224, 224, 224);
-			Color activeTab2 = Color.FromArgb(255, 242, 242, 242);
+			//Color bgColor = Color.FromArgb(255, 162, 162, 162);
+			//Color fgColor = Color.FromArgb(255, 196, 196, 196);
+			//Color inactiveTab = Color.FromArgb(255, 192, 192, 192);
+			//Color inactiveTab2 = Color.FromArgb(255, 224, 224, 224);
+			//Color activeTab = Color.FromArgb(255, 224, 224, 224);
+			//Color activeTab2 = Color.FromArgb(255, 242, 242, 242);
+			Color bgColor = Color.FromArgb(255, 117, 117, 117);
+			Color fgColor = Color.FromArgb(255, 145, 145, 146);
+			Color inactiveTab = Color.FromArgb(255, 145, 145, 145);
+			Color inactiveTab2 = Color.FromArgb(255, 135, 135, 135);
+			Color activeTab = Color.FromArgb(255, 174, 174, 174);
+			Color activeTab2 = Color.FromArgb(255, 203, 203, 203);
 
 			this.dockPanel.Skin.DockPaneStripSkin.DocumentGradient.DockStripGradient.StartColor = bgColor;
 			this.dockPanel.Skin.DockPaneStripSkin.DocumentGradient.DockStripGradient.EndColor = bgColor;
