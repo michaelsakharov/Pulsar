@@ -446,6 +446,8 @@ namespace Duality
 				return;
 			}
 
+			execContext = ExecutionContext.Terminated;
+
 			if (execContext != ExecutionContext.Editor)
 			{
 				OnTerminating();
@@ -484,7 +486,6 @@ namespace Duality
 			Logs.Core.Write("DualityApp terminated");
 
 			initialized = false;
-			execContext = ExecutionContext.Terminated;
 		}
 
 		/// <summary>
