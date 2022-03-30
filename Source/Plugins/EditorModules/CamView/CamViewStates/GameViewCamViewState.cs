@@ -531,23 +531,44 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 			Point2 clientSize = new Point2(this.RenderableControl.ClientSize.Width, this.RenderableControl.ClientSize.Height);
 			Point2 targetSize = this.TargetRenderSize;
 			Rect windowRect = this.LocalGameWindowRect;
-			
-			Vector2 imageSize;
-			Rect viewportRect;
-			DualityApp.CalculateGameViewport(targetSize, out viewportRect, out imageSize);
 
 			// Render the game view background using a background color matching editor UI,
 			// so users can discern between an area that isn't rendered to and a rendered
 			// area of the game that happens to be black or outside the game viewport.
 			//DrawDevice.RenderVoid(new Rect(clientSize), new ColorRgba(64, 64, 64));
 
+			//Camera[] activeSceneCameras = Scene.Current.FindComponents<Camera>().Where(c => c.Active).OrderByDescending(c => c.Priority).ToArray();
+			Camera[] activeSceneCameras = Scene.Current.FindComponents<Camera>().Where(c => c.Active).ToArray();
+
 			// Render Game view
-			if (deferredPipeline == null)
-				deferredPipeline = new DeferredPipeline(TargetRenderSize.X, TargetRenderSize.Y);
-			CameraComponent.useCustomViewPort = true;
-			//viewportRect.Pos += TargetRenderSize / 2f;
-			CameraComponent.CustomViewport = viewportRect;
-			deferredPipeline.RenderStage(Time.DeltaTime, Scene.Stage, CameraComponent);
+			foreach (Camera camera in activeSceneCameras)
+			{
+
+				Vector2 imageSize;
+				Rect viewportRect;
+				DualityApp.CalculateGameViewport(targetSize, out viewportRect, out imageSize);
+
+				// Cameras with a custom render target will render to that instead of the screen
+				if (false)
+				{
+					// Custom Render Texture
+				}
+				else
+				{
+					if (deferredPipeline == null)
+						deferredPipeline = new DeferredPipeline(TargetRenderSize.X, TargetRenderSize.Y);
+					// the Game View could have a differant viewport then whatever the DUalityApp is using, so assign a custom one to the Camera but keep track of if it already had a custom one
+					// this needs to be improved if we want to properly support multiple cameras
+					camera.useCustomViewPort = true;
+					var previousViewPort = camera.CustomViewport;
+					camera.CustomViewport = viewportRect;
+
+					deferredPipeline.RenderStage(Time.DeltaTime, Scene.Stage, camera);
+
+					camera.useCustomViewPort = false;
+					camera.CustomViewport = previousViewPort;
+				}
+			}
 		}
 
 		private static DeferredPipeline deferredPipeline;
