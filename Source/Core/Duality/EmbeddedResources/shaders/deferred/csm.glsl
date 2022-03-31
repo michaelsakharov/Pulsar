@@ -20,24 +20,25 @@ in vec2 texCoord;
 
 layout(location = 0) out vec4 oColor;
 
-uniform sampler2D samplerDepth;
+uniform sampler2D samplerPosition;
 uniform vec2 screenSize;
 uniform sampler2D[5] samplerShadowCsm;
 uniform mat4x4[5] shadowViewProjCsm;
 uniform float[6] shadowClipDistances;
 uniform float texelSize;
 uniform vec2 cameraClipPlane;
+uniform vec3 cameraPosition;
 uniform int debugCascades;
 
 void main()
 {
 	vec2 project = gl_FragCoord.xy / screenSize.xy;
 	
-	float depth = texture(samplerDepth, project).x;
-	if (depth == 1.0) 
+	vec3 position = texture(samplerPosition, project).xyz;
+	if (position == vec3(0, 0, 0)) 
 		discard;
-	
-	vec3 position = decodeWorldPosition(project, depth);
+	//float depth = (distance(position, cameraPosition) / 100000.0);
+	float depth = distance(position, cameraPosition);
 
 	vec3 cascadeColor = vec3(1);
 	float shadow = 1;

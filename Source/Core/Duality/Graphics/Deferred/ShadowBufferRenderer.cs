@@ -88,7 +88,7 @@ namespace Duality.Graphics.Deferred
 			// Render shadows
 			DualityApp.GraphicsBackend.BeginInstance(_renderShadowsCSMShader[(int)quality].Handle, textures, samplers);
 
-			DualityApp.GraphicsBackend.BindShaderVariable(_renderShadowsCSMParams.SamplerDepth, 0);
+			DualityApp.GraphicsBackend.BindShaderVariable(_renderShadowsCSMParams.SamplerPosition, 0);
 
             var shadowSamplers = new int[] { 1, 2, 3, 4, 5 };
             DualityApp.GraphicsBackend.BindShaderVariable(_renderShadowsCSMParams.SamplerShadowCsm, ref shadowSamplers);
@@ -97,6 +97,8 @@ namespace Duality.Graphics.Deferred
 
             var cameraClipPlane = new Vector2(camera.NearClipDistance, camera.FarClipDistance);
 			DualityApp.GraphicsBackend.BindShaderVariable(_renderShadowsCSMParams.CameraClipPlane, ref cameraClipPlane);
+			var cameraPos = camera.gameobj.Transform.Pos;
+			DualityApp.GraphicsBackend.BindShaderVariable(_renderShadowsCSMParams.CameraPosition, ref cameraPos);
 
 			DualityApp.GraphicsBackend.BindShaderVariable(_renderShadowsCSMParams.ScreenSize, ref _screenSize);
             var texelSize = 1.0f / (float)csmRenderTargets[0].Width;
@@ -115,7 +117,7 @@ namespace Duality.Graphics.Deferred
 
         private class RenderShadowsCSMParams
         {
-            public int SamplerDepth = 0;
+            public int SamplerPosition = 0;
             public int ScreenSize = 0;
             public int SamplerShadowCsm = 0;
             public int ShadowViewProjCsm = 0;
@@ -123,6 +125,7 @@ namespace Duality.Graphics.Deferred
             public int TexelSize = 0;
             public int InvViewProjection = 0;
             public int CameraClipPlane = 0;
+            public int CameraPosition = 0;
             public int DebugCascades = 0;
         }
     }

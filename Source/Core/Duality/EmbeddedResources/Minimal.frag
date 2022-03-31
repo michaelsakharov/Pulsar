@@ -17,6 +17,7 @@ in vec4 position;
 layout(location = 0) out vec4 oColor;
 layout(location = 1) out vec4 oNormal;
 layout(location = 2) out vec4 oSpecular;
+layout(location = 3) out vec4 oPosition;
 
 uniform mat4x4 itWorld;
 
@@ -60,6 +61,7 @@ void main() {
 	//oColor = vec4(1, 1, 1, 1);
 	oNormal = vec4(encodeNormals(normals), 1);
 	oSpecular = vec4(metallic, roughness, specular, 0);
+	oPosition = position;
 	
 #ifdef UNLIT
 	oNormal.w = 0;

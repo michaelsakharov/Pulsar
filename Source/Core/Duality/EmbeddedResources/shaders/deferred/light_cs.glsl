@@ -52,6 +52,7 @@ uniform mat4x4[MaxShadowCastingPointLights * 6] pointShadowMatrices;
 layout(binding = 0) uniform sampler2D samplerDepth;
 layout(binding = 1) uniform sampler2D samplerSpotLightShadowAtlas;
 layout(binding = 2) uniform sampler2D samplerPointLightShadowAtlas;
+layout(binding = 3) uniform sampler2D samplerPosition;
 
 layout(binding = 0, rgba8) uniform image2D samplerGBuffer0;
 layout(binding = 1, rgba16f) uniform image2D samplerGBuffer1;
@@ -130,7 +131,13 @@ void main() {
 	ivec2 pixelCoord = ivec2(gl_GlobalInvocationID.xy);	
 	vec2 texCoord = vec2(pixelCoord) / displaySize;
 
-	float depthFloat = texelFetch(samplerDepth, pixelCoord, 0).x;
+	// Process lighting
+	vec3 positionWS = texelFetch(samplerPosition, pixelCoord, 0).xyz;
+
+	//float depthFloat = texelFetch(samplerDepth, pixelCoord, 0).x;
+	//float depthFloat = (distance(positionWS, cameraPositionWS) / 100000.0);
+	float depthFloat = distance(positionWS, cameraPositionWS);
+
 	uint depthInt = uint(depthFloat * 0xffffffffu);
 
 	// Calculate min / max depth
@@ -156,10 +163,6 @@ void main() {
 	tileCorners[2] = unproject(vec4( (float(maxX)/displaySize.x) * 2.0f - 1.0f, (float(maxY)/displaySize.y) * 2.0f - 1.0f, 1.0f, 1.0f));
 	tileCorners[3] = unproject(vec4( (float(minX)/displaySize.x) * 2.0f - 1.0f, (float(maxY)/displaySize.y) * 2.0f - 1.0f, 1.0f, 1.0f));
 
-	vec4 frustum[4];
-	for(int i = 0; i < 4; i++) {
-		frustum[i] = create_plane(tileCorners[i], tileCorners[(i+1) & 3]);
-	}
 
 	// Synchronize
 	groupMemoryBarrier(); barrier();
@@ -171,13 +174,8 @@ void main() {
 			vec4 lightPositionVS = view * vec4(pointLights[lightIndex].positionRange.xyz, 1.0);
 			float radius = pointLights[lightIndex].positionRange.w;
 
-			if (   get_signed_distance_from_plane(lightPositionVS, frustum[0]) < radius
-				&& get_signed_distance_from_plane(lightPositionVS, frustum[1]) < radius
-				&& get_signed_distance_from_plane(lightPositionVS, frustum[2]) < radius
-				&& get_signed_distance_from_plane(lightPositionVS, frustum[3]) < radius) {
-					uint listIndex = atomicAdd(numTilePointLights, 1);
-            		tilePointLightList[listIndex] = lightIndex;
-				}
+			uint listIndex = atomicAdd(numTilePointLights, 1);
+            tilePointLightList[listIndex] = lightIndex;
 		}
 	}
 
@@ -191,20 +189,12 @@ void main() {
 			vec4 lightPositionVS = view * vec4(spotLights[lightIndex].positionRange.xyz, 1.0);
 			float radius = spotLights[lightIndex].positionRange.w;
 
-			if (   get_signed_distance_from_plane(lightPositionVS, frustum[0]) < radius
-				&& get_signed_distance_from_plane(lightPositionVS, frustum[1]) < radius
-				&& get_signed_distance_from_plane(lightPositionVS, frustum[2]) < radius
-				&& get_signed_distance_from_plane(lightPositionVS, frustum[3]) < radius) {
-					uint listIndex = atomicAdd(numTileSpotLights, 1);
-            		tileSpotLightList[listIndex] = lightIndex;
-				}
+			uint listIndex = atomicAdd(numTileSpotLights, 1);
+            tileSpotLightList[listIndex] = lightIndex;
 		}
 	}
 
 	groupMemoryBarrier(); barrier();
-
-	// Process lighting
-	vec3 positionWS = decodeWorldPosition(texCoord, depthFloat);
 	
 	vec4 gbuffer1 = imageLoad(samplerGBuffer1, pixelCoord);
 	vec3 diffuse = decodeDiffuse(imageLoad(samplerGBuffer0, pixelCoord).xyz);
@@ -268,7 +258,7 @@ void main() {
 				#elif SHADOW_QUALITY == 1
 					float shadow = sample_shadow_5(samplerPointLightShadowAtlas, uv, distance);
 				#else 
-					float shadow = check_shadow_map(samplerPointLightShadowAtlas, uv, distance);
+					float shadow = sample_shadow_5(samplerPointLightShadowAtlas, uv, distance);
 				#endif
 
 				attenuationNdotL *= shadow;
@@ -323,7 +313,7 @@ void main() {
 				#elif SHADOW_QUALITY == 1
 					float shadow = sample_shadow_5(samplerSpotLightShadowAtlas, uv, distance);
 				#else 
-					float shadow = check_shadow_map(samplerSpotLightShadowAtlas, uv, distance);
+					float shadow = sample_shadow_5(samplerSpotLightShadowAtlas, uv, distance);
 				#endif
 
 				attenuationNdotL *= shadow;

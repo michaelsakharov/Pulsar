@@ -93,6 +93,7 @@ namespace Duality.Graphics.Deferred
                 new Definition.Attachment(Definition.AttachmentPoint.Color, Renderer.PixelFormat.Rgba, Renderer.PixelInternalFormat.Rgba8, Renderer.PixelType.UnsignedByte, 0),
                 new Definition.Attachment(Definition.AttachmentPoint.Color, Renderer.PixelFormat.Rgba, Renderer.PixelInternalFormat.Rgba16f, Renderer.PixelType.Float, 1),
                 new Definition.Attachment(Definition.AttachmentPoint.Color, Renderer.PixelFormat.Rgba, Renderer.PixelInternalFormat.Rgba8, Renderer.PixelType.UnsignedByte, 2),
+                new Definition.Attachment(Definition.AttachmentPoint.Color, Renderer.PixelFormat.Rgba, Renderer.PixelInternalFormat.Rgba32f, Renderer.PixelType.Float, 3),
                 new Definition.Attachment(Definition.AttachmentPoint.Depth, Renderer.PixelFormat.DepthComponent, Renderer.PixelInternalFormat.DepthComponent32f, Renderer.PixelType.Float, 0)
             }));
 
@@ -381,7 +382,7 @@ namespace Duality.Graphics.Deferred
             DualityApp.GraphicsBackend.BindShaderVariable(shaderParams.SamplerGBuffer0, 0);
             DualityApp.GraphicsBackend.BindShaderVariable(shaderParams.SamplerGBuffer1, 1);
             DualityApp.GraphicsBackend.BindShaderVariable(shaderParams.SamplerGBuffer2, 2);
-            DualityApp.GraphicsBackend.BindShaderVariable(shaderParams.SamplerDepth, 3);
+            DualityApp.GraphicsBackend.BindShaderVariable(shaderParams.SamplerGBuffer3, 3);
 			DualityApp.GraphicsBackend.BindShaderVariable(shaderParams.SamplerShadow, 4);
 
             // Common uniforms
@@ -541,6 +542,7 @@ namespace Duality.Graphics.Deferred
             DualityApp.GraphicsBackend.BindImageTexture(0, _gbuffer.Textures[0].Handle, OpenTK.Graphics.OpenGL.TextureAccess.ReadOnly, OpenTK.Graphics.OpenGL.SizedInternalFormat.Rgba8);
             DualityApp.GraphicsBackend.BindImageTexture(1, _gbuffer.Textures[1].Handle, OpenTK.Graphics.OpenGL.TextureAccess.ReadOnly, OpenTK.Graphics.OpenGL.SizedInternalFormat.Rgba16f);
             DualityApp.GraphicsBackend.BindImageTexture(2, _gbuffer.Textures[2].Handle, OpenTK.Graphics.OpenGL.TextureAccess.ReadOnly, OpenTK.Graphics.OpenGL.SizedInternalFormat.Rgba8);
+            DualityApp.GraphicsBackend.BindImageTexture(3, _gbuffer.Textures[3].Handle, OpenTK.Graphics.OpenGL.TextureAccess.ReadOnly, OpenTK.Graphics.OpenGL.SizedInternalFormat.Rgba32f);
 			DualityApp.GraphicsBackend.BindImageTexture(3, _lightAccumulationTarget.Textures[0].Handle, OpenTK.Graphics.OpenGL.TextureAccess.ReadWrite, OpenTK.Graphics.OpenGL.SizedInternalFormat.Rgba16f);
 
 			DualityApp.GraphicsBackend.DispatchCompute((int)numTilesX, (int)numTilesY, 1);
