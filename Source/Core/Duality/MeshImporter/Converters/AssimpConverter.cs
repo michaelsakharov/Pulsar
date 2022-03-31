@@ -60,7 +60,7 @@ namespace Duality.MeshImporter.Meshes.Converters
 			return toReturn;
 		}
 
-		public unsafe Mesh Import(Stream stream)
+		public unsafe Mesh Import(Stream stream, string hint)
 		{
 			var api = Silk.NET.Assimp.Assimp.GetApi();
 
@@ -70,7 +70,8 @@ namespace Duality.MeshImporter.Meshes.Converters
 			//Marshal.Copy(buffer, 0, bufferPtr, buffer.Length);
 
 			//Silk.NET.Assimp.Scene* model = api.ImportFileFromMemory((byte*)bufferPtr, (uint)buffer.Length, (uint)(Silk.NET.Assimp.PostProcessSteps.CalculateTangentSpace | Silk.NET.Assimp.PostProcessSteps.LimitBoneWeights | Silk.NET.Assimp.PostProcessSteps.FlipUVs), "fbx");
-			Silk.NET.Assimp.Scene* model = api.ImportFileFromMemory(ref buffer[0], (uint)buffer.Length, (uint)(Silk.NET.Assimp.PostProcessSteps.CalculateTangentSpace | Silk.NET.Assimp.PostProcessSteps.LimitBoneWeights | Silk.NET.Assimp.PostProcessSteps.FlipUVs), "fbx");
+			//Silk.NET.Assimp.Scene* model = api.ImportFileFromMemory(ref buffer[0], (uint)buffer.Length, (uint)(Silk.NET.Assimp.PostProcessSteps.CalculateTangentSpace | Silk.NET.Assimp.PostProcessSteps.LimitBoneWeights | Silk.NET.Assimp.PostProcessSteps.FlipUVs), "fbx");
+			Silk.NET.Assimp.Scene* model = api.ImportFileFromMemory(ref buffer[0], (uint)buffer.Length, (uint)(Silk.NET.Assimp.PostProcessSteps.CalculateTangentSpace | Silk.NET.Assimp.PostProcessSteps.LimitBoneWeights | Silk.NET.Assimp.PostProcessSteps.FlipUVs), hint);
 
 			//Marshal.FreeHGlobal(bufferPtr);
 

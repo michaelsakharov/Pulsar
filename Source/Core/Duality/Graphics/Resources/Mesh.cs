@@ -19,10 +19,10 @@ namespace Duality.Graphics.Resources
 
 		internal static void InitDefaultContent()
 		{
-			DefaultContent.InitType<Mesh>(".dae", stream => new Mesh(stream), "meshes.");
-			DefaultContent.InitType<Mesh>(".fbx", stream => new Mesh(stream), "meshes.");
-			DefaultContent.InitType<Mesh>(".x", stream => new Mesh(stream), "meshes.");
-			DefaultContent.InitType<Mesh>(".obj", stream => new Mesh(stream), "meshes.");
+			DefaultContent.InitType<Mesh>(".dae", stream => new Mesh(stream, "dae"), "meshes.");
+			DefaultContent.InitType<Mesh>(".fbx", stream => new Mesh(stream, "fbx"), "meshes.");
+			DefaultContent.InitType<Mesh>(".x", stream => new Mesh(stream, "x"), "meshes.");
+			DefaultContent.InitType<Mesh>(".obj", stream => new Mesh(stream, "obj"), "meshes.");
 		}
 
 		[EditorHintFlags(MemberFlags.Invisible)]
@@ -33,10 +33,10 @@ namespace Duality.Graphics.Resources
 
 		public Mesh() { }
 
-		public Mesh(Stream objStream)
+		public Mesh(Stream objStream, string hint)
 		{
 			var importer = new Duality.MeshImporter.Meshes.Converters.AssimpConverter();
-			var mesh = importer.Import(objStream);
+			var mesh = importer.Import(objStream, hint);
 			SubMeshes = new SubMesh[mesh.SubMeshes.Count];
 			for (int i = 0; i < mesh.SubMeshes.Count; i++)
 			{
@@ -110,6 +110,7 @@ namespace Duality.Graphics.Resources
 		public static ContentRef<Mesh> Cone4 { get; private set; }
 		public static ContentRef<Mesh> Barrel { get; private set; }
 		public static ContentRef<Mesh> Cube { get; private set; }
+		public static ContentRef<Mesh> Sponza { get; private set; }
 	}
 
 	[Serializable]

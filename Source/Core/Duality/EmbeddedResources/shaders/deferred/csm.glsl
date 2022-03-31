@@ -37,8 +37,8 @@ void main()
 	vec3 position = texture(samplerPosition, project).xyz;
 	if (position == vec3(0, 0, 0)) 
 		discard;
-	//float depth = (distance(position, cameraPosition) / 100000.0);
-	float depth = distance(position, cameraPosition);
+	float depth = (distance(position, cameraPosition) / 100000.0);
+	//float depth = distance(position, cameraPosition);
 
 	vec3 cascadeColor = vec3(1);
 	float shadow = 1;

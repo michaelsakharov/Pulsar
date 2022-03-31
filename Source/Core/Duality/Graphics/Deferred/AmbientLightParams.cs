@@ -12,7 +12,7 @@ namespace Duality.Graphics.Deferred
         public int SamplerGBuffer0 = 0;
         public int SamplerGBuffer1 = 0;
         public int SamplerGBuffer2 = 0;
-        public int SamplerDepth = 0;
+        public int SamplerGBuffer3 = 0;
         public int SamplerIrradiance = 0;
         public int SamplerSpecular = 0;
         public int SamplerSpecularIntegration = 0;

@@ -28,7 +28,7 @@ layout(location = 0) out vec4 oColor;
 uniform sampler2D samplerGBuffer0;
 uniform sampler2D samplerGBuffer1;
 uniform sampler2D samplerGBuffer2;
-uniform sampler2D samplerDepth;
+uniform sampler2D samplerGBuffer3;
 uniform sampler2D samplerSSAO;
 uniform samplerCube samplerIrradiance;
 uniform samplerCube samplerSpecular;
@@ -55,8 +55,7 @@ void main()
 	float roughness = gbuffer2.y;
 	float occlusion = gbuffer2.w;
 
-	float depth = texture(samplerDepth, texCoord).x;
-	vec3 position = decodeWorldPosition(texCoord, depth);
+	vec3 position = texture(samplerGBuffer3, texCoord).xyz;
 	
 	if (gbuffer1.w == 0) {
 		if (mode == 1) {

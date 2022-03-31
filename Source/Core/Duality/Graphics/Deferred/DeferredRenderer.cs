@@ -301,7 +301,7 @@ namespace Duality.Graphics.Deferred
             DualityApp.GraphicsBackend.BindShaderVariable(_ambientLightParams.SamplerGBuffer0, 0);
             DualityApp.GraphicsBackend.BindShaderVariable(_ambientLightParams.SamplerGBuffer1, 1);
             DualityApp.GraphicsBackend.BindShaderVariable(_ambientLightParams.SamplerGBuffer2, 2);
-            DualityApp.GraphicsBackend.BindShaderVariable(_ambientLightParams.SamplerDepth, 3);
+            DualityApp.GraphicsBackend.BindShaderVariable(_ambientLightParams.SamplerGBuffer3, 3);
             DualityApp.GraphicsBackend.BindShaderVariable(_ambientLightParams.SamplerIrradiance, 4);
             DualityApp.GraphicsBackend.BindShaderVariable(_ambientLightParams.SamplerSpecular, 5);
             DualityApp.GraphicsBackend.BindShaderVariable(_ambientLightParams.SamplerSpecularIntegration, 6);

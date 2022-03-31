@@ -9,6 +9,6 @@ namespace Duality.MeshImporter.Meshes
 {
 	interface IMeshImporter
 	{
-		Mesh Import(Stream stream);
+		Mesh Import(Stream stream, string hint);
 	}
 }
