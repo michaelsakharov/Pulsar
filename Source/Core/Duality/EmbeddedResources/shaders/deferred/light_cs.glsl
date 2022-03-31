@@ -258,7 +258,7 @@ void main() {
 				#elif SHADOW_QUALITY == 1
 					float shadow = sample_shadow_5(samplerPointLightShadowAtlas, uv, distance);
 				#else 
-					float shadow = sample_shadow_5(samplerPointLightShadowAtlas, uv, distance);
+					float shadow = check_shadow_map(samplerPointLightShadowAtlas, uv, distance);
 				#endif
 
 				attenuationNdotL *= shadow;
@@ -313,7 +313,7 @@ void main() {
 				#elif SHADOW_QUALITY == 1
 					float shadow = sample_shadow_5(samplerSpotLightShadowAtlas, uv, distance);
 				#else 
-					float shadow = sample_shadow_5(samplerSpotLightShadowAtlas, uv, distance);
+					float shadow = check_shadow_map(samplerSpotLightShadowAtlas, uv, distance);
 				#endif
 
 				attenuationNdotL *= shadow;
