@@ -25,7 +25,7 @@ namespace Duality.Graphics.Post.Effects
 			_shader = new DrawTechnique(Shader.LoadEmbeddedShaderSource("shaders/post/visualize.glsl"), "");
 		}
 
-        public void Render(VisualizationMode mode, Duality.Components.Camera camera, RenderTarget gbuffer, RenderTarget ssao, RenderTarget input, RenderTarget output)
+        public void Render(VisualizationMode mode, Duality.Components.Camera camera, RenderTarget gbuffer, RenderTarget ssao, RenderTarget csmShadowBuffer, RenderTarget input, RenderTarget output)
         {
             if (_shaderParams == null)
             {
@@ -40,7 +40,7 @@ namespace Duality.Graphics.Post.Effects
                 ssaoHandle = ssao.Textures[0].Handle;
 
 			DualityApp.GraphicsBackend.BeginInstance(_shader.Handle,
-                new int[] { gbuffer.Textures[0].Handle, gbuffer.Textures[1].Handle, gbuffer.Textures[2].Handle, gbuffer.Textures[3].Handle, ssaoHandle },
+                new int[] { gbuffer.Textures[0].Handle, gbuffer.Textures[1].Handle, gbuffer.Textures[2].Handle, gbuffer.Textures[3].Handle, ssaoHandle, csmShadowBuffer.Textures[0].Handle },
                 new int[] { DualityApp.GraphicsBackend.DefaultSamplerNoFiltering, DualityApp.GraphicsBackend.DefaultSamplerNoFiltering, DualityApp.GraphicsBackend.DefaultSamplerNoFiltering, DualityApp.GraphicsBackend.DefaultSamplerNoFiltering, DualityApp.GraphicsBackend.DefaultSamplerNoFiltering, DualityApp.GraphicsBackend.DefaultSamplerNoFiltering });
 			DualityApp.GraphicsBackend.BindShaderVariable(_shaderParams.SamplerGBuffer0, 0);
             DualityApp.GraphicsBackend.BindShaderVariable(_shaderParams.SamplerGBuffer1, 1);

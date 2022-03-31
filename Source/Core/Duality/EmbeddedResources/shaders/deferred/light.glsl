@@ -13,11 +13,11 @@ void main()
 {
 	texCoord = iTexCoord;
 	
-//#if defined(SPOT_LIGHT) || defined(POINT_LIGHT)
-//	gl_Position = modelViewProjection * vec4(iPosition, 1);
-//#else
+#if defined(SPOT_LIGHT) || defined(POINT_LIGHT)
+	gl_Position = modelViewProjection * vec4(iPosition, 1);
+#else
 	gl_Position = vec4(iPosition, 1);
-//#endif
+#endif
 }
 
 #else
@@ -31,15 +31,13 @@ layout(location = 0) out vec4 oColor;
 uniform sampler2D samplerGBuffer0;
 uniform sampler2D samplerGBuffer1;
 uniform sampler2D samplerGBuffer2;
-uniform sampler2D samplerGBuffer3; // Position
 uniform sampler2D samplerDepth;
 
 uniform vec2 screenSize;
 uniform vec3 lightColor;
 uniform vec3 cameraPosition;
-uniform vec3 lightPosition; // For Point and Spot lights
 uniform vec3 lightDirection;
-uniform float lightRange;
+uniform sampler2D samplerShadow;
 
 void main()
 {
@@ -48,93 +46,50 @@ void main()
 	vec4 gbuffer0 = texture(samplerGBuffer0, project); // color
 	vec4 gbuffer1 = texture(samplerGBuffer1, project); // normal
 	vec4 gbuffer2 = texture(samplerGBuffer2, project); // specular stuff
-	vec4 gbuffer3 = texture(samplerGBuffer3, project); // world position
 	
 	if (gbuffer1.w == 0)
 		discard;
 	
 	float depth = texture(samplerDepth, project).x;
-	vec3 position = gbuffer3.xyz;
+	vec3 position = decodeWorldPosition(project, depth);
 	
+	vec3 lightDir = -normalize(lightDirection);
+	//vec3 lightVec = lightDir;
+	//vec3 lightDir = lightDirection;
+	
+	float attenuation = 1.0;
+
+	vec3 normal = decodeNormals(gbuffer1.xyz);
+	
+	float nDotL = saturate(dot(normal, lightDir));
 	vec3 lighting = vec3(0, 0, 0);
 
-	#ifdef DIRECTIONAL_LIGHT
-		vec3 lightDir = -normalize(lightDirection);
-		
-		float attenuation = 1.0;
+	float attenuationNdotL = attenuation * nDotL;
 	
-		vec3 normal = decodeNormals(gbuffer1.xyz);
-		
-		float nDotL = saturate(dot(normal, lightDir));
-	
-		float attenuationNdotL = attenuation * nDotL;
-		
-		if (attenuationNdotL > 0) {
-			float metallic = gbuffer2.x;
-			float roughness = gbuffer2.y;
-			float specular = gbuffer2.z;
-			
-			vec3 diffuse = decodeDiffuse(gbuffer0.xyz);
-			
-			vec3 eyeDir = normalize(cameraPosition - position);
-	
-			vec3 F0 = vec3(0.08);
-			F0 = mix(F0, diffuse, metallic);
-			
-			//lighting = brdf(normal, eyeDir, lightDir, roughness, metallic, lightColor * attenuationNdotL, diffuse, F0);
-			lighting = lightColor * attenuationNdotL;
-		}
-	#endif
-	#ifdef POINT_LIGHT
-		vec3 lightVec = (lightPosition - position);
-		vec3 lightDir = normalize(lightPosition - position);
+	if (attenuationNdotL > 0) {
+#ifdef SHADOWS
+		// Sample shadow buffer
+		float shadow = texture(samplerShadow, project).x;
+		attenuationNdotL *= shadow;
+#endif
 
-		vec3 normal = decodeNormals(gbuffer1.xyz);
+		float metallic = gbuffer2.x;
+		float roughness = gbuffer2.y;
+		float specular = gbuffer2.z;
+		
 		vec3 diffuse = decodeDiffuse(gbuffer0.xyz);
 		
-		float nDotL = saturate(dot(normal, lightDir));
-		
-		float lightDistanceSquared = dot(lightVec, lightVec);
-		
-		if(lightDistanceSquared < lightRange * lightRange){
-			float attenuation = 1.0 / lightDistanceSquared;
-			attenuation = attenuation * square(saturate(1.0 - square(lightDistanceSquared * square(1.0 / lightRange))));
+		vec3 eyeDir = normalize(cameraPosition - position);
 
-			float attenuationNdotL = attenuation * nDotL;
-			float metallic = gbuffer2.x;
-			float roughness = gbuffer2.y;
-			float specular = gbuffer2.z;
-			vec3 eyeDir = normalize(cameraPosition - position);
-			vec3 F0 = vec3(0.08);
-			F0 = mix(F0, diffuse, metallic);
-			lighting = brdf(normal, eyeDir, lightDir, roughness, metallic, lightColor * attenuationNdotL, diffuse, F0);
-			//lighting = lightColor * attenuationNdotL;
-		}
-			//lighting = vec3(lightRange, 0, 0);
-
-		//float nDotL = saturate(dot(normal, lightDir));
-		//
-		//float attenuationNdotL = attenuation * nDotL;
-		//
-		//if (attenuationNdotL > 0) 
-		//{
-		//	float metallic = gbuffer2.x;
-		//	float roughness = gbuffer2.y;
-		//	float specular = gbuffer2.z;
-		//	
-		//	vec3 diffuse = decodeDiffuse(gbuffer0.xyz);
-		//		
-		//	//vec3 eyeDir = normalize(cameraPosition - position);
-		//	//vec3 F0 = vec3(0.08);
-		//	//F0 = mix(F0, diffuse, metallic);
-		//	//lighting = brdf(normal, eyeDir, lightDir, roughness, metallic, lightColor * attenuationNdotL, diffuse, F0);
-		//
-		//	vec3 diffuseLight = attenuationNdotL * diffuse * lightColor;
-		//	lighting = attenuationNdotL * lightColor;
-		//}
-	#endif
+		vec3 F0 = vec3(0.08);
+		F0 = mix(F0, diffuse, metallic);
+		
+		//lighting = brdf(normal, eyeDir, lightDir, roughness, metallic, lightColor * attenuationNdotL, diffuse, F0);
+		lighting = lightColor * attenuationNdotL;
+	}
 
 	oColor.xyz = lighting.xyz;
+	//oColor.xyz = normal;
 	oColor.w = 1.0;
 }
 #endif

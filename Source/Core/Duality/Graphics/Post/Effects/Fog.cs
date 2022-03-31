@@ -41,13 +41,13 @@ namespace Duality.Graphics.Post.Effects
 
 			var inverseViewProjectionMatrix = Matrix4.Invert(view * projection);
 
+			var itView = Matrix4.Invert(Matrix4.Transpose(view));
 			DualityApp.GraphicsBackend.BeginInstance(_shader.Handle,
 				new int[] { gbuffer.Textures[3].Handle, input.Textures[0].Handle },
 				new int[] { DualityApp.GraphicsBackend.DefaultSamplerNoFiltering, DualityApp.GraphicsBackend.DefaultSamplerNoFiltering });
 			DualityApp.GraphicsBackend.BindShaderVariable(_shaderParams.SamplerDepth, 0);
 			DualityApp.GraphicsBackend.BindShaderVariable(_shaderParams.SamplerScene, 1);
 			DualityApp.GraphicsBackend.BindShaderVariable(_shaderParams.InvViewProjection, ref inverseViewProjectionMatrix);
-
 			var Pos = camera.GameObj.Transform.Pos;
 			DualityApp.GraphicsBackend.BindShaderVariable(_shaderParams.CameraPosition, ref Pos);
 

@@ -176,7 +176,7 @@ namespace Duality.Graphics.Post
             return _ssaoOutput;
         }
 
-        public RenderTarget Render(Duality.Components.Camera camera, Stage stage, RenderTarget gbuffer, RenderTarget input, float deltaTime)
+        public RenderTarget Render(Duality.Components.Camera camera, Stage stage, RenderTarget gbuffer, RenderTarget input, RenderTarget csmShadowBuffer, float deltaTime)
         {
 			DualityApp.GraphicsBackend.ProfileBeginSection(Profiler.Post);
 
@@ -206,7 +206,7 @@ namespace Duality.Graphics.Post
             if (VisualizationMode != VisualizationMode.None)
             {
                 // Visualize does it's own gamma, but only if it wants to (some things are linear)
-                _visualize.Render(VisualizationMode, camera, gbuffer, _ssaoOutput, _temporaryRenderTargets[0], _temporaryRenderTargets[1]);
+                _visualize.Render(VisualizationMode, camera, gbuffer, _ssaoOutput, csmShadowBuffer, _temporaryRenderTargets[0], _temporaryRenderTargets[1]);
                 SwapRenderTargets();
             }
 
