@@ -27,7 +27,6 @@ uniform sampler2D samplerGBuffer3;
 uniform sampler2D samplerSSAO;
 uniform sampler2D samplerSMAAEdge;
 uniform sampler2D samplerSMAABlend;
-uniform sampler2D samplerCSM;
 uniform int visualizationMode;
 uniform vec2 cameraClipPlanes;
 
@@ -46,7 +45,6 @@ void main() {
 	vec4 ssao = texture(samplerSSAO, texCoord);
 	vec4 smaaEdge = texture(samplerSMAAEdge, texCoord);
 	vec4 smaaBlend = texture(samplerSMAABlend, texCoord);
-	vec4 csm = texture(samplerCSM, texCoord);
 
 	vec3 res = vec3(0);
 
@@ -81,9 +79,6 @@ void main() {
 			break;
 		case 10: // smaa blend
 			res = smaaBlend.xyz;
-			break;
-		case 11: // csm
-			res = csm.xyz;
 			break;
 	}
 
