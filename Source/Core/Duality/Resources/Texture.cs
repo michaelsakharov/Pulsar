@@ -52,6 +52,7 @@ namespace Duality.Resources
 		/// </summary>
 		public static ContentRef<Texture> SpecularIntegartion { get; private set; }
 		public static ContentRef<Texture> ColorCorrectLUT { get; private set; }
+		public static ContentRef<Texture> DefaultNormalMap { get; private set; }
 
 		internal static void InitDefaultContent()
 		{
@@ -63,6 +64,13 @@ namespace Duality.Resources
 				{ "DualityLogoMedium", new Texture(Pixmap.DualityLogoMedium) },
 				{ "DualityLogoSmall", new Texture(Pixmap.DualityLogoSmall) },
 				{ "White", new Texture(Pixmap.White) },
+				{ "DefaultNormalMap", new Texture(
+					Pixmap.DefaultNormalMap,
+					TextureSizeMode.Default,
+					TextureMagFilter.Nearest,
+					TextureMinFilter.Nearest,
+					TextureWrapMode.Repeat,
+					TextureWrapMode.Repeat) },
 				{ "Checkerboard", new Texture(
 					Pixmap.Checkerboard, 
 					TextureSizeMode.Default,

@@ -10,6 +10,7 @@
 	</PropertyGroup>
 	<ItemGroup>
 	  <None Remove="EmbeddedResources\ColorCorrectLUT.png" />
+	  <None Remove="EmbeddedResources\DefaultNormalMap.png" />
 	  <None Remove="EmbeddedResources\meshes\Barrel.fbx" />
 	  <None Remove="EmbeddedResources\meshes\Cone16.fbx" />
 	  <None Remove="EmbeddedResources\meshes\Cone4.fbx" />
@@ -258,6 +259,7 @@
 	<ItemGroup>
 		<EmbeddedResource Include="EmbeddedResources\Checkerboard.png" />
 		<EmbeddedResource Include="EmbeddedResources\ColorCorrectLUT.png" />
+		<EmbeddedResource Include="EmbeddedResources\DefaultNormalMap.png" />
 		<EmbeddedResource Include="EmbeddedResources\DualityLogoBig.png" />
 		<EmbeddedResource Include="EmbeddedResources\DualityLogoMedium.png" />
 		<EmbeddedResource Include="EmbeddedResources\DualityLogoSmall.png" />

@@ -94,9 +94,9 @@ namespace Duality.Graphics
 
             DefaultSampler = RenderSystem.CreateSampler(new Dictionary<SamplerParameterName, int>
             {
-                { SamplerParameterName.TextureMinFilter, (int)TextureMinFilter.LinearMipmapLinear },
+                { SamplerParameterName.TextureMinFilter, (int)TextureMinFilter.Linear },
                 { SamplerParameterName.TextureMagFilter, (int)TextureMagFilter.Linear },
-                { SamplerParameterName.TextureMaxAnisotropyExt, 16 },
+                //{ SamplerParameterName.TextureMaxAnisotropyExt, 16 },
                 { SamplerParameterName.TextureWrapS, (int)TextureWrapMode.Repeat },
                 { SamplerParameterName.TextureWrapT, (int)TextureWrapMode.Repeat },
                 { SamplerParameterName.TextureWrapR, (int)TextureWrapMode.Repeat }

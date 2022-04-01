@@ -54,6 +54,7 @@ namespace Duality.Resources
 		/// </summary>
 		public static ContentRef<Pixmap> SpecularIntegartion { get; private set; }
 		public static ContentRef<Pixmap> ColorCorrectLUT { get; private set; }
+		public static ContentRef<Pixmap> DefaultNormalMap { get; private set; }
 
 		internal static void InitDefaultContent()
 		{

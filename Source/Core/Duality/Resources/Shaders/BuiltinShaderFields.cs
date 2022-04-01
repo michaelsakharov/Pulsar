@@ -14,6 +14,7 @@ namespace Duality.Resources
 	public static class BuiltinShaderFields
 	{
 		public static readonly string MainTex = "mainTex";
+		public static readonly string NormalMap = "normalMap";
 		public static readonly string MainColor = "mainColor";
 	}
 }

@@ -24,7 +24,7 @@ layout(location = 3) out vec4 oPosition;
 uniform vec3 cameraPosition;
 
 uniform sampler2D mainTex;
-uniform sampler2D samplerNormalMap;
+uniform sampler2D normalMap;
 uniform sampler2D samplerRoughnessMetalMap;
 uniform sampler2D samplerOcclusionRoughnessMetalness;
 
@@ -38,18 +38,18 @@ void get_material(out vec3 diffuse, out vec3 normals, out float metallic, out fl
 
 	occlusion = 1.0;
 	
-	//vec4 NR = texture(samplerNormalMap, texCoord);
-	//NR.xyz = normalize(NR.xyz * 2.0 - 1.0);
-	//
-	//mat3x3 TBN = mat3x3(normalize(tangent), normalize(bitangent), normalize(normal));
-	//normals = normalize(TBN * NR.xyz);
+	vec4 NR = texture(normalMap, texCoord);
+	NR.xyz = normalize(NR.xyz * 2.0 - 1.0);
+	
+	mat3x3 TBN = mat3x3(normalize(tangent), normalize(bitangent), normalize(normal));
+	normals = normalize(TBN * NR.xyz);
+
+	//normals = normalize(normal);
 
 	//#if !defined(HAS_SAMPLER_ROUGHNESSMETALMAP) && !defined(HAS_SAMPLER_OCCLUSIONROUGHNESSMETALNESS)
 	//roughness = NR.w;
 	//metallic = 0.0;
 	//#endif
-
-	normals = normalize(normal);
 	
 #ifdef HAS_SAMPLER_ROUGHNESSMETALMAP
 	vec4 materialParameters = texture(samplerRoughnessMetalMap, texCoord);

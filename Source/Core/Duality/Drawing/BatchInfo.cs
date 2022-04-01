@@ -313,7 +313,7 @@ namespace Duality.Drawing
 				textures.AddRange(technique.Res.DefaultParameters.GetAllTextures());
 			}
 			var result = textures.GroupBy(s => s.Item1).Select(s => s.First()).ToList();
-			return result;
+			return result.Where(s => s.Item2.IsAvailable).ToList();
 		}
 
 		public ShaderParameterCollection GetParameters()
@@ -347,7 +347,9 @@ namespace Duality.Drawing
 			//SetValue<Vector4>("uDiffuseColor", new Vector4(1, 1, 1, 1));
 
 			//var Textures = GetParameters().GetAllTextures();
-			var Textures = GetAllTextures();
+			var AllTextures = GetAllTextures();
+			var Textures = AllTextures.Where(s => tech.GetUniform(s.Item1) != -1).ToList();
+
 
 			_textureHandles = new int[Textures.Count];
 			_samplerToTexture = new int[Textures.Count];
@@ -357,7 +359,7 @@ namespace Duality.Drawing
 			foreach (var samplerInfo in Textures)
 			{
 				_textureHandles[i] = samplerInfo.Item2.Res.Handle;
-				_samplers[i] = DualityApp.GraphicsBackend.DefaultSamplerNoFiltering;
+				_samplers[i] = DualityApp.GraphicsBackend.DefaultSampler;
 				_samplerToTexture[i] = tech.GetUniform(samplerInfo.Item1);
 				i++;
 			}
@@ -465,14 +467,15 @@ namespace Duality.Drawing
 		/// <param name="modelViewProjection"></param>
 		public void BindPerObject(ref Matrix4 world, ref Matrix4 worldView, ref Matrix4 itWorld, ref Matrix4 modelViewProjection, Graphics.SkeletalAnimation.SkeletonInstance skeleton)
 		{
-			DualityApp.GraphicsBackend.BindShaderVariable(_handles.ModelViewProjection, ref modelViewProjection);
-			DualityApp.GraphicsBackend.BindShaderVariable(_handles.World, ref world);
-			DualityApp.GraphicsBackend.BindShaderVariable(_handles.WorldView, ref worldView);
-			DualityApp.GraphicsBackend.BindShaderVariable(_handles.ItWorld, ref itWorld);
+			DrawTechnique tech = this.technique.Res ?? DrawTechnique.Solid.Res;
+			DualityApp.GraphicsBackend.BindShaderVariable(tech.GetUniform("modelViewProjection"), ref modelViewProjection);
+			DualityApp.GraphicsBackend.BindShaderVariable(tech.GetUniform("world"), ref world);
+			DualityApp.GraphicsBackend.BindShaderVariable(tech.GetUniform("worldView"), ref worldView);
+			DualityApp.GraphicsBackend.BindShaderVariable(tech.GetUniform("itWorld"), ref itWorld);
 
 			if (skeleton != null)
 			{
-				DualityApp.GraphicsBackend.BindShaderVariable(_handles.Bones, ref skeleton.FinalBoneTransforms);
+				DualityApp.GraphicsBackend.BindShaderVariable(tech.GetUniform("bones"), ref skeleton.FinalBoneTransforms);
 			}
 		}
 
