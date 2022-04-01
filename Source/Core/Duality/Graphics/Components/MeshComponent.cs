@@ -27,11 +27,11 @@ namespace Duality.Graphics.Components
 			set { this._mesh = value; }
 		}
 
-		public ContentRef<Material> _material = null;
+		public ContentRef<Material>[] _material = null;
 		/// <summary>
 		/// [GET / SET] The <see cref="Mesh"/> that is to be rendered by this component.
 		/// </summary>
-		public ContentRef<Material> Material
+		public ContentRef<Material>[] Material
 		{
 			get { return this._material; }
 			set { this._material = value; }
@@ -106,11 +106,20 @@ namespace Duality.Graphics.Components
 			var world = gameobj.Transform.WorldMatrix;
 			//GetWorldMatrix(out var world);
 
+			if(Material == null)
+			{
+				Material = new ContentRef<Material>[Mesh.Res.SubMeshes.Length];
+				for (var i = 0; i < Mesh.Res.SubMeshes.Length; i++)
+				{
+					Material[i] = Mesh.Res.SubMeshes[i].Material;
+				}
+			}
+
 			for (var i = 0; i < Mesh.Res.SubMeshes.Length; i++)
             {
                 var subMesh = Mesh.Res.SubMeshes[i];
 
-				var mat = Material;
+				var mat = Material[i];
 				if(mat == null || mat.IsAvailable == false)
 				{
 					mat = subMesh.Material;
