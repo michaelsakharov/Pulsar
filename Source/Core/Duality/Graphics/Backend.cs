@@ -912,9 +912,19 @@ namespace Duality.Graphics
             packet->TextureHandle = texture;
             packet->Access = access;
             packet->Format = format;
-        }
+		}
 
-        public unsafe void BindBufferBase(int index, int handle)
+		public unsafe void BindNativeTexture(int unit, int texture, OGL.TextureAccess access, OGL.SizedInternalFormat format)
+		{
+			WriteHeader<PacketBindImageTexture>(OpCode.BindImageTexture, 0, out var packet);
+
+			packet->Unit = unit;
+			packet->TextureHandle = texture;
+			packet->Access = access;
+			packet->Format = format;
+		}
+
+		public unsafe void BindBufferBase(int index, int handle)
         {
             WriteHeader<PacketBindBufferBase>(OpCode.BindBufferBase, 0, out var packet);
 

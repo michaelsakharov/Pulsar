@@ -328,6 +328,9 @@ namespace Duality.Drawing
 		{
 			DrawTechnique tech = this.technique.Res ?? DrawTechnique.Solid.Res;
 
+			SetTexture("samplerDiffuseMap", Texture.Checkerboard);
+			SetValue<Vector4>("uDiffuseColor", new Vector4(1, 1, 1, 1));
+
 			var Textures = GetParameters().GetAllTextures();
 
 			_textureHandles = new int[Textures.Count];
@@ -338,7 +341,7 @@ namespace Duality.Drawing
 			foreach (var samplerInfo in Textures)
 			{
 				_textureHandles[i] = samplerInfo.Item2.Res.Handle;
-				_samplers[i] = DualityApp.GraphicsBackend.DefaultSampler;
+				_samplers[i] = DualityApp.GraphicsBackend.DefaultSamplerNoFiltering;
 				_samplerToTexture[i] = tech.GetUniform(samplerInfo.Item1);
 				i++;
 			}
@@ -354,19 +357,18 @@ namespace Duality.Drawing
 			DrawTechnique tech = this.technique.Res ?? DrawTechnique.Solid.Res;
 
 			PrepareTextures();
-			DualityApp.GraphicsBackend.BeginInstance(tech.Handle, _textureHandles, samplers: _samplers, renderStateId: renderStateId);
+			DualityApp.GraphicsBackend.BeginInstance(tech.Handle, _textureHandles, _samplers, renderStateId);
 			for (var i = 0; i < _samplerToTexture.Length; i++)
 			{
 				DualityApp.GraphicsBackend.BindShaderVariable(_samplerToTexture[i], i);
 			}
 
 			// Bind Shader
-			NativeShaderProgram nativeShader = tech.NativeShader as NativeShaderProgram;
-			NativeShaderProgram.Bind(nativeShader);
+			//NativeShaderProgram.Bind(tech.NativeShader);
 
 			// Setup shader data
-			ShaderFieldInfo[] varInfo = nativeShader.Fields;
-			int[] locations = nativeShader.FieldLocations;
+			ShaderFieldInfo[] varInfo = tech.NativeShader.Fields;
+			int[] locations = tech.NativeShader.FieldLocations;
 
 			DualityApp.GraphicsBackend.BindShaderVariable(_handles.Time, DualityApp.GraphicsBackend.ElapsedTime);
 			Vector3 camPos = camera.GameObj.Transform.Pos;
@@ -396,7 +398,9 @@ namespace Duality.Drawing
 					SetUniform(field, location, data);
 				}
 			}
-			//NativeTexture.ResetBinding(curSamplerIndex);
+			// This reset i believe would remove the remnants of other bindings elsewhere, this is actually super helpful and we kinda need it
+			// but atm we have no proper way to Unbind textures, so other textures, for example the GBuffer may linger into other materials that didnt get a texture binded to it where it requested one
+			//NativeTexture.ResetBinding(_samplerToTexture.Length);
 		}
 
 		public static void SetUniform(ShaderFieldInfo field, int location, object data)

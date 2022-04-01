@@ -40,39 +40,37 @@ namespace Duality.Backend
 
 			texInit = true;
 		}
-		public static void Bind(ContentRef<Duality.Resources.Texture> target, int texUnit = 0)
-		{
-			Bind((target.Res != null ? target.Res.Native : null) as NativeTexture, texUnit);
-		}
-		public static void Bind(NativeTexture tex, int texUnit = 0)
-		{
-			if (!texInit) InitTextureFields();
 
-			if (curBound[texUnit] == tex) return;
-			if (activeTexUnit != texUnit) GL.ActiveTexture(texUnits[texUnit]);
-			activeTexUnit = texUnit;
-
-			if (tex == null)
-			{
-				GL.BindTexture(TextureTarget.Texture2D, 0);
-				GL.Disable(EnableCap.Texture2D);
-				curBound[texUnit] = null;
-			}
-			else
-			{
-				GL.Enable(EnableCap.Texture2D);
-				GL.BindTexture(TextureTarget.Texture2D, tex.Handle);
-				curBound[texUnit] = tex;
-			}
-		}
-		public static void ResetBinding(int beginAtIndex = 0)
-		{
-			if (!texInit) InitTextureFields();
-			for (int i = beginAtIndex; i < texUnits.Length; i++)
-			{
-				Bind(null as NativeTexture, i);
-			}
-		}
+		//public static void Bind(NativeTexture tex, int texUnit = 0)
+		//{
+		//	if (!texInit) InitTextureFields();
+		//
+		//	if (curBound[texUnit] == tex) return;
+		//	if (activeTexUnit != texUnit) GL.ActiveTexture(texUnits[texUnit]);
+		//	activeTexUnit = texUnit;
+		//
+		//	if (tex == null)
+		//	{
+		//		GL.BindTexture(TextureTarget.Texture2D, 0);
+		//		GL.Disable(EnableCap.Texture2D);
+		//		DualityApp.GraphicsBackend.BindImageTexture();
+		//		curBound[texUnit] = null;
+		//	}
+		//	else
+		//	{
+		//		GL.Enable(EnableCap.Texture2D);
+		//		GL.BindTexture(TextureTarget.Texture2D, tex.Handle);
+		//		curBound[texUnit] = tex;
+		//	}
+		//}
+		//public static void ResetBinding(int beginAtIndex = 0)
+		//{
+		//	if (!texInit) InitTextureFields();
+		//	for (int i = beginAtIndex; i < texUnits.Length; i++)
+		//	{
+		//		Bind(null as NativeTexture, i);
+		//	}
+		//}
 
 
 		private int handle = 0;

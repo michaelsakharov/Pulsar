@@ -34,6 +34,7 @@ uniform float uMetalness;
 
 void get_material(out vec3 diffuse, out vec3 normals, out float metallic, out float specular, out float roughness, out float occlusion) {
 	diffuse = pow(texture(samplerDiffuseMap, texCoord).xyz * uDiffuseColor.xyz, vec3(2.2));
+	//diffuse = texture(samplerDiffuseMap, texCoord).xyz * uDiffuseColor.xyz;
 
 	occlusion = 1.0;
 	
