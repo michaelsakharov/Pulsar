@@ -105,6 +105,7 @@ namespace Duality.Resources
 		/// [GET] A list of fields that are declared in this shader. May trigger compiling the
 		/// shader if it wasn't compiled yet.
 		/// </summary>
+		[EditorHintFlags(MemberFlags.ReadOnly)]
 		public IReadOnlyList<ShaderFieldInfo> DeclaredFields
 		{
 			get

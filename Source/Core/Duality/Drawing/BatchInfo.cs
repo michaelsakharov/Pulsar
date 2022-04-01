@@ -322,6 +322,11 @@ namespace Duality.Drawing
 
 			DrawTechnique tech = this.technique.Res ?? DrawTechnique.Solid.Res;
 			tech.BindUniformLocations(_handles);
+		}
+
+		public void PrepareTextures()
+		{
+			DrawTechnique tech = this.technique.Res ?? DrawTechnique.Solid.Res;
 
 			var Textures = GetParameters().GetAllTextures();
 
@@ -348,6 +353,7 @@ namespace Duality.Drawing
 
 			DrawTechnique tech = this.technique.Res ?? DrawTechnique.Solid.Res;
 
+			PrepareTextures();
 			DualityApp.GraphicsBackend.BeginInstance(tech.Handle, _textureHandles, samplers: _samplers, renderStateId: renderStateId);
 			for (var i = 0; i < _samplerToTexture.Length; i++)
 			{
@@ -454,6 +460,7 @@ namespace Duality.Drawing
 
 		class ShaderHandles
 		{
+			// built in shader variables should go here
 			public int ModelViewProjection = 0;
 			public int World = 0;
 			public int WorldView = 0;
