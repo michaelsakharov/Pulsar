@@ -115,6 +115,10 @@ namespace Duality.Graphics.Components
 				{
 					mat = subMesh.Material;
 				}
+				else
+				{
+					if (mat.IsAvailable == false) continue;
+				}
 
 				if (mat.IsAvailable == false) continue;
 
@@ -122,7 +126,7 @@ namespace Duality.Graphics.Components
 
                 if (frustum == null || frustum.Intersects(subMeshBoundingSphere))
                 {
-                    operations.Add(subMesh.Handle, world, subMesh.Material.Res, null, false, CastShadows);
+                    operations.Add(subMesh.Handle, world, mat.Res, null, false, CastShadows);
                 }
             }
         }

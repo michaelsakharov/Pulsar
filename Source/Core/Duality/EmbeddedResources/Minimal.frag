@@ -23,18 +23,18 @@ layout(location = 3) out vec4 oPosition;
 
 uniform vec3 cameraPosition;
 
-uniform sampler2D samplerDiffuseMap;
+uniform sampler2D mainTex;
 uniform sampler2D samplerNormalMap;
 uniform sampler2D samplerRoughnessMetalMap;
 uniform sampler2D samplerOcclusionRoughnessMetalness;
 
-uniform vec4 uDiffuseColor;
+uniform vec4 mainColor;
 uniform float uRoughness;
 uniform float uMetalness;
 
 void get_material(out vec3 diffuse, out vec3 normals, out float metallic, out float specular, out float roughness, out float occlusion) {
-	diffuse = pow(texture(samplerDiffuseMap, texCoord).xyz * uDiffuseColor.xyz, vec3(2.2));
-	//diffuse = texture(samplerDiffuseMap, texCoord).xyz * uDiffuseColor.xyz;
+	diffuse = pow(texture(mainTex, texCoord).xyz * mainColor.xyz, vec3(2.2));
+	//diffuse = texture(mainTex, texCoord).xyz * mainColor.xyz;
 
 	occlusion = 1.0;
 	

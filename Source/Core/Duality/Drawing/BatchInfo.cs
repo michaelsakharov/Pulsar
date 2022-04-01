@@ -328,8 +328,8 @@ namespace Duality.Drawing
 		{
 			DrawTechnique tech = this.technique.Res ?? DrawTechnique.Solid.Res;
 
-			SetTexture("samplerDiffuseMap", Texture.Checkerboard);
-			SetValue<Vector4>("uDiffuseColor", new Vector4(1, 1, 1, 1));
+			//SetTexture("samplerDiffuseMap", Texture.Checkerboard);
+			//SetValue<Vector4>("uDiffuseColor", new Vector4(1, 1, 1, 1));
 
 			var Textures = GetParameters().GetAllTextures();
 
@@ -386,9 +386,6 @@ namespace Duality.Drawing
 				if (field.Type == ShaderFieldType.Sampler2D)
 				{
 					// textures are handled Above
-					//ContentRef<Texture> texRef = GetInternalTexture(field.Name);
-					//NativeTexture.Bind(texRef, curSamplerIndex);
-					//GL.Uniform1(location, curSamplerIndex);
 				}
 				else
 				{
@@ -400,6 +397,7 @@ namespace Duality.Drawing
 			}
 			// This reset i believe would remove the remnants of other bindings elsewhere, this is actually super helpful and we kinda need it
 			// but atm we have no proper way to Unbind textures, so other textures, for example the GBuffer may linger into other materials that didnt get a texture binded to it where it requested one
+			// without this reset we see a lot of oddities, like objects taking textures from other objects, because they themselves didnt have one set
 			//NativeTexture.ResetBinding(_samplerToTexture.Length);
 		}
 
