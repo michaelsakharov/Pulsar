@@ -35,6 +35,11 @@ namespace Duality.Graphics.Resources
 
 		public Mesh(Stream objStream, string hint)
 		{
+			LoadMesh(objStream, hint);
+		}
+
+		public void LoadMesh(Stream objStream, string hint)
+		{
 			var importer = new Duality.MeshImporter.Meshes.Converters.AssimpConverter();
 			var mesh = importer.Import(objStream, hint);
 			SubMeshes = new SubMesh[mesh.SubMeshes.Count];

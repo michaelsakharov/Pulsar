@@ -8,12 +8,12 @@ namespace Duality.Renderer
 {
     public class VertexFormatElement
     {
-        public readonly VertexFormatSemantic Semantic;
-        public readonly VertexPointerType Type;
-        public readonly byte Count;
-        public readonly short Offset;
-        public readonly short Divisor;
-        public readonly bool Normalized;
+        public VertexFormatSemantic Semantic;
+        public VertexPointerType Type;
+        public byte Count;
+        public short Offset;
+        public short Divisor;
+        public bool Normalized;
 
         public VertexFormatElement(VertexFormatSemantic semantic, VertexPointerType type, byte count, short offset, short divisor = 0, bool normalized = false)
         {

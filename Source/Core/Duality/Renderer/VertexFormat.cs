@@ -8,8 +8,12 @@ namespace Duality.Renderer
 {
 	public class VertexFormat
 	{
-		public readonly int Size;
-		public readonly VertexFormatElement[] Elements;
+		public int Size;
+		public VertexFormatElement[] Elements;
+
+		public VertexFormat()
+		{
+		}
 
 		public VertexFormat(VertexFormatElement[] elements)
 		{
