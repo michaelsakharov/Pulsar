@@ -1,9 +1,11 @@
 ﻿#include "/shaders/core"
 
-#include "/shaders/brdf"
-
 uniform float time;
 uniform vec2 uvAnimation;
+
+uniform mat4x4 itWorld;
+
+#include "/shaders/brdf"
 
 in vec3 normal;
 in vec3 tangent;
@@ -19,48 +21,69 @@ layout(location = 1) out vec4 oNormal;
 layout(location = 2) out vec4 oSpecular;
 layout(location = 3) out vec4 oPosition;
 
-uniform mat4x4 itWorld;
-
 uniform vec3 cameraPosition;
 
-vec4 get_diffuse() {
-vec4 v_0 = vec4(1, 0.8862745, 0.6078432, 1);
-return pow(v_0, vec4(2.2));
+uniform sampler2D samplerDiffuseMap;
+uniform sampler2D samplerNormalMap;
+uniform sampler2D samplerRoughnessMetalMap;
+uniform sampler2D samplerOcclusionRoughnessMetalness;
 
-}
-vec3 get_normals() {
-return normalize(normal);
-}
-float get_metallic() {
-float f_1 = 1;
-return f_1;
+uniform vec4 uDiffuseColor;
+uniform float uRoughness;
+uniform float uMetalness;
 
-}
-float get_roughness() {
-float f_2 = 0.3;
-return f_2;
+void get_material(out vec3 diffuse, out vec3 normals, out float metallic, out float specular, out float roughness, out float occlusion) {
+	diffuse = pow(texture(samplerDiffuseMap, texCoord).xyz * uDiffuseColor.xyz, vec3(2.2));
 
-}
-float get_specular() {
-return 0.5;
+	occlusion = 1.0;
+	
+	//vec4 NR = texture(samplerNormalMap, texCoord);
+	//NR.xyz = normalize(NR.xyz * 2.0 - 1.0);
+	//
+	//mat3x3 TBN = mat3x3(normalize(tangent), normalize(bitangent), normalize(normal));
+	//normals = normalize(TBN * NR.xyz);
+
+	//#if !defined(HAS_SAMPLER_ROUGHNESSMETALMAP) && !defined(HAS_SAMPLER_OCCLUSIONROUGHNESSMETALNESS)
+	//roughness = NR.w;
+	//metallic = 0.0;
+	//#endif
+
+	normals = normalize(normal);
+	
+#ifdef HAS_SAMPLER_ROUGHNESSMETALMAP
+	vec4 materialParameters = texture(samplerRoughnessMetalMap, texCoord);
+	
+	roughness = materialParameters.x;
+	metallic = materialParameters.y;
+#endif
+#ifdef HAS_SAMPLER_OCCLUSIONROUGHNESSMETALNESS
+	vec4 materialParameters = texture(samplerOcclusionRoughnessMetalness, texCoord);
+	
+	roughness = materialParameters.y;
+	metallic = materialParameters.z;
+	//occlusion = materialParameters.x;
+#endif
+#ifdef HAS_ROUGHNESS
+	roughness = uRoughness;
+#endif
+#ifdef HAS_METALNESS
+	metallic = uMetalness;
+#endif
+
+	specular = 0.5;
 }
 
 void main() {
-	vec3 normals = get_normals();
-	
-	normals = normalize(mat3x3(itWorld) * normals);
-	
-	vec3 diffuse = get_diffuse().xyz;
-	
-	float metallic = get_metallic();
-	float specular = get_specular();
+	vec3 diffuse;
+	vec3 normals;
+	float metallic, specular, roughness, occlusion;
 
-	float roughness = get_roughness();
+	get_material(diffuse, normals, metallic, specular, roughness, occlusion);
+	roughness = max(0.01, roughness);
 	
-	oColor = vec4(encodeDiffuse(diffuse), 1);
-	//oColor = vec4(1, 1, 1, 1);
+	oColor = vec4(encodeDiffuse(diffuse), 0);
 	oNormal = vec4(encodeNormals(normals), 1);
-	oSpecular = vec4(metallic, roughness, specular, 0);
+	oSpecular = vec4(max(metallic, 0.5), max(roughness, 0.5), max(specular, 0.5), occlusion);
 	oPosition = position;
 	
 #ifdef UNLIT

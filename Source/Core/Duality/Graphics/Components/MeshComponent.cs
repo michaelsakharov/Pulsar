@@ -5,6 +5,7 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 using Duality.Graphics.Resources;
+using Duality.Resources;
 
 namespace Duality.Graphics.Components
 {
@@ -24,6 +25,16 @@ namespace Duality.Graphics.Components
 		{
 			get { return this._mesh; }
 			set { this._mesh = value; }
+		}
+
+		public ContentRef<Material> _material = null;
+		/// <summary>
+		/// [GET / SET] The <see cref="Mesh"/> that is to be rendered by this component.
+		/// </summary>
+		public ContentRef<Material> Material
+		{
+			get { return this._material; }
+			set { this._material = value; }
 		}
 
 		protected virtual void UpdateDerviedMeshSettings()
@@ -99,7 +110,13 @@ namespace Duality.Graphics.Components
             {
                 var subMesh = Mesh.Res.SubMeshes[i];
 
-				if (subMesh.Material.IsAvailable == false) continue;
+				var mat = Material;
+				if(mat == null || mat.IsAvailable == false)
+				{
+					mat = subMesh.Material;
+				}
+
+				if (mat.IsAvailable == false) continue;
 
 				Mesh.Res.SubMeshes[i].BoundingSphere.Transform(ref world, out var subMeshBoundingSphere);
 

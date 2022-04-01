@@ -3,6 +3,8 @@
 uniform float time;
 uniform vec2 uvAnimation;
 
+uniform mat4x4 itWorld;
+
 layout(location = ATTRIB_POSITION) in vec3 iPosition;
 layout(location = ATTRIB_TEXCOORD_0) in vec2 iTexCoord;
 #ifdef SPLAT
@@ -30,7 +32,7 @@ uniform mat4x4 worldView;
 uniform mat4x4 modelViewProjection;
 
 #ifdef SKINNED
-uniform mat4x4[64] bones;
+uniform mat4x4[96] bones;
 #endif
 
 void main()
@@ -57,7 +59,7 @@ void main()
 		blendPos += (worldMatrix * vec4(iPosition, 1)) * weight;
 		
 		mat3 worldRot = mat3(worldMatrix[0].xyz, worldMatrix[1].xyz, worldMatrix[2].xyz);
-		blendNormal+= (worldRot * iNormal) * weight;
+		blendNormal += (worldRot * iNormal) * weight;
 	}
 	
 	blendPos = vec4(blendPos.xyz, 1);
@@ -65,12 +67,17 @@ void main()
 	normal = normalize(blendNormal);
 	tangent = normalize(iTangent);
 	bitangent = cross(normal, tangent);
+	
+	normal = mat3(itWorld) * normal;
+	tangent = mat3(itWorld) * tangent;
+	bitangent = mat3(itWorld) * bitangent;
+	
 	position = world * blendPos;
 
 	gl_Position = modelViewProjection * blendPos;
 #else
-	normal = normalize(iNormal);
-	tangent = normalize(iTangent);
+	normal = mat3(itWorld) * normalize(iNormal);
+	tangent = mat3(itWorld) * normalize(iTangent);
 	bitangent = normalize(cross(normal, tangent));
 	
 	position = world * vec4(iPosition, 1);
