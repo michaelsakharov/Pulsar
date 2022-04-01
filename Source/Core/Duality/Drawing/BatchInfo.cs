@@ -301,6 +301,21 @@ namespace Duality.Drawing
 			return null;
 		}
 
+		public List<(string, ContentRef<Texture>)> GetAllTextures()
+		{
+			List<(string, ContentRef<Texture>)> textures = new List<(string, ContentRef<Texture>)>();
+			if (this.parameters != null)
+			{
+				textures.AddRange(parameters.GetAllTextures());
+			}
+			if (this.technique.Res != null)
+			{
+				textures.AddRange(technique.Res.DefaultParameters.GetAllTextures());
+			}
+			var result = textures.GroupBy(s => s.Item1).Select(s => s.First()).ToList();
+			return result;
+		}
+
 		public ShaderParameterCollection GetParameters()
 		{
 			if (this.parameters != null)
@@ -331,7 +346,8 @@ namespace Duality.Drawing
 			//SetTexture("samplerDiffuseMap", Texture.Checkerboard);
 			//SetValue<Vector4>("uDiffuseColor", new Vector4(1, 1, 1, 1));
 
-			var Textures = GetParameters().GetAllTextures();
+			//var Textures = GetParameters().GetAllTextures();
+			var Textures = GetAllTextures();
 
 			_textureHandles = new int[Textures.Count];
 			_samplerToTexture = new int[Textures.Count];
