@@ -401,6 +401,8 @@
 		<Copy SourceFiles="$(OutputPath)$(AssemblyName).dll" DestinationFolder="$(RootFolder)Build\Output\" />
 		<Copy SourceFiles="$(OutputPath)$(AssemblyName).pdb" DestinationFolder="$(RootFolder)Build\Output\" />
 		<Copy SourceFiles="$(OutputPath)$(AssemblyName).xml" DestinationFolder="$(RootFolder)Build\Output\" />
+		<Copy SourceFiles="$(RootFolder)Source\Dependencies\Assimp32.dll" DestinationFolder="$(RootFolder)Build\Output\" />
+		<Copy SourceFiles="$(RootFolder)Source\Dependencies\Assimp64.dll" DestinationFolder="$(RootFolder)Build\Output\" />
 		<Copy SourceFiles="$(PkgNVorbis)\lib\netstandard2.0\NVorbis.dll" DestinationFolder="$(RootFolder)Build\Output\" />
 		<Copy SourceFiles="$(PkgNVorbis)\lib\netstandard2.0\NVorbis.xml" DestinationFolder="$(RootFolder)Build\Output\" />
 	</Target>
