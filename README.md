@@ -2,7 +2,8 @@ Pulsar - An Open Source .Net 3D Game Engine
 =======
 
 Pulsar is a plugin based 3D game engine based on C# and OpenTK.
-The Engine is derived from the Open Source project [Duality](https://github.com/AdamsLair/duality), and wouldnt have been possible without it! 
+The Engine is derived from the Open Source project [Duality](https://github.com/AdamsLair/duality), and wouldnt have been possible without it!
+Much of the rendering is also derived from [Triton](https://github.com/johang88/triton)
 
 If you have questions or just want to say Hi, feel free to check out the [discussions](https://github.com/michaelsakharov/Pulsar/discussions) area, or join us in the [Discord Server](https://discord.gg/V2vPb2F7fy). Also, feedback is always welcome!
 
@@ -15,6 +16,10 @@ All framework build results will be located in the shared `Build/Output` folder.
 ### Contributing
 
 Are you experienced with c# and wanna contribute to Pulsar? Feel free to make a Pull Request!
+
+### Images
+
+![image](https://user-images.githubusercontent.com/8621606/161371217-c17b5150-5ea3-40b5-859e-669b223f18cd.png)
 
 ----------
 
