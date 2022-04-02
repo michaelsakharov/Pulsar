@@ -37,7 +37,6 @@ uniform vec2 screenSize;
 uniform vec3 lightColor;
 uniform vec3 cameraPosition;
 uniform vec3 lightDirection;
-uniform sampler2D samplerShadow;
 
 void main()
 {
@@ -67,12 +66,6 @@ void main()
 	float attenuationNdotL = attenuation * nDotL;
 	
 	if (attenuationNdotL > 0) {
-#ifdef SHADOWS
-		// Sample shadow buffer
-		float shadow = texture(samplerShadow, project).x;
-		attenuationNdotL *= shadow;
-#endif
-
 		float metallic = gbuffer2.x;
 		float roughness = gbuffer2.y;
 		float specular = gbuffer2.z;

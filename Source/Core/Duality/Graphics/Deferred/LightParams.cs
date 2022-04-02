@@ -14,8 +14,6 @@ namespace Duality.Graphics.Deferred
 		public int SamplerGBuffer2 = 0;
 		public int SamplerGBuffer3 = 0;
 		public int SamplerDepth = 0;
-		public int SamplerShadow = 0;
-		public int SamplerShadowCube = 0;
 		public int LightDirection = 0;
 		public int CameraPosition = 0;
 		public int LightPosition = 0;
@@ -31,15 +29,6 @@ namespace Duality.Graphics.Deferred
 		public int TexelSize = 0;
 		public int LightInvSquareRadius = 0;
 
-		// CSM
-		public int SamplerShadow1 = 0;
-		public int SamplerShadow2 = 0;
-		public int SamplerShadow3 = 0;
-		public int ShadowViewProj1 = 0;
-		public int ShadowViewProj2 = 0;
-		public int ShadowViewProj3 = 0;
-		public int ClipDistances = 0;
-
         // Compute
         public int NumTiles = 0;
         public int DisplaySize = 0;
@@ -49,7 +38,5 @@ namespace Duality.Graphics.Deferred
         public int CameraClipPlanes = 0;
         public int View = 0;
         public int Projection = 0;
-        public int SpotShadowMatrices = 0;
-        public int PointShadowMatrices = 0;
     }
 }

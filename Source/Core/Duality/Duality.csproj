@@ -198,9 +198,9 @@
 	  <None Remove="EmbeddedResources\shaders\deferred\ambient.glsl" />
 	  <None Remove="EmbeddedResources\shaders\deferred\combine.glsl" />
 	  <None Remove="EmbeddedResources\shaders\deferred\csm.glsl" />
+	  <None Remove="EmbeddedResources\shaders\deferred\DirectionalLight.glsl" />
 	  <None Remove="EmbeddedResources\shaders\deferred\fog.glsl" />
 	  <None Remove="EmbeddedResources\shaders\deferred\gbuffer.glsl" />
-	  <None Remove="EmbeddedResources\shaders\deferred\light.glsl" />
 	  <None Remove="EmbeddedResources\shaders\deferred\light_cs.glsl" />
 	  <None Remove="EmbeddedResources\shaders\deferred\render_shadows.glsl" />
 	  <None Remove="EmbeddedResources\shaders\deferred\render_shadows_cube.glsl" />
@@ -294,7 +294,7 @@
 		<EmbeddedResource Include="EmbeddedResources\shaders\deferred\csm.glsl" />
 		<EmbeddedResource Include="EmbeddedResources\shaders\deferred\fog.glsl" />
 		<EmbeddedResource Include="EmbeddedResources\shaders\deferred\gbuffer.glsl" />
-		<EmbeddedResource Include="EmbeddedResources\shaders\deferred\light.glsl" />
+		<EmbeddedResource Include="EmbeddedResources\shaders\deferred\directionallight.glsl" />
 		<EmbeddedResource Include="EmbeddedResources\shaders\deferred\light_cs.glsl" />
 		<EmbeddedResource Include="EmbeddedResources\shaders\deferred\render_shadows.glsl" />
 		<EmbeddedResource Include="EmbeddedResources\shaders\deferred\render_shadows_cube.glsl" />

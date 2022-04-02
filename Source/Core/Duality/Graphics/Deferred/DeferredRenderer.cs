@@ -1,9 +1,6 @@
 ﻿    using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Duality.Graphics.Resources;
 using Duality.Renderer;
 using Duality.Renderer.RenderTargets;
 using Duality.Resources;
@@ -12,18 +9,8 @@ namespace Duality.Graphics.Deferred
 {
     public class DeferredRenderer
     {
-        private const int SpotShadowAtlasResolution = 2048;
-        private const int SpotShadowResolution = 256;
-        private const int MaxShadowCastingSpotLights = SpotShadowAtlasResolution / SpotShadowResolution;
-
-        private const int MaxShadowCastingPointLights = 6;
-        private const int PointShadowResolution = 256;
-        private const int PointShadowAtlasResolution = PointShadowResolution * 6;
-
-        private readonly ShadowRenderer _shadowRenderer;
-
         private AmbientLightParams _ambientLightParams = new AmbientLightParams();
-        private LightParams[] _lightParams;
+        private LightParams _lightParams;
         private CombineParams _combineParams = new CombineParams();
         private LightParams _computeLightParams = new LightParams();
 
@@ -35,8 +22,8 @@ namespace Duality.Graphics.Deferred
         private BatchBuffer _quadMesh;
 
         private DrawTechnique _ambientLightShader;
-        private DrawTechnique[] _lightShaders;
-        private ComputeShader[] _lightComputeShader = new ComputeShader[(int)ShadowQuality.High + 1];
+        private DrawTechnique _lightShaders;
+        private ComputeShader _lightComputeShader;
 
         private const int NumLightInstances = 1024;
         private readonly PointLightDataCS[] _pointLightDataCS = new PointLightDataCS[NumLightInstances];
@@ -44,9 +31,6 @@ namespace Duality.Graphics.Deferred
 
         private readonly SpotLightDataCS[] _spotLightDataCS = new SpotLightDataCS[NumLightInstances];
         private int _spotLightDataCSBuffer;
-
-        private readonly int[] _lightToShadowIndex = new int[NumLightInstances + NumLightInstances];
-        private int _lightToShadowIndexCSBuffer;
 
         private bool _initialized = false;
 
@@ -57,35 +41,17 @@ namespace Duality.Graphics.Deferred
         private int _lightInsideRenderState;
         private int _lightOutsideRenderState;
 
-        public int _directionalShaderOffset = 0;
-
         public int RenderedLights = 0;
-
-        public RenderSettings Settings;
 
         private readonly RenderOperations _renderOperations = new RenderOperations();
 
-        private int[] _lightTextureBinds = new int[5];
-        private int[] _lightSamplers = new int[5];
+        private int[] _lightTextureBinds = new int[4];
+        private int[] _lightSamplers = new int[4];
 
-        private RenderTarget _shadowBuffer = null;
-        private Duality.Resources.Texture _specularIntegarion;
+        private Texture _specularIntegarion;
 
-        public RenderTarget SpotShadowAtlas;
-        private int _spotShadowCount = 0;
-        private Matrix4[] _spotShadowMatrices = new Matrix4[MaxShadowCastingSpotLights];
-
-        public RenderTarget PointShadowAtlas;
-        private int _pointShadowCount = 0;
-        private Matrix4[] _pointShadowMatrices = new Matrix4[MaxShadowCastingPointLights * 6];
-
-        public DeferredRenderer(ShadowRenderer shadowRenderer, int width, int height)
+        public DeferredRenderer(int width, int height)
         {
-            Settings.ShadowQuality = ShadowQuality.High;
-            Settings.EnableShadows = true;
-            Settings.ShadowRenderDistance = 128.0f;
-            _shadowRenderer = shadowRenderer ?? throw new ArgumentNullException(nameof(shadowRenderer));
-
             _screenSize = new Vector2(width, height);
 
             _gbuffer = DualityApp.GraphicsBackend.CreateRenderTarget("gbuffer", new Definition(width, height, true, new List<Definition.Attachment>()
@@ -102,51 +68,14 @@ namespace Duality.Graphics.Deferred
                 new Definition.Attachment(Definition.AttachmentPoint.Color, Renderer.PixelFormat.Rgba, Renderer.PixelInternalFormat.Rgba16f, Renderer.PixelType.Float, 0)
             }));
 
-            SpotShadowAtlas = DualityApp.GraphicsBackend.CreateRenderTarget("spot_shadow_atlas", new Definition(SpotShadowAtlasResolution, SpotShadowResolution, true, new List<Definition.Attachment>()
-                    {
-						new Definition.Attachment(Definition.AttachmentPoint.Depth, Renderer.PixelFormat.DepthComponent, Renderer.PixelInternalFormat.DepthComponent16, Renderer.PixelType.Float, 0)
-                    }));
-
-            PointShadowAtlas = DualityApp.GraphicsBackend.CreateRenderTarget("point_shadow_atlas", new Definition(PointShadowAtlasResolution, PointShadowAtlasResolution, true, new List<Definition.Attachment>()
-                    {
-						new Definition.Attachment(Definition.AttachmentPoint.Depth, Renderer.PixelFormat.DepthComponent, Renderer.PixelInternalFormat.DepthComponent16, Renderer.PixelType.Float, 0)
-                    }));
-
 			//_ambientLightShader = _resourceManager.Load<Duality.Resources.Shader>("/shaders/deferred/ambient");
 			_ambientLightShader = new DrawTechnique(Shader.LoadEmbeddedShaderSource("shaders/deferred/ambient.glsl"), "");
 
 			// Init light shaders
-			var lightTypes = new string[] { "DIRECTIONAL_LIGHT" };
-            var lightPermutations = new string[] { "NO_SHADOWS", "SHADOWS" };
+			_lightShaders = new DrawTechnique(Shader.LoadEmbeddedShaderSource("shaders/deferred/directionallight.glsl"), "");
+			_lightParams = new LightParams();
 
-            _lightShaders = new DrawTechnique[lightTypes.Length * lightPermutations.Length];
-            _lightParams = new LightParams[lightTypes.Length * lightPermutations.Length];
-
-            for (var l = 0; l < lightTypes.Length; l++)
-            {
-                var lightType = lightTypes[l];
-                for (var p = 0; p < lightPermutations.Length; p++)
-                {
-                    var index = l * lightPermutations.Length + p;
-                    var defines = lightType + ";" + lightPermutations[p];
-
-                    //_lightShaders[index] = _resourceManager.Load<Duality.Resources.Shader>("/shaders/deferred/light", defines);
-					_lightShaders[index] = new DrawTechnique(Shader.LoadEmbeddedShaderSource("shaders/deferred/light.glsl"), defines);
-					_lightParams[index] = new LightParams();
-                }
-            }
-
-            _directionalShaderOffset = 0;
-
-            var shadowQualities = new string[] { "SHADOW_QUALITY_LOWEST", "SHADOW_QUALITY_LOW", "SHADOW_QUALITY_MEDIUM", "SHADOW_QUALITY_HIGH" };
-            for (var i = 0; i < _lightComputeShader.Length; i++)
-            {
-                //_lightComputeShader[i] = _resourceManager.Load<Duality.Resources.Shader>("/shaders/deferred/light_cs", shadowQualities[i]);
-				_lightComputeShader[i] = new ComputeShader(Shader.LoadEmbeddedShaderSource("shaders/deferred/light_cs.glsl"));
-			}
-            
-            //_specularIntegarion = _resourceManager.Load<Duality.Resources.Texture>("/textures/specular_integartion");
-			//_specularIntegarion = ContentProvider.RequestContent<Texture>("textures/specular_integartion").Res;
+			_lightComputeShader = new ComputeShader(Shader.LoadEmbeddedShaderSource("shaders/deferred/light_cs.glsl"));
 			_specularIntegarion = Texture.SpecularIntegartion.Res;
 
 			_quadMesh = DualityApp.GraphicsBackend.CreateBatchBuffer();
@@ -165,14 +94,10 @@ namespace Duality.Graphics.Deferred
 
             _spotLightDataCSBuffer = DualityApp.GraphicsBackend.RenderSystem.CreateBuffer(BufferTarget.ShaderStorageBuffer, true);
 			DualityApp.GraphicsBackend.RenderSystem.SetBufferData(_spotLightDataCSBuffer, _spotLightDataCS, true, true);
-
-            _lightToShadowIndexCSBuffer = DualityApp.GraphicsBackend.RenderSystem.CreateBuffer(BufferTarget.ShaderStorageBuffer, true);
-			DualityApp.GraphicsBackend.RenderSystem.SetBufferData(_lightToShadowIndexCSBuffer, _lightToShadowIndex, true, true);
         }
 
 		public void Resize(int width, int height)
 		{
-
 			_screenSize = new Vector2(width, height);
 			DualityApp.GraphicsBackend.ResizeRenderTarget(_gbuffer, width, height);
 			DualityApp.GraphicsBackend.ResizeRenderTarget(_lightAccumulationTarget, width, height);
@@ -181,12 +106,8 @@ namespace Duality.Graphics.Deferred
         public void InitializeHandles()
         {
             _ambientLightShader.BindUniformLocations(_ambientLightParams);
-            for (var i = 0; i < _lightParams.Length; i++)
-            {
-                _lightShaders[i].BindUniformLocations(_lightParams[i]);
-            }
-            // Expect all of them to have the same uniform locations (probably not a good idea)
-            _lightComputeShader[0].BindUniformLocations(_computeLightParams);
+			_lightShaders.BindUniformLocations(_lightParams);
+			_lightComputeShader.BindUniformLocations(_computeLightParams);
         }
 
         private void Initialize()
@@ -218,11 +139,9 @@ namespace Duality.Graphics.Deferred
             return _gbuffer;
         }
 
-        public RenderTarget RenderLighting(Stage stage, Duality.Components.Camera camera, RenderTarget shadowBuffer, RenderTarget ssao)
+        public RenderTarget RenderLighting(Stage stage, Duality.Components.Camera camera, RenderTarget ssao)
         {
             Initialize();
-
-            _shadowBuffer = shadowBuffer;
 
             RenderedLights = 0;
 
@@ -349,55 +268,39 @@ namespace Duality.Graphics.Deferred
 
             // Convert light color to linear space
             var lightColor = light.Color * light.Intensity;
-            //lightColor = new Vector3((float)System.Math.Pow(lightColor.X, 2.2f), (float)System.Math.Pow(lightColor.Y, 2.2f), (float)System.Math.Pow(lightColor.Z, 2.2f)) * light.Intensity;
-
-            // Select the correct shader
-            var lightTypeOffset = _shadowBuffer != null ? 1 : 0;
-
-            var shader = _lightShaders[lightTypeOffset];
-            var shaderParams = _lightParams[lightTypeOffset];
 
             // Setup textures and begin rendering with the chosen shader
             _lightTextureBinds[0] = _gbuffer.Textures[0].Handle;
             _lightTextureBinds[1] = _gbuffer.Textures[1].Handle;
             _lightTextureBinds[2] = _gbuffer.Textures[2].Handle;
             _lightTextureBinds[3] = _gbuffer.Textures[3].Handle;
-            if (_shadowBuffer != null)
-                _lightTextureBinds[4] = _shadowBuffer.Textures[0].Handle;
-            else
-                _lightTextureBinds[4] = 0;
 
             _lightSamplers[0] = DualityApp.GraphicsBackend.DefaultSamplerNoFiltering;
             _lightSamplers[1] = DualityApp.GraphicsBackend.DefaultSamplerNoFiltering;
             _lightSamplers[2] = DualityApp.GraphicsBackend.DefaultSamplerNoFiltering;
             _lightSamplers[3] = DualityApp.GraphicsBackend.DefaultSamplerNoFiltering;
-            if (light.Type == LighType.Directional && _shadowBuffer != null && light.CastShadows)
-                _lightSamplers[4] = DualityApp.GraphicsBackend.DefaultSamplerNoFiltering;
-            else
-                _lightSamplers[4] = 0;
 
-			DualityApp.GraphicsBackend.BeginInstance(shader.Handle, _lightTextureBinds, _lightSamplers, renderStateId);
+			DualityApp.GraphicsBackend.BeginInstance(_lightShaders.Handle, _lightTextureBinds, _lightSamplers, renderStateId);
 
             // Setup texture samplers
-            DualityApp.GraphicsBackend.BindShaderVariable(shaderParams.SamplerGBuffer0, 0);
-            DualityApp.GraphicsBackend.BindShaderVariable(shaderParams.SamplerGBuffer1, 1);
-            DualityApp.GraphicsBackend.BindShaderVariable(shaderParams.SamplerGBuffer2, 2);
-            DualityApp.GraphicsBackend.BindShaderVariable(shaderParams.SamplerGBuffer3, 3);
-			DualityApp.GraphicsBackend.BindShaderVariable(shaderParams.SamplerShadow, 4);
+            DualityApp.GraphicsBackend.BindShaderVariable(_lightParams.SamplerGBuffer0, 0);
+            DualityApp.GraphicsBackend.BindShaderVariable(_lightParams.SamplerGBuffer1, 1);
+            DualityApp.GraphicsBackend.BindShaderVariable(_lightParams.SamplerGBuffer2, 2);
+            DualityApp.GraphicsBackend.BindShaderVariable(_lightParams.SamplerGBuffer3, 3);
 
             // Common uniforms
-            DualityApp.GraphicsBackend.BindShaderVariable(shaderParams.ScreenSize, ref _screenSize);
-            DualityApp.GraphicsBackend.BindShaderVariable(shaderParams.ModelViewProjection, ref modelViewProjection);
-			DualityApp.GraphicsBackend.BindShaderVariable(shaderParams.LightColor, ref lightColor);
+            DualityApp.GraphicsBackend.BindShaderVariable(_lightParams.ScreenSize, ref _screenSize);
+            DualityApp.GraphicsBackend.BindShaderVariable(_lightParams.ModelViewProjection, ref modelViewProjection);
+			DualityApp.GraphicsBackend.BindShaderVariable(_lightParams.LightColor, ref lightColor);
 			var Pos = camera.GameObj.Transform.Pos;
-			DualityApp.GraphicsBackend.BindShaderVariable(shaderParams.CameraPosition, ref Pos);
+			DualityApp.GraphicsBackend.BindShaderVariable(_lightParams.CameraPosition, ref Pos);
 
 			var lightDirWS = light.GameObj.Transform.Forward;
 
-			DualityApp.GraphicsBackend.BindShaderVariable(shaderParams.LightDirection, ref lightDirWS);
+			DualityApp.GraphicsBackend.BindShaderVariable(_lightParams.LightDirection, ref lightDirWS);
 
             var inverseViewProjectionMatrix = Matrix4.Invert(view * projection);
-			DualityApp.GraphicsBackend.BindShaderVariable(shaderParams.InvViewProjection, ref inverseViewProjectionMatrix);
+			DualityApp.GraphicsBackend.BindShaderVariable(_lightParams.InvViewProjection, ref inverseViewProjectionMatrix);
 
 			DualityApp.GraphicsBackend.DrawMesh(_quadMesh.MeshHandle);
 
@@ -410,13 +313,9 @@ namespace Duality.Graphics.Deferred
             var boundingSphere = new BoundingSphere();
             int pointLightCount = 0, spotLightCount = 0;
 
-            _spotShadowCount = 0;
-            _pointShadowCount = 0;
-
             // Sort by distance, this prioritizes closer shadow casting lights
             // TODO: This generates the garbage
             lights = lights.OrderBy(x => (x.GameObj.Transform.Pos - camera.GameObj.Transform.Pos).LengthSquared).ToList();
-			DualityApp.GraphicsBackend.ProfileBeginSection(Profiler.ShadowRenderPointSpot);
             foreach (var light in lights)
             {
                 if (!light.Enabled || (light.Type != LighType.PointLight && light.Type != LighType.SpotLight))
@@ -435,23 +334,11 @@ namespace Duality.Graphics.Deferred
                 RenderedLights++;
 
                 var lightColor = light.Color * light.Intensity;
-                //lightColor = new Vector3((float)System.Math.Pow(lightColor.X, 2.2f), (float)System.Math.Pow(lightColor.Y, 2.2f), (float)System.Math.Pow(lightColor.Z, 2.2f)) * light.Intensity;
 
                 if (light.Type == LighType.PointLight)
                 {
                     _pointLightDataCS[pointLightCount].PositionRange = new Vector4(lightPositionWS, light.Range);
                     _pointLightDataCS[pointLightCount].Color = new Vector4(lightColor, light.Intensity);
-                    
-                    if (light.CastShadows)
-                    {
-                        // TODO: Render Point Light Shadows!
-                        _lightToShadowIndex[pointLightCount] = RenderPointLightShadows(stage, light);
-                    }
-                    else
-                    {
-                        _lightToShadowIndex[pointLightCount] = -1;
-                    }
-
                     pointLightCount++;
                 }
                 else
@@ -464,22 +351,11 @@ namespace Duality.Graphics.Deferred
                     _spotLightDataCS[spotLightCount].PositionRange = new Vector4(lightPositionWS, light.Range);
                     _spotLightDataCS[spotLightCount].ColorInnerAngle = new Vector4(lightColor, light.InnerAngle);
                     _spotLightDataCS[spotLightCount].DirectionOuterAngle = new Vector4(lightDirWS, light.OuterAngle);
-                    
-                    if (light.CastShadows == true)
-                    {
-                        _lightToShadowIndex[NumLightInstances + spotLightCount] = RenderSpotLightShadows(stage, light);
-                    }
-                    else
-                    {
-                        _lightToShadowIndex[NumLightInstances + spotLightCount] = -1;
-                    }
-
                     spotLightCount++;
                 }
             }
 
 			DualityApp.GraphicsBackend.Barrier(OpenTK.Graphics.OpenGL.MemoryBarrierFlags.AllBarrierBits);
-			DualityApp.GraphicsBackend.ProfileEndSection(Profiler.ShadowRenderPointSpot);
 
 			// Reset render target
 			DualityApp.GraphicsBackend.BeginPass(_lightAccumulationTarget, new Vector4(0.0f, 0.0f, 0.0f, 1.0f), ClearFlags.All);
@@ -499,18 +375,12 @@ namespace Duality.Graphics.Deferred
 				DualityApp.GraphicsBackend.UpdateBufferInline(_spotLightDataCSBuffer, spotLightCount * sizeof(SpotLightDataCS), (byte*)data);
             }
 
-            fixed (int* data = _lightToShadowIndex)
-            {
-				DualityApp.GraphicsBackend.UpdateBufferInline(_lightToShadowIndexCSBuffer, _lightToShadowIndex.Length * sizeof(int), (byte*)data);
-            }
-
 			DualityApp.GraphicsBackend.BindBufferBase(0, _pointLightDataCSBuffer);
             DualityApp.GraphicsBackend.BindBufferBase(1, _spotLightDataCSBuffer);
-            DualityApp.GraphicsBackend.BindBufferBase(2, _lightToShadowIndexCSBuffer);
 
             var lightTileSize = 16;
 
-			DualityApp.GraphicsBackend.BeginInstance(_lightComputeShader[(int)Settings.ShadowQuality].Handle, new int[] { _gbuffer.Textures[3].Handle, SpotShadowAtlas.Textures[0].Handle, PointShadowAtlas.Textures[0].Handle }, new int[] { DualityApp.GraphicsBackend.DefaultSamplerNoFiltering, DualityApp.GraphicsBackend.DefaultSamplerNoFiltering, DualityApp.GraphicsBackend.DefaultSamplerNoFiltering }, _lightAccumulatinRenderState);
+			DualityApp.GraphicsBackend.BeginInstance(_lightComputeShader.Handle, new int[] { _gbuffer.Textures[3].Handle }, new int[] { DualityApp.GraphicsBackend.DefaultSamplerNoFiltering }, _lightAccumulatinRenderState);
 
             var numTilesX = (uint)DispatchSize(lightTileSize, _gbuffer.Textures[0].Width);
             var numTilesY = (uint)DispatchSize(lightTileSize, _gbuffer.Textures[0].Height);
@@ -527,8 +397,6 @@ namespace Duality.Graphics.Deferred
 			DualityApp.GraphicsBackend.BindShaderVariable(_computeLightParams.CameraPositionWS, ref Pos);
             DualityApp.GraphicsBackend.BindShaderVariable(_computeLightParams.View, ref view);
             DualityApp.GraphicsBackend.BindShaderVariable(_computeLightParams.Projection, ref projection);
-            DualityApp.GraphicsBackend.BindShaderVariable(_computeLightParams.SpotShadowMatrices, ref _spotShadowMatrices);
-			DualityApp.GraphicsBackend.BindShaderVariable(_computeLightParams.PointShadowMatrices, ref _pointShadowMatrices);
 
             var inverseViewProjectionMatrix = Matrix4.Invert(view * projection);
             var inverseProjectionMatrix = Matrix4.Invert(projection);
@@ -544,102 +412,6 @@ namespace Duality.Graphics.Deferred
 			DualityApp.GraphicsBackend.Barrier(OpenTK.Graphics.OpenGL.MemoryBarrierFlags.AllBarrierBits);
 
 			DualityApp.GraphicsBackend.ProfileEndSection(Profiler.TiledLights);
-        }
-
-        /// <summary>
-        /// Render spot light shadows, returns the index of the shadow map on the atlas
-        /// </summary>
-        private int RenderSpotLightShadows(Stage stage, Components.LightComponent light)
-        {
-            if (_spotShadowCount >= MaxShadowCastingSpotLights)
-            {
-                return -1;
-            }
-
-            // Light direction
-            Vector3 unitZ = Vector3.UnitZ;
-			var quat = light.GameObj.Transform.Quaternion;
-			Vector3.Transform(ref unitZ, ref quat, out var lightDirWS);
-            lightDirWS = lightDirWS.Normalized;
-
-            // Calculate index and viewport
-            var index = _spotShadowCount++;
-
-            var x = index * SpotShadowResolution;
-            var y = 0;
-            
-            // Camera matrix
-            var view = Matrix4.CreateLookAt(light.GameObj.Transform.Pos, light.GameObj.Transform.Pos + lightDirWS, Vector3.UnitY);
-            var projection = Matrix4.CreatePerspectiveFieldOfView(light.OuterAngle, 1.0f, 0.1f, light.Range * 1.2f);
-
-            var viewProjection = view * projection;
-            _spotShadowMatrices[index] = viewProjection;
-
-			// Render the shadow map!
-			DualityApp.GraphicsBackend.BeginPass(SpotShadowAtlas, new Vector4(0, 0, 0, 1), x, y, SpotShadowResolution, SpotShadowResolution, ClearFlags.All);
-            _shadowRenderer.RenderShadowMap(light, stage, lightDirWS, view, projection);
-			DualityApp.GraphicsBackend.EndPass();
-
-            return index;
-        }
-
-        private int RenderPointLightShadows(Stage stage, Components.LightComponent light)
-        {
-            if (_pointShadowCount >= MaxShadowCastingPointLights)
-            {
-                return -1;
-            }
-
-            // Calculate index and viewport
-            var index = _pointShadowCount++;
-
-            var dir = new Vector3[]
-            {
-                new Vector3(1, 0, 0), 
-                new Vector3(-1, 0, 0), 
-                new Vector3(0, 1, 0),
-                new Vector3(0, -1, 0),
-                new Vector3(0, 0, -1),
-                new Vector3(0, 0, 1)
-            };
-
-            var up = new Vector3[]
-            {
-                new Vector3(0, 1, 0),
-                new Vector3(0, 1, 0),
-                new Vector3(0, 0, 1),
-                new Vector3(0, 0, -1),
-                new Vector3(0, 1, 0),
-                new Vector3(0, 1, 0)
-            };
-
-            var projection = Matrix4.CreatePerspectiveFieldOfView(MathF.DegToRad(92.0f), 1.0f, 0.1f, light.Range);
-
-            for (var i = 0; i < 6; i++)
-            {
-                var x = i * PointShadowResolution;
-                var y = index * PointShadowResolution;
-
-                // Camera matrix
-                var view = Matrix4.CreateLookAt(light.GameObj.Transform.Pos, light.GameObj.Transform.Pos + dir[i], up[i]);
-
-                var viewProjection = view * projection;
-                _pointShadowMatrices[(index * 6) + i] = viewProjection;
-
-				// Render the shadow map!
-				DualityApp.GraphicsBackend.BeginPass(PointShadowAtlas, new Vector4(0, 0, 0, 1), x, y, PointShadowResolution, PointShadowResolution, ClearFlags.All);
-                _shadowRenderer.RenderShadowMap(light, stage, dir[i], view, projection);
-				DualityApp.GraphicsBackend.EndPass();
-            }
-
-            return index;
-        }
-
-        public struct RenderSettings
-        {
-            public ShadowQuality ShadowQuality;
-            public bool EnableShadows;
-            public float ShadowRenderDistance;
         }
 
         private struct PointLightDataCS

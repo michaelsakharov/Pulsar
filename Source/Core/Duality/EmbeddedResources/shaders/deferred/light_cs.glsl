@@ -1,6 +1,5 @@
 #include "/shaders/core"
 #include "/shaders/brdf"
-#include "/shaders/deferred/shadows"
 
 #define COMPUTE
 
@@ -8,12 +7,6 @@
 #define MaxLights 1024
 
 layout(local_size_x = LightTileSize, local_size_y = LightTileSize) in;
-
-#define SpotLightShadowIndexOffset 1024
-#define MaxShadowCastingSpotLights 8
-
-#define PointLightShadowIndexOffset 0
-#define MaxShadowCastingPointLights 6
 
 struct PointLight {
 	vec4 positionRange;
@@ -34,10 +27,6 @@ layout(std430, binding = 1) buffer SpotLights {
 	SpotLight spotLights[];
 };
 
-layout(std430, binding = 2) buffer ShadowMapIndexes {
-	int lightToShadowIndex[];
-};
-
 uniform mat4x4 view;
 uniform mat4x4 projection;
 uniform vec3 cameraPositionWS;
@@ -46,13 +35,9 @@ uniform uvec2 numTiles;
 uniform uvec2 displaySize;
 uniform int numPointLights;
 uniform int numSpotLights;
-uniform mat4x4[MaxShadowCastingSpotLights] spotShadowMatrices;
-uniform mat4x4[MaxShadowCastingPointLights * 6] pointShadowMatrices;
 
 layout(binding = 0) uniform sampler2D samplerDepth;
-layout(binding = 1) uniform sampler2D samplerSpotLightShadowAtlas;
-layout(binding = 2) uniform sampler2D samplerPointLightShadowAtlas;
-layout(binding = 3) uniform sampler2D samplerPosition;
+layout(binding = 1) uniform sampler2D samplerPosition;
 
 layout(binding = 0, rgba8) uniform image2D samplerGBuffer0;
 layout(binding = 1, rgba16f) uniform image2D samplerGBuffer1;
@@ -230,40 +215,6 @@ void main() {
 
 			float attenuationNdotL = attenuation * nDotL;
 
-			// Shadows!
-			int shadowMapIndex = lightToShadowIndex[PointLightShadowIndexOffset + lIdx];
-			if (shadowMapIndex > -1) {
-				vec3 luv = -lightDir;
-				luv.z = -luv.z;
-
-				int face = vec3_to_face(luv);
-
-				// Sample shadows!
-				vec4 shadowUv = pointShadowMatrices[shadowMapIndex * 6 + face] * vec4(positionWS, 1.0);
-				shadowUv.xyz = 0.5 * shadowUv.xyz / shadowUv.w + vec3(0.5);
-
-				shadowUv.x += face;
-				shadowUv.x *= 1.0 / float(6);
-
-				shadowUv.y += shadowMapIndex;
-				shadowUv.y *= 1.0 / float(MaxShadowCastingPointLights);
-
-				float distance = shadowUv.z;
-				vec2 uv = shadowUv.xy;
-
-				#if SHADOW_QUALITY == 3
-					float shadow = sample_shadow_29(samplerPointLightShadowAtlas, uv, distance);
-				#elif SHADOW_QUALITY == 2
-					float shadow = sample_shadow_12(samplerPointLightShadowAtlas, uv, distance);
-				#elif SHADOW_QUALITY == 1
-					float shadow = sample_shadow_5(samplerPointLightShadowAtlas, uv, distance);
-				#else 
-					float shadow = check_shadow_map(samplerPointLightShadowAtlas, uv, distance);
-				#endif
-
-				attenuationNdotL *= shadow;
-			}
-			
 			lighting += brdf(normalWS, eyeDir, lightDir, roughness, metallic, light.colorIntensity.xyz * attenuationNdotL, diffuse, F0);
 		}
 		
@@ -293,32 +244,6 @@ void main() {
 
 			float attenuationNdotL = attenuation * nDotL;
 
-			// Shadows!
-			int shadowMapIndex = lightToShadowIndex[SpotLightShadowIndexOffset + lIdx];
-			if (shadowMapIndex > -1) {
-				// Sample shadows!
-				vec4 shadowUv = spotShadowMatrices[shadowMapIndex] * vec4(positionWS, 1.0);
-				shadowUv.xyz = 0.5 * shadowUv.xyz / shadowUv.w + vec3(0.5);
-
-				shadowUv.x += shadowMapIndex;
-				shadowUv.x *= 1.0 / float(MaxShadowCastingSpotLights);
-
-				float distance = shadowUv.z;
-				vec2 uv = shadowUv.xy;
-
-				#if SHADOW_QUALITY == 3
-					float shadow = sample_shadow_29(samplerSpotLightShadowAtlas, uv, distance);
-				#elif SHADOW_QUALITY == 2
-					float shadow = sample_shadow_12(samplerSpotLightShadowAtlas, uv, distance);
-				#elif SHADOW_QUALITY == 1
-					float shadow = sample_shadow_5(samplerSpotLightShadowAtlas, uv, distance);
-				#else 
-					float shadow = check_shadow_map(samplerSpotLightShadowAtlas, uv, distance);
-				#endif
-
-				attenuationNdotL *= shadow;
-			}
-			
 			lighting += brdf(normalWS, eyeDir, lightDir, roughness, metallic, light.colorInnerAngle.xyz * attenuationNdotL, diffuse, F0);
 		}
 

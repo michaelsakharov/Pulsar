@@ -9,8 +9,6 @@ namespace Duality.Graphics.Pipelines
 	public class DeferredPipeline
 	{
 		private Graphics.Deferred.DeferredRenderer DeferredRenderer;
-		private Graphics.Deferred.ShadowRenderer ShadowRenderer;
-		private Graphics.Deferred.ShadowBufferRenderer ShadowBufferRenderer;
 		private Graphics.Post.PostEffectManager PostEffectManager;
 
 		private Graphics.SpriteBatch SpriteRenderer;
@@ -23,9 +21,7 @@ namespace Duality.Graphics.Pipelines
 			Width = width;
 			Height = height;
 
-			ShadowRenderer = new Graphics.Deferred.ShadowRenderer();
-			DeferredRenderer = new Graphics.Deferred.DeferredRenderer(ShadowRenderer, Width, Height);
-			ShadowBufferRenderer = new Graphics.Deferred.ShadowBufferRenderer(Width, Height);
+			DeferredRenderer = new Graphics.Deferred.DeferredRenderer(Width, Height);
 			PostEffectManager = new Graphics.Post.PostEffectManager(Width, Height);
 
 			SpriteRenderer = DualityApp.GraphicsBackend.CreateSpriteBatch();
@@ -42,29 +38,13 @@ namespace Duality.Graphics.Pipelines
 			if (camera != null)
 			{
 				var gbuffer = DeferredRenderer.RenderGBuffer(stage, camera);
-				var sunLight = stage.GetSunLight();
-
-				// Prepare shadow buffer for sunlight
-				RenderTarget shadows = null;
-				if (sunLight != null && sunLight.CastShadows)
-				{
-					Profile.TimeShadowsGeneration.BeginMeasure();
-					List<RenderTarget>  csm = ShadowRenderer.RenderCSM(gbuffer, sunLight, stage, camera, out var viewProjections, out var clipDistances);
-					Profile.TimeShadowsGeneration.EndMeasure();
-
-					ShadowBufferRenderer.DebugCascades = PostEffectManager.VisualizationMode == Graphics.Post.VisualizationMode.CSM;
-
-					Profile.TimeShadowsRender.BeginMeasure();
-					shadows = ShadowBufferRenderer.Render(camera, gbuffer, csm, viewProjections, clipDistances, DeferredRenderer.Settings.ShadowQuality);
-					Profile.TimeShadowsRender.EndMeasure();
-				}
 
 				// Light + post, ssao needed for ambient so we render it first
 				Profile.TimeSSAO.BeginMeasure();
 				var ssao = PostEffectManager.RenderSSAO(camera, gbuffer);
 				Profile.TimeSSAO.EndMeasure();
-				var lightOutput = DeferredRenderer.RenderLighting(stage, camera, shadows, ssao);
-				var postProcessedResult = PostEffectManager.Render(camera, stage, gbuffer, lightOutput, shadows, deltaTime);
+				var lightOutput = DeferredRenderer.RenderLighting(stage, camera, ssao);
+				var postProcessedResult = PostEffectManager.Render(camera, stage, gbuffer, lightOutput, deltaTime);
 
 				DualityApp.GraphicsBackend.BeginPass(null, Vector4.Zero, ClearFlags.Color);
 
@@ -84,10 +64,7 @@ namespace Duality.Graphics.Pipelines
 			Width = width;
 			Height = height;
 
-			//if (ShadowRenderer != null) ShadowRenderer.Resize(width, height);
 			if (DeferredRenderer != null) DeferredRenderer.Resize(width, height);
-			if (ShadowBufferRenderer != null) ShadowBufferRenderer.Resize(width, height);
-			//if (SpriteRenderer != null) SpriteRenderer.Resize(width, height);
 			if (PostEffectManager != null) PostEffectManager.Resize(width, height);
 		}
 
