@@ -10,8 +10,6 @@ using Duality;
 using Duality.Drawing;
 using Duality.Resources;
 using Duality.Components;
-using Duality.Components.Renderers;
-
 using NUnit.Framework;
 
 
@@ -68,16 +66,16 @@ namespace Duality.Tests.Resources
 			GameObject obj = prefab.Instantiate();
 			obj.LinkToPrefab(prefab);
 
-			SpriteRenderer sprite = obj.GetComponent<SpriteRenderer>();
-			Assert.AreNotSame(sprite, prefabContent.GetComponent<SpriteRenderer>());
+			Camera sprite = obj.GetComponent<Camera>();
+			Assert.AreNotSame(sprite, prefabContent.GetComponent<Camera>());
 
 			GameObject child = obj.Children.First();
 			Assert.AreNotSame(child, prefabContent.Children.First());
 
 			obj.PrefabLink.Apply();
-			Assert.AreSame(sprite, obj.GetComponent<SpriteRenderer>());
+			Assert.AreSame(sprite, obj.GetComponent<Camera>());
 			Assert.AreSame(child, obj.Children.First());
-			Assert.AreNotSame(sprite, prefabContent.GetComponent<SpriteRenderer>());
+			Assert.AreNotSame(sprite, prefabContent.GetComponent<Camera>());
 			Assert.AreNotSame(child, prefabContent.Children.First());
 		}
 		[Test] public void ApplyChanges()
@@ -87,24 +85,24 @@ namespace Duality.Tests.Resources
 			Prefab prefab = new Prefab(prefabContent);
 
 			GameObject obj = prefab.Instantiate();
-			SpriteRenderer sprite = obj.GetComponent<SpriteRenderer>();
-			SpriteRenderer childSprite = obj.Children.First().GetComponent<SpriteRenderer>();
+			Camera sprite = obj.GetComponent<Camera>();
+			Camera childSprite = obj.Children.First().GetComponent<Camera>();
 
 			obj.LinkToPrefab(prefab);
 
-			sprite.ColorTint = ColorRgba.Red;
-			childSprite.ColorTint = ColorRgba.Green;
+			sprite.useCustomViewPort = true;
+			childSprite.useCustomViewPort = true;
 
-			obj.PrefabLink.PushChange(sprite, PropertyOf(() => sprite.ColorTint));
-			obj.PrefabLink.PushChange(childSprite, PropertyOf(() => sprite.ColorTint));
+			obj.PrefabLink.PushChange(sprite, PropertyOf(() => sprite.useCustomViewPort));
+			obj.PrefabLink.PushChange(childSprite, PropertyOf(() => sprite.useCustomViewPort));
 
 			obj.PrefabLink.ApplyPrefab();
-			Assert.AreNotEqual(sprite.ColorTint, ColorRgba.Red);
-			Assert.AreNotEqual(childSprite.ColorTint, ColorRgba.Green);
+			Assert.AreNotEqual(sprite.useCustomViewPort, true);
+			Assert.AreNotEqual(childSprite.useCustomViewPort, true);
 
 			obj.PrefabLink.ApplyChanges();
-			Assert.AreEqual(sprite.ColorTint, ColorRgba.Red);
-			Assert.AreEqual(childSprite.ColorTint, ColorRgba.Green);
+			Assert.AreEqual(sprite.useCustomViewPort, true);
+			Assert.AreEqual(childSprite.useCustomViewPort, true);
 		}
 		[Test] public void AllowAdditionalObjects()
 		{
@@ -171,10 +169,10 @@ namespace Duality.Tests.Resources
 			Prefab parentPrefab = new Prefab(parentObj);
 			parentObj.LinkToPrefab(parentPrefab);
 
-			SpriteRenderer childSprite = childObj.GetComponent<SpriteRenderer>();
-			childSprite.ColorTint = ColorRgba.Green;
+			Camera childSprite = childObj.GetComponent<Camera>();
+			childSprite.useCustomViewPort = true;
 
-			childObj.PrefabLink.PushChange(childSprite, PropertyOf(() => childSprite.ColorTint));
+			childObj.PrefabLink.PushChange(childSprite, PropertyOf(() => childSprite.useCustomViewPort));
 			parentObj.PrefabLink.PushChange(childObj, PropertyOf(() => childObj.PrefabLink));
 
 			// Apply the parent Prefab. In an error case, this could overwrite the childs PrefabLink
@@ -182,7 +180,7 @@ namespace Duality.Tests.Resources
 			// Apply it again. If the childs PrefabLink was overwritten, this will change the child sprites color
 			parentObj.PrefabLink.Apply();
 
-			Assert.AreEqual(ColorRgba.Green, childSprite.ColorTint);
+			Assert.AreEqual(true, childSprite.useCustomViewPort);
 		}
 
 		[Test] public void SameNamePropertyChanges()
@@ -192,13 +190,13 @@ namespace Duality.Tests.Resources
 			gameObj.LinkToPrefab(prefab);
 
 			var transform = gameObj.GetComponent<Transform>();
-			var spriteRenderer = gameObj.GetComponent<SpriteRenderer>();
+			var spriteRenderer = gameObj.GetComponent<Camera>();
 			gameObj.PrefabLink.PushChange(transform, PropertyOf(() => transform.ActiveSingle), false);
 			gameObj.PrefabLink.PushChange(spriteRenderer, PropertyOf(() => spriteRenderer.ActiveSingle), false);
 
 			gameObj.PrefabLink.ApplyChanges();
 
-			Assert.IsFalse(gameObj.GetComponent<SpriteRenderer>().ActiveSingle);
+			Assert.IsFalse(gameObj.GetComponent<Camera>().ActiveSingle);
 			Assert.IsFalse(gameObj.GetComponent<Transform>().ActiveSingle);
 		}
 		[Test] public void PrefabChangeListCloningBug()
@@ -248,7 +246,7 @@ namespace Duality.Tests.Resources
 		{
 			GameObject obj = new GameObject("SimpleObject", parent);
 			obj.AddComponent<Transform>();
-			obj.AddComponent<SpriteRenderer>();
+			obj.AddComponent<Camera>();
 			return obj;
 		}
 		private bool CheckEquality(GameObject a, GameObject b)

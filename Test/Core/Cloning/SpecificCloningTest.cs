@@ -14,7 +14,6 @@ using Duality.Cloning;
 using Duality.Drawing;
 using Duality.Resources;
 using Duality.Components;
-using Duality.Components.Renderers;
 using Duality.Tests.Cloning.HelperObjects;
 
 using NUnit.Framework;

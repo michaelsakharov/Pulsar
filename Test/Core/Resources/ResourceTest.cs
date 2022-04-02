@@ -10,7 +10,6 @@ using Duality;
 using Duality.Drawing;
 using Duality.Resources;
 using Duality.Components;
-using Duality.Components.Renderers;
 
 using NUnit.Framework;
 

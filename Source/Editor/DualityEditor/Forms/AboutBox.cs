@@ -35,5 +35,10 @@ namespace Duality.Editor.Forms
 			Clipboard.Clear();
 			Clipboard.SetText(this.labelVersion.Text);
 		}
+
+		private void linkLabelWebsite_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+		{
+			Process.Start("https://github.com/AdamsLair/duality");
+		}
 	}
 }

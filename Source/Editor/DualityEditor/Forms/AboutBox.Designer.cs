@@ -92,23 +92,24 @@
             this.labelWebsite.Location = new System.Drawing.Point(3, 212);
             this.labelWebsite.Margin = new System.Windows.Forms.Padding(3);
             this.labelWebsite.Name = "labelWebsite";
-            this.labelWebsite.Size = new System.Drawing.Size(52, 17);
+            this.labelWebsite.Size = new System.Drawing.Size(73, 17);
             this.labelWebsite.TabIndex = 3;
-            this.labelWebsite.Text = "Made By:";
+            this.labelWebsite.Text = "Derived From:";
             this.labelWebsite.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // linkLabelWebsite
             // 
             this.linkLabelWebsite.AutoSize = true;
             this.linkLabelWebsite.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.linkLabelWebsite.Location = new System.Drawing.Point(61, 212);
+            this.linkLabelWebsite.Location = new System.Drawing.Point(82, 212);
             this.linkLabelWebsite.Margin = new System.Windows.Forms.Padding(3);
             this.linkLabelWebsite.Name = "linkLabelWebsite";
-            this.linkLabelWebsite.Size = new System.Drawing.Size(91, 17);
+            this.linkLabelWebsite.Size = new System.Drawing.Size(178, 17);
             this.linkLabelWebsite.TabIndex = 5;
             this.linkLabelWebsite.TabStop = true;
-            this.linkLabelWebsite.Text = "Wulferis (Michael)";
+            this.linkLabelWebsite.Text = "Duality - A 2D GameDev Framework";
             this.linkLabelWebsite.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.linkLabelWebsite.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelWebsite_LinkClicked);
             // 
             // labelVersion
             // 
@@ -116,11 +117,11 @@
             this.tableLayoutPanel.SetColumnSpan(this.labelVersion, 2);
             this.labelVersion.Cursor = System.Windows.Forms.Cursors.Hand;
             this.labelVersion.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.labelVersion.Location = new System.Drawing.Point(158, 212);
+            this.labelVersion.Location = new System.Drawing.Point(266, 212);
             this.labelVersion.Margin = new System.Windows.Forms.Padding(3);
             this.labelVersion.Name = "labelVersion";
             this.tableLayoutPanel.SetRowSpan(this.labelVersion, 2);
-            this.labelVersion.Size = new System.Drawing.Size(343, 40);
+            this.labelVersion.Size = new System.Drawing.Size(235, 40);
             this.labelVersion.TabIndex = 7;
             this.labelVersion.Text = "Core Version: {0}\r\nEditor Version: {1}";
             this.labelVersion.Click += new System.EventHandler(this.labelVersion_Click);
