@@ -392,11 +392,6 @@ namespace Duality.Graphics.Deferred
 			var Pos = camera.GameObj.Transform.Pos;
 			DualityApp.GraphicsBackend.BindShaderVariable(shaderParams.CameraPosition, ref Pos);
 
-            Vector3 unitZ = Vector3.UnitZ;
-			//var quat = light.GameObj.Transform.Quaternion;
-			//Vector3.Transform(ref unitZ, ref quat, out var lightDirWS);
-			//lightDirWS = lightDirWS.Normalized;
-			//var lightDirWS = unitZ;
 			var lightDirWS = light.GameObj.Transform.Forward;
 
 			DualityApp.GraphicsBackend.BindShaderVariable(shaderParams.LightDirection, ref lightDirWS);
