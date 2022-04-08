@@ -52,7 +52,7 @@ namespace Duality
 			//Font.InitDefaultContent();
 			AudioData.InitDefaultContent();
 			Sound.InitDefaultContent();
-			//Duality.Graphics.Resources.Mesh.InitDefaultContent();
+			Mesh.InitDefaultContent();
 
 			Logs.Core.Write("...done!");
 			Logs.Core.PopIndent();

@@ -5,6 +5,7 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 using Duality.Resources;
+using THREE.Math;
 
 namespace Duality.Graphics.Components
 {
@@ -13,35 +14,38 @@ namespace Duality.Graphics.Components
 		[DontSerialize] protected bool _meshDirty = true; // Start Dirty
 		[DontSerialize] protected bool _inScene = false;
 
-		[DontSerialize] THREE.Objects.Mesh mesh;
+		[DontSerialize] List<THREE.Objects.Mesh> threeMesh;
 
-		public ContentRef<Material> _material = null;
+		public ContentRef<Mesh> _mesh = null;
 		/// <summary>
 		/// [GET / SET] The <see cref="Mesh"/> that is to be rendered by this component.
 		/// </summary>
-		public ContentRef<Material> Material
+		public ContentRef<Mesh> Mesh
 		{
-			get { return this._material; }
-			set { this._material = value; }
+			get { return this._mesh; }
+			set { this._mesh = value; }
 		}
 
 		void ICmpInitializable.OnActivate()
 		{
-			if (mesh == null)
+			if (threeMesh == null && Mesh.IsAvailable)
 			{
-				mesh = new THREE.Objects.Mesh(new THREE.Geometries.BoxGeometry(1, 1, 1), (Material != null && Material.IsAvailable) ? Material.Res.GetThreeMaterial() : MeshBasicMaterial.Default.Res.GetThreeMaterial());
+				CreateThreeMesh();
 				_inScene = true;
-				Scene.ThreeScene.Add(mesh);
+				foreach (var submesh in threeMesh)
+					Scene.ThreeScene.Add(submesh);
 			}
 			UpdateMeshObject();
 		}
 
 		void ICmpInitializable.OnDeactivate()
 		{
-			if(mesh != null)
+			if(threeMesh != null)
 			{
 				_inScene = false;
-				Scene.ThreeScene.Remove(mesh);
+				foreach (var submesh in threeMesh)
+					Scene.ThreeScene.Remove(submesh);
+				threeMesh = null;
 			}
 		}
 
@@ -57,22 +61,62 @@ namespace Duality.Graphics.Components
 
 		void UpdateMeshObject()
 		{
-			if (mesh != null && GameObj.Transform != null)
+			if (_meshDirty)
 			{
-				mesh.Material = ((Material != null && Material.IsAvailable) ? Material.Res : MeshBasicMaterial.Default.Res).GetThreeMaterial();
-				mesh.Position.Set(this.GameObj.Transform.Pos.X, this.GameObj.Transform.Pos.Y, this.GameObj.Transform.Pos.Z);
-				mesh.Rotation.Set(this.GameObj.Transform.Rotation.X, this.GameObj.Transform.Rotation.Y, this.GameObj.Transform.Rotation.Z, THREE.Math.RotationOrder.XYZ);
-				mesh.Scale.Set(this.GameObj.Transform.Scale.X, this.GameObj.Transform.Scale.Y, this.GameObj.Transform.Scale.Z);
+				// Mesh was changed
+			}
+
+			if (threeMesh != null && GameObj.Transform != null && Mesh.IsAvailable)
+			{
+				foreach (var submesh in threeMesh)
+				{
+					//submesh.Material = ((Material != null && Material.IsAvailable) ? Material.Res : MeshBasicMaterial.Default.Res).GetThreeMaterial();
+					submesh.Material = MeshPhongMaterial.Default.Res.GetThreeMaterial();
+					submesh.Material.Color = new Color().SetHex(0x7777ff);
+					submesh.Position.Set(this.GameObj.Transform.Pos.X, this.GameObj.Transform.Pos.Y, this.GameObj.Transform.Pos.Z);
+					submesh.Rotation.Set(this.GameObj.Transform.Rotation.X, this.GameObj.Transform.Rotation.Y, this.GameObj.Transform.Rotation.Z, THREE.Math.RotationOrder.XYZ);
+					submesh.Scale.Set(this.GameObj.Transform.Scale.X, this.GameObj.Transform.Scale.Y, this.GameObj.Transform.Scale.Z);
+				}
+			}
+		}
+
+		void CreateThreeMesh()
+		{
+			var geometry = new THREE.Core.Geometry();
+
+			foreach (var submesh in Mesh.Res.SubMeshes)
+			{
+				foreach (var vertex in submesh.Vertices)
+					geometry.Vertices.Add(new THREE.Math.Vector3(vertex.X, vertex.Y, vertex.Z));
+
+				foreach (var color in submesh.Colors)
+					geometry.Colors.Add(new THREE.Math.Color(color.R, color.G, color.B));
+
+				foreach (var face in submesh.Faces)
+					geometry.Faces.Add(new THREE.Core.Face3((int)face.X, (int)face.Y, (int)face.Z));
+
+				foreach (var normal in submesh.Normals)
+					geometry.Normals.Add(new THREE.Math.Vector3(normal.X, normal.Y, normal.Z));
+
+				foreach (var uv in submesh.Uvs)
+					geometry.Uvs.Add(new THREE.Math.Vector2(uv.X, uv.Y));
+
+				if(threeMesh == null)
+				{
+					threeMesh = new List<THREE.Objects.Mesh>();
+				}
+				threeMesh.Add(new THREE.Objects.Mesh(geometry, (submesh.Material != null && submesh.Material.IsAvailable) ? submesh.Material.Res.GetThreeMaterial() : MeshBasicMaterial.Default.Res.GetThreeMaterial()));
 			}
 		}
 
 		void IDisposable.Dispose()
 		{
-			if (mesh != null)
+			if (threeMesh != null)
 			{
-				mesh.Dispose();
+				foreach (var submesh in threeMesh)
+					submesh.Dispose();
 				if(_inScene)
-					Scene.ThreeScene.Remove(mesh);
+					Scene.ThreeScene.Remove(threeMesh);
 			}
 		}
 	}
