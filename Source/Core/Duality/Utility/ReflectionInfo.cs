@@ -65,13 +65,6 @@ namespace Duality
 			
 			Type resource = typeof(Resource);
 			Property_Resource_AssetInfo		= GetProperty(resource, "AssetInfo");
-
-			Type pixmap = typeof(Pixmap);
-			Property_Pixmap_Atlas			= GetProperty(pixmap, "Atlas");
-
-			Type batchInfo = typeof(BatchInfo);
-			Property_BatchInfo_Technique	= GetProperty(batchInfo, "Technique");
-			Property_BatchInfo_MainColor	= GetProperty(batchInfo, "MainColor");
 			
 			Type soundEmitter = typeof(SoundEmitter);
 			Property_SoundEmitter_Sources	= GetProperty(soundEmitter, "Sources");

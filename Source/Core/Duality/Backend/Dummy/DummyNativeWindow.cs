@@ -15,7 +15,6 @@ namespace Duality.Backend.Dummy
 			while (DualityApp.ExecContext != DualityApp.ExecutionContext.Terminated)
 			{
 				DualityApp.Update();
-				DualityApp.Render();
 			}
 		}
 

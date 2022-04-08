@@ -81,22 +81,9 @@ namespace Duality.Launcher
 				new DefaultAssemblyLoader(),
 				launcherArgs);
 
-			// Open up a new window
-			WindowOptions options = new WindowOptions
-			{
-				Size = DualityApp.UserData.Instance.WindowSize,
-				ScreenMode = launcherArgs.IsDebugging ? ScreenMode.Window : DualityApp.UserData.Instance.WindowMode,
-				RefreshMode = launcherArgs.IsProfiling ? RefreshMode.NoSync : DualityApp.UserData.Instance.WindowRefreshMode,
-				Title = DualityApp.AppData.Instance.AppName,
-				SystemCursorVisible = launcherArgs.IsDebugging || DualityApp.UserData.Instance.SystemCursorVisible
-			};
 
-			this.refreshMode = options.RefreshMode;
 
-			this.window = DualityApp.OpenWindow(options);
-			window.UpdateFrame += Test_UpdateFrame;
-			window.RenderFrame += Test_RenderFrame;
-			window.Resize += Window_Resize;
+			this.window = DualityApp.OpenRenderer();
 
 			// Register events and input
 			this.HookIntoDuality();
@@ -210,7 +197,6 @@ namespace Duality.Launcher
 			Rect viewportRect;
 			DualityApp.CalculateGameViewport(this.Size, out viewportRect, out imageSize);
 
-			DualityApp.Render();
 			//Profile.TimeRender.BeginMeasure();
 			//Profile.TimeSwapBuffers.BeginMeasure();
 			//this.window.SwapBuffers();

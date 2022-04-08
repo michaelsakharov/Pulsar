@@ -17,13 +17,9 @@ using Duality.Launcher;
 using System.Runtime.CompilerServices;
 using OpenTK.Graphics;
 using OpenTK;
-using Duality.Renderer;
-using Duality.Graphics;
 using OpenTK.Graphics.OpenGL;
 using System.Runtime.InteropServices;
 using System.Diagnostics;
-using Duality.Graphics.Components;
-using Duality.Graphics.Pipelines;
 
 namespace Duality
 {
@@ -87,7 +83,7 @@ namespace Duality
 		private static IAssemblyLoader          assemblyLoader     = null;
 		private static CorePluginManager        pluginManager      = new CorePluginManager();
 		private static ISystemBackend           systemBack         = null;
-		private static Duality.Graphics.Backend graphicsBack       = null;
+		private static THREE.Renderers.GLRenderer graphicsBack       = null;
 		private static IAudioBackend            audioBack          = null;
 		private static Point2                   windowSize         = Point2.Zero;
 		private static MouseInput               mouse              = new MouseInput();
@@ -101,8 +97,6 @@ namespace Duality
 
 		private static DebugProc _debugProcCallback = DebugCallback;
 		private static GCHandle _debugProcCallbackHandle;
-
-		private static DeferredPipeline deferredPipeline;
 
 		public static float ResolutionScale { get; set; }
 		public static bool CursorVisible { get; set; } = true;
@@ -160,7 +154,7 @@ namespace Duality
 		/// [GET] The graphics backend that is used by Duality. Don't use this unless you know exactly what you're doing.
 		/// ESPECIALLY dont Set it, it WILL break things!
 		/// </summary>
-		public static Duality.Graphics.Backend GraphicsBackend
+		public static THREE.Renderers.GLRenderer GraphicsBackend
 		{
 			get { return graphicsBack; }
 			set { graphicsBack = value; }
@@ -367,45 +361,27 @@ namespace Duality
 		/// Opens up a window for Duality to render into. This also initializes the part of Duality that requires a 
 		/// valid rendering context. Should be called before performing any rendering related operations with Duality.
 		/// </summary>
-		public static OpenTK.GameWindow OpenWindow(WindowOptions options)
+		public static THREE.Renderers.GLRenderer OpenRenderer(GLControl control)
 		{
 			if (!initialized) throw new InvalidOperationException("Can't initialize graphics / rendering because Duality itself isn't initialized yet.");
 
-			Logs.Core.Write("Opening Window...");
+			Logs.Core.Write("Initializing GL Renderer...");
 			Logs.Core.PushIndent();
 
-			var graphicsMode = new GraphicsMode(new ColorFormat(32), 24, 0, 0);
-			var window = new OpenTK.GameWindow(options.Size.X, options.Size.Y, graphicsMode, "Game Window", GameWindowFlags.Default, DisplayDevice.Default)
-			{
-				Visible = true,
-				CursorVisible = CursorVisible
-			};
-
-			var context = new GraphicsContext(graphicsMode, window.WindowInfo, 4, 6, GraphicsContextFlags.ForwardCompatible | GraphicsContextFlags.Debug);
-			context.MakeCurrent(window.WindowInfo);
-			context.LoadAll();
-
-			var ctx = new ContextReference
-			{
-				Context = context,
-				SwapBuffers = context.SwapBuffers
-			};
-
-			var timer = new System.Diagnostics.Stopwatch();
-			timer.Start();
-
-			graphicsBack = new Duality.Graphics.Backend(window.Width, window.Height, ctx);
+			graphicsBack = new THREE.Renderers.GLRenderer();
+			graphicsBack.glControl = control;
+			graphicsBack.Init();
 
 			Logs.Core.PopIndent();
 
 			InitPostWindow();
 
-			return window;
+			return graphicsBack;
 		}
 		/// <summary>
 		/// Initializes the part of Duality that requires a valid rendering context. 
 		/// Should be called before performing any rendering related operations with Duality.
-		/// Is called implicitly when using <see cref="OpenWindow"/>.
+		/// Is called implicitly when using <see cref="OpenRenderer"/>.
 		/// </summary>
 		public static void InitPostWindow()
 		{
@@ -446,8 +422,6 @@ namespace Duality
 				return;
 			}
 
-			execContext = ExecutionContext.Terminated;
-
 			if (execContext != ExecutionContext.Editor)
 			{
 				OnTerminating();
@@ -467,12 +441,13 @@ namespace Duality
 			sound.Dispose();
 			sound = null;
 
-
 			ShutdownBackend(ref audioBack);
 			pluginManager.ClearPlugins();
 
 			// Since this performs file system operations, it needs to happen before shutting down the system backend.
 			Profile.SaveTextReport(environment == ExecutionEnvironment.Editor ? "perflog_editor.txt" : "perflog.txt");
+
+			graphicsBack.Dispose();
 
 			ShutdownBackend(ref systemBack);
 
@@ -486,6 +461,8 @@ namespace Duality
 			Logs.Core.Write("DualityApp terminated");
 
 			initialized = false;
+
+			execContext = ExecutionContext.Terminated;
 		}
 
 		/// <summary>
@@ -641,23 +618,6 @@ namespace Duality
 			isUpdating = false;
 
 			if (terminateScheduled) Terminate();
-
-			// Execute Command List
-			DualityApp.GraphicsBackend.Process();
-		}
-
-		/// <summary>
-		/// Performs a single render cycle.
-		/// </summary>
-		public static void Render()
-		{
-			if (deferredPipeline == null)
-				deferredPipeline = new DeferredPipeline(WindowSize.X, WindowSize.Y);
-
-			deferredPipeline.RenderStage(Time.DeltaTime, Scene.Stage, Scene.Camera);
-
-			// Execute Command List
-			GraphicsBackend.Process();
 		}
 
 		private static void DebugCallback(DebugSource source, DebugType type, int id, DebugSeverity severity, int length, IntPtr message, IntPtr userParam)

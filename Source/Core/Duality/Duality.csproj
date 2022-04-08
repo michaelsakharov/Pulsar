@@ -246,6 +246,7 @@
 	<ItemGroup>
 		<PackageReference Include="NVorbis" Version="0.10.1" GeneratePathProperty="true" />
 		<PackageReference Include="OpenTK" Version="3.1.0" />
+		<PackageReference Include="OpenTK.GLControl" Version="3.1.0" />
 		<PackageReference Include="Silk.NET.Assimp" Version="2.14.0" />
 		<PackageReference Include="System.Threading.Tasks.Parallel" Version="4.3.0" />
     <PackageReference Include="MemoryInterop.ILPatcher" Version="2.2.0" />
@@ -395,6 +396,13 @@
 
 	<ItemGroup>
 	  <Folder Include="MeshImporter\" />
+	  <Folder Include="Three\" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Reference Include="THREE">
+	    <HintPath>..\..\Dependencies\THREE.dll</HintPath>
+	  </Reference>
 	</ItemGroup>
 
 	<Target Name="AggregateOutput" BeforeTargets="AfterBuild">
