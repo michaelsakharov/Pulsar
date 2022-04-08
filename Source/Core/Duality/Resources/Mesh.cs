@@ -50,7 +50,7 @@ namespace Duality.Resources
 						SubMeshes[i].Material = MeshPhongMaterial.Default;
 						SubMeshes[i].Vertices = new List<Vector3>();
 						SubMeshes[i].Colors = new List<ColorRgba>();
-						SubMeshes[i].Faces = new List<Vector3>();
+						SubMeshes[i].Faces = new List<Face>();
 						SubMeshes[i].Normals = new List<Vector3>();
 						SubMeshes[i].Uvs = new List<Vector2>();
 
@@ -63,7 +63,7 @@ namespace Duality.Resources
 							SubMeshes[i].Colors.Add(new ColorRgba(color.R, color.G, color.B));
 
 						foreach (var face in geometry.Faces)
-							SubMeshes[i].Faces.Add(new Vector3(face.a, face.b, face.c));
+							SubMeshes[i].Faces.Add(new Face(face.a, face.b, face.c, new Vector3(face.Normal.X, face.Normal.Y, face.Normal.Z)));
 
 						foreach (var normal in geometry.Normals)
 							SubMeshes[i].Normals.Add(new Vector3(normal.X, normal.Y, normal.Z));
@@ -119,11 +119,27 @@ namespace Duality.Resources
 		public ContentRef<MeshPhongMaterial> Material;
 		public List<Vector3> Vertices;
 		public List<ColorRgba> Colors;
-		public List<Vector3> Faces;
+		public List<Face> Faces;
 		public List<Vector3> Normals;
 		public List<Vector2> Uvs;
 		//public List<Vector2> Uvs2;
 		//public List<Vector4> SkinIndices;
 		//public List<Vector4> SkinWeights;
+	}
+
+	[Serializable]
+	public class Face
+	{
+		public int a;
+		public int b;
+		public int c;
+		public Vector3 normal;
+		public Face(int a, int b, int c, Vector3 normal)
+		{
+			this.a = a;
+			this.b = b;
+			this.c = c;
+			this.normal = normal;
+		}
 	}
 }

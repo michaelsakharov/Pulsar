@@ -33,6 +33,7 @@ namespace Duality.Graphics.Components
 			if (Light != null)
 			{
 				Scene.ThreeScene.Remove(Light);
+				Scene.ThreeScene.Remove(Light.Target);
 				Light.Dispose();
 				Light = null;
 			}
@@ -51,14 +52,14 @@ namespace Duality.Graphics.Components
 		void UpdateLight()
 		{
 			Light.Position.Set(this.GameObj.Transform.Pos.X, this.GameObj.Transform.Pos.Y, this.GameObj.Transform.Pos.Z);
-			//Light.Rotation.Set(this.GameObj.Transform.Rotation.X, this.GameObj.Transform.Rotation.Y, this.GameObj.Transform.Rotation.Z, THREE.Math.RotationOrder.XYZ);
-			//Light.Scale.Set(this.GameObj.Transform.Scale.X, this.GameObj.Transform.Scale.Y, this.GameObj.Transform.Scale.Z);
+			Light.Rotation.Set(this.GameObj.Transform.Rotation.X, this.GameObj.Transform.Rotation.Y, this.GameObj.Transform.Rotation.Z, THREE.Math.RotationOrder.XYZ);
+			Light.Scale.Set(this.GameObj.Transform.Scale.X, this.GameObj.Transform.Scale.Y, this.GameObj.Transform.Scale.Z);
 
-			Light.Color = new THREE.Math.Color(Color.R, Color.G, Color.B);
+			Light.Color = new THREE.Math.Color(Color.R / 255, Color.G / 255, Color.B / 255);
 			Light.Intensity = Intensity;
 
-			//Vector3 forward = GameObj.Transform.Forward;
-			//Light.Target.Position.Set(this.GameObj.Transform.Pos.X + forward.X, this.GameObj.Transform.Pos.Y + forward.Y, this.GameObj.Transform.Pos.Z + forward.Z);
+			Vector3 forward = GameObj.Transform.Forward;
+			Light.Target.Position.Set(this.GameObj.Transform.Pos.X + forward.X, this.GameObj.Transform.Pos.Y + forward.Y, this.GameObj.Transform.Pos.Z + forward.Z);
 		}
 
 		void CreateLight()
@@ -66,34 +67,35 @@ namespace Duality.Graphics.Components
 			if(Light != null)
 			{
 				Scene.ThreeScene.Remove(Light);
+				Scene.ThreeScene.Remove(Light.Target);
 				Light.Dispose();
 				Light = null;
 			}
 
 			Light = new DirectionalLight(new Color().SetHex(0xffffff));
 
-			//Light.CastShadow = true;
-			//Light.Shadow.Camera.Near = 2;
-			//Light.Shadow.Camera.Far = 200;
-			//Light.Shadow.Camera.Fov = 50;
-			//(Light.Shadow.Camera as OrthographicCamera).Left = -100;
-			//(Light.Shadow.Camera as OrthographicCamera).CameraRight = 100;
-			//(Light.Shadow.Camera as OrthographicCamera).Top = 100;
-			//(Light.Shadow.Camera as OrthographicCamera).Bottom = -100;
-			//Light.Shadow.MapSize.Set(2048, 2048);
-
+			Light.CastShadow = true;
+			Light.Shadow.Camera.Near = 1;
+			Light.Shadow.Camera.Far = 1000;
+			Light.Shadow.Camera.Fov = 50;
+			(Light.Shadow.Camera as OrthographicCamera).Left = -50;
+			(Light.Shadow.Camera as OrthographicCamera).CameraRight = 50;
+			(Light.Shadow.Camera as OrthographicCamera).Top = 50;
+			(Light.Shadow.Camera as OrthographicCamera).Bottom = -50;
+			Light.Shadow.MapSize.Set(2048, 2048);
 
 			Light.Position.Set(this.GameObj.Transform.Pos.X, this.GameObj.Transform.Pos.Y, this.GameObj.Transform.Pos.Z);
-			//Light.Rotation.Set(this.GameObj.Transform.Rotation.X, this.GameObj.Transform.Rotation.Y, this.GameObj.Transform.Rotation.Z, THREE.Math.RotationOrder.XYZ);
-			//Light.Scale.Set(this.GameObj.Transform.Scale.X, this.GameObj.Transform.Scale.Y, this.GameObj.Transform.Scale.Z);
+			Light.Rotation.Set(this.GameObj.Transform.Rotation.X, this.GameObj.Transform.Rotation.Y, this.GameObj.Transform.Rotation.Z, THREE.Math.RotationOrder.YXZ);
+			Light.Scale.Set(this.GameObj.Transform.Scale.X, this.GameObj.Transform.Scale.Y, this.GameObj.Transform.Scale.Z);
 
-			Light.Color = new THREE.Math.Color(Color.R, Color.G, Color.B);
+			Light.Color = new THREE.Math.Color(Color.R / 255, Color.G / 255, Color.B / 255);
 			Light.Intensity = Intensity;
 
-			//Vector3 forward = GameObj.Transform.Forward;
-			//Light.Target.Position.Set(this.GameObj.Transform.Pos.X + forward.X, this.GameObj.Transform.Pos.Y + forward.Y, this.GameObj.Transform.Pos.Z + forward.Z);
+			Vector3 forward = GameObj.Transform.Forward;
+			Light.Target.Position.Set(this.GameObj.Transform.Pos.X + forward.X, this.GameObj.Transform.Pos.Y + forward.Y, this.GameObj.Transform.Pos.Z + forward.Z);
 
 			Scene.ThreeScene.Add(Light);
+			Scene.ThreeScene.Add(Light.Target);
 		}
 
 		void IDisposable.Dispose()
@@ -101,6 +103,7 @@ namespace Duality.Graphics.Components
 			if (Light != null)
 			{
 				Scene.ThreeScene.Remove(Light);
+				Scene.ThreeScene.Remove(Light.Target);
 				Light.Dispose();
 				Light = null;
 			}

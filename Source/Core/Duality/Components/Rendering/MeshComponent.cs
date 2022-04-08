@@ -71,10 +71,12 @@ namespace Duality.Graphics.Components
 				foreach (var submesh in threeMesh)
 				{
 					//submesh.Material = ((Material != null && Material.IsAvailable) ? Material.Res : MeshBasicMaterial.Default.Res).GetThreeMaterial();
-					submesh.Material = MeshPhongMaterial.Default.Res.GetThreeMaterial();
+					submesh.Material = MeshLambertMaterial.Default.Res.GetThreeMaterial();
 					submesh.Material.Color = new Color().SetHex(0x7777ff);
+					submesh.CastShadow = true;
+					submesh.ReceiveShadow = true;
 					submesh.Position.Set(this.GameObj.Transform.Pos.X, this.GameObj.Transform.Pos.Y, this.GameObj.Transform.Pos.Z);
-					submesh.Rotation.Set(this.GameObj.Transform.Rotation.X, this.GameObj.Transform.Rotation.Y, this.GameObj.Transform.Rotation.Z, THREE.Math.RotationOrder.XYZ);
+					submesh.Rotation.Set(this.GameObj.Transform.Rotation.X, this.GameObj.Transform.Rotation.Y, this.GameObj.Transform.Rotation.Z, THREE.Math.RotationOrder.YXZ);
 					submesh.Scale.Set(this.GameObj.Transform.Scale.X, this.GameObj.Transform.Scale.Y, this.GameObj.Transform.Scale.Z);
 				}
 			}
@@ -93,7 +95,7 @@ namespace Duality.Graphics.Components
 					geometry.Colors.Add(new THREE.Math.Color(color.R, color.G, color.B));
 
 				foreach (var face in submesh.Faces)
-					geometry.Faces.Add(new THREE.Core.Face3((int)face.X, (int)face.Y, (int)face.Z));
+					geometry.Faces.Add(new THREE.Core.Face3(face.a, face.b, face.c, new THREE.Math.Vector3(face.normal.X, face.normal.Y, face.normal.Z)));
 
 				foreach (var normal in submesh.Normals)
 					geometry.Normals.Add(new THREE.Math.Vector3(normal.X, normal.Y, normal.Z));
