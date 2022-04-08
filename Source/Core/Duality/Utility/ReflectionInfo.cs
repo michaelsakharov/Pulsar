@@ -33,11 +33,6 @@ namespace Duality
 
 		public static readonly PropertyInfo	Property_Resource_AssetInfo;
 
-		public static readonly PropertyInfo	Property_Pixmap_Atlas;
-
-		public static readonly PropertyInfo	Property_BatchInfo_Technique;
-		public static readonly PropertyInfo	Property_BatchInfo_MainColor;
-
 		public static readonly FieldInfo Field_Material_Info;
 
 
@@ -71,7 +66,7 @@ namespace Duality
 
 			// Retrieve FieldInfo data
 			Type material = typeof(Material);
-			Field_Material_Info	= GetField(material, "info");
+			//Field_Material_Info	= GetField(material, "info");
 		}
 		
 		private static PropertyInfo GetProperty(Type type, string name)

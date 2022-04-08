@@ -13,7 +13,7 @@ namespace Duality.Graphics.Components
 		[DontSerialize] protected bool _meshDirty = true; // Start Dirty
 		[DontSerialize] protected bool _inScene = false;
 
-		THREE.Objects.Mesh mesh;
+		[DontSerialize] THREE.Objects.Mesh mesh;
 
 		public ContentRef<Material> _material = null;
 		/// <summary>
@@ -29,7 +29,7 @@ namespace Duality.Graphics.Components
 		{
 			if (mesh == null)
 			{
-				mesh = new THREE.Objects.Mesh(new THREE.Geometries.BoxGeometry(1, 1, 1), Material.Res.GetThreeMaterial());
+				mesh = new THREE.Objects.Mesh(new THREE.Geometries.BoxGeometry(1, 1, 1), (Material != null && Material.IsAvailable) ? Material.Res.GetThreeMaterial() : MeshBasicMaterial.Default.Res.GetThreeMaterial());
 				_inScene = true;
 				Scene.ThreeScene.Add(mesh);
 			}
@@ -57,9 +57,12 @@ namespace Duality.Graphics.Components
 
 		void UpdateMeshObject()
 		{
-			mesh.Position.Set(this.GameObj.Transform.Pos.X, this.GameObj.Transform.Pos.Y, this.GameObj.Transform.Pos.Z);
-			mesh.Rotation.Set(this.GameObj.Transform.Rotation.X, this.GameObj.Transform.Rotation.Y, this.GameObj.Transform.Rotation.Z, THREE.Math.RotationOrder.XYZ);
-			mesh.Scale.Set(this.GameObj.Transform.Scale.X, this.GameObj.Transform.Scale.Y, this.GameObj.Transform.Scale.Z);
+			if (mesh != null && GameObj.Transform != null)
+			{
+				mesh.Position.Set(this.GameObj.Transform.Pos.X, this.GameObj.Transform.Pos.Y, this.GameObj.Transform.Pos.Z);
+				mesh.Rotation.Set(this.GameObj.Transform.Rotation.X, this.GameObj.Transform.Rotation.Y, this.GameObj.Transform.Rotation.Z, THREE.Math.RotationOrder.XYZ);
+				mesh.Scale.Set(this.GameObj.Transform.Scale.X, this.GameObj.Transform.Scale.Y, this.GameObj.Transform.Scale.Z);
+			}
 		}
 
 		void IDisposable.Dispose()

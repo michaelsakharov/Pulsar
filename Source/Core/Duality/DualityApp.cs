@@ -20,6 +20,7 @@ using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using System.Runtime.InteropServices;
 using System.Diagnostics;
+using THREE.Math;
 
 namespace Duality
 {
@@ -621,8 +622,12 @@ namespace Duality
 
 		public static void Render()
 		{
-
-			DualityApp.GraphicsBackend.Render(Scene.ThreeScene, Scene.Camera.GetTHREECamera());
+			if (Scene.Camera != null)
+			{
+				//Scene.ThreeScene.Background = Color.Hex(0xffffff);
+				//GraphicsBackend.SetClearColor(new Color().SetHex(0x000000));
+				DualityApp.GraphicsBackend.Render(Scene.ThreeScene, Scene.Camera.GetTHREECamera());
+			}
 
 		}
 
