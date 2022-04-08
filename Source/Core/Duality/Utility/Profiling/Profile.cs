@@ -266,19 +266,17 @@ namespace Duality
 					
 				if (options.HasFlag(ProfileReportOptions.GroupHeader))
 				{
-					reportBuilder.Append(options.HasFlag(ProfileReportOptions.FormattedText) ? FormattedText.FormatNewline : Environment.NewLine);
+					reportBuilder.Append(Environment.NewLine);
 					reportBuilder.AppendLine(("[ " + pair.Key.Name + " ]").PadLeft(35, '-').PadRight(50,'-'));
-					reportBuilder.Append(options.HasFlag(ProfileReportOptions.FormattedText) ? FormattedText.FormatNewline : Environment.NewLine);
+					reportBuilder.Append(Environment.NewLine);
 				}
 				else if (reportBuilder.Length > 0)
 				{
-					reportBuilder.Append(options.HasFlag(ProfileReportOptions.FormattedText) ? FormattedText.FormatNewline : Environment.NewLine);
+					reportBuilder.Append(Environment.NewLine);
 				}
 
 				if (options.HasFlag(ProfileReportOptions.Header))
 				{
-					if (options.HasFlag(ProfileReportOptions.FormattedText))
-						reportBuilder.Append(FormattedText.FormatColor(ColorRgba.White.WithAlpha(0.5f)));
 
 					reportBuilder.Append("Name");
 					reportBuilder.Append(' ', 1 + Math.Max((1 + maxNameLen) - "Name".Length, 0));
@@ -294,10 +292,7 @@ namespace Duality
 					if (options.HasFlag(ProfileReportOptions.SampleCount))
 						reportBuilder.Append("        Samples ");
 
-					reportBuilder.Append(options.HasFlag(ProfileReportOptions.FormattedText) ? FormattedText.FormatNewline : Environment.NewLine);
-
-					if (options.HasFlag(ProfileReportOptions.FormattedText))
-						reportBuilder.Append(FormattedText.FormatColor(ColorRgba.White));
+					reportBuilder.Append(Environment.NewLine);
 				}
 				Stack<ProfileCounter> appendStack = new Stack<ProfileCounter>(rootCounters.Reverse());
 				while (appendStack.Count > 0)
@@ -309,14 +304,6 @@ namespace Duality
 					if (omitMinor && data.Severity <= 0.005f)
 						continue;
 					
-					if (options.HasFlag(ProfileReportOptions.FormattedText))
-					{
-						float severity = data.Severity;
-						ColorRgba lineColor = severity >= 0.5f ? 
-							ColorRgba.Lerp(ColorRgba.White, ColorRgba.Red, 2.0f * (severity - 0.5f)) :
-							ColorRgba.Lerp(ColorRgba.TransparentWhite, ColorRgba.White, 0.1f + 0.9f * (2.0f * severity));
-						reportBuilder.Append(FormattedText.FormatColor(lineColor));
-					}
 					reportBuilder.Append(' ', current.ParentDepth * 2);
 					reportBuilder.Append(current.DisplayName);
 					reportBuilder.Append(':');
@@ -357,15 +344,11 @@ namespace Duality
 						reportBuilder.Append(valStr);
 						reportBuilder.Append(' ');
 					}
-					reportBuilder.Append(options.HasFlag(ProfileReportOptions.FormattedText) ? FormattedText.FormatNewline : Environment.NewLine);
+					reportBuilder.Append(Environment.NewLine);
 
 					IEnumerable<ProfileCounter> childCounters = counters.Where(c => c.Parent == current);
 					foreach (ProfileCounter child in childCounters.Reverse())
 						appendStack.Push(child);
-				}
-				if (options.HasFlag(ProfileReportOptions.FormattedText))
-				{
-					reportBuilder.Append(FormattedText.FormatColor(ColorRgba.White));
 				}
 			}
 

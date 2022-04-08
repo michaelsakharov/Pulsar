@@ -61,10 +61,6 @@ namespace Duality.Editor.Plugins.CamView
 		{
 			get { return this.view.EditingUserGuides; }
 		}
-		internal NativeRenderableSite RenderableSite
-		{
-			get { return this.view == null ? null : this.view.RenderableSite; }
-		}
 		internal Control RenderableControl
 		{
 			get { return this.view == null ? null : this.view.RenderableControl; }

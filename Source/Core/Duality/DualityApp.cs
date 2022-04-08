@@ -95,9 +95,6 @@ namespace Duality
 		private static ExecutionContext         execContext        = ExecutionContext.Terminated;
 		private static List<object>             disposeSchedule    = new List<object>();
 
-		private static DebugProc _debugProcCallback = DebugCallback;
-		private static GCHandle _debugProcCallbackHandle;
-
 		public static float ResolutionScale { get; set; }
 		public static bool CursorVisible { get; set; } = true;
 
@@ -361,22 +358,31 @@ namespace Duality
 		/// Opens up a window for Duality to render into. This also initializes the part of Duality that requires a 
 		/// valid rendering context. Should be called before performing any rendering related operations with Duality.
 		/// </summary>
-		public static THREE.Renderers.GLRenderer OpenRenderer(GLControl control)
+		public static OpenTK.GameWindow OpenWindow(int width, int height)
 		{
 			if (!initialized) throw new InvalidOperationException("Can't initialize graphics / rendering because Duality itself isn't initialized yet.");
 
 			Logs.Core.Write("Initializing GL Renderer...");
 			Logs.Core.PushIndent();
 
+			var graphicsMode = new GraphicsMode(new ColorFormat(32), 24, 0, 0);
+			var window = new OpenTK.GameWindow(width, height, graphicsMode, "Game Window", GameWindowFlags.Default, DisplayDevice.Default)
+			{
+				Visible = true,
+				CursorVisible = CursorVisible
+			};
+
 			graphicsBack = new THREE.Renderers.GLRenderer();
-			graphicsBack.glControl = control;
+			graphicsBack.Context = window.Context;
+			graphicsBack.Width = width;
+			graphicsBack.Height = height;
 			graphicsBack.Init();
 
 			Logs.Core.PopIndent();
 
 			InitPostWindow();
 
-			return graphicsBack;
+			return window;
 		}
 		/// <summary>
 		/// Initializes the part of Duality that requires a valid rendering context. 
@@ -386,13 +392,6 @@ namespace Duality
 		public static void InitPostWindow()
 		{
 			DefaultContent.Init();
-
-			// OpenGL Error Handling
-			_debugProcCallbackHandle = GCHandle.Alloc(_debugProcCallback);
-
-			GL.DebugMessageCallback(_debugProcCallback, IntPtr.Zero);
-			GL.Enable(EnableCap.DebugOutput);
-			GL.Enable(EnableCap.DebugOutputSynchronous);
 
 			// Post-Window init is the last thing that happens before loading game
 			// content and entering simulation. When done in a game context, notify
@@ -620,14 +619,11 @@ namespace Duality
 			if (terminateScheduled) Terminate();
 		}
 
-		private static void DebugCallback(DebugSource source, DebugType type, int id, DebugSeverity severity, int length, IntPtr message, IntPtr userParam)
+		public static void Render()
 		{
-			string messageString = Marshal.PtrToStringAnsi(message, length);
 
-			Logs.Core.Write($"OpenGL Error: {severity} {type} | {messageString}");
+			DualityApp.GraphicsBackend.Render(Scene.ThreeScene, Scene.Camera.GetTHREECamera());
 
-			if (type == DebugType.DebugTypeError)
-				throw new Exception(messageString);
 		}
 
 		public static void Resize(int width, int height)
@@ -635,6 +631,8 @@ namespace Duality
 			DualityApp.WindowSize = new Point2(width, height);
 
 			// Destroy the current Rendering system
+			GraphicsBackend.Width = width;
+			GraphicsBackend.Height = height;
 			GraphicsBackend.Resize(width, height);
 		}
 
@@ -906,7 +904,6 @@ namespace Duality
 		private static void pluginManager_PluginsRemoved(object sender, DualityPluginEventArgs e)
 		{
 			// Clean globally cached type data
-			ImageCodec.ClearTypeCache();
 			ObjectCreator.ClearTypeCache();
 			ReflectionHelper.ClearTypeCache();
 			Component.RequireMap.ClearTypeCache();

@@ -18,7 +18,7 @@ using Duality.Editor.UndoRedoActions;
 using Duality.Editor.AssetManagement;
 
 using Duality.Launcher;
-using Duality.Renderer;
+using THREE.Renderers;
 
 namespace Duality.Editor
 {
@@ -184,9 +184,6 @@ namespace Duality.Editor
 			
 			// Need to load editor plugins before initializing the graphics context, so the backend is available
 			pluginManager.LoadPlugins();
-
-			// Need to initialize graphics context and default content before instantiating anything that could require any of them
-			InitMainGraphicsContext();
 
 			DualityApp.InitPostWindow();
 
@@ -378,51 +375,6 @@ namespace Duality.Editor
 					a.SubjectType.IsAssignableFrom(subjectType) && 
 					a.MatchesContext(context));
 			}
-		}
-
-		private static void InitMainGraphicsContext()
-		{
-			if (mainGraphicsContext != null) return;
-
-			//graphicsBack = new Duality.Graphics.Backend(window.Width, window.Height, ctx);
-			if (graphicsBack == null)
-				DualityApp.InitBackend(out graphicsBack, GetAvailDualityEditorTypes);
-
-			Logs.Editor.Write("Creating editor graphics context...");
-			Logs.Editor.PushIndent();
-			try
-			{
-				// Currently bound to game-specific settings. Should be decoupled
-				// from them at some point, so the editor can use independent settings.
-				mainGraphicsContext = graphicsBack.CreateContext(
-					DualityApp.AppData.Instance.MultisampleBackBuffer ?
-					DualityApp.UserData.Instance.AntialiasingQuality :
-					AAQuality.Off);
-
-				var ctx = new ContextReference
-				{
-					Context = mainGraphicsContext.GLContext,
-					SwapBuffers = mainGraphicsContext.GLContext.SwapBuffers
-				};
-
-				DualityApp.GraphicsBackend = new Duality.Graphics.Backend(512, 512, ctx);
-			}
-			catch (Exception e)
-			{
-				mainGraphicsContext = null;
-				Logs.Editor.WriteError("Can't create editor graphics context, because an error occurred: {0}", LogFormat.Exception(e));
-			}
-			Logs.Editor.PopIndent();
-		}
-		public static void PerformBufferSwap()
-		{
-			if (mainGraphicsContext == null) return;
-			mainGraphicsContext.PerformBufferSwap();
-		}
-		public static NativeRenderableSite CreateRenderableSite()
-		{
-			if (mainGraphicsContext == null) return null;
-			return mainGraphicsContext.CreateRenderableSite();
 		}
 
 		public static void UpdateGameObject(GameObject obj)
@@ -928,9 +880,6 @@ namespace Duality.Editor
 					}
 					OnUpdatingEngine();
 				}
-				
-				// Perform a buffer swap
-				PerformBufferSwap();
 
 				// Give the processor a rest if we have the time, don't use 100% CPU
 				while (watch.Elapsed.TotalSeconds < 0.01d)

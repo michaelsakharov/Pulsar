@@ -16,7 +16,6 @@ using Duality.Drawing;
 
 using Duality.Editor.Controls.ToolStrip;
 using Duality.Editor.Plugins.CamView.Properties;
-using Duality.Graphics.Pipelines;
 
 namespace Duality.Editor.Plugins.CamView.CamViewStates
 {
@@ -58,7 +57,6 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 		private SpecialRenderSize targetRenderSizeMode    = SpecialRenderSize.CamView;
 		private List<Point2>      recentTargetRenderSizes = new List<Point2>();
 		private bool              isUpdatingUI            = false;
-		private Texture           outputTexture           = null;
 
 
 		/// <inheritdoc />
@@ -164,18 +162,6 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 				return 
 					this.targetRenderSize.X <= this.RenderableControl.ClientSize.Width &&
 					this.targetRenderSize.Y <= this.RenderableControl.ClientSize.Height;
-			}
-		}
-		/// <summary>
-		/// [GET] Whether an offscreen buffer should be used for rendering the game.
-		/// </summary>
-		private bool UseOffscreenBuffer
-		{
-			get
-			{
-				return 
-					!this.TargetSizeFitsClientArea || 
-					this.RenderableSite.AntialiasingQuality != this.GameAntialiasingQuality;
 			}
 		}
 		/// <summary>
@@ -555,23 +541,11 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 				}
 				else
 				{
-					if (deferredPipeline == null)
-						deferredPipeline = new DeferredPipeline(TargetRenderSize.X, TargetRenderSize.Y);
-					// the Game View could have a differant viewport then whatever the DUalityApp is using, so assign a custom one to the Camera but keep track of if it already had a custom one
-					// this needs to be improved if we want to properly support multiple cameras
-					camera.useCustomViewPort = true;
-					var previousViewPort = camera.CustomViewport;
-					camera.CustomViewport = viewportRect;
-
-					deferredPipeline.RenderStage(Time.DeltaTime, Scene.Stage, camera);
-
-					camera.useCustomViewPort = false;
-					camera.CustomViewport = previousViewPort;
+					DualityApp.GraphicsBackend.Render(Scene.ThreeScene, camera.GetTHREECamera());
 				}
 			}
 		}
 
-		private static DeferredPipeline deferredPipeline;
 		/// <inheritdoc />
 		protected override void OnResize()
 		{

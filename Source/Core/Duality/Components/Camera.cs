@@ -297,6 +297,20 @@ namespace Duality.Components
 			return Frustum;
 		}
 
+		public THREE.Cameras.Camera GetTHREECamera()
+		{
+			THREE.Cameras.Camera camera = new THREE.Cameras.Camera();
+			camera.Fov = FieldOfView;
+			camera.Aspect = DualityApp.GraphicsBackend.AspectRatio;
+			camera.Near = NearZ;
+			camera.Far = FarZ;
+			camera.Position.X = this.GameObj.Transform.Pos.X;
+			camera.Position.Y = this.GameObj.Transform.Pos.Y;
+			camera.Position.Z = this.GameObj.Transform.Pos.Z;
+			camera.Rotation.Set(this.GameObj.Transform.Rotation.X, this.GameObj.Transform.Rotation.Y, this.GameObj.Transform.Rotation.Z, THREE.Math.RotationOrder.XYZ);
+			return camera;
+		}
+
 		void ICmpInitializable.OnActivate()
 		{
 			if(DualityApp.ExecContext == DualityApp.ExecutionContext.Game)

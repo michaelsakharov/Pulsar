@@ -80,6 +80,9 @@
 		<Reference Include="Microsoft.Build" />
 		<Reference Include="System.IO.Compression" />
 		<Reference Include="System.Windows.Forms" />
+		<Reference Include="THREE">
+		  <HintPath>..\..\Dependencies\THREE.dll</HintPath>
+		</Reference>
 		<Reference Include="VistaBridgeLibrary">
 			<HintPath>VistaBridgeLibrary.dll</HintPath>
 		</Reference>

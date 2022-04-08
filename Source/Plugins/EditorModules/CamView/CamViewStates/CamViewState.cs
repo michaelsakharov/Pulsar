@@ -15,7 +15,7 @@ using Duality.Editor.Forms;
 using Duality.Editor.Plugins.CamView.CamViewLayers;
 using Duality.Editor.Plugins.CamView.Properties;
 using Duality.Editor.Plugins.CamView.UndoRedoActions;
-using Duality.Graphics.Pipelines;
+using OpenTK;
 
 namespace Duality.Editor.Plugins.CamView.CamViewStates
 {
@@ -41,9 +41,6 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 			DragScene,
 		}
 
-
-		private static readonly ContentRef<Duality.Resources.Font> OverlayFont = Duality.Resources.Font.GenericMonospace8;
-
 		private Vector3       camVel                 = Vector3.Zero;
 		private Point         camActionBeginLoc      = Point.Empty;
 		private Vector3       camActionBeginLocSpace = Vector3.Zero;
@@ -54,8 +51,6 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 		private bool          engineUserInput        = false;
 		private UserGuideType snapToUserGuides       = UserGuideType.All;
 		private bool          mouseover              = false;
-		private FormattedText statusText             = new FormattedText();
-		private FormattedText actionText             = new FormattedText();
 		private List<Type>    lastActiveLayers       = new List<Type>();
 		private List<string>  lastObjVisibility      = new List<string>();
 		private TimeSpan      renderedGameTime       = TimeSpan.MinValue;
@@ -136,14 +131,6 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 			get { return this.snapToUserGuides; }
 			protected set { this.snapToUserGuides = value; }
 		}
-		public string StatusText
-		{
-			get { return this.statusText.SourceText; }
-		}
-		public string ActionText
-		{
-			get { return this.actionText.SourceText; }
-		}
 
 
 		/// <summary>
@@ -155,7 +142,7 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 			this.RestoreActiveLayers();
 			this.RestoreObjectVisibility();
 
-			Control control = this.RenderableSite.Control;
+			Control control = this.RenderableControl;
 			control.Paint		+= this.RenderableControl_Paint;
 			control.MouseDown	+= this.RenderableControl_MouseDown;
 			control.MouseUp		+= this.RenderableControl_MouseUp;
@@ -187,7 +174,6 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 			if (Scene.Current != null) this.Scene_Changed(this, EventArgs.Empty);
 			
 			this.OnCurrentCameraChanged(new CamView.CameraChangedEventArgs(null, this.CameraComponent));
-			this.UpdateFormattedTextRenderers();
 
 			if (this.IsViewVisible)
 				this.OnShown();
@@ -203,7 +189,7 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 
 			this.Cursor = CursorHelper.Arrow;
 
-			Control control = this.RenderableSite.Control;
+			Control control = this.RenderableControl;
 			control.Paint		-= this.RenderableControl_Paint;
 			control.MouseDown	-= this.RenderableControl_MouseDown;
 			control.MouseUp		-= this.RenderableControl_MouseUp;
@@ -319,10 +305,6 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 			// Gather general data
 			Point cursorPos = this.PointToClient(Cursor.Position);
 
-			// Update action text from hovered / selection / action object
-			Vector2 actionTextPos = new Vector2(cursorPos.X + 30, cursorPos.Y + 10);
-			this.actionText.SourceText = this.UpdateActionText(ref actionTextPos);
-
 			// Collect the views overlay layer drawcalls
 			this.CollectLayerOverlayDrawcalls();
 
@@ -349,22 +331,6 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 			//		}
 			//		canvas.PopState();
 			//	}
-			//
-			//	// Draw current action text
-			//	if (!this.actionText.IsEmpty)
-			//	{
-			//		canvas.DrawText(this.actionText, actionTextPos.X, actionTextPos.Y, drawBackground: true);
-			//	}
-			//
-			//	// Update / Draw current status text
-			//	{
-			//		this.statusText.SourceText = this.UpdateStatusText();
-			//		if (!this.statusText.IsEmpty)
-			//		{
-			//			Vector2 statusTextSize = this.statusText.Size;
-			//			canvas.DrawText(this.statusText, 10, this.ClientSize.Height - statusTextSize.Y - 10, drawBackground: true);
-			//		}
-			//	}
 			//}
 			//canvas.PopState();
 			//
@@ -383,33 +349,13 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 			// Collect the views overlay layer drawcalls
 			this.CollectLayerBackgroundDrawcalls();
 		}
-		protected virtual string UpdateStatusText()
-		{
-			// Draw camera action hints
-			if (this.camAction != CameraAction.None)
-			{
-				return
-					string.Format("Cam X:{0,7:0}/n", this.CameraObj.Transform.Pos.X) +
-					string.Format("Cam Y:{0,7:0}/n", this.CameraObj.Transform.Pos.Y) +
-					string.Format("Cam Z:{0,7:0}", this.CameraObj.Transform.Pos.Z);
-			}
-
-			// Unhandled
-			return null;
-		}
-		protected virtual string UpdateActionText(ref Vector2 actionTextPos)
-		{
-			return null;
-		}
 
 		protected virtual void OnRenderState()
 		{
 			// Render here!
-			CameraComponent.useCustomViewPort = false;
-			deferredPipeline.RenderStage(Time.DeltaTime, Scene.Stage, CameraComponent);
+			DualityApp.GraphicsBackend.Render(Scene.ThreeScene, CameraComponent.GetTHREECamera());
 		}
 
-		private static DeferredPipeline deferredPipeline;
 		private float _currentYaw = 0.3f;
 		private float _currentPitch = 0.3f;
 
@@ -631,15 +577,6 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 			}
 		}
 
-		private void UpdateFormattedTextRenderers()
-		{
-			this.statusText.MaxWidth = this.ClientSize.Width - 20;
-			this.statusText.MaxHeight = this.ClientSize.Height - 20;
-			this.statusText.Fonts = new [] { OverlayFont };
-			this.actionText.MaxWidth = MathF.Min(500, this.ClientSize.Width / 2);
-			this.actionText.MaxHeight = MathF.Min(500, this.ClientSize.Height / 2);
-			this.actionText.Fonts = new [] { OverlayFont };
-		}
 		private void ForceDragDropRenderUpdate()
 		{
 			// There is no event loop while performing a dragdrop operation, so we'll have to do
@@ -647,7 +584,6 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 
 			// Force immediate buffer swap and continuous repaint
 			this.renderFrameLast = 0;
-			DualityEditorApp.PerformBufferSwap();
 		}
 		
 
@@ -673,12 +609,8 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 			this.renderFrameLast = Time.FrameCount;
 			this.renderedGameTime = Time.GameTimer;
 
-
-			if (deferredPipeline == null)
-				deferredPipeline = new DeferredPipeline(RenderableControl.Width, RenderableControl.Height);
 			// Retrieve OpenGL context
-			//try { this.RenderableSite.MakeCurrent(); } catch (Exception) { return; }
-			DualityApp.GraphicsBackend.ChangeGLContext(RenderableSite.Control.Context, RenderableSite.Control.WindowInfo);
+			DualityApp.GraphicsBackend.SetGraphicsContext((View.RenderableControl as GLControl).Context, View.RenderableControl.Width, View.RenderableControl.Height);
 
 			// Perform rendering
 			try
@@ -691,7 +623,7 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 			}
 			
 			// Make sure the rendered result ends up on screen
-			this.RenderableSite.SwapBuffers();
+			(this.RenderableControl as GLControl).SwapBuffers();
 		}
 		private void RenderableControl_MouseMove(object sender, MouseEventArgs e)
 		{
@@ -928,10 +860,7 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 		{
 			if (this.ClientSize == Size.Empty) return;
 
-			if(deferredPipeline != null)
-				deferredPipeline.Resize(ClientSize.Width, ClientSize.Height);
-
-			this.UpdateFormattedTextRenderers();
+			DualityApp.Resize(ClientSize.Width, ClientSize.Height);
 			this.OnResize();
 		}
 		private void View_FocusDistChanged(object sender, EventArgs e)

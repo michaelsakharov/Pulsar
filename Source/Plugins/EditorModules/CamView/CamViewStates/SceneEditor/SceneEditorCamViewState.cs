@@ -362,7 +362,7 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 		}
 		private void ClearContextMenu()
 		{
-			if (this.RenderableSite == null || this.RenderableControl.ContextMenu == null)
+			if (this.RenderableControl == null || this.RenderableControl.ContextMenu == null)
 				return;
 
 			this.RenderableControl.ContextMenu.MenuItems.Clear();

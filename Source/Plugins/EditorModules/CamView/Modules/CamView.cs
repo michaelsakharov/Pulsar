@@ -33,6 +33,8 @@ using Key = Duality.Input.Key;
 using MouseButton = Duality.Input.MouseButton;
 using MouseEventArgs = System.Windows.Forms.MouseEventArgs;
 using Duality.Editor.Backend;
+using OpenTK;
+using THREE.Renderers;
 
 namespace Duality.Editor.Plugins.CamView
 {
@@ -162,7 +164,7 @@ namespace Duality.Editor.Plugins.CamView
 
 		private	int						runtimeId					= 0;
 		private	bool					isHiddenDocument			= false;
-		private	NativeRenderableSite	graphicsControl				= null;
+		private	GLControl				graphicsControl				= null;
 		private	GameObject				camObj						= null;
 		private	Camera					camComp						= null;
 		private	CamViewState			activeState					= null;
@@ -250,13 +252,9 @@ namespace Duality.Editor.Plugins.CamView
 		{
 			get { return this.camObj; }
 		}
-		public NativeRenderableSite RenderableSite
-		{
-			get { return this.graphicsControl; }
-		}
 		public Control RenderableControl
 		{
-			get { return this.graphicsControl != null ? this.graphicsControl.Control : null; }
+			get { return this.graphicsControl != null ? this.graphicsControl : null; }
 		}
 		public ToolStrip ToolbarCamera
 		{
@@ -333,14 +331,8 @@ namespace Duality.Editor.Plugins.CamView
 			this.SetCurrentCamera(null);
 
 			// Initialize PerspectiveMode Selector
-			FieldInfo[] perspectiveModeFields = typeof(ProjectionMode).GetTypeInfo().GetRuntimeFields().ToArray();
-			foreach (string perspectiveName in Enum.GetNames(typeof(ProjectionMode)))
-			{
-				ToolStripMenuItem perspectiveItem = new ToolStripMenuItem(perspectiveName);
-				var perspectiveField = perspectiveModeFields.FirstOrDefault(m => m.Name == perspectiveName);
-				perspectiveItem.Tag = HelpInfo.FromMember(perspectiveField);
-				this.perspectiveDropDown.DropDownItems.Add(perspectiveItem);
-			}
+			this.perspectiveDropDown.DropDownItems.Add("Perspective");
+			this.perspectiveDropDown.DropDownItems.Add("Orthographic");
 
 			// Initialize from loaded state id, if not done yet manually
 			if (this.activeState == null)
@@ -467,7 +459,7 @@ namespace Duality.Editor.Plugins.CamView
 			// Get rid of a possibly existing old glControl
 			if (this.graphicsControl != null)
 			{
-				Control oldControl = this.graphicsControl.Control;
+				GLControl oldControl = this.graphicsControl;
 
 				oldControl.MouseEnter		-= this.graphicsControl_MouseEnter;
 				oldControl.MouseLeave		-= this.graphicsControl_MouseLeave;
@@ -488,8 +480,13 @@ namespace Duality.Editor.Plugins.CamView
 			}
 
 			// Create a new glControl
-			this.graphicsControl = DualityEditorApp.CreateRenderableSite();
-			Control control = this.graphicsControl.Control;
+			this.graphicsControl = new GLControl(OpenTK.Graphics.GraphicsMode.Default);
+			GLControl control = this.graphicsControl;
+
+			if (DualityApp.GraphicsBackend == null)
+			{
+				DualityApp.GraphicsBackend = new GLRenderer(control.Context, 800, 600);
+			}
 
 			control.BackColor = Color.Black;
 			control.Dock = DockStyle.Fill;
@@ -836,7 +833,7 @@ namespace Duality.Editor.Plugins.CamView
 
 			if (nativeCamera != null)
 			{
-				node.SetElementValue("Perspective", nativeCamera.Orthographic ? ProjectionMode.Orthographic : ProjectionMode.Perspective);
+				node.SetElementValue("Perspective", nativeCamera.Orthographic ? "Orthographic" : "Perspective");
 				//XElement bgColorElement = new XElement("BackgroundColor");
 				//{
 				//	bgColorElement.SetElementValue("R", nativeCamera.ClearColor.R);
@@ -1014,13 +1011,13 @@ namespace Duality.Editor.Plugins.CamView
 		
 		private void InstallFocusHook()
 		{
-			if (this.graphicsControl.Control.Focused) return;
+			if (this.graphicsControl.Focused) return;
 
 			// Hook global message filter
 			if (this.globalInputFilter == null)
 			{
 				this.globalInputFilter = new InputEventMessageRedirector(
-					this.graphicsControl.Control, 
+					this.graphicsControl, 
 					this.FocusHookFilter, 
 					InputEventMessageRedirector.MessageType.MouseWheel,
 					InputEventMessageRedirector.MessageType.KeyDown);
@@ -1222,8 +1219,8 @@ namespace Duality.Editor.Plugins.CamView
 			if (this.IsDualityTarget && this.activeState != null)
 			{
 				DualityApp.WindowSize = this.activeState.RenderedImageSize;
+				DualityApp.GraphicsBackend.Resize(this.activeState.RenderedImageSize.X, this.activeState.RenderedImageSize.Y);
 			}
-			DualityApp.GraphicsBackend.Resize(RenderableSite.Control.Width, RenderableSite.Control.Height);
 
 			this.RenderableControl.Invalidate();
 		}
@@ -1454,12 +1451,8 @@ namespace Duality.Editor.Plugins.CamView
 		}
 		private void perspectiveDropDown_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
 		{
-			ProjectionMode perspective;
-			if (Enum.TryParse(e.ClickedItem.Text, out perspective))
-			{
-				this.camComp.Orthographic = perspective == ProjectionMode.Orthographic;
-				this.OnPerspectiveChanged();
-			}
+			this.camComp.Orthographic = e.ClickedItem.Text == "Orthographic";
+			this.OnPerspectiveChanged();
 		}
 
 		HelpInfo IHelpProvider.ProvideHoverHelp(Point localPos, ref bool captured)
