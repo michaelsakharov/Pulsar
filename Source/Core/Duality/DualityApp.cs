@@ -635,6 +635,8 @@ namespace Duality
 		{
 			DualityApp.WindowSize = new Point2(width, height);
 
+			GL.Viewport(0, 0, width, height);
+
 			// Destroy the current Rendering system
 			GraphicsBackend.Width = width;
 			GraphicsBackend.Height = height;

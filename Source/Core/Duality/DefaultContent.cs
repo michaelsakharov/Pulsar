@@ -38,6 +38,16 @@ namespace Duality
 			LineBasicMaterial.InitDefaultContent();
 			LineDashedMaterial.InitDefaultContent();
 			MeshBasicMaterial.InitDefaultContent();
+			MeshDepthMaterial.InitDefaultContent();
+			MeshDistanceMaterial.InitDefaultContent();
+			MeshFaceMaterial.InitDefaultContent();
+			MeshLambertMaterial.InitDefaultContent();
+			MeshMatcapMaterial.InitDefaultContent();
+			MeshNormalMaterial.InitDefaultContent();
+			MeshPhongMaterial.InitDefaultContent();
+			MeshPhysicalMaterial.InitDefaultContent();
+			MeshStandardMaterial.InitDefaultContent();
+			MeshToonMaterial.InitDefaultContent();
 
 			//Font.InitDefaultContent();
 			AudioData.InitDefaultContent();

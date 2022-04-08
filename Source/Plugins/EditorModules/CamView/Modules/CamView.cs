@@ -486,6 +486,7 @@ namespace Duality.Editor.Plugins.CamView
 			if (DualityApp.GraphicsBackend == null)
 			{
 				DualityApp.GraphicsBackend = new GLRenderer(control.Context, 800, 600);
+				DualityApp.GraphicsBackend.Init();
 			}
 
 			control.BackColor = Color.Black;
