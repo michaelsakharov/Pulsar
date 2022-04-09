@@ -38,6 +38,7 @@ namespace Duality.Resources
 		public override THREE.Materials.Material GetThreeMaterial()
 		{
 			var mat = new THREE.Materials.MeshDistanceMaterial();
+			base.SetupBaseMaterialSettings(mat);
 			mat.ReferencePosition = new THREE.Math.Vector3(ReferencePosition.X, ReferencePosition.Y, ReferencePosition.Z);
 			mat.NearDistance = NearDistance;
 			mat.FarDistance = FarDistance;

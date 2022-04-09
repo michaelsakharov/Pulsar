@@ -29,6 +29,7 @@ namespace Duality.Resources
 		public override THREE.Materials.Material GetThreeMaterial()
 		{
 			var mat = new THREE.Materials.MeshBasicMaterial();
+			base.SetupBaseMaterialSettings(mat);
 			return mat;
 		}
 
