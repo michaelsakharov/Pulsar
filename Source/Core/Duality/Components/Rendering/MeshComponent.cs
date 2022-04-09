@@ -26,6 +26,26 @@ namespace Duality.Graphics.Components
 			set { this._mesh = value; }
 		}
 
+		public ContentRef<Material> _defaultMaterial = MeshPhongMaterial.Default.As<Material>();
+		/// <summary>
+		/// [GET / SET] The <see cref="Material"/> used by default if no material is assign from the Materials variable.
+		/// </summary>
+		public ContentRef<Material> DefaultMaterial
+		{
+			get { return this._defaultMaterial; }
+			set { this._defaultMaterial = value; }
+		}
+
+		public ContentRef<Material>[] _materials = null;
+		/// <summary>
+		/// [GET / SET] The <see cref="Material"/>'s used to render each mesh
+		/// </summary>
+		public ContentRef<Material>[] Materials
+		{
+			get { return this._materials; }
+			set { this._materials = value; }
+		}
+
 		void ICmpInitializable.OnActivate()
 		{
 			if (threeMesh == null && Mesh.IsAvailable)
@@ -68,16 +88,30 @@ namespace Duality.Graphics.Components
 
 			if (threeMesh != null && GameObj.Transform != null && Mesh.IsAvailable)
 			{
+				int matID = 1;
 				foreach (var submesh in threeMesh)
 				{
-					//submesh.Material = ((Material != null && Material.IsAvailable) ? Material.Res : MeshBasicMaterial.Default.Res).GetThreeMaterial();
-					submesh.Material = MeshPhongMaterial.Default.Res.GetThreeMaterial();
-					submesh.Material.Color = new Color().SetHex(0x7777ff);
+					if(Materials != null && Materials.Count() >= matID)
+					{
+						if (Materials[matID] != null && Materials[matID].IsAvailable)
+						{
+							submesh.Material = Materials[matID].Res.GetThreeMaterial();
+						}
+						else
+						{
+							submesh.Material = ((DefaultMaterial != null && DefaultMaterial.IsAvailable) ? DefaultMaterial.Res : MeshBasicMaterial.Default.Res).GetThreeMaterial();
+						}
+					}
+					else
+					{
+						submesh.Material = ((DefaultMaterial != null && DefaultMaterial.IsAvailable) ? DefaultMaterial.Res : MeshBasicMaterial.Default.Res).GetThreeMaterial();
+					}
 					submesh.CastShadow = true;
 					submesh.ReceiveShadow = true;
 					submesh.Position.Set(this.GameObj.Transform.Pos.X, this.GameObj.Transform.Pos.Y, this.GameObj.Transform.Pos.Z);
 					submesh.Rotation.Set(this.GameObj.Transform.Rotation.X, this.GameObj.Transform.Rotation.Y, this.GameObj.Transform.Rotation.Z, THREE.Math.RotationOrder.YXZ);
 					submesh.Scale.Set(this.GameObj.Transform.Scale.X, this.GameObj.Transform.Scale.Y, this.GameObj.Transform.Scale.Z);
+					matID++;
 				}
 			}
 		}
