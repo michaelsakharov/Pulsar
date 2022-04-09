@@ -4,11 +4,17 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
+using Duality.Components;
+using Duality.Editor;
+using Duality.Properties;
 using Duality.Resources;
 using THREE.Math;
 
 namespace Duality.Graphics.Components
 {
+	[RequiredComponent(typeof(Transform))]
+	[EditorHintCategory(CoreResNames.CategoryGraphics)]
+	[EditorHintImage(CoreResNames.ImageFragmentShader)]
 	public class MeshComponent : Component, ICmpInitializable, ICmpUpdatable, ICmpEditorUpdatable, IDisposable
 	{
 		[DontSerialize] protected bool _meshDirty = true; // Start Dirty
@@ -86,7 +92,7 @@ namespace Duality.Graphics.Components
 				// Mesh was changed
 			}
 
-			if (threeMesh != null && GameObj.Transform != null && Mesh.IsAvailable)
+			if (threeMesh != null && Mesh.IsAvailable)
 			{
 				int matID = 1;
 				foreach (var submesh in threeMesh)

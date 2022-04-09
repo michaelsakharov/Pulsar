@@ -4,7 +4,10 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
+using Duality.Components;
 using Duality.Drawing;
+using Duality.Editor;
+using Duality.Properties;
 using Duality.Resources;
 using THREE.Cameras;
 using THREE.Lights;
@@ -12,6 +15,9 @@ using THREE.Math;
 
 namespace Duality.Graphics.Components
 {
+	[RequiredComponent(typeof(Transform))]
+	[EditorHintCategory(CoreResNames.CategoryGraphics)]
+	[EditorHintImage(CoreResNames.ImageFragmentShader)]
 	public class DirectionalLightComponent : Component, ICmpInitializable, ICmpUpdatable, ICmpEditorUpdatable, IDisposable
 	{
 
