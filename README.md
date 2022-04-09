@@ -12,6 +12,7 @@ If you have questions or just want to say Hi, feel free to check out the [discus
 If you want to build Pulsar yourself, you can do so using Visual Studio by simply opening `Duality.sln` and selecting "Build Solution".
 
 All framework build results will be located in the shared `Build/Output` folder. Sample project build results will be separate, and located in their respective `Content/Plugins` subdirectories. To launch any of the included sample projects after building Duality, select it as a startup project in your IDE. Otherwise, you can use either `DualityEditor` or `DualityLauncher` as a startup project.
+You may also need to place the 'Renderers' Folder into the 'Build/Output' manually, this will eventually be improved by moving them into Embedded Resources.
 
 ### Contributing
 
