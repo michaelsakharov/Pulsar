@@ -71,7 +71,7 @@ namespace Duality.Graphics.Components
 				foreach (var submesh in threeMesh)
 				{
 					//submesh.Material = ((Material != null && Material.IsAvailable) ? Material.Res : MeshBasicMaterial.Default.Res).GetThreeMaterial();
-					submesh.Material = MeshLambertMaterial.Default.Res.GetThreeMaterial();
+					submesh.Material = MeshPhongMaterial.Default.Res.GetThreeMaterial();
 					submesh.Material.Color = new Color().SetHex(0x7777ff);
 					submesh.CastShadow = true;
 					submesh.ReceiveShadow = true;
