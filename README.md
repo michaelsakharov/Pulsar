@@ -31,4 +31,4 @@ Are you experienced with c# and wanna contribute to Pulsar? Feel free to make a 
 ### Maintainers of Duality
 - [SirePi](https://github.com/SirePi)
 - [Barsonax](https://github.com/Barsonax)
-- [Ilexp](https://github.com/ilexp) (creator, now inactive but still around to give us advice)
+- [Ilexp](https://github.com/ilexp)
