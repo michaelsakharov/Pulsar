@@ -22,6 +22,7 @@ using System.Runtime.InteropServices;
 using System.Diagnostics;
 using THREE.Math;
 using THREE;
+using Duality.Components;
 
 namespace Duality
 {
@@ -123,7 +124,10 @@ namespace Duality
 		/// </summary>
 		public static event EventHandler Terminating = null;
 
-		
+		public delegate void RenderEventHandler(Scene scene, Camera camera);
+		public static event RenderEventHandler PreRender;
+		public static event RenderEventHandler PostRender;
+
 		/// <summary>
 		/// [GET] The plugin manager that is used by Duality. Don't use this unless you know exactly what you're doing.
 		/// If you want to load a plugin, use the <see cref="CorePluginManager"/> from this property.
@@ -630,9 +634,25 @@ namespace Duality
 				//GraphicsBackend.SetClearColor(new Color().SetHex(0x000000));
 				GraphicsBackend.ShadowMap.Enabled = true;
 				GraphicsBackend.ShadowMap.type = Constants.PCFSoftShadowMap;
+
+				DualityApp.InvokePreRender(Scene.Current, Scene.Camera);
+
 				DualityApp.GraphicsBackend.Render(Scene.ThreeScene, Scene.Camera.GetTHREECamera());
+
+				DualityApp.InvokePostRender(Scene.Current, Scene.Camera);
+
 			}
 
+		}
+
+		public static void InvokePreRender(Scene scene, Camera camera)
+		{
+			PreRender?.Invoke(scene, camera);
+		}
+
+		public static void InvokePostRender(Scene scene, Camera camera)
+		{
+			PostRender?.Invoke(scene, camera);
 		}
 
 		public static void Resize(int width, int height)

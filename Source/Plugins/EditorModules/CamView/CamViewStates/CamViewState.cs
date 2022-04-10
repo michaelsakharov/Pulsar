@@ -355,7 +355,12 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 			// Render here!
 			DualityApp.GraphicsBackend.ShadowMap.Enabled = true;
 			DualityApp.GraphicsBackend.ShadowMap.type = THREE.Constants.PCFSoftShadowMap;
+
+			DualityApp.InvokePreRender(Scene.Current, Scene.Camera);
+
 			DualityApp.GraphicsBackend.Render(Scene.ThreeScene, CameraComponent.GetTHREECamera());
+
+			DualityApp.InvokePostRender(Scene.Current, Scene.Camera);
 		}
 
 		private float _currentYaw = 0.3f;
