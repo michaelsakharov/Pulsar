@@ -20,7 +20,8 @@ Are you experienced with c# and wanna contribute to Pulsar? Feel free to make a 
 
 ### Images
 
-![image](https://user-images.githubusercontent.com/8621606/161371217-c17b5150-5ea3-40b5-859e-669b223f18cd.png)
+![image](https://user-images.githubusercontent.com/8621606/162609511-8302cf18-0847-40e3-8590-97ab1f407a36.png)
+
 
 ----------
 
