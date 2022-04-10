@@ -110,7 +110,24 @@ namespace Duality.Resources
 			}
 		}
 
+		public static ContentRef<Mesh> Barrel { get; private set; }
+		public static ContentRef<Mesh> Cone { get; private set; }
+		public static ContentRef<Mesh> Cube { get; private set; }
+		public static ContentRef<Mesh> Cylinder { get; private set; }
+		public static ContentRef<Mesh> Disk { get; private set; }
+		public static ContentRef<Mesh> DiskHole { get; private set; }
+		public static ContentRef<Mesh> Dome { get; private set; }
+		public static ContentRef<Mesh> DomeHalf { get; private set; }
+		public static ContentRef<Mesh> DomeQuarter { get; private set; }
+		public static ContentRef<Mesh> DoubleSidedTriangle { get; private set; }
+		public static ContentRef<Mesh> HalfPipe { get; private set; }
+		public static ContentRef<Mesh> HalfPipeEnd { get; private set; }
+		public static ContentRef<Mesh> OneSidedTriangle { get; private set; }
+		public static ContentRef<Mesh> Plane { get; private set; }
+		public static ContentRef<Mesh> Ring { get; private set; }
+		public static ContentRef<Mesh> Sphere { get; private set; }
 		public static ContentRef<Mesh> Sponza { get; private set; }
+		public static ContentRef<Mesh> Torus { get; private set; }
 	}
 
 	[Serializable]
