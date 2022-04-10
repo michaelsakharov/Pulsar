@@ -8,7 +8,6 @@ using Duality.Components;
 using Duality.Cloning;
 using Duality.Properties;
 using Duality.Utility.Coroutines;
-using Duality.Graphics;
 
 namespace Duality.Resources
 {
@@ -28,7 +27,7 @@ namespace Duality.Resources
 		private static int                 switchLock        = 0;
 		private static bool                switchToScheduled = false;
 		private static ContentRef<Scene>   switchToTarget    = null;
-		private static Stage			   stage			 = null;
+		private static THREE.Scenes.Scene  threeScene		 = null;
 		private static Camera			   camera			 = null;
 
 		/// <summary>
@@ -104,9 +103,9 @@ namespace Duality.Resources
 		{
 			get { return isSwitching; }
 		}
-		public static Stage Stage
+		public static THREE.Scenes.Scene ThreeScene
 		{
-			get { return stage; }
+			get { return threeScene; }
 		}
 		public static Camera Camera
 		{
@@ -147,7 +146,7 @@ namespace Duality.Resources
 
 		static Scene()
 		{
-			stage = new Stage();
+			threeScene = new  THREE.Scenes.Scene();
 			Current = new Scene();
 		}
 
@@ -178,7 +177,8 @@ namespace Duality.Resources
 			}
 			else
 			{
-				stage = new Stage();
+				if (threeScene != null) threeScene.Dispose();
+				threeScene = new THREE.Scenes.Scene();
 				Scene.Current = scene.Res;
 			}
 		}
@@ -220,7 +220,8 @@ namespace Duality.Resources
 			switchToScheduled = false;
 
 			// Perform the scheduled switch
-			stage = new Stage();
+			if (threeScene != null) threeScene.Dispose();
+			threeScene = new THREE.Scenes.Scene();
 			Scene.Current = target;
 
 			// If we now end up with another scheduled switch, we might be

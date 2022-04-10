@@ -1,6 +1,4 @@
-﻿using Duality.Editor.Plugins.Base.Forms;
-
-namespace Duality.Editor.Plugins.Base
+﻿namespace Duality.Editor.Plugins.Base
 {
 	/// <summary>
 	/// Contains all user settings related to the editor base plugin.

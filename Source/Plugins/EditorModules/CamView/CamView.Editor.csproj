@@ -65,6 +65,9 @@
 
   <ItemGroup>
     <Reference Include="System.Windows.Forms" />
+    <Reference Include="THREE">
+      <HintPath>..\..\..\Dependencies\THREE.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
   <Target Name="AggregateOutput" BeforeTargets="AfterBuild">

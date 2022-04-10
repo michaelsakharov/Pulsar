@@ -82,18 +82,9 @@ namespace Duality.Launcher
 				launcherArgs);
 
 			// Open up a new window
-			WindowOptions options = new WindowOptions
-			{
-				Size = DualityApp.UserData.Instance.WindowSize,
-				ScreenMode = launcherArgs.IsDebugging ? ScreenMode.Window : DualityApp.UserData.Instance.WindowMode,
-				RefreshMode = launcherArgs.IsProfiling ? RefreshMode.NoSync : DualityApp.UserData.Instance.WindowRefreshMode,
-				Title = DualityApp.AppData.Instance.AppName,
-				SystemCursorVisible = launcherArgs.IsDebugging || DualityApp.UserData.Instance.SystemCursorVisible
-			};
+			this.refreshMode = launcherArgs.IsProfiling ? RefreshMode.NoSync : DualityApp.UserData.Instance.WindowRefreshMode;
 
-			this.refreshMode = options.RefreshMode;
-
-			this.window = DualityApp.OpenWindow(options);
+			this.window = DualityApp.OpenWindow(DualityApp.UserData.Instance.WindowSize.X, DualityApp.UserData.Instance.WindowSize.Y);
 			window.UpdateFrame += Test_UpdateFrame;
 			window.RenderFrame += Test_RenderFrame;
 			window.Resize += Window_Resize;
@@ -213,7 +204,7 @@ namespace Duality.Launcher
 			DualityApp.Render();
 			//Profile.TimeRender.BeginMeasure();
 			//Profile.TimeSwapBuffers.BeginMeasure();
-			//this.window.SwapBuffers();
+			this.window.SwapBuffers();
 			//Profile.TimeSwapBuffers.EndMeasure();
 			//Profile.TimeRender.EndMeasure();
 		}

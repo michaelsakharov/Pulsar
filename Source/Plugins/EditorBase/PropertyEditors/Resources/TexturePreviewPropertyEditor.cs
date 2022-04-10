@@ -19,15 +19,15 @@ namespace Duality.Editor.Plugins.Base.PropertyEditors
 {
 	public class TexturePreviewPropertyEditor : ImagePreviewPropertyEditor
 	{
-		private	Texture		value					= null;
-		private	Rectangle	rectLabelWidth			= Rectangle.Empty;
-		private	Rectangle	rectLabelHeight			= Rectangle.Empty;
-		private	Rectangle	rectLabelWidthVal		= Rectangle.Empty;
-		private	Rectangle	rectLabelHeightVal		= Rectangle.Empty;
-		private	Rectangle	rectLabelOglWidth		= Rectangle.Empty;
-		private	Rectangle	rectLabelOglHeight		= Rectangle.Empty;
-		private	Rectangle	rectLabelOglWidthVal	= Rectangle.Empty;
-		private	Rectangle	rectLabelOglHeightVal	= Rectangle.Empty;
+		private Texture value = null;
+		private Rectangle rectLabelWidth = Rectangle.Empty;
+		private Rectangle rectLabelHeight = Rectangle.Empty;
+		private Rectangle rectLabelWidthVal = Rectangle.Empty;
+		private Rectangle rectLabelHeightVal = Rectangle.Empty;
+		private Rectangle rectLabelOglWidth = Rectangle.Empty;
+		private Rectangle rectLabelOglHeight = Rectangle.Empty;
+		private Rectangle rectLabelOglWidthVal = Rectangle.Empty;
+		private Rectangle rectLabelOglHeightVal = Rectangle.Empty;
 
 		public override object DisplayedValue
 		{
@@ -36,10 +36,10 @@ namespace Duality.Editor.Plugins.Base.PropertyEditors
 		protected override int PreviewFrameCount
 		{
 			get
-			{ 
-				return 
-					this.value != null && this.value.BasePixmap.IsAvailable && this.value.BasePixmap.Res.Atlas != null ? 
-					this.value.BasePixmap.Res.Atlas.Count : 
+			{
+				return
+					this.value != null && this.value.BasePixmap.IsAvailable && this.value.BasePixmap.Res.Atlas != null ?
+					this.value.BasePixmap.Res.Atlas.Count :
 					0;
 			}
 		}
@@ -68,9 +68,9 @@ namespace Duality.Editor.Plugins.Base.PropertyEditors
 			else if (frameIndex == -1)
 			{
 				return PreviewProvider.GetPreviewImage(
-					this.value, 
-					this.ClientRectangle.Width - 2, 
-					Math.Min(BigHeight - 2, this.value.ContentHeight), 
+					this.value,
+					this.ClientRectangle.Width - 2,
+					Math.Min(BigHeight - 2, this.value.ContentHeight),
 					PreviewSizeMode.FixedHeight);
 			}
 			else
@@ -105,54 +105,54 @@ namespace Duality.Editor.Plugins.Base.PropertyEditors
 		{
 			base.OnPaint(e);
 
-			ControlRenderer.DrawStringLine(e.Graphics, 
-				"Width:", 
-				SystemFonts.DefaultFont, 
-				this.rectLabelWidth, 
+			ControlRenderer.DrawStringLine(e.Graphics,
+				"Width:",
+				SystemFonts.DefaultFont,
+				this.rectLabelWidth,
 				!this.Enabled ? ControlRenderer.ColorGrayText : ControlRenderer.ColorText);
-			ControlRenderer.DrawStringLine(e.Graphics, 
-				"Height:", 
-				SystemFonts.DefaultFont, 
-				this.rectLabelHeight, 
+			ControlRenderer.DrawStringLine(e.Graphics,
+				"Height:",
+				SystemFonts.DefaultFont,
+				this.rectLabelHeight,
 				!this.Enabled ? ControlRenderer.ColorGrayText : ControlRenderer.ColorText);
-			ControlRenderer.DrawStringLine(e.Graphics, 
-				this.value != null ? this.value.ContentWidth.ToString() : " - ", 
-				SystemFonts.DefaultFont, 
-				this.rectLabelWidthVal, 
+			ControlRenderer.DrawStringLine(e.Graphics,
+				this.value != null ? this.value.ContentWidth.ToString() : " - ",
+				SystemFonts.DefaultFont,
+				this.rectLabelWidthVal,
 				!this.Enabled ? ControlRenderer.ColorGrayText : ControlRenderer.ColorText);
-			ControlRenderer.DrawStringLine(e.Graphics, 
-				this.value != null ? this.value.ContentHeight.ToString() : " - ", 
-				SystemFonts.DefaultFont, 
-				this.rectLabelHeightVal, 
+			ControlRenderer.DrawStringLine(e.Graphics,
+				this.value != null ? this.value.ContentHeight.ToString() : " - ",
+				SystemFonts.DefaultFont,
+				this.rectLabelHeightVal,
 				!this.Enabled ? ControlRenderer.ColorGrayText : ControlRenderer.ColorText);
 
-			ControlRenderer.DrawStringLine(e.Graphics, 
-				"TexWidth:", 
-				SystemFonts.DefaultFont, 
-				this.rectLabelOglWidth, 
+			ControlRenderer.DrawStringLine(e.Graphics,
+				"TexWidth:",
+				SystemFonts.DefaultFont,
+				this.rectLabelOglWidth,
 				!this.Enabled ? ControlRenderer.ColorGrayText : ControlRenderer.ColorText);
-			ControlRenderer.DrawStringLine(e.Graphics, 
-				"TexHeight:", 
-				SystemFonts.DefaultFont, 
-				this.rectLabelOglHeight, 
+			ControlRenderer.DrawStringLine(e.Graphics,
+				"TexHeight:",
+				SystemFonts.DefaultFont,
+				this.rectLabelOglHeight,
 				!this.Enabled ? ControlRenderer.ColorGrayText : ControlRenderer.ColorText);
-			ControlRenderer.DrawStringLine(e.Graphics, 
-				this.value != null ? this.value.InternalWidth.ToString() : " - ", 
-				SystemFonts.DefaultFont, 
-				this.rectLabelOglWidthVal, 
+			ControlRenderer.DrawStringLine(e.Graphics,
+				this.value != null ? this.value.InternalWidth.ToString() : " - ",
+				SystemFonts.DefaultFont,
+				this.rectLabelOglWidthVal,
 				!this.Enabled ? ControlRenderer.ColorGrayText : ControlRenderer.ColorText);
-			ControlRenderer.DrawStringLine(e.Graphics, 
-				this.value != null ? this.value.InternalHeight.ToString() : " - ", 
-				SystemFonts.DefaultFont, 
-				this.rectLabelOglHeightVal, 
+			ControlRenderer.DrawStringLine(e.Graphics,
+				this.value != null ? this.value.InternalHeight.ToString() : " - ",
+				SystemFonts.DefaultFont,
+				this.rectLabelOglHeightVal,
 				!this.Enabled ? ControlRenderer.ColorGrayText : ControlRenderer.ColorText);
 
 			if (this.PreviewFrameCount == 0)
 			{
-				ControlRenderer.DrawStringLine(e.Graphics, 
-					this.value != null ? this.value.Name : " - ", 
-					SystemFonts.DefaultFont, 
-					this.rectLabelName, 
+				ControlRenderer.DrawStringLine(e.Graphics,
+					this.value != null ? this.value.Name : " - ",
+					SystemFonts.DefaultFont,
+					this.rectLabelName,
 					!this.Enabled ? ControlRenderer.ColorGrayText : ControlRenderer.ColorText,
 					StringAlignment.Far);
 			}
@@ -204,7 +204,7 @@ namespace Duality.Editor.Plugins.Base.PropertyEditors
 				this.rectLabelOglWidthVal.Bottom,
 				35,
 				this.rectHeaderContent.Height / 2);
-			
+
 			this.rectLabelName.X = this.rectLabelOglWidthVal.Right;
 			this.rectLabelName.Width = this.rectHeaderContent.Width - this.rectLabelOglWidthVal.Right;
 		}

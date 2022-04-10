@@ -14,9 +14,7 @@ namespace Duality.Editor.Plugins.Base
 	{
 		public static readonly string SourceFileExtVertex = ".vert";
 		public static readonly string SourceFileExtFragment = ".frag";
-		public static readonly string SourceFileExtCompute = ".compute";
-		public static readonly string SourceFileExtCompound = ".glsl";
-		private static readonly string[] SourceFileExts = new[] { SourceFileExtVertex, SourceFileExtFragment, SourceFileExtCompute, SourceFileExtCompound };
+		private static readonly string[] SourceFileExts = new[] { SourceFileExtVertex, SourceFileExtFragment };
 		
 
 		public string Id
@@ -44,8 +42,6 @@ namespace Duality.Editor.Plugins.Base
 					env.AddOutput<VertexShader>(input.AssetName, input.Path);
 				else if(string.Equals(ext, SourceFileExtFragment, StringComparison.InvariantCultureIgnoreCase))
 					env.AddOutput<FragmentShader>(input.AssetName, input.Path);
-				else
-					env.AddOutput<ComputeShader>(input.AssetName, input.Path);
 			}
 		}
 		public void Import(IAssetImportEnvironment env)
@@ -61,10 +57,8 @@ namespace Duality.Editor.Plugins.Base
 				IContentRef targetRef;
 				if (string.Equals(ext, SourceFileExtVertex, StringComparison.InvariantCultureIgnoreCase))
 					targetRef = env.GetOutput<VertexShader>(input.AssetName);
-				else if (string.Equals(ext, SourceFileExtFragment, StringComparison.InvariantCultureIgnoreCase))
-					targetRef = env.GetOutput<FragmentShader>(input.AssetName);
 				else
-					targetRef = env.GetOutput<ComputeShader>(input.AssetName);
+					targetRef = env.GetOutput<FragmentShader>(input.AssetName);
 
 				// If we successfully acquired one, proceed with the import
 				if (targetRef.IsAvailable)
@@ -73,7 +67,6 @@ namespace Duality.Editor.Plugins.Base
 
 					// Update shader data from the input file
 					target.Source = File.ReadAllText(input.Path);
-					target.Compile();
 
 					// Add the requested output to signal that we've done something with it
 					env.AddOutput(targetRef, input.Path);
@@ -89,12 +82,8 @@ namespace Duality.Editor.Plugins.Base
 				// Add the file path of the exported output we'll produce.
 				if (env.Input is FragmentShader)
 					env.AddOutputPath(env.Input.Name + SourceFileExtFragment);
-				else if (env.Input is VertexShader)
-					env.AddOutputPath(env.Input.Name + SourceFileExtVertex);
-				else if (env.Input is ComputeShader)
-					env.AddOutputPath(env.Input.Name + SourceFileExtCompute);
 				else
-					env.AddOutputPath(env.Input.Name + SourceFileExtCompound);
+					env.AddOutputPath(env.Input.Name + SourceFileExtVertex);
 			}
 		}
 		public void Export(IAssetExportEnvironment env)
@@ -104,12 +93,8 @@ namespace Duality.Editor.Plugins.Base
 			string outputPath;
 			if (env.Input is FragmentShader)
 				outputPath = env.AddOutputPath(input.Name + SourceFileExtFragment);
-			else if (env.Input is VertexShader)
-				outputPath = env.AddOutputPath(input.Name + SourceFileExtVertex);
-			else if (env.Input is ComputeShader)
-				outputPath = env.AddOutputPath(input.Name + SourceFileExtCompute);
 			else
-				outputPath = env.AddOutputPath(input.Name + SourceFileExtCompound);
+				outputPath = env.AddOutputPath(input.Name + SourceFileExtVertex);
 
 			// Take the input Resource's TrueType font data and save it at the specified location
 			File.WriteAllText(outputPath, input.Source);

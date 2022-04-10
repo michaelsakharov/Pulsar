@@ -23,9 +23,9 @@ namespace Duality.Plugins.Compatibility
 			{
 				switch (resolveTypeError.TypeId)
 				{
-					case "Duality.Resources.BatchInfo": resolveTypeError.ResolvedType = typeof(Duality.Drawing.BatchInfo); break;
-					case "Duality.Resources.BatchInfo+DirtyFlag": resolveTypeError.ResolvedType = typeof(ObsoleteEnum); break;
-					case "Duality.Resources.Pixmap+Layer": resolveTypeError.ResolvedType = typeof(Duality.Drawing.PixelData); break;
+					//case "Duality.Resources.BatchInfo": resolveTypeError.ResolvedType = typeof(Duality.Drawing.BatchInfo); break;
+					//case "Duality.Resources.BatchInfo+DirtyFlag": resolveTypeError.ResolvedType = typeof(ObsoleteEnum); break;
+					//case "Duality.Resources.Pixmap+Layer": resolveTypeError.ResolvedType = typeof(Duality.Drawing.PixelData); break;
 				}
 			}
 			else if (resolveMemberError != null)

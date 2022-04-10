@@ -21,8 +21,8 @@ namespace Duality.Editor.Plugins.Base.DataConverters
 
 		public override bool CanConvertFrom(ConvertOperation convert)
 		{
-			return 
-				convert.AllowedOperations.HasFlag(ConvertOperation.Operation.Convert) && 
+			return
+				convert.AllowedOperations.HasFlag(ConvertOperation.Operation.Convert) &&
 				convert.CanPerform<Texture>();
 		}
 		public override bool Convert(ConvertOperation convert)

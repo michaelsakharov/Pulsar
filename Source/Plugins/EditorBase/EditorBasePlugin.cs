@@ -12,12 +12,11 @@ using Duality.Resources;
 
 using Duality.Editor;
 using Duality.Editor.Forms;
-using Duality.Editor.Plugins.Base.Forms;
 using Duality.Editor.Properties;
 using Duality.Editor.UndoRedoActions;
 using Duality.Editor.Plugins.Base.Properties;
 using WeifenLuo.WinFormsUI.Docking;
-
+using Duality.Editor.Plugins.Base.Forms;
 
 namespace Duality.Editor.Plugins.Base
 {
@@ -25,7 +24,7 @@ namespace Duality.Editor.Plugins.Base
 	{
 		private static readonly string ElementNamePixmapSlicer = "PixmapSlicer";
 
-		private PixmapSlicerForm         slicingForm        = null;
+		private PixmapSlicerForm slicingForm = null;
 		private EditorBasePluginSettings editorBaseSettings = new EditorBasePluginSettings();
 
 		private bool isLoading = false;
@@ -35,7 +34,6 @@ namespace Duality.Editor.Plugins.Base
 		{
 			get { return "EditorBase"; }
 		}
-
 
 		public PixmapSlicerForm RequestPixmapSlicerForm()
 		{
@@ -104,19 +102,19 @@ namespace Duality.Editor.Plugins.Base
 		{
 			this.isLoading = true;
 
-			this.editorBaseSettings = pluginSettings.Get<EditorBasePluginSettings>();
+			this.editorBaseSettings = pluginSettings.Get<EditorBasePluginSettings>(); 
 			if (this.slicingForm != null)
 			{
 				this.slicingForm.UserSettings = this.editorBaseSettings.PixmapSlicer;
 				this.slicingForm.ApplyUserSettings();
 			}
-			
+
 			this.isLoading = false;
 		}
 		protected override IDockContent DeserializeDockContent(Type dockContentType)
 		{
 			this.isLoading = true;
-			IDockContent result;
+			IDockContent result; 
 			if (dockContentType == typeof(PixmapSlicerForm))
 				result = this.RequestPixmapSlicerForm();
 			else
@@ -124,7 +122,6 @@ namespace Duality.Editor.Plugins.Base
 			this.isLoading = false;
 			return result;
 		}
-
 		private void slicingForm_FormClosed(object sender, FormClosedEventArgs e)
 		{
 			// Store the slicer forms user settings for when we re-open the form later on, or serialize
@@ -171,19 +168,19 @@ namespace Duality.Editor.Plugins.Base
 		private void PropagateDependentResourceChanges(ContentRef<Resource> resRef, List<object> modifiedObjects)
 		{
 			// If a font has been modified, reload it and update all TextRenderers
-			if (resRef.Is<Font>())
-			{
-				//foreach (TextRenderer r in Scene.Current.AllObjects.GetComponents<TextRenderer>())
-				//{
-				//	if (r.Text.Fonts.Contains(resRef.As<Font>()))
-				//	{
-				//		r.Text.ApplySource();
-				//		modifiedObjects.Add(r);
-				//	}
-				//}
-			}
+			//if (resRef.Is<Font>())
+			//{
+			//	//foreach (TextRenderer r in Scene.Current.AllObjects.GetComponents<TextRenderer>())
+			//	//{
+			//	//	if (r.Text.Fonts.Contains(resRef.As<Font>()))
+			//	//	{
+			//	//		r.Text.ApplySource();
+			//	//		modifiedObjects.Add(r);
+			//	//	}
+			//	//}
+			//}
 			// If its a Pixmap, reload all associated Textures
-			else if (resRef.Is<Pixmap>())
+			if (resRef.Is<Pixmap>())
 			{
 				ContentRef<Pixmap> pixRef = resRef.As<Pixmap>();
 				foreach (ContentRef<Texture> tex in ContentProvider.GetLoadedContent<Texture>())
@@ -210,7 +207,7 @@ namespace Duality.Editor.Plugins.Base
 					if (tex.NeedsReload)
 						tex.ReloadData();
 				}
-
+			
 				//ContentRef<Texture> texRef = resRef.As<Texture>();
 				//foreach (ContentRef<RenderTarget> rt in ContentProvider.GetLoadedContent<RenderTarget>())
 				//{
@@ -223,20 +220,20 @@ namespace Duality.Editor.Plugins.Base
 				//}
 			}
 			// If its some kind of shader, update all associated techniques
-			else if (resRef.Is<Shader>())
-			{
-				ContentRef<FragmentShader> fragRef = resRef.As<FragmentShader>();
-				ContentRef<VertexShader> vertRef = resRef.As<VertexShader>();
-				foreach (ContentRef<DrawTechnique> sp in ContentProvider.GetLoadedContent<DrawTechnique>())
-				{
-					if (!sp.IsAvailable) continue;
-					if (sp.Res.Fragment == fragRef || sp.Res.Vertex == vertRef)
-					{
-						if (sp.Res.Compiled) sp.Res.Compile();
-						modifiedObjects.Add(sp.Res);
-					}
-				}
-			}
+			//else if (resRef.Is<Shader>())
+			//{
+			//	ContentRef<FragmentShader> fragRef = resRef.As<FragmentShader>();
+			//	ContentRef<VertexShader> vertRef = resRef.As<VertexShader>();
+			//	foreach (ContentRef<ShaderMaterial> sp in ContentProvider.GetLoadedContent<ShaderMaterial>())
+			//	{
+			//		if (!sp.IsAvailable) continue;
+			//		if (sp.Res.Fragment == fragRef || sp.Res.Vertex == vertRef)
+			//		{
+			//			if (sp.Res.Compiled) sp.Res.Compile();
+			//			modifiedObjects.Add(sp.Res);
+			//		}
+			//	}
+			//}
 		}
 	}
 }

@@ -24,15 +24,15 @@ namespace Duality.Resources
 		/// <summary>
 		/// [GET] A Pixmap showing the Duality icon.
 		/// </summary>
-		public static ContentRef<Pixmap> DualityIcon       { get; private set; }
+		public static ContentRef<Pixmap> DualityIcon { get; private set; }
 		/// <summary>
 		/// [GET] A Pixmap showing the Duality icon without the text on it.
 		/// </summary>
-		public static ContentRef<Pixmap> DualityIconB      { get; private set; }
+		public static ContentRef<Pixmap> DualityIconB { get; private set; }
 		/// <summary>
 		/// A Pixmap showing the Duality logo.
 		/// </summary>
-		public static ContentRef<Pixmap> DualityLogoBig    { get; private set; }
+		public static ContentRef<Pixmap> DualityLogoBig { get; private set; }
 		/// <summary>
 		/// A Pixmap showing the Duality logo.
 		/// </summary>
@@ -40,15 +40,15 @@ namespace Duality.Resources
 		/// <summary>
 		/// A Pixmap showing the Duality logo.
 		/// </summary>
-		public static ContentRef<Pixmap> DualityLogoSmall  { get; private set; }
+		public static ContentRef<Pixmap> DualityLogoSmall { get; private set; }
 		/// <summary>
 		/// [GET] A plain white 1x1 Pixmap. Can be used as a dummy.
 		/// </summary>
-		public static ContentRef<Pixmap> White             { get; private set; }
+		public static ContentRef<Pixmap> White { get; private set; }
 		/// <summary>
 		/// [GET] A 256x256 black and white checkerboard image.
 		/// </summary>
-		public static ContentRef<Pixmap> Checkerboard      { get; private set; }
+		public static ContentRef<Pixmap> Checkerboard { get; private set; }
 		/// <summary>
 		/// [GET] Specular Integartion
 		/// </summary>
@@ -77,10 +77,10 @@ namespace Duality.Resources
 			DefaultContent.InitType<Pixmap>(".png", stream => new Pixmap(codec.Read(stream)));
 		}
 
-		
+
 		private List<PixelData> layers = new List<PixelData>();
-		private List<Rect>      atlas  = null;
-		
+		private List<Rect> atlas = null;
+
 		/// <summary>
 		/// [GET / SET] The main <see cref="Duality.Drawing.PixelData"/> layer of this <see cref="Pixmap"/>.
 		/// </summary>
@@ -146,11 +146,11 @@ namespace Duality.Resources
 			set { this.atlas = value; }
 		}
 
- 
+
 		/// <summary>
 		/// Creates a new, empty Pixmap.
 		/// </summary>
-		public Pixmap() : this(null) {}
+		public Pixmap() : this(null) { }
 		/// <summary>
 		/// Creates a new Pixmap from the specified <see cref="Duality.Drawing.PixelData"/>.
 		/// </summary>

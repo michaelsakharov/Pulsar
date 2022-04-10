@@ -29,15 +29,36 @@ namespace Duality
 
 			VertexShader.InitDefaultContent();
 			FragmentShader.InitDefaultContent();
-			CompoundShader.InitDefaultContent();
-			DrawTechnique.InitDefaultContent();
+			//CompoundShader.InitDefaultContent();
+			//DrawTechnique.InitDefaultContent();
 			Pixmap.InitDefaultContent();
 			Texture.InitDefaultContent();
-			Material.InitDefaultContent();
-			Font.InitDefaultContent();
+
+			//Material.InitDefaultContent();
+			LineBasicMaterial.InitDefaultContent();
+			LineDashedMaterial.InitDefaultContent();
+			MeshBasicMaterial.InitDefaultContent();
+			MeshDepthMaterial.InitDefaultContent();
+			MeshDistanceMaterial.InitDefaultContent();
+			MeshFaceMaterial.InitDefaultContent();
+			MeshLambertMaterial.InitDefaultContent();
+			MeshMatcapMaterial.InitDefaultContent();
+			MeshNormalMaterial.InitDefaultContent();
+			MeshPhongMaterial.InitDefaultContent();
+			MeshPhysicalMaterial.InitDefaultContent();
+			MeshStandardMaterial.InitDefaultContent();
+			MeshToonMaterial.InitDefaultContent();
+
+			PointCloudMaterial.InitDefaultContent();
+			PointsMaterial.InitDefaultContent();
+			ShaderMaterial.InitDefaultContent();
+			ShadowMaterial.InitDefaultContent();
+			SpriteMaterial.InitDefaultContent();
+
+			//Font.InitDefaultContent();
 			AudioData.InitDefaultContent();
 			Sound.InitDefaultContent();
-			Duality.Graphics.Resources.Mesh.InitDefaultContent();
+			Mesh.InitDefaultContent();
 
 			Logs.Core.Write("...done!");
 			Logs.Core.PopIndent();

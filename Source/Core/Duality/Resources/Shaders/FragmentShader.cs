@@ -3,7 +3,7 @@ using System.IO;
 
 using Duality.Properties;
 using Duality.Editor;
-
+using System.Collections.Generic;
 
 namespace Duality.Resources
 {
@@ -18,26 +18,13 @@ namespace Duality.Resources
 		/// [GET] A minimal FragmentShader. It performs a texture lookup
 		/// and applies vertex-coloring.
 		/// </summary>
-		public static ContentRef<FragmentShader> Minimal	{ get; private set; }
-		/// <summary>
-		/// [GET] A FragmentShader designed for picking operations. It uses
-		/// the provided texture for alpha output and forwards the incoming RGB color value.
-		/// </summary>
-		public static ContentRef<FragmentShader> Picking	{ get; private set; }
-		/// <summary>
-		/// [GET] The SharpMask FragmentShader. It enforces an antialiazed sharp mask when upscaling linearly blended textures.
-		/// </summary>
-		public static ContentRef<FragmentShader> SharpAlpha	{ get; private set; }
+		public static ContentRef<FragmentShader> Default	{ get; private set; }
 
 		internal static void InitDefaultContent()
 		{
-			DefaultContent.InitType<FragmentShader>(".frag", stream =>
+			DefaultContent.InitType<FragmentShader>(new Dictionary<string, FragmentShader>
 			{
-				using (StreamReader reader = new StreamReader(stream))
-				{
-					string code = reader.ReadToEnd();
-					return new FragmentShader(code);
-				}
+				{ "Default", new FragmentShader(@"void main() { gl_FragColor = vec4(1.0,1.0,1.0,1.0); }") }
 			});
 		}
 
@@ -47,7 +34,7 @@ namespace Duality.Resources
 			get { return ShaderType.Fragment; }
 		}
 		
-		public FragmentShader() : base(Minimal.IsAvailable ? Minimal.Res.Source : string.Empty) {}
+		public FragmentShader() : base(Default.IsAvailable ? Default.Res.Source : string.Empty) {}
 		public FragmentShader(string sourceCode) : base(sourceCode) {}
 	}
 }

@@ -33,10 +33,7 @@ namespace Duality
 
 		public static readonly PropertyInfo	Property_Resource_AssetInfo;
 
-		public static readonly PropertyInfo	Property_Pixmap_Atlas;
-
-		public static readonly PropertyInfo	Property_BatchInfo_Technique;
-		public static readonly PropertyInfo	Property_BatchInfo_MainColor;
+		public static readonly PropertyInfo Property_Pixmap_Atlas;
 
 		public static readonly FieldInfo Field_Material_Info;
 
@@ -67,18 +64,14 @@ namespace Duality
 			Property_Resource_AssetInfo		= GetProperty(resource, "AssetInfo");
 
 			Type pixmap = typeof(Pixmap);
-			Property_Pixmap_Atlas			= GetProperty(pixmap, "Atlas");
+			Property_Pixmap_Atlas = GetProperty(pixmap, "Atlas");
 
-			Type batchInfo = typeof(BatchInfo);
-			Property_BatchInfo_Technique	= GetProperty(batchInfo, "Technique");
-			Property_BatchInfo_MainColor	= GetProperty(batchInfo, "MainColor");
-			
 			Type soundEmitter = typeof(SoundEmitter);
 			Property_SoundEmitter_Sources	= GetProperty(soundEmitter, "Sources");
 
 			// Retrieve FieldInfo data
 			Type material = typeof(Material);
-			Field_Material_Info	= GetField(material, "info");
+			//Field_Material_Info	= GetField(material, "info");
 		}
 		
 		private static PropertyInfo GetProperty(Type type, string name)

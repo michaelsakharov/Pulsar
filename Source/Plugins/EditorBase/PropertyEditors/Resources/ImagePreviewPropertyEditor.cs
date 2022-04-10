@@ -22,14 +22,14 @@ namespace Duality.Editor.Plugins.Base.PropertyEditors
 		protected const int SmallHeight = 64 + HeaderHeight;
 		protected const int BigHeight = 256 + HeaderHeight;
 
-		private		List<Bitmap>	prevImageFrame		= new List<Bitmap>();
-		private		float			prevImageLum		= 0.0f;
-		private		int				prevImageHash		= -1;
-		protected	Rectangle		rectHeader			= Rectangle.Empty;
-		protected	Rectangle		rectHeaderContent	= Rectangle.Empty;
-		protected	Rectangle		rectPreview			= Rectangle.Empty;
-		protected	Rectangle		rectLabelName		= Rectangle.Empty;
-		private		NumericEditorTemplate	subImageSelector	= null;
+		private List<Bitmap> prevImageFrame = new List<Bitmap>();
+		private float prevImageLum = 0.0f;
+		private int prevImageHash = -1;
+		protected Rectangle rectHeader = Rectangle.Empty;
+		protected Rectangle rectHeaderContent = Rectangle.Empty;
+		protected Rectangle rectPreview = Rectangle.Empty;
+		protected Rectangle rectLabelName = Rectangle.Empty;
+		private NumericEditorTemplate subImageSelector = null;
 
 
 		protected abstract int PreviewFrameCount { get; }
@@ -48,7 +48,7 @@ namespace Duality.Editor.Plugins.Base.PropertyEditors
 			this.Height = SmallHeight;
 			this.Hints = HintFlags.None;
 		}
-		
+
 		protected abstract int GetPreviewHash();
 		protected abstract Bitmap GeneratePreviewFrame(int frameIndex);
 
@@ -69,7 +69,7 @@ namespace Duality.Editor.Plugins.Base.PropertyEditors
 				var avgColor = baseImage.GetAverageColor();
 				this.prevImageLum = avgColor.GetLuminance();
 			}
-			
+
 			// Update frame selector visibility
 			if (this.PreviewFrameCount > 0)
 			{
@@ -110,7 +110,7 @@ namespace Duality.Editor.Plugins.Base.PropertyEditors
 		protected override void OnPaint(PaintEventArgs e)
 		{
 			base.OnPaint(e);
-			
+
 			Rectangle rectImage = new Rectangle(this.rectPreview.X + 1, this.rectPreview.Y + 1, this.rectPreview.Width - 2, this.rectPreview.Height - 2);
 			Color brightChecker = this.prevImageLum > 0.5f ? Color.FromArgb(48, 48, 48) : Color.FromArgb(224, 224, 224);
 			Color darkChecker = this.prevImageLum > 0.5f ? Color.FromArgb(32, 32, 32) : Color.FromArgb(192, 192, 192);
@@ -131,7 +131,7 @@ namespace Duality.Editor.Plugins.Base.PropertyEditors
 					imgSize.Height = MathF.RoundToInt(imgSize.Width / widthForHeight);
 				}
 				e.Graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
-				e.Graphics.DrawImage(img, 
+				e.Graphics.DrawImage(img,
 					rectImage.X + rectImage.Width / 2 - imgSize.Width / 2,
 					rectImage.Y + rectImage.Height / 2 - imgSize.Height / 2,
 					imgSize.Width,
@@ -139,9 +139,9 @@ namespace Duality.Editor.Plugins.Base.PropertyEditors
 				e.Graphics.InterpolationMode = InterpolationMode.Default;
 			}
 
-			ControlRenderer.DrawBorder(e.Graphics, 
-				this.rectPreview, 
-				BorderStyle.Simple, 
+			ControlRenderer.DrawBorder(e.Graphics,
+				this.rectPreview,
+				BorderStyle.Simple,
 				!this.Enabled ? BorderState.Disabled : BorderState.Normal);
 
 			bool focusBg = this.Focused || (this is IPopupControlHost && (this as IPopupControlHost).IsDropDownOpened);
@@ -151,17 +151,17 @@ namespace Duality.Editor.Plugins.Base.PropertyEditors
 				headerBgColor = headerBgColor.ScaleBrightness(this.ControlRenderer.FocusBrightnessScale);
 			}
 			GroupedPropertyEditor.DrawGroupHeaderBackground(
-				e.Graphics, 
-				this.rectHeader, 
-				headerBgColor, 
+				e.Graphics,
+				this.rectHeader,
+				headerBgColor,
 				GroupedPropertyEditor.GroupHeaderStyle.SmoothSunken);
-			
+
 			if (this.subImageSelector.Rect.Width > 0)
 			{
-				this.ControlRenderer.DrawStringLine(e.Graphics, 
-					"Frame Index", 
-					SystemFonts.DefaultFont, 
-					this.rectLabelName, 
+				this.ControlRenderer.DrawStringLine(e.Graphics,
+					"Frame Index",
+					SystemFonts.DefaultFont,
+					this.rectLabelName,
 					!this.Enabled ? this.ControlRenderer.ColorGrayText : this.ControlRenderer.ColorText,
 					StringAlignment.Far);
 				this.subImageSelector.OnPaint(e, this.Enabled && !this.subImageSelector.ReadOnly, false);

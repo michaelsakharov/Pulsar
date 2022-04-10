@@ -18,11 +18,11 @@ namespace Duality.Editor.Plugins.Base.PropertyEditors
 {
 	public class PixmapPreviewPropertyEditor : ImagePreviewPropertyEditor
 	{
-		private	Pixmap		value				= null;
-		private	Rectangle	rectLabelWidth		= Rectangle.Empty;
-		private	Rectangle	rectLabelHeight		= Rectangle.Empty;
-		private	Rectangle	rectLabelWidthVal	= Rectangle.Empty;
-		private	Rectangle	rectLabelHeightVal	= Rectangle.Empty;
+		private Pixmap value = null;
+		private Rectangle rectLabelWidth = Rectangle.Empty;
+		private Rectangle rectLabelHeight = Rectangle.Empty;
+		private Rectangle rectLabelWidthVal = Rectangle.Empty;
+		private Rectangle rectLabelHeightVal = Rectangle.Empty;
 
 		public override object DisplayedValue
 		{
@@ -39,7 +39,7 @@ namespace Duality.Editor.Plugins.Base.PropertyEditors
 			this.Height = SmallHeight;
 			this.Hints = HintFlags.None;
 		}
-		
+
 		protected override int GetPreviewHash()
 		{
 			PixelData basePxLayer = this.value != null ? this.value.MainLayer : null;
@@ -56,9 +56,9 @@ namespace Duality.Editor.Plugins.Base.PropertyEditors
 			else if (frameIndex == -1)
 			{
 				return PreviewProvider.GetPreviewImage(
-					this.value, 
-					this.ClientRectangle.Width - 2, 
-					Math.Min(BigHeight - 2, this.value.Height), 
+					this.value,
+					this.ClientRectangle.Width - 2,
+					Math.Min(BigHeight - 2, this.value.Height),
 					PreviewSizeMode.FixedHeight);
 			}
 			else
@@ -91,34 +91,34 @@ namespace Duality.Editor.Plugins.Base.PropertyEditors
 		protected override void OnPaint(PaintEventArgs e)
 		{
 			base.OnPaint(e);
-			
-			ControlRenderer.DrawStringLine(e.Graphics, 
-				"Width:", 
-				SystemFonts.DefaultFont, 
-				this.rectLabelWidth, 
+
+			ControlRenderer.DrawStringLine(e.Graphics,
+				"Width:",
+				SystemFonts.DefaultFont,
+				this.rectLabelWidth,
 				!this.Enabled ? ControlRenderer.ColorGrayText : ControlRenderer.ColorText);
-			ControlRenderer.DrawStringLine(e.Graphics, 
-				"Height:", 
-				SystemFonts.DefaultFont, 
-				this.rectLabelHeight, 
+			ControlRenderer.DrawStringLine(e.Graphics,
+				"Height:",
+				SystemFonts.DefaultFont,
+				this.rectLabelHeight,
 				!this.Enabled ? ControlRenderer.ColorGrayText : ControlRenderer.ColorText);
-			ControlRenderer.DrawStringLine(e.Graphics, 
-				this.value != null ? this.value.Width.ToString() : " - ", 
-				SystemFonts.DefaultFont, 
-				this.rectLabelWidthVal, 
+			ControlRenderer.DrawStringLine(e.Graphics,
+				this.value != null ? this.value.Width.ToString() : " - ",
+				SystemFonts.DefaultFont,
+				this.rectLabelWidthVal,
 				!this.Enabled ? ControlRenderer.ColorGrayText : ControlRenderer.ColorText);
-			ControlRenderer.DrawStringLine(e.Graphics, 
-				this.value != null ? this.value.Height.ToString() : " - ", 
-				SystemFonts.DefaultFont, 
-				this.rectLabelHeightVal, 
+			ControlRenderer.DrawStringLine(e.Graphics,
+				this.value != null ? this.value.Height.ToString() : " - ",
+				SystemFonts.DefaultFont,
+				this.rectLabelHeightVal,
 				!this.Enabled ? ControlRenderer.ColorGrayText : ControlRenderer.ColorText);
 
 			if (this.PreviewFrameCount == 0)
 			{
-				ControlRenderer.DrawStringLine(e.Graphics, 
-					this.value != null ? this.value.Name : " - ", 
-					SystemFonts.DefaultFont, 
-					this.rectLabelName, 
+				ControlRenderer.DrawStringLine(e.Graphics,
+					this.value != null ? this.value.Name : " - ",
+					SystemFonts.DefaultFont,
+					this.rectLabelName,
 					!this.Enabled ? ControlRenderer.ColorGrayText : ControlRenderer.ColorText,
 					StringAlignment.Far);
 			}
@@ -148,7 +148,7 @@ namespace Duality.Editor.Plugins.Base.PropertyEditors
 				this.rectLabelWidthVal.Bottom,
 				35,
 				this.rectHeaderContent.Height / 2);
-			
+
 			this.rectLabelName.X = this.rectLabelWidthVal.Right;
 			this.rectLabelName.Width = this.rectHeaderContent.Width - this.rectLabelWidthVal.Right;
 		}

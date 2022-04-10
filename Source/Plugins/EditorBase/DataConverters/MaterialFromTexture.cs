@@ -26,12 +26,12 @@ namespace Duality.Editor.Plugins.Base.DataConverters
 			{
 				return convert.CanPerform<Texture>();
 			}
-			
+
 			if (convert.AllowedOperations.HasFlag(ConvertOperation.Operation.Convert))
 			{
 				List<Texture> availData = convert.Perform<Texture>(ConvertOperation.Operation.Convert).ToList();
-				return availData.Any(t => 
-					this.FindMatchingResources<Texture,Material>(t, IsMatch)
+				return availData.Any(t =>
+					this.FindMatchingResources<Texture, Material>(t, IsMatch)
 					.Any());
 			}
 
@@ -48,13 +48,14 @@ namespace Duality.Editor.Plugins.Base.DataConverters
 				if (convert.IsObjectHandled(baseRes)) continue;
 
 				// Find target Resource matching the source - or create one.
-				Material targetRes = 
-					this.FindMatchingResources<Texture,Material>(baseRes, IsMatch)
+				Material targetRes =
+					this.FindMatchingResources<Texture, Material>(baseRes, IsMatch)
 					.FirstOrDefault();
 				if (targetRes == null && convert.AllowedOperations.HasFlag(ConvertOperation.Operation.CreateRes))
 				{
 					string resPath = PathHelper.GetFreePath(baseRes.FullName, Resource.GetFileExtByType<Material>());
-					targetRes = new Material(DrawTechnique.Solid, baseRes);
+					targetRes = new MeshStandardMaterial();
+					targetRes.Map = baseRes;
 					targetRes.Save(resPath);
 				}
 
@@ -69,7 +70,7 @@ namespace Duality.Editor.Plugins.Base.DataConverters
 
 		private static bool IsMatch(Texture source, Material target)
 		{
-			return target.MainTexture == source;
+			return target.Map == source;
 		}
 	}
 }

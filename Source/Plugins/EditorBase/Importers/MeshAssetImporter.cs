@@ -10,13 +10,12 @@ using Duality.Drawing;
 using Duality.Resources;
 using Duality.Editor;
 using Duality.Editor.AssetManagement;
-using Duality.Graphics.Resources;
 
 namespace Duality.Editor.Plugins.Base
 {
 	public class MeshAssetImporter : AssetImporter<Mesh>
 	{
-		private static readonly string[] SourceFileExtensions = new[] { ".obj", ".fbx", ".x", ".dae" };
+		private static readonly string[] SourceFileExtensions = new[] { ".obj", ".fbx", ".dae", ".x", ".blend", ".bvh", ".ply", ".pmx" };
 
 
 		public override string Id
@@ -40,7 +39,8 @@ namespace Duality.Editor.Plugins.Base
 		protected override void ImportResource(ContentRef<Mesh> resourceRef, AssetImportInput input, IAssetImportEnvironment env)
 		{
 			Mesh resource = resourceRef.Res;
-			resource.LoadMesh(new FileStream(input.Path, FileMode.Open), System.IO.Path.GetExtension(input.Path));
+			var result = Duality.Assimp.AssimpLoader.Import(new FileStream(input.Path, FileMode.Open), System.IO.Path.GetExtension(input.Path));
+			resource.SubMeshes = result.ToArray();
 		}
 		protected override void ExportResource(ContentRef<Mesh> resourceRef, string path, IAssetExportEnvironment env)
 		{

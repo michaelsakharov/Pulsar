@@ -21,8 +21,8 @@ namespace Duality.Editor.Plugins.Base.DataConverters
 
 		public override bool CanConvertFrom(ConvertOperation convert)
 		{
-			return 
-				convert.AllowedOperations.HasFlag(ConvertOperation.Operation.Convert) && 
+			return
+				convert.AllowedOperations.HasFlag(ConvertOperation.Operation.Convert) &&
 				convert.CanPerform<Material>();
 		}
 		public override bool Convert(ConvertOperation convert)
@@ -35,9 +35,9 @@ namespace Duality.Editor.Plugins.Base.DataConverters
 			foreach (Material baseRes in availData)
 			{
 				if (convert.IsObjectHandled(baseRes)) continue;
-				if (!baseRes.MainTexture.IsAvailable) continue;
+				if (baseRes.Map == null || !baseRes.Map.IsAvailable) continue;
 
-				convert.AddResult(baseRes.MainTexture.Res);
+				convert.AddResult(baseRes.Map.Res);
 				finishConvertOp = true;
 				convert.MarkObjectHandled(baseRes);
 			}

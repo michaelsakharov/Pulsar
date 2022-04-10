@@ -14,7 +14,7 @@ namespace Duality.Editor.Plugins.Base.EditorActions
 			texture.Size = new Point2(128, 128);
 			texture.ReloadData();
 		}
-		
+
 		public override bool MatchesContext(string context)
 		{
 			return context == DualityEditorApp.ActionContextSetupObjectForEditing;

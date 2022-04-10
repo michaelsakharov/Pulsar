@@ -3,7 +3,7 @@ using System.IO;
 
 using Duality.Properties;
 using Duality.Editor;
-
+using System.Collections.Generic;
 
 namespace Duality.Resources
 {
@@ -18,17 +18,13 @@ namespace Duality.Resources
 		/// [GET] A minimal vertex shader. It performs OpenGLs default transformation
 		/// and forwards a single texture coordinate and color to the fragment stage.
 		/// </summary>
-		public static ContentRef<VertexShader> Minimal { get; private set; }
+		public static ContentRef<VertexShader> Default { get; private set; }
 
 		internal static void InitDefaultContent()
 		{
-			DefaultContent.InitType<VertexShader>(".vert", stream =>
+			DefaultContent.InitType<VertexShader>(new Dictionary<string, VertexShader>
 			{
-				using (StreamReader reader = new StreamReader(stream))
-				{
-					string code = reader.ReadToEnd();
-					return new VertexShader(code);
-				}
+				{ "Default", new VertexShader(@"void main() { gl_Position = projectionMatrix*modelViewMatrix*vec4(position,1.0); }") }
 			});
 		}
 
@@ -38,7 +34,7 @@ namespace Duality.Resources
 			get { return ShaderType.Vertex; }
 		}
 
-		public VertexShader() : base(Minimal.IsAvailable ? Minimal.Res.Source : string.Empty) {}
+		public VertexShader() : base(Default.IsAvailable ? Default.Res.Source : string.Empty) {}
 		public VertexShader(string sourceCode) : base(sourceCode) {}
 	}
 }

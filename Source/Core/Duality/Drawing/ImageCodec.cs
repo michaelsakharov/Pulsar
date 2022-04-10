@@ -8,9 +8,9 @@ namespace Duality.Drawing
 	public static class ImageCodec
 	{
 		public const string FormatJpeg = "image/jpeg";
-		public const string FormatPng  = "image/png";
+		public const string FormatPng = "image/png";
 		public const string FormatTiff = "image/tiff";
-		public const string FormatBmp  = "image/bmp";
+		public const string FormatBmp = "image/bmp";
 
 		private static List<IImageCodec> availableCodecs = null;
 		public static IEnumerable<IImageCodec> AvailableCodecs
@@ -28,8 +28,8 @@ namespace Duality.Drawing
 			availableCodecs = new List<IImageCodec>();
 			foreach (TypeInfo imageCodecType in DualityApp.GetAvailDualityTypes(typeof(IImageCodec)))
 			{
- 				if (imageCodecType.IsAbstract) continue;
- 				if (imageCodecType.IsInterface) continue;
+				if (imageCodecType.IsAbstract) continue;
+				if (imageCodecType.IsInterface) continue;
 
 				IImageCodec codec = imageCodecType.CreateInstanceOf() as IImageCodec;
 				if (codec != null)

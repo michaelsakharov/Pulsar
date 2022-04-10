@@ -18,13 +18,17 @@ namespace Duality.Editor.Plugins.Base.PropertyEditors
 		protected override void BeforeAutoCreateEditors()
 		{
 			base.BeforeAutoCreateEditors();
-			BatchInfoPropertyEditor e = this.AddEditorForMember(ReflectionInfo.Field_Material_Info) as BatchInfoPropertyEditor;
-			e.PropertyName = null;
-			e.Hints = HintFlags.None;
-			e.HeaderIcon = null;
-			e.HeaderValueText = null;
-			e.HeaderHeight = 0;
-			e.Expanded = true;
+			ResourcePropertyEditor content = new ResourcePropertyEditor();
+			content.EditedType = this.EditedType;
+			content.Getter = this.GetValue;
+			content.Setter = this.SetValues;
+			content.Hints = HintFlags.None;
+			content.HeaderHeight = 0;
+			content.HeaderValueText = null;
+			content.PreventFocus = true;
+			this.ParentGrid.ConfigureEditor(content);
+			this.AddPropertyEditor(content);
+			content.Expanded = true;
 		}
 		protected override bool IsAutoCreateMember(MemberInfo info)
 		{

@@ -6,7 +6,6 @@ using Duality;
 using Duality.Resources;
 using Duality.Drawing;
 using Duality.Editor;
-using Font = Duality.Resources.Font;
 
 
 namespace Duality.Editor.Plugins.Base.PreviewGenerators

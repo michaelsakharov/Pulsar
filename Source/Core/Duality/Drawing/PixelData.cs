@@ -6,6 +6,7 @@ using System.IO;
 using System.Threading.Tasks;
 
 using Duality.Serialization;
+using Duality.Editor;
 
 namespace Duality.Drawing
 {
@@ -17,20 +18,20 @@ namespace Duality.Drawing
 		/// <summary>
 		/// Represents an unknown <see cref="PixelData"/> version.
 		/// </summary>
-		private const int Serialize_Version_Unknown		= 0;
+		private const int Serialize_Version_Unknown = 0;
 		/// <summary>
 		/// Represents the PNG-compressed <see cref="PixelData"/> version.
 		/// </summary>
-		private const int Serialize_Version_LayerPng	= 3;
+		private const int Serialize_Version_LayerPng = 3;
 		/// <summary>
 		/// Represents the first v2.x <see cref="PixelData"/> version that requires an explicitly stated format id for image codec support.
 		/// </summary>
-		private const int Serialize_Version_FormatId	= 4;
+		private const int Serialize_Version_FormatId = 4;
 
 
-		private	int	width;
-		private	int height;
-		private	ColorRgba[]	data;
+		private int width;
+		private int height;
+		private ColorRgba[] data;
 
 
 		/// <summary>
@@ -80,9 +81,9 @@ namespace Duality.Drawing
 			}
 		}
 
-			
-		public PixelData() : this(0, 0, ColorRgba.TransparentBlack) {}
-		public PixelData(int width, int height) : this(width, height, ColorRgba.TransparentBlack) {}
+
+		public PixelData() : this(0, 0, ColorRgba.TransparentBlack) { }
+		public PixelData(int width, int height) : this(width, height, ColorRgba.TransparentBlack) { }
 		public PixelData(int width, int height, ColorRgba backColor)
 		{
 			if (width < 0) throw new ArgumentException("Width may not be negative.", "width");
@@ -117,11 +118,11 @@ namespace Duality.Drawing
 		public PixelData Clone()
 		{
 			return new PixelData(
-				this.width, 
-				this.height, 
+				this.width,
+				this.height,
 				this.data.Clone() as ColorRgba[]);
 		}
-		
+
 		/// <summary>
 		/// Replaces the <see cref="PixelData"/>s content with the specified color data.
 		/// Ownership of the data block will be assumed - it won't be copied before using it.
@@ -168,23 +169,23 @@ namespace Duality.Drawing
 			int x = 0;
 			int y = 0;
 
-			if (origin == Alignment.Right || 
-				origin == Alignment.TopRight || 
+			if (origin == Alignment.Right ||
+				origin == Alignment.TopRight ||
 				origin == Alignment.BottomRight)
 				x = w - this.width;
 			else if (
-				origin == Alignment.Center || 
-				origin == Alignment.Top || 
+				origin == Alignment.Center ||
+				origin == Alignment.Top ||
 				origin == Alignment.Bottom)
 				x = (w - this.width) / 2;
 
-			if (origin == Alignment.Bottom || 
-				origin == Alignment.BottomLeft || 
+			if (origin == Alignment.Bottom ||
+				origin == Alignment.BottomLeft ||
 				origin == Alignment.BottomRight)
 				y = h - this.height;
 			else if (
-				origin == Alignment.Center || 
-				origin == Alignment.Left || 
+				origin == Alignment.Center ||
+				origin == Alignment.Left ||
 				origin == Alignment.Right)
 				y = (h - this.height) / 2;
 
@@ -231,9 +232,9 @@ namespace Duality.Drawing
 			Point2 size;
 			this.GetOpaqueBoundaries(out topLeft, out size);
 			this.SubImage(
-				cropX ? topLeft.X : 0, 
-				cropY ? topLeft.Y : 0, 
-				cropX ? size.X : this.width, 
+				cropX ? topLeft.X : 0,
+				cropY ? topLeft.Y : 0,
+				cropX ? size.X : this.width,
 				cropY ? size.Y : this.height);
 		}
 
@@ -319,17 +320,17 @@ namespace Duality.Drawing
 
 			Parallel.ForEach(Partitioner.Create(0, this.data.Length), range =>
 			{
-				Point2	pos		= new Point2();
-				int[]	nPos	= new int[8];
-				bool[]	nOk		= new bool[8];
-				int[]	mixClr	= new int[4];
+				Point2 pos = new Point2();
+				int[] nPos = new int[8];
+				bool[] nOk = new bool[8];
+				int[] mixClr = new int[4];
 
 				for (int i = range.Item1; i < range.Item2; i++)
 				{
 					if (dataCopy[i].A != 0) continue;
 
-					pos.Y	= i / this.width;
-					pos.X	= i - (pos.Y * this.width);
+					pos.Y = i / this.width;
+					pos.X = i - (pos.Y * this.width);
 
 					mixClr[0] = 0;
 					mixClr[1] = 0;
@@ -345,14 +346,14 @@ namespace Duality.Drawing
 					nPos[6] = i - this.width + 1;
 					nPos[7] = i + this.width + 1;
 
-					nOk[0]	= pos.Y > 0;
-					nOk[1]	= pos.Y < this.height - 1;
-					nOk[2]	= pos.X > 0;
-					nOk[3]	= pos.X < this.width - 1;
-					nOk[4]	= nOk[2] && nOk[0];
-					nOk[5]	= nOk[2] && nOk[1];
-					nOk[6]	= nOk[3] && nOk[0];
-					nOk[7]	= nOk[3] && nOk[1];
+					nOk[0] = pos.Y > 0;
+					nOk[1] = pos.Y < this.height - 1;
+					nOk[2] = pos.X > 0;
+					nOk[3] = pos.X < this.width - 1;
+					nOk[4] = nOk[2] && nOk[0];
+					nOk[5] = nOk[2] && nOk[1];
+					nOk[6] = nOk[3] && nOk[0];
+					nOk[7] = nOk[3] && nOk[1];
 
 					int nMult = 2;
 					for (int j = 0; j < 8; j++)
@@ -389,7 +390,7 @@ namespace Duality.Drawing
 				this.data[i] = transparentColor;
 			}
 		}
-			
+
 		/// <summary>
 		/// Rescales the Layer, stretching it to the specified size.
 		/// </summary>
@@ -414,23 +415,23 @@ namespace Duality.Drawing
 			int x = 0;
 			int y = 0;
 
-			if (origin == Alignment.Right || 
-				origin == Alignment.TopRight || 
+			if (origin == Alignment.Right ||
+				origin == Alignment.TopRight ||
 				origin == Alignment.BottomRight)
 				x = w - this.width;
 			else if (
-				origin == Alignment.Center || 
-				origin == Alignment.Top || 
+				origin == Alignment.Center ||
+				origin == Alignment.Top ||
 				origin == Alignment.Bottom)
 				x = (w - this.width) / 2;
 
-			if (origin == Alignment.Bottom || 
-				origin == Alignment.BottomLeft || 
+			if (origin == Alignment.Bottom ||
+				origin == Alignment.BottomLeft ||
 				origin == Alignment.BottomRight)
 				y = h - this.height;
 			else if (
-				origin == Alignment.Center || 
-				origin == Alignment.Left || 
+				origin == Alignment.Center ||
+				origin == Alignment.Left ||
 				origin == Alignment.Right)
 				y = (h - this.height) / 2;
 
@@ -475,12 +476,12 @@ namespace Duality.Drawing
 			Point2 size;
 			this.GetOpaqueBoundaries(out topLeft, out size);
 			return this.CloneSubImage(
-				cropX ? topLeft.X : 0, 
-				cropY ? topLeft.Y : 0, 
-				cropX ? size.X : this.width, 
+				cropX ? topLeft.X : 0,
+				cropY ? topLeft.Y : 0,
+				cropX ? size.X : this.width,
 				cropY ? size.Y : this.height);
 		}
-			
+
 		/// <summary>
 		/// Performs a drawing operation from this Layer to a target layer.
 		/// </summary>
@@ -523,7 +524,7 @@ namespace Duality.Drawing
 						}
 						else if (blend == BlendMode.Add)
 						{
-							ColorRgba targetColor	= target.data[targetN];
+							ColorRgba targetColor = target.data[targetN];
 							float alphaTemp = (float)this.data[sourceN].A / 255.0f;
 							target.data[targetN].R = (byte)Math.Min(255, Math.Max(0, (int)Math.Round(targetColor.R + this.data[sourceN].R * alphaTemp)));
 							target.data[targetN].G = (byte)Math.Min(255, Math.Max(0, (int)Math.Round(targetColor.G + this.data[sourceN].G * alphaTemp)));
@@ -532,7 +533,7 @@ namespace Duality.Drawing
 						}
 						else if (blend == BlendMode.Alpha)
 						{
-							ColorRgba targetColor	= target.data[targetN];
+							ColorRgba targetColor = target.data[targetN];
 							float alphaTemp = (float)this.data[sourceN].A / 255.0f;
 							target.data[targetN].R = (byte)Math.Min(255, Math.Max(0, (int)Math.Round(targetColor.R * (1.0f - alphaTemp) + this.data[sourceN].R * alphaTemp)));
 							target.data[targetN].G = (byte)Math.Min(255, Math.Max(0, (int)Math.Round(targetColor.G * (1.0f - alphaTemp) + this.data[sourceN].G * alphaTemp)));
@@ -541,7 +542,7 @@ namespace Duality.Drawing
 						}
 						else if (blend == BlendMode.AlphaPre)
 						{
-							ColorRgba targetColor	= target.data[targetN];
+							ColorRgba targetColor = target.data[targetN];
 							float alphaTemp = (float)this.data[sourceN].A / 255.0f;
 							target.data[targetN].R = (byte)Math.Min(255, Math.Max(0, (int)Math.Round(targetColor.R * (1.0f - alphaTemp) + this.data[sourceN].R)));
 							target.data[targetN].G = (byte)Math.Min(255, Math.Max(0, (int)Math.Round(targetColor.G * (1.0f - alphaTemp) + this.data[sourceN].G)));
@@ -550,7 +551,7 @@ namespace Duality.Drawing
 						}
 						else if (blend == BlendMode.Multiply)
 						{
-							ColorRgba targetColor	= target.data[targetN];
+							ColorRgba targetColor = target.data[targetN];
 							float clrTempR = (float)targetColor.R / 255.0f;
 							float clrTempG = (float)targetColor.G / 255.0f;
 							float clrTempB = (float)targetColor.B / 255.0f;
@@ -562,7 +563,7 @@ namespace Duality.Drawing
 						}
 						else if (blend == BlendMode.Light)
 						{
-							ColorRgba targetColor	= target.data[targetN];
+							ColorRgba targetColor = target.data[targetN];
 							float clrTempR = (float)targetColor.R / 255.0f;
 							float clrTempG = (float)targetColor.G / 255.0f;
 							float clrTempB = (float)targetColor.B / 255.0f;
@@ -574,7 +575,7 @@ namespace Duality.Drawing
 						}
 						else if (blend == BlendMode.Invert)
 						{
-							ColorRgba targetColor	= target.data[targetN];
+							ColorRgba targetColor = target.data[targetN];
 							float clrTempR = (float)targetColor.R / 255.0f;
 							float clrTempG = (float)targetColor.G / 255.0f;
 							float clrTempB = (float)targetColor.B / 255.0f;
@@ -644,7 +645,7 @@ namespace Duality.Drawing
 						}
 						else if (blend == BlendMode.Add)
 						{
-							clrTarget	= target.data[targetN];
+							clrTarget = target.data[targetN];
 							float alphaTemp = (float)clrSource.A / 255.0f;
 							target.data[targetN].R = (byte)Math.Min(255, Math.Max(0, (int)Math.Round(clrTarget.R + clrSource.R * alphaTemp)));
 							target.data[targetN].G = (byte)Math.Min(255, Math.Max(0, (int)Math.Round(clrTarget.G + clrSource.G * alphaTemp)));
@@ -653,7 +654,7 @@ namespace Duality.Drawing
 						}
 						else if (blend == BlendMode.Alpha)
 						{
-							clrTarget	= target.data[targetN];
+							clrTarget = target.data[targetN];
 							float alphaTemp = (float)clrSource.A / 255.0f;
 							target.data[targetN].R = (byte)Math.Min(255, Math.Max(0, (int)Math.Round(clrTarget.R * (1.0f - alphaTemp) + clrSource.R * alphaTemp)));
 							target.data[targetN].G = (byte)Math.Min(255, Math.Max(0, (int)Math.Round(clrTarget.G * (1.0f - alphaTemp) + clrSource.G * alphaTemp)));
@@ -662,7 +663,7 @@ namespace Duality.Drawing
 						}
 						else if (blend == BlendMode.AlphaPre)
 						{
-							clrTarget	= target.data[targetN];
+							clrTarget = target.data[targetN];
 							float alphaTemp = (float)clrSource.A / 255.0f;
 							target.data[targetN].R = (byte)Math.Min(255, Math.Max(0, (int)Math.Round(clrTarget.R * (1.0f - alphaTemp) + clrSource.R)));
 							target.data[targetN].G = (byte)Math.Min(255, Math.Max(0, (int)Math.Round(clrTarget.G * (1.0f - alphaTemp) + clrSource.G)));
@@ -671,7 +672,7 @@ namespace Duality.Drawing
 						}
 						else if (blend == BlendMode.Multiply)
 						{
-							clrTarget	= target.data[targetN];
+							clrTarget = target.data[targetN];
 							float clrTempR = (float)clrTarget.R / 255.0f;
 							float clrTempG = (float)clrTarget.G / 255.0f;
 							float clrTempB = (float)clrTarget.B / 255.0f;
@@ -683,7 +684,7 @@ namespace Duality.Drawing
 						}
 						else if (blend == BlendMode.Light)
 						{
-							clrTarget	= target.data[targetN];
+							clrTarget = target.data[targetN];
 							float clrTempR = (float)clrTarget.R / 255.0f;
 							float clrTempG = (float)clrTarget.G / 255.0f;
 							float clrTempB = (float)clrTarget.B / 255.0f;
@@ -695,7 +696,7 @@ namespace Duality.Drawing
 						}
 						else if (blend == BlendMode.Invert)
 						{
-							clrTarget	= target.data[targetN];
+							clrTarget = target.data[targetN];
 							float clrTempR = (float)clrTarget.R / 255.0f;
 							float clrTempG = (float)clrTarget.G / 255.0f;
 							float clrTempB = (float)clrTarget.B / 255.0f;
@@ -717,8 +718,8 @@ namespace Duality.Drawing
 		private ColorRgba[] InternalRescale(int w, int h, ImageScaleFilter filter)
 		{
 			if (this.width == w && this.height == h) return null;
-				
-			ColorRgba[]	tempDestData = new ColorRgba[w * h];
+
+			ColorRgba[] tempDestData = new ColorRgba[w * h];
 			if (filter == ImageScaleFilter.Nearest)
 			{
 				// Don't use Parallel.For here, the overhead is too big and the compiler 
@@ -728,9 +729,9 @@ namespace Duality.Drawing
 					int y = i / w;
 					int x = i - (y * w);
 
-					int xTmp	= (x * this.width) / w;
-					int yTmp	= (y * this.height) / h;
-					int nTmp	= xTmp + (yTmp * this.width);
+					int xTmp = (x * this.width) / w;
+					int yTmp = (y * this.height) / h;
+					int nTmp = xTmp + (yTmp * this.width);
 					tempDestData[i] = this.data[nTmp];
 				}
 			}
@@ -743,61 +744,61 @@ namespace Duality.Drawing
 						int y = i / w;
 						int x = i - (y * w);
 
-						float	xRatio	= ((float)(x * this.width) / (float)w) + 0.5f;
-						float	yRatio	= ((float)(y * this.height) / (float)h) + 0.5f;
-						int		xTmp	= (int)xRatio;
-						int		yTmp	= (int)yRatio;
+						float xRatio = ((float)(x * this.width) / (float)w) + 0.5f;
+						float yRatio = ((float)(y * this.height) / (float)h) + 0.5f;
+						int xTmp = (int)xRatio;
+						int yTmp = (int)yRatio;
 						xRatio -= xTmp;
 						yRatio -= yTmp;
 
-						int		xTmp2	= xTmp + 1;
-						int		yTmp2	= yTmp + 1;
+						int xTmp2 = xTmp + 1;
+						int yTmp2 = yTmp + 1;
 						xTmp = xTmp < this.width ? xTmp : this.width - 1;
 						yTmp = (yTmp < this.height ? yTmp : this.height - 1) * this.width;
 						xTmp2 = xTmp2 < this.width ? xTmp2 : this.width - 1;
 						yTmp2 = (yTmp2 < this.height ? yTmp2 : this.height - 1) * this.width;
 
-						int		nTmp0	= xTmp + yTmp;
-						int		nTmp1	= xTmp2 + yTmp;
-						int		nTmp2	= xTmp + yTmp2;
-						int		nTmp3	= xTmp2 + yTmp2;
+						int nTmp0 = xTmp + yTmp;
+						int nTmp1 = xTmp2 + yTmp;
+						int nTmp2 = xTmp + yTmp2;
+						int nTmp3 = xTmp2 + yTmp2;
 
-						tempDestData[i].R = 
+						tempDestData[i].R =
 							(byte)
 							(
 								((float)this.data[nTmp0].R * (1.0f - xRatio) * (1.0f - yRatio)) +
-								((float)this.data[nTmp1].R * xRatio * (1.0f - yRatio)) + 
+								((float)this.data[nTmp1].R * xRatio * (1.0f - yRatio)) +
 								((float)this.data[nTmp2].R * yRatio * (1.0f - xRatio)) +
 								((float)this.data[nTmp3].R * xRatio * yRatio)
 							);
-						tempDestData[i].G = 
+						tempDestData[i].G =
 							(byte)
 							(
 								((float)this.data[nTmp0].G * (1.0f - xRatio) * (1.0f - yRatio)) +
-								((float)this.data[nTmp1].G * xRatio * (1.0f - yRatio)) + 
+								((float)this.data[nTmp1].G * xRatio * (1.0f - yRatio)) +
 								((float)this.data[nTmp2].G * yRatio * (1.0f - xRatio)) +
 								((float)this.data[nTmp3].G * xRatio * yRatio)
 							);
-						tempDestData[i].B = 
+						tempDestData[i].B =
 							(byte)
 							(
 								((float)this.data[nTmp0].B * (1.0f - xRatio) * (1.0f - yRatio)) +
-								((float)this.data[nTmp1].B * xRatio * (1.0f - yRatio)) + 
+								((float)this.data[nTmp1].B * xRatio * (1.0f - yRatio)) +
 								((float)this.data[nTmp2].B * yRatio * (1.0f - xRatio)) +
 								((float)this.data[nTmp3].B * xRatio * yRatio)
 							);
-						tempDestData[i].A = 
+						tempDestData[i].A =
 							(byte)
 							(
 								((float)this.data[nTmp0].A * (1.0f - xRatio) * (1.0f - yRatio)) +
-								((float)this.data[nTmp1].A * xRatio * (1.0f - yRatio)) + 
+								((float)this.data[nTmp1].A * xRatio * (1.0f - yRatio)) +
 								((float)this.data[nTmp2].A * yRatio * (1.0f - xRatio)) +
 								((float)this.data[nTmp3].A * xRatio * yRatio)
 							);
 					}
 				});
 			}
-				
+
 			return tempDestData;
 		}
 
@@ -807,7 +808,7 @@ namespace Duality.Drawing
 
 			writer.WriteValue("version", Serialize_Version_FormatId);
 			writer.WriteValue("formatId", formatId);
-			
+
 			IImageCodec codec = ImageCodec.GetWrite(formatId);
 			if (codec == null)
 			{
@@ -843,7 +844,7 @@ namespace Duality.Drawing
 					"Unknown PixelData serialization version '{0}'. Can't load image data.",
 					version));
 			}
-			
+
 			IImageCodec codec = ImageCodec.GetRead(formatId);
 			if (codec == null)
 			{
@@ -864,5 +865,58 @@ namespace Duality.Drawing
 			}
 		}
 	}
+	public enum BlendMode
+	{
+		/// <summary>
+		/// Incoming color overwrites background color completely. Doesn't need Z-Sorting.
+		/// </summary>
+		Solid,
+		/// <summary>
+		/// Incoming color overwrites background color but leaves out areas with low alpha. Doesn't need Z-Sorting.
+		/// </summary>
+		Mask,
 
+		/// <summary>
+		/// Incoming color is multiplied by its alpha value and then added to background color. Needs Z-Sorting.
+		/// </summary>
+		Add,
+		/// <summary>
+		/// Incoming color overwrites background color, weighted by its alpha value. Needs Z-Sorting.
+		/// </summary>
+		Alpha,
+		/// <summary>
+		/// Premultiplied Alpha: Colors specify brightness, alpha specifies opacity. Needs Z-Sorting.
+		/// </summary>
+		AlphaPre,
+		/// <summary>
+		/// Incoming color scales background color. Needs Z-Sorting.
+		/// </summary>
+		Multiply,
+		/// <summary>
+		/// Incoming color is multiplied and then added to background color. Needs Z-Sorting.
+		/// </summary>
+		Light,
+		/// <summary>
+		/// Incoming color inverts background color. Needs Z-Sorting.
+		/// </summary>
+		Invert,
+
+		/// <summary>
+		/// The total number of available BlendModes.
+		/// </summary>
+		[EditorHintFlags(MemberFlags.Invisible)]
+		Count
+	}
+
+	public enum ImageScaleFilter
+	{
+		/// <summary>
+		/// Nearest neighbor filterting / No interpolation.
+		/// </summary>
+		Nearest,
+		/// <summary>
+		/// Linear interpolation.
+		/// </summary>
+		Linear
+	}
 }

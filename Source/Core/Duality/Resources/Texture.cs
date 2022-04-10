@@ -7,6 +7,7 @@ using Duality.Drawing;
 using Duality.Cloning;
 using Duality.Backend;
 using Duality.IO;
+using THREE.Textures;
 
 namespace Duality.Resources
 {
@@ -22,31 +23,31 @@ namespace Duality.Resources
 		/// <summary>
 		/// [GET] A Texture showing the Duality icon.
 		/// </summary>
-		public static ContentRef<Texture> DualityIcon		{ get; private set; }
+		public static ContentRef<Texture> DualityIcon { get; private set; }
 		/// <summary>
 		/// [GET] A Texture showing the Duality icon without the text on it.
 		/// </summary>
-		public static ContentRef<Texture> DualityIconB		{ get; private set; }
+		public static ContentRef<Texture> DualityIconB { get; private set; }
 		/// <summary>
 		/// A Texture showing the Duality logo.
 		/// </summary>
-		public static ContentRef<Texture> DualityLogoBig	{ get; private set; }
+		public static ContentRef<Texture> DualityLogoBig { get; private set; }
 		/// <summary>
 		/// A Texture showing the Duality logo.
 		/// </summary>
-		public static ContentRef<Texture> DualityLogoMedium	{ get; private set; }
+		public static ContentRef<Texture> DualityLogoMedium { get; private set; }
 		/// <summary>
 		/// A Texture showing the Duality logo.
 		/// </summary>
-		public static ContentRef<Texture> DualityLogoSmall	{ get; private set; }
+		public static ContentRef<Texture> DualityLogoSmall { get; private set; }
 		/// <summary>
 		/// [GET] A plain white 1x1 Texture. Can be used as a dummy.
 		/// </summary>
-		public static ContentRef<Texture> White				{ get; private set; }
+		public static ContentRef<Texture> White { get; private set; }
 		/// <summary>
 		/// [GET] A 256x256 black and white checkerboard texture.
 		/// </summary>
-		public static ContentRef<Texture> Checkerboard		{ get; private set; }
+		public static ContentRef<Texture> Checkerboard { get; private set; }
 		/// <summary>
 		/// [GET] Specular Integartion
 		/// </summary>
@@ -56,7 +57,7 @@ namespace Duality.Resources
 
 		internal static void InitDefaultContent()
 		{
-			DefaultContent.InitType<Texture>(new Dictionary<string,Texture>
+			DefaultContent.InitType<Texture>(new Dictionary<string, Texture>
 			{
 				{ "DualityIcon", new Texture(Pixmap.DualityIcon) },
 				{ "DualityIconB", new Texture(Pixmap.DualityIconB) },
@@ -67,56 +68,78 @@ namespace Duality.Resources
 				{ "DefaultNormalMap", new Texture(
 					Pixmap.DefaultNormalMap,
 					TextureSizeMode.Default,
-					TextureMagFilter.Nearest,
-					TextureMinFilter.Nearest,
-					TextureWrapMode.Repeat,
-					TextureWrapMode.Repeat) },
+					MagnificationFilters.NearestFilter,
+					MinificationFilters.NearestFilter,
+					WrappingModes.RepeatWrapping,
+					WrappingModes.RepeatWrapping,
+					WrappingModes.RepeatWrapping) },
 				{ "Checkerboard", new Texture(
-					Pixmap.Checkerboard, 
+					Pixmap.Checkerboard,
 					TextureSizeMode.Default,
-					TextureMagFilter.Nearest,
-					TextureMinFilter.Nearest,
-					TextureWrapMode.Repeat,
-					TextureWrapMode.Repeat) },
+					MagnificationFilters.NearestFilter,
+					MinificationFilters.NearestFilter,
+					WrappingModes.RepeatWrapping,
+					WrappingModes.RepeatWrapping,
+					WrappingModes.RepeatWrapping) },
 				{ "SpecularIntegartion", new Texture(
-					Pixmap.SpecularIntegartion, 
+					Pixmap.SpecularIntegartion,
 					TextureSizeMode.Default,
-					TextureMagFilter.Nearest,
-					TextureMinFilter.Nearest,
-					TextureWrapMode.Repeat,
-					TextureWrapMode.Repeat) },
+					MagnificationFilters.NearestFilter,
+					MinificationFilters.NearestFilter,
+					WrappingModes.RepeatWrapping,
+					WrappingModes.RepeatWrapping,
+					WrappingModes.RepeatWrapping) },
 				{ "ColorCorrectLUT", new Texture(
-					Pixmap.ColorCorrectLUT, 
+					Pixmap.ColorCorrectLUT,
 					TextureSizeMode.Default,
-					TextureMagFilter.Nearest,
-					TextureMinFilter.Nearest,
-					TextureWrapMode.Repeat,
-					TextureWrapMode.Repeat) },
+					MagnificationFilters.NearestFilter,
+					MinificationFilters.NearestFilter,
+					WrappingModes.RepeatWrapping,
+					WrappingModes.RepeatWrapping,
+					WrappingModes.RepeatWrapping) },
 			});
 		}
 
-		
-		private	ContentRef<Pixmap>	basePixmap	= null;
-		private	Point2				size		= Point2.Zero;
-		private	TextureSizeMode		texSizeMode	= TextureSizeMode.Default;
-		private	TextureMagFilter	filterMag	= TextureMagFilter.Linear;
-		private	TextureMinFilter	filterMin	= TextureMinFilter.LinearMipmapLinear;
-		private	TextureWrapMode		wrapX		= TextureWrapMode.Clamp;
-		private	TextureWrapMode		wrapY		= TextureWrapMode.Clamp;
-		private	TexturePixelFormat	pixelformat	= TexturePixelFormat.Rgba;
-		private	bool				anisoFilter	= false;
 
-		[DontSerialize] private	NativeTexture nativeTex = null;
-		[DontSerialize] private	int		pxWidth		= 0;
-		[DontSerialize] private	int		pxHeight	= 0;
-		[DontSerialize] private	float	pxDiameter	= 0.0f;
-		[DontSerialize] private	int		texWidth	= 0;
-		[DontSerialize] private	int		texHeight	= 0;
-		[DontSerialize] private	Vector2	uvRatio		= new Vector2(1.0f, 1.0f);
-		[DontSerialize] private	bool	needsReload	= true;
-		[DontSerialize] private	Rect[]	atlas		= null;
+		private ContentRef<Pixmap> basePixmap = null;
+		private Point2 size = Point2.Zero;
+		private TextureSizeMode texSizeMode = TextureSizeMode.Default;
 
-		
+		[DontSerialize] private THREE.Textures.Texture threeTex = null;
+		[DontSerialize] private int pxWidth = 0;
+		[DontSerialize] private int pxHeight = 0;
+		[DontSerialize] private int texWidth = 0;
+		[DontSerialize] private int texHeight = 0;
+		[DontSerialize] private Vector2 uvRatio = new Vector2(1.0f, 1.0f);
+		[DontSerialize] private bool needsReload = true;
+		[DontSerialize] private Rect[] atlas = null;
+
+		private int _Anisotropy = 1;
+		private Vector2 _Center = new Vector2(0, 0);
+		private Vector2 _Offset = new Vector2(0, 0);
+		private WrappingModes _WrapS = WrappingModes.RepeatWrapping;
+		private WrappingModes _WrapT = WrappingModes.RepeatWrapping;
+		private WrappingModes _WrapR = WrappingModes.RepeatWrapping;
+		private Vector2 _Repeat = new Vector2(1, 1);
+		private MagnificationFilters _MagFilter = MagnificationFilters.LinearFilter;
+		private MinificationFilters _MinFilter = MinificationFilters.LinearMipmapLinearFilter;
+		private MappingModes _Mapping = MappingModes.UVMapping;
+		private float _Rotation = 0;
+		private bool _FlipY = false;
+
+		[EditorHintFlags(MemberFlags.AffectsOthers), EditorHintRange(1, 2)] public int Anisotropy { get { return this._Anisotropy; } set { this._Anisotropy = value; this.needsReload = true; } }
+		[EditorHintFlags(MemberFlags.AffectsOthers)] public Vector2 Center { get { return this._Center; } set { this._Center = value; this.needsReload = true; } }
+		[EditorHintFlags(MemberFlags.AffectsOthers)] public Vector2 Offset { get { return this._Offset; } set { this._Offset = value; this.needsReload = true; } }
+		[EditorHintFlags(MemberFlags.AffectsOthers)] public WrappingModes WrapS { get { return this._WrapS; } set { this._WrapS = value; this.needsReload = true; } }
+		[EditorHintFlags(MemberFlags.AffectsOthers)] public WrappingModes WrapT { get { return this._WrapT; } set { this._WrapT = value; this.needsReload = true; } }
+		[EditorHintFlags(MemberFlags.AffectsOthers)] public WrappingModes WrapR { get { return this._WrapR; } set { this._WrapR = value; this.needsReload = true; } }
+		[EditorHintFlags(MemberFlags.AffectsOthers)] public Vector2 Repeat { get { return this._Repeat; } set { this._Repeat = value; this.needsReload = true; } }
+		[EditorHintFlags(MemberFlags.AffectsOthers)] public MagnificationFilters MagFilter { get { return this._MagFilter; } set { this._MagFilter = value; this.needsReload = true; } }
+		[EditorHintFlags(MemberFlags.AffectsOthers)] public MinificationFilters MinFilter { get { return this._MinFilter; } set { this._MinFilter = value; this.needsReload = true; } }
+		[EditorHintFlags(MemberFlags.AffectsOthers)] public MappingModes Mapping { get { return this._Mapping; } set { this._Mapping = value; this.needsReload = true; } }
+		[EditorHintFlags(MemberFlags.AffectsOthers)] public float Rotation { get { return this._Rotation; } set { this._Rotation = value; this.needsReload = true; } }
+		[EditorHintFlags(MemberFlags.AffectsOthers)] public bool FlipY { get { return this._FlipY; } set { this._FlipY = value; this.needsReload = true; } }
+
 		/// <summary>
 		/// [GET] The width of the internal texture that has been allocated, in pixels.
 		/// </summary>
@@ -169,51 +192,24 @@ namespace Duality.Resources
 		/// [GET] The backends native texture. You shouldn't use this unless you know exactly what you're doing.
 		/// </summary>
 		[EditorHintFlags(MemberFlags.Invisible)]
-		public NativeTexture Native
+		public THREE.Textures.Texture ThreeTexture
 		{
-			get { return this.nativeTex; }
+			get { return this.threeTex; }
 		}
-		public int Handle
-		{
-			get { return this.nativeTex.Handle; }
-		}
+
 		public int Width
 		{
-			get { return this.nativeTex.Width; }
+			get { return this.threeTex.ImageSize.Width; }
 		}
 		public int Height
 		{
-			get { return this.nativeTex.Height; }
+			get { return this.threeTex.ImageSize.Height; }
 		}
-		/// <summary>
-		/// [GET] The UV coordinate size that represents the texture's used content area.
-		/// </summary>
-		[EditorHintFlags(MemberFlags.Invisible)]
-		public Vector2 UVRatio
-		{
-			get { return this.uvRatio; }
-		}
-		/// <summary>
-		/// [GET] Returns whether or not the texture uses mipmaps.
-		/// </summary>
-		[EditorHintFlags(MemberFlags.Invisible)]
-		public bool HasMipmaps
-		{
-			get { return 
-				this.filterMin == TextureMinFilter.LinearMipmapLinear ||
-				this.filterMin == TextureMinFilter.LinearMipmapNearest ||
-				this.filterMin == TextureMinFilter.NearestMipmapLinear ||
-				this.filterMin == TextureMinFilter.NearestMipmapNearest; }
-		}
-		/// <summary>
-		/// Indicates that the textures parameters have been changed in a way that will make it
-		/// necessary to reload its data before using it next time.
-		/// </summary>
-		[EditorHintFlags(MemberFlags.Invisible)]
 		public bool NeedsReload
 		{
 			get { return this.needsReload; }
-		} 
+		}
+
 		/// <summary>
 		/// [GET / SET] The Textures nominal size. When create from a <see cref="BasePixmap"/>, this
 		/// value will be read-only and derived from its <see cref="Pixmap.Size"/>.
@@ -246,7 +242,7 @@ namespace Duality.Resources
 		/// <summary>
 		/// Sets up a new, uninitialized Texture.
 		/// </summary>
-		public Texture() : this(0, 0) {}
+		public Texture() : this(0, 0) { }
 		/// <summary>
 		/// Creates a new Texture based on a <see cref="Duality.Resources.Pixmap"/>.
 		/// </summary>
@@ -257,19 +253,20 @@ namespace Duality.Resources
 		/// <param name="wrapX">The OpenGL wrap mode on the texel x axis.</param>
 		/// <param name="wrapY">The OpenGL wrap mode on the texel y axis.</param>
 		/// <param name="format">The format in which OpenGL stores the pixel data.</param>
-		public Texture(ContentRef<Pixmap> basePixmap, 
-			TextureSizeMode sizeMode	= TextureSizeMode.Default, 
-			TextureMagFilter filterMag	= TextureMagFilter.Linear, 
-			TextureMinFilter filterMin	= TextureMinFilter.LinearMipmapLinear,
-			TextureWrapMode wrapX		= TextureWrapMode.Clamp,
-			TextureWrapMode wrapY		= TextureWrapMode.Clamp,
-			TexturePixelFormat format	= TexturePixelFormat.Rgba)
+		public Texture(ContentRef<Pixmap> basePixmap,
+			TextureSizeMode sizeMode = TextureSizeMode.Default,
+			MagnificationFilters filterMag = MagnificationFilters.LinearFilter,
+			MinificationFilters filterMin = MinificationFilters.LinearMipmapLinearFilter,
+			WrappingModes wrapS = WrappingModes.ClampToEdgeWrapping,
+			WrappingModes wrapT = WrappingModes.ClampToEdgeWrapping,
+			WrappingModes wrapR = WrappingModes.ClampToEdgeWrapping)
 		{
-			this.filterMag = filterMag;
-			this.filterMin = filterMin;
-			this.wrapX = wrapX;
-			this.wrapY = wrapY;
-			this.pixelformat = format;
+			this.MagFilter = filterMag;
+			this.MinFilter = filterMin;
+			this.WrapS = wrapS;
+			this.WrapS = wrapS;
+			this.WrapT = wrapT;
+			this.WrapR = wrapR;
 			this.LoadData(basePixmap, sizeMode);
 		}
 		/// <summary>
@@ -283,22 +280,22 @@ namespace Duality.Resources
 		/// <param name="wrapX">The OpenGL wrap mode on the texel x axis.</param>
 		/// <param name="wrapY">The OpenGL wrap mode on the texel y axis.</param>
 		/// <param name="format">The format in which OpenGL stores the pixel data.</param>
-		public Texture(int width, int height, 
-			TextureSizeMode sizeMode	= TextureSizeMode.Default, 
-			TextureMagFilter filterMag	= TextureMagFilter.Linear, 
-			TextureMinFilter filterMin	= TextureMinFilter.LinearMipmapLinear,
-			TextureWrapMode wrapX		= TextureWrapMode.Clamp,
-			TextureWrapMode wrapY		= TextureWrapMode.Clamp,
-			TexturePixelFormat format	= TexturePixelFormat.Rgba)
+		public Texture(int width, int height,
+			TextureSizeMode sizeMode = TextureSizeMode.Default,
+			MagnificationFilters filterMag = MagnificationFilters.LinearFilter,
+			MinificationFilters filterMin = MinificationFilters.LinearMipmapLinearFilter,
+			WrappingModes wrapS = WrappingModes.ClampToEdgeWrapping,
+			WrappingModes wrapT = WrappingModes.ClampToEdgeWrapping,
+			WrappingModes wrapR = WrappingModes.ClampToEdgeWrapping)
 		{
-			this.filterMag = filterMag;
-			this.filterMin = filterMin;
-			this.wrapX = wrapX;
-			this.wrapY = wrapY;
-			this.pixelformat = format;
+			this.MagFilter = filterMag;
+			this.MinFilter = filterMin;
+			this.WrapS = wrapS;
+			this.WrapS = wrapS;
+			this.WrapT = wrapT;
+			this.WrapR = wrapR;
 			this.texSizeMode = sizeMode;
 			this.AdjustSize(width, height);
-			this.SetupNativeRes();
 		}
 
 		/// <summary>
@@ -316,7 +313,7 @@ namespace Duality.Resources
 		/// <param name="sizeMode">Specifies behaviour in case the source data has non-power-of-two dimensions.</param>
 		public void LoadData(ContentRef<Pixmap> basePixmap, TextureSizeMode sizeMode)
 		{
-			if (this.nativeTex == null) this.nativeTex = new NativeTexture();
+			if (threeTex != null) threeTex.Dispose();
 			this.needsReload = false;
 			this.basePixmap = basePixmap;
 			this.texSizeMode = sizeMode;
@@ -336,7 +333,6 @@ namespace Duality.Resources
 					pixelData = Pixmap.Checkerboard.Res.MainLayer;
 
 				this.AdjustSize(pixelData.Width, pixelData.Height);
-				this.SetupNativeRes();
 				if (this.texSizeMode != TextureSizeMode.NonPowerOfTwo &&
 					(this.pxWidth != this.texWidth || this.pxHeight != this.texHeight))
 				{
@@ -353,13 +349,12 @@ namespace Duality.Resources
 				}
 
 				// Load pixel data to video memory
-				this.nativeTex.LoadData(
-					this.pixelformat, 
-					pixelData.Width, pixelData.Height, 
-					pixelData.Data, 
-					ColorDataLayout.Rgba, 
-					ColorDataElementType.Byte);
-					
+				threeTex = new THREE.Textures.Texture(pixelData.ToBitmap(), (int)this.Mapping, (int)this.WrapS, (int)this.WrapT, (int)this.MagFilter, (int)this.MinFilter, anisotropy: this.Anisotropy);
+				threeTex.flipY = FlipY;
+				threeTex.Rotation = Rotation;
+				threeTex.Format = THREE.Constants.RGBFormat;
+				threeTex.NeedsUpdate = true;
+
 				// Adjust atlas to represent UV coordinates
 				if (this.atlas != null)
 				{
@@ -379,7 +374,6 @@ namespace Duality.Resources
 			{
 				this.atlas = null;
 				this.AdjustSize(this.size.X, this.size.Y);
-				this.SetupNativeRes();
 			}
 		}
 
@@ -398,27 +392,7 @@ namespace Duality.Resources
 		/// <param name="target">The target image to store the retrieved pixel data in.</param>
 		public void GetPixelData(PixelData target)
 		{
-			ColorRgba[] data = new ColorRgba[this.texWidth * this.texHeight];
-			this.GetPixelDataInternal(data);
-			target.SetData(data, this.texWidth, this.texHeight);
-		}
-
-		private int GetPixelDataInternal<T>(T[] buffer) where T : struct
-		{
-			int readBytes = this.texWidth * this.texHeight * 4;
-			if (readBytes == 0) return 0;
-
-			int readElements = readBytes / System.Runtime.InteropServices.Marshal.SizeOf(typeof(T));
-			if (buffer.Length < readElements)
-			{
-				throw new ArgumentException(
-					string.Format("The target buffer is too small. Its length needs to be at least {0}.", readBytes), 
-					"buffer");
-			}
-
-			this.nativeTex.GetData(buffer, ColorDataLayout.Rgba, ColorDataElementType.Byte);
-
-			return readElements;
+			target.FromBitmap(this.threeTex.Image);
 		}
 
 		/// <summary>
@@ -450,7 +424,6 @@ namespace Duality.Resources
 			this.size = new Point2(MathF.Abs(width), MathF.Abs(height));
 			this.pxWidth = this.size.X;
 			this.pxHeight = this.size.Y;
-			this.pxDiameter = MathF.Distance(this.pxWidth, this.pxHeight);
 
 			if (this.texSizeMode == TextureSizeMode.NonPowerOfTwo)
 			{
@@ -476,21 +449,6 @@ namespace Duality.Resources
 					this.uvRatio = Vector2.One;
 			}
 		}
-		/// <summary>
-		/// Sets up the Textures OpenGL resources, clearing previously uploaded pixel data.
-		/// </summary>
-		protected void SetupNativeRes()
-		{
-			if (this.nativeTex == null) this.nativeTex = new NativeTexture();
-
-			this.nativeTex.SetupEmpty(
-				this.pixelformat,
-				this.texWidth, this.texHeight,
-				this.filterMin, this.filterMag,
-				this.wrapX, this.wrapY,
-				this.anisoFilter ? 4 : 0,
-				this.HasMipmaps);
-		}
 
 		protected override void OnLoaded()
 		{
@@ -502,10 +460,10 @@ namespace Duality.Resources
 			base.OnDisposing(manually);
 
 			// Dispose unmanaged Resources
-			if (this.nativeTex != null)
+			if (this.threeTex != null)
 			{
-				this.nativeTex.Dispose();
-				this.nativeTex = null;
+				this.threeTex.Dispose();
+				this.threeTex = null;
 			}
 
 			// Get rid of big data references, so the GC can collect them.
@@ -517,5 +475,65 @@ namespace Duality.Resources
 			Texture c = target as Texture;
 			c.LoadData(this.basePixmap, this.texSizeMode);
 		}
+	}
+
+	public enum MappingModes
+	{
+		UVMapping = 300,
+		CubeReflectionMapping = 301,
+		CubeRefractionMapping = 302,
+		EquirectangularReflectionMapping = 303,
+		EquirectangularRefractionMapping = 304,
+		CubeUVReflectionMapping = 306,
+	}
+
+	public enum WrappingModes
+	{
+		RepeatWrapping = 1000,
+		ClampToEdgeWrapping = 1001,
+		MirroredRepeatWrapping = 1002,
+	}
+
+	public enum MagnificationFilters
+	{
+		NearestFilter = 1003,
+		LinearFilter = 1006,
+	}
+
+	public enum MinificationFilters
+	{
+		NearestFilter = 1003,
+		NearestMipmapNearestFilter = 1004,
+		NearestMipmapLinearFilter = 1005,
+		LinearFilter = 1006,
+		LinearMipmapNearestFilter = 1007,
+		LinearMipmapLinearFilter = 1008,
+	}
+
+	public enum TextureSizeMode
+	{
+		/// <summary>
+		/// Enlarges the images dimensions without scaling the image, leaving
+		/// the new space empty. Texture coordinates are automatically adjusted in
+		/// order to display the image correctly. This preserves the images full
+		/// quality but prevents tiling, if not power-of-two anyway.
+		/// </summary>
+		Enlarge,
+		/// <summary>
+		/// Stretches the image to fit power-of-two dimensions and downscales it
+		/// again when displaying. This might blur the image slightly but allows
+		/// tiling it.
+		/// </summary>
+		Stretch,
+		/// <summary>
+		/// The images dimensions are not affected, as OpenGL uses an actual 
+		/// non-power-of-two texture. However, this might be unsupported on older hardware.
+		/// </summary>
+		NonPowerOfTwo,
+
+		/// <summary>
+		/// The default behaviour. Equals <see cref="Enlarge"/>.
+		/// </summary>
+		Default = Enlarge
 	}
 }

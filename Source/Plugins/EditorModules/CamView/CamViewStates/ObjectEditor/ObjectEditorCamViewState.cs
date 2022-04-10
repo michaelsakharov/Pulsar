@@ -695,47 +695,6 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 			//canvas.PopState();
 		}
 
-		protected override string UpdateActionText(ref Vector2 actionTextPos)
-		{
-			//string actionText = null;
-			//ObjectEditorAction visibleObjectAction = this.VisibleObjAction;
-			//if (visibleObjectAction != ObjectEditorAction.None && ((this.mouseoverObject != null && this.mouseoverSelect) || this.actionObjSel.Count == 1))
-			//{
-			//	ObjectEditorSelObj obj;
-			//	if (this.mouseoverObject != null || this.mouseoverAction == visibleObjectAction)
-			//	{
-			//		obj = (this.mouseoverObject != null && this.mouseoverSelect) ? this.mouseoverObject : this.actionObjSel[0];
-			//	}
-			//	else
-			//	{
-			//		obj = this.actionObjSel[0];
-			//		actionTextPos = this.GetScreenPos(this.actionObjSel[0].Pos);
-			//	}
-			//
-			//	// If the SelObj is valid, let it determine the current action text
-			//	if (obj.ActualObject != null)
-			//	{
-			//		actionText = obj.UpdateActionText(visibleObjectAction, this.action != ObjectEditorAction.None);
-			//	}
-			//}
-			//
-			//if (actionText != null)
-			//	return actionText;
-			//
-			return base.UpdateActionText(ref actionTextPos);
-		}
-		protected override string UpdateStatusText()
-		{
-			ObjectEditorAction visibleObjectAction = this.VisibleObjAction;
-
-			if (visibleObjectAction == ObjectEditorAction.Move)            return Properties.CamViewRes.CamView_Action_Move;
-			else if (visibleObjectAction == ObjectEditorAction.Rotate)     return Properties.CamViewRes.CamView_Action_Rotate;
-			else if (visibleObjectAction == ObjectEditorAction.Scale)      return Properties.CamViewRes.CamView_Action_Scale;
-			else if (visibleObjectAction == ObjectEditorAction.RectSelect) return Properties.CamViewRes.CamView_Action_Select_Active;
-
-			return base.UpdateStatusText();
-		}
-
 		protected override void OnUpdateState()
 		{
 			this.ValidateSelectionStats();

@@ -17,13 +17,12 @@ using Duality.Launcher;
 using System.Runtime.CompilerServices;
 using OpenTK.Graphics;
 using OpenTK;
-using Duality.Renderer;
-using Duality.Graphics;
 using OpenTK.Graphics.OpenGL;
 using System.Runtime.InteropServices;
 using System.Diagnostics;
-using Duality.Graphics.Components;
-using Duality.Graphics.Pipelines;
+using THREE.Math;
+using THREE;
+using Duality.Components;
 
 namespace Duality
 {
@@ -87,7 +86,7 @@ namespace Duality
 		private static IAssemblyLoader          assemblyLoader     = null;
 		private static CorePluginManager        pluginManager      = new CorePluginManager();
 		private static ISystemBackend           systemBack         = null;
-		private static Duality.Graphics.Backend graphicsBack       = null;
+		private static THREE.Renderers.GLRenderer graphicsBack       = null;
 		private static IAudioBackend            audioBack          = null;
 		private static Point2                   windowSize         = Point2.Zero;
 		private static MouseInput               mouse              = new MouseInput();
@@ -98,11 +97,6 @@ namespace Duality
 		private static ExecutionEnvironment     environment        = ExecutionEnvironment.Unknown;
 		private static ExecutionContext         execContext        = ExecutionContext.Terminated;
 		private static List<object>             disposeSchedule    = new List<object>();
-
-		private static DebugProc _debugProcCallback = DebugCallback;
-		private static GCHandle _debugProcCallbackHandle;
-
-		private static DeferredPipeline deferredPipeline;
 
 		public static float ResolutionScale { get; set; }
 		public static bool CursorVisible { get; set; } = true;
@@ -130,7 +124,10 @@ namespace Duality
 		/// </summary>
 		public static event EventHandler Terminating = null;
 
-		
+		public delegate void RenderEventHandler(Scene scene, Camera camera);
+		public static event RenderEventHandler PreRender;
+		public static event RenderEventHandler PostRender;
+
 		/// <summary>
 		/// [GET] The plugin manager that is used by Duality. Don't use this unless you know exactly what you're doing.
 		/// If you want to load a plugin, use the <see cref="CorePluginManager"/> from this property.
@@ -160,7 +157,7 @@ namespace Duality
 		/// [GET] The graphics backend that is used by Duality. Don't use this unless you know exactly what you're doing.
 		/// ESPECIALLY dont Set it, it WILL break things!
 		/// </summary>
-		public static Duality.Graphics.Backend GraphicsBackend
+		public static THREE.Renderers.GLRenderer GraphicsBackend
 		{
 			get { return graphicsBack; }
 			set { graphicsBack = value; }
@@ -367,34 +364,25 @@ namespace Duality
 		/// Opens up a window for Duality to render into. This also initializes the part of Duality that requires a 
 		/// valid rendering context. Should be called before performing any rendering related operations with Duality.
 		/// </summary>
-		public static OpenTK.GameWindow OpenWindow(WindowOptions options)
+		public static OpenTK.GameWindow OpenWindow(int width, int height)
 		{
 			if (!initialized) throw new InvalidOperationException("Can't initialize graphics / rendering because Duality itself isn't initialized yet.");
 
-			Logs.Core.Write("Opening Window...");
+			Logs.Core.Write("Initializing GL Renderer...");
 			Logs.Core.PushIndent();
 
 			var graphicsMode = new GraphicsMode(new ColorFormat(32), 24, 0, 0);
-			var window = new OpenTK.GameWindow(options.Size.X, options.Size.Y, graphicsMode, "Game Window", GameWindowFlags.Default, DisplayDevice.Default)
+			var window = new OpenTK.GameWindow(width, height, graphicsMode, "Game Window", GameWindowFlags.Default, DisplayDevice.Default)
 			{
 				Visible = true,
 				CursorVisible = CursorVisible
 			};
 
-			var context = new GraphicsContext(graphicsMode, window.WindowInfo, 4, 6, GraphicsContextFlags.ForwardCompatible | GraphicsContextFlags.Debug);
-			context.MakeCurrent(window.WindowInfo);
-			context.LoadAll();
-
-			var ctx = new ContextReference
-			{
-				Context = context,
-				SwapBuffers = context.SwapBuffers
-			};
-
-			var timer = new System.Diagnostics.Stopwatch();
-			timer.Start();
-
-			graphicsBack = new Duality.Graphics.Backend(window.Width, window.Height, ctx);
+			graphicsBack = new THREE.Renderers.GLRenderer();
+			graphicsBack.Context = window.Context;
+			graphicsBack.Width = width;
+			graphicsBack.Height = height;
+			graphicsBack.Init();
 
 			Logs.Core.PopIndent();
 
@@ -405,18 +393,11 @@ namespace Duality
 		/// <summary>
 		/// Initializes the part of Duality that requires a valid rendering context. 
 		/// Should be called before performing any rendering related operations with Duality.
-		/// Is called implicitly when using <see cref="OpenWindow"/>.
+		/// Is called implicitly when using <see cref="OpenRenderer"/>.
 		/// </summary>
 		public static void InitPostWindow()
 		{
 			DefaultContent.Init();
-
-			// OpenGL Error Handling
-			_debugProcCallbackHandle = GCHandle.Alloc(_debugProcCallback);
-
-			GL.DebugMessageCallback(_debugProcCallback, IntPtr.Zero);
-			GL.Enable(EnableCap.DebugOutput);
-			GL.Enable(EnableCap.DebugOutputSynchronous);
 
 			// Post-Window init is the last thing that happens before loading game
 			// content and entering simulation. When done in a game context, notify
@@ -446,8 +427,6 @@ namespace Duality
 				return;
 			}
 
-			execContext = ExecutionContext.Terminated;
-
 			if (execContext != ExecutionContext.Editor)
 			{
 				OnTerminating();
@@ -467,12 +446,13 @@ namespace Duality
 			sound.Dispose();
 			sound = null;
 
-
 			ShutdownBackend(ref audioBack);
 			pluginManager.ClearPlugins();
 
 			// Since this performs file system operations, it needs to happen before shutting down the system backend.
 			Profile.SaveTextReport(environment == ExecutionEnvironment.Editor ? "perflog_editor.txt" : "perflog.txt");
+
+			graphicsBack.Dispose();
 
 			ShutdownBackend(ref systemBack);
 
@@ -486,6 +466,8 @@ namespace Duality
 			Logs.Core.Write("DualityApp terminated");
 
 			initialized = false;
+
+			execContext = ExecutionContext.Terminated;
 		}
 
 		/// <summary>
@@ -641,40 +623,47 @@ namespace Duality
 			isUpdating = false;
 
 			if (terminateScheduled) Terminate();
-
-			// Execute Command List
-			DualityApp.GraphicsBackend.Process();
 		}
 
-		/// <summary>
-		/// Performs a single render cycle.
-		/// </summary>
 		public static void Render()
 		{
-			if (deferredPipeline == null)
-				deferredPipeline = new DeferredPipeline(WindowSize.X, WindowSize.Y);
+			if (Scene.Camera != null)
+			{
+				//Scene.ThreeScene.Background = Color.Hex(0xffffff);
+				//GraphicsBackend.SetClearColor(new Color().SetHex(0x000000));
+				//GraphicsBackend.SetClearColor(new Color().SetHex(0x000000));
+				GraphicsBackend.ShadowMap.Enabled = true;
+				GraphicsBackend.ShadowMap.type = Constants.PCFSoftShadowMap;
 
-			deferredPipeline.RenderStage(Time.DeltaTime, Scene.Stage, Scene.Camera);
+				DualityApp.InvokePreRender(Scene.Current, Scene.Camera);
 
-			// Execute Command List
-			GraphicsBackend.Process();
+				DualityApp.GraphicsBackend.Render(Scene.ThreeScene, Scene.Camera.GetTHREECamera());
+
+				DualityApp.InvokePostRender(Scene.Current, Scene.Camera);
+
+			}
+
 		}
 
-		private static void DebugCallback(DebugSource source, DebugType type, int id, DebugSeverity severity, int length, IntPtr message, IntPtr userParam)
+		public static void InvokePreRender(Scene scene, Camera camera)
 		{
-			string messageString = Marshal.PtrToStringAnsi(message, length);
+			PreRender?.Invoke(scene, camera);
+		}
 
-			Logs.Core.Write($"OpenGL Error: {severity} {type} | {messageString}");
-
-			if (type == DebugType.DebugTypeError)
-				throw new Exception(messageString);
+		public static void InvokePostRender(Scene scene, Camera camera)
+		{
+			PostRender?.Invoke(scene, camera);
 		}
 
 		public static void Resize(int width, int height)
 		{
 			DualityApp.WindowSize = new Point2(width, height);
 
+			GL.Viewport(0, 0, width, height);
+
 			// Destroy the current Rendering system
+			GraphicsBackend.Width = width;
+			GraphicsBackend.Height = height;
 			GraphicsBackend.Resize(width, height);
 		}
 
@@ -946,7 +935,6 @@ namespace Duality
 		private static void pluginManager_PluginsRemoved(object sender, DualityPluginEventArgs e)
 		{
 			// Clean globally cached type data
-			ImageCodec.ClearTypeCache();
 			ObjectCreator.ClearTypeCache();
 			ReflectionHelper.ClearTypeCache();
 			Component.RequireMap.ClearTypeCache();

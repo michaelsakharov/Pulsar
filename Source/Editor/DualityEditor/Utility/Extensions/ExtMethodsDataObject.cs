@@ -17,7 +17,6 @@ namespace Duality.Editor
 		public static readonly string ComponentFormat = typeof(Component).FullName;
 		public static readonly string GameObjectFormat = typeof(GameObject).FullName;
 		public static readonly string ContentRefFormat = typeof(IContentRef).FullName;
-		public static readonly string BatchInfoFormat = typeof(BatchInfo).FullName;
 		public static readonly string ColorDataFormat = typeof(IColorData).FullName;
 
 		private static string GetWrappedDataFormat(string dataFormat, DataObjectStorage storage)
@@ -221,38 +220,6 @@ namespace Duality.Editor
 			// Filter and return resources that match the specified type
 			content = wrappedData.OfType<IContentRef>().Where(r => r.Is(resType)).ToArray();
 			return content.Any();
-		}
-
-		public static void SetBatchInfos(this IDataObject data, IEnumerable<BatchInfo> obj)
-		{
-			BatchInfo[] objArray = obj.ToArray();
-			if (objArray.Length > 0) data.SetWrappedData(objArray, BatchInfoFormat, DataObjectStorage.Value);
-		}
-		public static bool ContainsBatchInfos(this IDataObject data)
-		{
-			return data.GetWrappedDataPresent(BatchInfoFormat, DataObjectStorage.Value);
-		}
-		public static BatchInfo[] GetBatchInfos(this IDataObject data)
-		{
-			BatchInfo[] materials;
-			if (!data.TryGetBatchInfos(out materials))
-				return null;
-			else
-				return materials;
-		}
-		public static bool TryGetBatchInfos(this IDataObject data, out BatchInfo[] batches)
-		{
-			// Retrieve all materials from the data object
-			IEnumerable<object> wrappedData;
-			if (!data.TryGetWrappedData(BatchInfoFormat, DataObjectStorage.Value, out wrappedData))
-			{
-				batches = null;
-				return false;
-			}
-
-			// Return the retrieved materials
-			batches = wrappedData.OfType<BatchInfo>().ToArray();
-			return batches.Any();
 		}
 
 		public static void SetIColorData(this IDataObject data, IEnumerable<IColorData> color)

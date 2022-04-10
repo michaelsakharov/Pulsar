@@ -26,12 +26,12 @@ namespace Duality.Editor.Plugins.Base.DataConverters
 			{
 				return convert.CanPerform<Pixmap>();
 			}
-			
+
 			if (convert.AllowedOperations.HasFlag(ConvertOperation.Operation.Convert))
 			{
 				List<Pixmap> availData = convert.Perform<Pixmap>(ConvertOperation.Operation.Convert).ToList();
-				return availData.Any(t => 
-					this.FindMatchingResources<Pixmap,Texture>(t, IsMatch)
+				return availData.Any(t =>
+					this.FindMatchingResources<Pixmap, Texture>(t, IsMatch)
 					.Any());
 			}
 
@@ -48,8 +48,8 @@ namespace Duality.Editor.Plugins.Base.DataConverters
 				if (convert.IsObjectHandled(baseRes)) continue;
 
 				// Find target Resource matching the source - or create one.
-				Texture targetRes = 
-					this.FindMatchingResources<Pixmap,Texture>(baseRes, IsMatch)
+				Texture targetRes =
+					this.FindMatchingResources<Pixmap, Texture>(baseRes, IsMatch)
 					.FirstOrDefault();
 				if (targetRes == null && convert.AllowedOperations.HasFlag(ConvertOperation.Operation.CreateRes))
 				{
