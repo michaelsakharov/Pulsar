@@ -81,7 +81,7 @@ namespace Duality.Resources
 			mat.MetalnessMap = MetalnessMap.IsAvailable ? MetalnessMap.Res.ThreeTexture : null;
 			mat.RoughnessMap = RoughnessMap.IsAvailable ? RoughnessMap.Res.ThreeTexture : null;
 			mat.BumpMap = BumpMap.IsAvailable ? BumpMap.Res.ThreeTexture : null;
-			mat.EmissiveMap = EmissiveMap.IsAvailable ? EmissiveMap.Res.ThreeTexture : null;
+			//mat.EmissiveMap = EmissiveMap.IsAvailable ? EmissiveMap.Res.ThreeTexture : null;
 			mat.DisplacementMap = DisplacementMap.IsAvailable ? DisplacementMap.Res.ThreeTexture : null;
 			mat.AoMap = AoMap.IsAvailable ? AoMap.Res.ThreeTexture : null;
 			mat.EnvMap = EnvMap.IsAvailable ? EnvMap.Res.ThreeTexture : null;
@@ -89,7 +89,7 @@ namespace Duality.Resources
 			mat.Color = new THREE.Math.Color(Color.R / 255f, Color.G / 255f, Color.B / 255f);
 			mat.Specular = new THREE.Math.Color(Specular.R / 255f, Specular.G / 255f, Specular.B / 255f);
 			mat.Sheen = new THREE.Math.Color(Sheen.R / 255f, Sheen.G / 255f, Sheen.B / 255f);
-			mat.Emissive = new THREE.Math.Color(Emissive.R / 255f, Emissive.G / 255f, Emissive.B / 255f);
+			//mat.Emissive = new THREE.Math.Color(Emissive.R / 255f, Emissive.G / 255f, Emissive.B / 255f);
 
 			mat.Opacity = Opacity;
 			mat.Reflectivity = Reflectivity;
@@ -97,7 +97,7 @@ namespace Duality.Resources
 			mat.Metalness = Metalness;
 			mat.Roughness = Roughness;
 			mat.Shininess = Shininess;
-			mat.EmissiveIntensity = EmissiveIntensity;
+			//mat.EmissiveIntensity = EmissiveIntensity;
 			mat.BumpScale = BumpScale;
 
 			mat.AoMapIntensity = AoMapIntensity;
