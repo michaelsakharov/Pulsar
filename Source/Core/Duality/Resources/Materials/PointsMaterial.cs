@@ -31,11 +31,9 @@ namespace Duality.Resources
 		public override THREE.Materials.Material GetThreeMaterial()
 		{
 			if (cachedMaterial == null)
-			{
 				cachedMaterial = new THREE.Materials.PointsMaterial();
-				base.SetupBaseMaterialSettings(cachedMaterial);
-				(cachedMaterial as THREE.Materials.PointsMaterial).Size = Size;
-			}
+			base.SetupBaseMaterialSettings(cachedMaterial);
+			(cachedMaterial as THREE.Materials.PointsMaterial).Size = Size;
 
 			return cachedMaterial;
 		}

@@ -29,10 +29,8 @@ namespace Duality.Resources
 		public override THREE.Materials.Material GetThreeMaterial()
 		{
 			if(cachedMaterial == null)
-			{
 				cachedMaterial = new THREE.Materials.ShadowMaterial();
-				base.SetupBaseMaterialSettings(cachedMaterial);
-			}
+			base.SetupBaseMaterialSettings(cachedMaterial);
 			return cachedMaterial;
 		}
 

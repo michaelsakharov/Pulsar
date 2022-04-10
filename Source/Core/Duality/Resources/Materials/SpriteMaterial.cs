@@ -32,12 +32,10 @@ namespace Duality.Resources
 		public override THREE.Materials.Material GetThreeMaterial()
 		{
 			if (cachedMaterial == null)
-			{
 				cachedMaterial = new THREE.Materials.SpriteMaterial();
-				base.SetupBaseMaterialSettings(cachedMaterial);
-				cachedMaterial.Rotation = Rotation;
-				cachedMaterial.SizeAttenuation = SizeAttenuation;
-			}
+			base.SetupBaseMaterialSettings(cachedMaterial);
+			cachedMaterial.Rotation = Rotation;
+			cachedMaterial.SizeAttenuation = SizeAttenuation;
 			return cachedMaterial;
 		}
 

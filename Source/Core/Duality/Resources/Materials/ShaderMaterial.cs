@@ -50,13 +50,12 @@ namespace Duality.Resources
 			if (cachedMaterial == null || _isDirty)
 			{
 				if(cachedMaterial != null) cachedMaterial.Dispose();
-
 				cachedMaterial = new THREE.Materials.ShaderMaterial();
-				base.SetupBaseMaterialSettings(cachedMaterial);
-				(cachedMaterial as THREE.Materials.ShaderMaterial).FragmentShader = Fragment.IsAvailable ? Fragment.Res.Source : FragmentShader.Default.Res.Source;
-				(cachedMaterial as THREE.Materials.ShaderMaterial).VertexShader = Vertex.IsAvailable ? Vertex.Res.Source : VertexShader.Default.Res.Source;
 			}
-	
+			base.SetupBaseMaterialSettings(cachedMaterial);
+			(cachedMaterial as THREE.Materials.ShaderMaterial).FragmentShader = Fragment.IsAvailable ? Fragment.Res.Source : FragmentShader.Default.Res.Source;
+			(cachedMaterial as THREE.Materials.ShaderMaterial).VertexShader = Vertex.IsAvailable ? Vertex.Res.Source : VertexShader.Default.Res.Source;
+
 			return cachedMaterial;
 		}
 		

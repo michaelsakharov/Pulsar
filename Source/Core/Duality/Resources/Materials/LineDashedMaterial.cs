@@ -51,16 +51,18 @@ namespace Duality.Resources
 		// Methods
 		public override THREE.Materials.Material GetThreeMaterial()
 		{
-			var mat = new THREE.Materials.LineDashedMaterial();
-			base.SetupBaseMaterialSettings(mat);
-			mat.LineWidth = LineWidth;
-			mat.LineCap = "round";
-			mat.LineJoin = "round";
+			if (cachedMaterial == null)
+				cachedMaterial = new THREE.Materials.LineDashedMaterial();
 
-			mat.Scale = scale;
-			mat.DashSize = dashSize;
-			mat.GapSize = gapSize;
-			return mat;
+			base.SetupBaseMaterialSettings(cachedMaterial);
+			cachedMaterial.LineWidth = LineWidth;
+			(cachedMaterial as THREE.Materials.LineDashedMaterial).LineCap = "round";
+			(cachedMaterial as THREE.Materials.LineDashedMaterial).LineJoin = "round";
+
+			(cachedMaterial as THREE.Materials.LineDashedMaterial).Scale = scale;
+			(cachedMaterial as THREE.Materials.LineDashedMaterial).DashSize = dashSize;
+			(cachedMaterial as THREE.Materials.LineDashedMaterial).GapSize = gapSize;
+			return cachedMaterial;
 		}
 
 		protected override MaterialType Type { get { return MaterialType.LineDashed; } }

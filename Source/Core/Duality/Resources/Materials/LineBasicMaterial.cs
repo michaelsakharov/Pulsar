@@ -36,12 +36,14 @@ namespace Duality.Resources
 		// Methods
 		public override THREE.Materials.Material GetThreeMaterial()
 		{
-			var mat = new THREE.Materials.LineBasicMaterial();
-			base.SetupBaseMaterialSettings(mat);
-			mat.LineWidth = LineWidth;
-			mat.LineCap = "round";
-			mat.LineJoin = "round";
-			return mat;
+			if (cachedMaterial == null)
+				cachedMaterial = new THREE.Materials.LineBasicMaterial();
+
+			base.SetupBaseMaterialSettings(cachedMaterial);
+			cachedMaterial.LineWidth = LineWidth;
+			(cachedMaterial as THREE.Materials.LineBasicMaterial).LineCap = "round";
+			(cachedMaterial as THREE.Materials.LineBasicMaterial).LineJoin = "round";
+			return cachedMaterial;
 		}
 
 		protected override MaterialType Type { get { return MaterialType.LineBasic; } }
