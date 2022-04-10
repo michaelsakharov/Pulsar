@@ -8,6 +8,7 @@ using Duality.Components;
 using Duality.Editor;
 using Duality.Properties;
 using Duality.Resources;
+using THREE.Core;
 using THREE.Math;
 
 namespace Duality.Graphics.Components
@@ -124,18 +125,19 @@ namespace Duality.Graphics.Components
 
 		void CreateThreeMesh()
 		{
-			var geometry = new THREE.Core.Geometry();
-
+			// This needs to be Improved, Ideally we want to find a way to store a Geometry object directly
+			// I think we need to re-introduce Json Saving/Loading on the THREE Port, so that
+			// we can store a Mesh as a Json once loaded, and when the Mesh resource is loaded Compile the Geometry There
+			// instead of here, and store it when used
 			foreach (var submesh in Mesh.Res.SubMeshes)
 			{
+				THREE.Core.DirectGeometry geometry = new THREE.Core.DirectGeometry();
+
 				foreach (var vertex in submesh.Vertices)
 					geometry.Vertices.Add(new THREE.Math.Vector3(vertex.X, vertex.Y, vertex.Z));
 
 				foreach (var color in submesh.Colors)
 					geometry.Colors.Add(new THREE.Math.Color(color.R, color.G, color.B));
-
-				foreach (var face in submesh.Faces)
-					geometry.Faces.Add(new THREE.Core.Face3(face.a, face.b, face.c, new THREE.Math.Vector3(face.normal.X, face.normal.Y, face.normal.Z)));
 
 				foreach (var normal in submesh.Normals)
 					geometry.Normals.Add(new THREE.Math.Vector3(normal.X, normal.Y, normal.Z));
@@ -143,11 +145,26 @@ namespace Duality.Graphics.Components
 				foreach (var uv in submesh.Uvs)
 					geometry.Uvs.Add(new THREE.Math.Vector2(uv.X, uv.Y));
 
-				if(threeMesh == null)
+				foreach (var uv2 in submesh.Uvs2)
+					geometry.Uvs2.Add(new THREE.Math.Vector2(uv2.X, uv2.Y));
+
+				foreach (var skin in submesh.SkinIndices)
+					geometry.SkinIndices.Add(new THREE.Math.Vector4(skin.X, skin.Y, skin.Z, skin.W));
+
+				foreach (var skin in submesh.SkinWeights)
+					geometry.SkinWeights.Add(new THREE.Math.Vector4(skin.X, skin.Y, skin.Z, skin.W));
+
+				foreach (var draw in submesh.Groups)
+					geometry.Groups.Add(new THREE.Core.DrawRange() { Count = (int)draw.X, Start = (int)draw.Y, MaterialIndex = (int)draw.Z });
+
+				var geometry2 = new BufferGeometry().FromDirectGeometry(geometry);
+
+				if (threeMesh == null)
 				{
 					threeMesh = new List<THREE.Objects.Mesh>();
 				}
-				threeMesh.Add(new THREE.Objects.Mesh(geometry, (submesh.Material != null && submesh.Material.IsAvailable) ? submesh.Material.Res.GetThreeMaterial() : MeshBasicMaterial.Default.Res.GetThreeMaterial()));
+				var mesh = new THREE.Objects.Mesh(geometry2, (submesh.Material != null && submesh.Material.IsAvailable) ? submesh.Material.Res.GetThreeMaterial() : MeshBasicMaterial.Default.Res.GetThreeMaterial());
+				threeMesh.Add(mesh);
 			}
 		}
 

@@ -264,6 +264,7 @@
 		<PackageReference Include="NVorbis" Version="0.10.1" GeneratePathProperty="true" />
 		<PackageReference Include="OpenTK" Version="3.1.0" />
 		<PackageReference Include="OpenTK.GLControl" Version="3.1.0" />
+		<PackageReference Include="Silk.NET.Assimp" Version="2.15.0" />
 		<PackageReference Include="System.Threading.Tasks.Parallel" Version="4.3.0" />
     <PackageReference Include="MemoryInterop.ILPatcher" Version="2.2.0" />
 	</ItemGroup>
@@ -403,10 +404,6 @@
 
 	<ItemGroup>
 		<Content Include="EmbeddedResources\CousineLicense.txt" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Folder Include="Three\" />
 	</ItemGroup>
 
 	<ItemGroup>
