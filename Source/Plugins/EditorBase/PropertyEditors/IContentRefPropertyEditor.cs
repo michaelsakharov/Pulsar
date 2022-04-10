@@ -118,7 +118,13 @@ namespace Duality.Editor.Plugins.Base.PropertyEditors
 			if (!contentRef.IsAvailable) return 0;
 
 			ConvertOperation convOp = new ConvertOperation(new[] { contentRef.Res }, ConvertOperation.Operation.Convert);
-			if (convOp.CanPerform<AudioData>())
+			if (convOp.CanPerform<Pixmap>())
+			{
+				Pixmap basePx = convOp.Perform<Pixmap>().FirstOrDefault();
+				PixelData basePxLayer = basePx != null ? basePx.MainLayer : null;
+				return basePxLayer != null ? basePxLayer.GetHashCode() : 0;
+			}
+			else if (convOp.CanPerform<AudioData>())
 			{
 				AudioData audioData = convOp.Perform<AudioData>().FirstOrDefault();
 				return (audioData != null && audioData.OggVorbisData != null) ? audioData.OggVorbisData.GetHashCode() : 0;

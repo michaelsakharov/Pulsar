@@ -16,12 +16,15 @@ using Duality.Editor.Properties;
 using Duality.Editor.UndoRedoActions;
 using Duality.Editor.Plugins.Base.Properties;
 using WeifenLuo.WinFormsUI.Docking;
-
+using Duality.Editor.Plugins.Base.Forms;
 
 namespace Duality.Editor.Plugins.Base
 {
 	public class EditorBasePlugin : EditorPlugin
 	{
+		private static readonly string ElementNamePixmapSlicer = "PixmapSlicer";
+
+		private PixmapSlicerForm slicingForm = null;
 		private EditorBasePluginSettings editorBaseSettings = new EditorBasePluginSettings();
 
 		private bool isLoading = false;
@@ -30,6 +33,37 @@ namespace Duality.Editor.Plugins.Base
 		public override string Id
 		{
 			get { return "EditorBase"; }
+		}
+
+		public PixmapSlicerForm RequestPixmapSlicerForm()
+		{
+			// Create a new slicing form, if none are available right now
+			if (this.slicingForm == null || this.slicingForm.IsDisposed)
+			{
+				this.slicingForm = new PixmapSlicerForm();
+				this.slicingForm.FormClosed += this.slicingForm_FormClosed;
+
+				// If there are cached settings available, apply them to the new editor
+				if (this.editorBaseSettings != null)
+				{
+					this.slicingForm.UserSettings = this.editorBaseSettings.PixmapSlicer;
+					this.slicingForm.ApplyUserSettings();
+				}
+
+				if (!this.isLoading)
+				{
+					this.slicingForm.DockPanel = DualityEditorApp.MainForm.MainDockPanel;
+				}
+			}
+
+			// If we're not creating it as part of the loading procedure,
+			// add it to the main docking layout directly
+			if (!this.isLoading)
+			{
+				this.slicingForm.Show(DualityEditorApp.MainForm.MainDockPanel);
+			}
+
+			return this.slicingForm;
 		}
 
 		protected override void InitPlugin(MainForm main)
@@ -68,17 +102,35 @@ namespace Duality.Editor.Plugins.Base
 		{
 			this.isLoading = true;
 
-			this.editorBaseSettings = pluginSettings.Get<EditorBasePluginSettings>();
-			
+			this.editorBaseSettings = pluginSettings.Get<EditorBasePluginSettings>(); 
+			if (this.slicingForm != null)
+			{
+				this.slicingForm.UserSettings = this.editorBaseSettings.PixmapSlicer;
+				this.slicingForm.ApplyUserSettings();
+			}
+
 			this.isLoading = false;
 		}
 		protected override IDockContent DeserializeDockContent(Type dockContentType)
 		{
 			this.isLoading = true;
-			IDockContent result;
+			IDockContent result; 
+			if (dockContentType == typeof(PixmapSlicerForm))
+				result = this.RequestPixmapSlicerForm();
+			else
 				result = base.DeserializeDockContent(dockContentType);
 			this.isLoading = false;
 			return result;
+		}
+		private void slicingForm_FormClosed(object sender, FormClosedEventArgs e)
+		{
+			// Store the slicer forms user settings for when we re-open the form later on, or serialize
+			// while it remains closed.
+			this.editorBaseSettings.PixmapSlicer = this.slicingForm.UserSettings;
+
+			this.slicingForm.FormClosed -= this.slicingForm_FormClosed;
+			this.slicingForm.Dispose();
+			this.slicingForm = null;
 		}
 		private void menuItemAppData_Click(object sender, EventArgs e)
 		{
@@ -127,52 +179,52 @@ namespace Duality.Editor.Plugins.Base
 			//	//	}
 			//	//}
 			//}
-			//// If its a Pixmap, reload all associated Textures
-			//else if (resRef.Is<Pixmap>())
-			//{
-			//	ContentRef<Pixmap> pixRef = resRef.As<Pixmap>();
-			//	foreach (ContentRef<Texture> tex in ContentProvider.GetLoadedContent<Texture>())
-			//	{
-			//		if (!tex.IsAvailable) continue;
-			//		if (tex.Res.BasePixmap == pixRef)
-			//		{
-			//			// Note: Reloading texture data every time _any_ change happens to a Pixmap
-			//			// is super wasteful. Find a way to identify relevant changes, and only reload
-			//			// when they happen.
-			//			// An example of an unnecessary reload is changing the Pixmap atlas, where updating
-			//			// the atlas only would be sufficient.
-			//			tex.Res.ReloadData();
-			//			modifiedObjects.Add(tex.Res);
-			//		}
-			//	}
-			//}
-			//// If its a Texture, update all associated RenderTargets
-			//else if (resRef.Is<Texture>())
-			//{
-			//	if (resRef.IsLoaded)
-			//	{
-			//		Texture tex = resRef.As<Texture>().Res;
-			//		if (tex.NeedsReload)
-			//			tex.ReloadData();
-			//	}
-			//
-			//	//ContentRef<Texture> texRef = resRef.As<Texture>();
-			//	//foreach (ContentRef<RenderTarget> rt in ContentProvider.GetLoadedContent<RenderTarget>())
-			//	//{
-			//	//	if (!rt.IsAvailable) continue;
-			//	//	if (rt.Res.Targets.Contains(texRef))
-			//	//	{
-			//	//		rt.Res.SetupTarget();
-			//	//		modifiedObjects.Add(rt.Res);
-			//	//	}
-			//	//}
-			//}
-			//// If its some kind of shader, update all associated techniques
+			// If its a Pixmap, reload all associated Textures
+			if (resRef.Is<Pixmap>())
+			{
+				ContentRef<Pixmap> pixRef = resRef.As<Pixmap>();
+				foreach (ContentRef<Texture> tex in ContentProvider.GetLoadedContent<Texture>())
+				{
+					if (!tex.IsAvailable) continue;
+					if (tex.Res.BasePixmap == pixRef)
+					{
+						// Note: Reloading texture data every time _any_ change happens to a Pixmap
+						// is super wasteful. Find a way to identify relevant changes, and only reload
+						// when they happen.
+						// An example of an unnecessary reload is changing the Pixmap atlas, where updating
+						// the atlas only would be sufficient.
+						tex.Res.ReloadData();
+						modifiedObjects.Add(tex.Res);
+					}
+				}
+			}
+			// If its a Texture, update all associated RenderTargets
+			else if (resRef.Is<Texture>())
+			{
+				if (resRef.IsLoaded)
+				{
+					Texture tex = resRef.As<Texture>().Res;
+					if (tex.NeedsReload)
+						tex.ReloadData();
+				}
+			
+				//ContentRef<Texture> texRef = resRef.As<Texture>();
+				//foreach (ContentRef<RenderTarget> rt in ContentProvider.GetLoadedContent<RenderTarget>())
+				//{
+				//	if (!rt.IsAvailable) continue;
+				//	if (rt.Res.Targets.Contains(texRef))
+				//	{
+				//		rt.Res.SetupTarget();
+				//		modifiedObjects.Add(rt.Res);
+				//	}
+				//}
+			}
+			// If its some kind of shader, update all associated techniques
 			//else if (resRef.Is<Shader>())
 			//{
 			//	ContentRef<FragmentShader> fragRef = resRef.As<FragmentShader>();
 			//	ContentRef<VertexShader> vertRef = resRef.As<VertexShader>();
-			//	foreach (ContentRef<DrawTechnique> sp in ContentProvider.GetLoadedContent<DrawTechnique>())
+			//	foreach (ContentRef<ShaderMaterial> sp in ContentProvider.GetLoadedContent<ShaderMaterial>())
 			//	{
 			//		if (!sp.IsAvailable) continue;
 			//		if (sp.Res.Fragment == fragRef || sp.Res.Vertex == vertRef)

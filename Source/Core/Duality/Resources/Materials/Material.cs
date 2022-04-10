@@ -19,20 +19,20 @@ namespace Duality.Resources
 	{
 		public abstract THREE.Materials.Material GetThreeMaterial();
 
-		//public Texture Map;
-		//public Texture NormalMap;
-		//public Vector2 NormalScale;
-		//public Texture SpecularMap;
-		//public Texture AlphaMap;
-		//public Texture MetalnessMap;
-		//public Texture RoughnessMap;
-		//public Texture BumpMap;
-		//public Texture EmissiveMap;
-		//public Texture DisplacementMap;
-		//public float DisplacementScale;
-		//
-		//public Texture AoMap;
-		//public Texture EnvMap;
+		public ContentRef<Texture> Map;
+		public ContentRef<Texture> NormalMap;
+		public Vector2 NormalScale;
+		public ContentRef<Texture> SpecularMap;
+		public ContentRef<Texture> AlphaMap;
+		public ContentRef<Texture> MetalnessMap;
+		public ContentRef<Texture> RoughnessMap;
+		public ContentRef<Texture> BumpMap;
+		public ContentRef<Texture> EmissiveMap;
+		public ContentRef<Texture> DisplacementMap;
+		public float DisplacementScale;
+		
+		public ContentRef<Texture> AoMap;
+		public ContentRef<Texture> EnvMap;
 
 		public ColorRgba Color = ColorRgba.White;
 		public ColorRgba Specular = ColorRgba.Black;
@@ -74,6 +74,18 @@ namespace Duality.Resources
 
 		protected void SetupBaseMaterialSettings(THREE.Materials.Material mat)
 		{
+			mat.Map = Map.IsAvailable ? Map.Res.THREE : null;
+			mat.NormalMap = NormalMap.IsAvailable ? NormalMap.Res.THREE : null;
+			mat.SpecularMap = SpecularMap.IsAvailable ? SpecularMap.Res.THREE : null;
+			mat.AlphaMap = AlphaMap.IsAvailable ? AlphaMap.Res.THREE : null;
+			mat.MetalnessMap = MetalnessMap.IsAvailable ? MetalnessMap.Res.THREE : null;
+			mat.RoughnessMap = RoughnessMap.IsAvailable ? RoughnessMap.Res.THREE : null;
+			mat.BumpMap = BumpMap.IsAvailable ? BumpMap.Res.THREE : null;
+			mat.EmissiveMap = EmissiveMap.IsAvailable ? EmissiveMap.Res.THREE : null;
+			mat.DisplacementMap = DisplacementMap.IsAvailable ? DisplacementMap.Res.THREE : null;
+			mat.AoMap = AoMap.IsAvailable ? AoMap.Res.THREE : null;
+			mat.EnvMap = EnvMap.IsAvailable ? EnvMap.Res.THREE : null;
+
 			mat.Color = new THREE.Math.Color(Color.R / 255f, Color.G / 255f, Color.B / 255f);
 			mat.Specular = new THREE.Math.Color(Specular.R / 255f, Specular.G / 255f, Specular.B / 255f);
 			mat.Sheen = new THREE.Math.Color(Sheen.R / 255f, Sheen.G / 255f, Sheen.B / 255f);
