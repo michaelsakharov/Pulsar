@@ -49,6 +49,12 @@ namespace Duality
 			MeshStandardMaterial.InitDefaultContent();
 			MeshToonMaterial.InitDefaultContent();
 
+			PointCloudMaterial.InitDefaultContent();
+			PointsMaterial.InitDefaultContent();
+			//ShaderMaterial.InitDefaultContent();
+			ShadowMaterial.InitDefaultContent();
+			SpriteMaterial.InitDefaultContent();
+
 			//Font.InitDefaultContent();
 			AudioData.InitDefaultContent();
 			Sound.InitDefaultContent();

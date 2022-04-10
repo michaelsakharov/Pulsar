@@ -412,6 +412,10 @@
 	  </Reference>
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="Components\Rendering\Post Processing\" />
+	</ItemGroup>
+
 	<Target Name="AggregateOutput" BeforeTargets="AfterBuild">
 		<Copy SourceFiles="$(OutputPath)$(AssemblyName).dll" DestinationFolder="$(RootFolder)Build\Output\" />
 		<Copy SourceFiles="$(OutputPath)$(AssemblyName).pdb" DestinationFolder="$(RootFolder)Build\Output\" />
