@@ -111,7 +111,7 @@ namespace Duality.Components
 			set { this.orthographic = value; isDirty = true; }
 		}
 
-		[DontSerialize] THREE.Cameras.Camera cachedCamera;
+		[DontSerialize] private THREE.Cameras.Camera cachedCamera;
 
 		public THREE.Cameras.Camera GetTHREECamera()
 		{

@@ -17,7 +17,13 @@ namespace Duality.Resources
 	[ExplicitResourceReference()]
 	public abstract class Material : Resource
 	{
-		[NonSerialized] protected THREE.Materials.Material cachedMaterial;
+		[DontSerialize] private THREE.Materials.Material _cachedMaterial = null;
+		/// <summary>
+		/// [GET] The Cached Three Material. Don't use this unless you know exactly what you're doing.
+		/// </summary>
+		[EditorHintFlags(MemberFlags.Invisible)]
+		public THREE.Materials.Material cachedMaterial { get { return this._cachedMaterial; } set { this._cachedMaterial = value; } }
+
 		public abstract THREE.Materials.Material GetThreeMaterial();
 
 		public ContentRef<Texture> Map;

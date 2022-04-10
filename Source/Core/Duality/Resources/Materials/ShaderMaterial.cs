@@ -42,7 +42,7 @@ namespace Duality.Resources
 			set { fragment = value; _isDirty = true; }
 		}
 
-		[NonSerialized] bool _isDirty;
+		[DontSerialize] bool _isDirty;
 
 		// Methods
 		public override THREE.Materials.Material GetThreeMaterial()
