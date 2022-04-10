@@ -31,8 +31,8 @@ namespace Duality
 			FragmentShader.InitDefaultContent();
 			//CompoundShader.InitDefaultContent();
 			//DrawTechnique.InitDefaultContent();
-			//Pixmap.InitDefaultContent();
-			//Texture.InitDefaultContent();
+			Pixmap.InitDefaultContent();
+			Texture.InitDefaultContent();
 
 			//Material.InitDefaultContent();
 			LineBasicMaterial.InitDefaultContent();
@@ -51,7 +51,7 @@ namespace Duality
 
 			PointCloudMaterial.InitDefaultContent();
 			PointsMaterial.InitDefaultContent();
-			//ShaderMaterial.InitDefaultContent();
+			ShaderMaterial.InitDefaultContent();
 			ShadowMaterial.InitDefaultContent();
 			SpriteMaterial.InitDefaultContent();
 
