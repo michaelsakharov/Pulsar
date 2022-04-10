@@ -28,9 +28,13 @@ namespace Duality.Resources
 		// Methods
 		public override THREE.Materials.Material GetThreeMaterial()
 		{
-			var mat = new THREE.Materials.MeshMatcapMaterial();
-			base.SetupBaseMaterialSettings(mat);
-			return mat;
+			if (cachedMaterial == null)
+			{
+				cachedMaterial = new THREE.Materials.MeshMatcapMaterial();
+				base.SetupBaseMaterialSettings(cachedMaterial);
+			}
+
+			return cachedMaterial;
 		}
 
 		protected override MaterialType Type { get { return MaterialType.MeshMatcap; } }

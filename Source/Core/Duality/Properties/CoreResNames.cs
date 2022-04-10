@@ -14,6 +14,7 @@ namespace Duality.Properties
 
 		public const string CategoryNone			= "";
 		public const string CategoryGraphics		= "Graphics";
+		public const string CategoryMaterials		= "Materials";
 		public const string CategorySound			= "Sound";
 		public const string CategoryPhysics			= "Physics";
 		public const string CategoryDiagnostics		= "Diagnostics";

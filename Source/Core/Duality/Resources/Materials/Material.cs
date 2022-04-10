@@ -12,11 +12,12 @@ using THREE.Materials;
 
 namespace Duality.Resources
 {
-	[EditorHintCategory(CoreResNames.CategoryGraphics)]
+	[EditorHintCategory(CoreResNames.CategoryMaterials)]
 	[EditorHintImage(CoreResNames.ImageMaterial)]
 	[ExplicitResourceReference()]
 	public abstract class Material : Resource
 	{
+		[NonSerialized] protected THREE.Materials.Material cachedMaterial;
 		public abstract THREE.Materials.Material GetThreeMaterial();
 
 		public ContentRef<Texture> Map;

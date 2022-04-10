@@ -11,7 +11,7 @@ namespace Duality.Resources
 	/// <summary>
 	/// Represents an Three Material.
 	/// </summary>
-	[EditorHintCategory(CoreResNames.CategoryGraphics)]
+	[EditorHintCategory(CoreResNames.CategoryMaterials)]
 	[EditorHintImage(CoreResNames.ImageMaterial)]
 	public class ShadowMaterial : Material
 	{
@@ -28,9 +28,12 @@ namespace Duality.Resources
 		// Methods
 		public override THREE.Materials.Material GetThreeMaterial()
 		{
-			var mat = new THREE.Materials.ShadowMaterial();
-			base.SetupBaseMaterialSettings(mat);
-			return mat;
+			if(cachedMaterial == null)
+			{
+				cachedMaterial = new THREE.Materials.ShadowMaterial();
+				base.SetupBaseMaterialSettings(cachedMaterial);
+			}
+			return cachedMaterial;
 		}
 
 		protected override MaterialType Type { get { return MaterialType.Shadow; } }

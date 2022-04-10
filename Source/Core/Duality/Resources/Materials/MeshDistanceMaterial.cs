@@ -37,12 +37,16 @@ namespace Duality.Resources
 		// Methods
 		public override THREE.Materials.Material GetThreeMaterial()
 		{
-			var mat = new THREE.Materials.MeshDistanceMaterial();
-			base.SetupBaseMaterialSettings(mat);
-			mat.ReferencePosition = new THREE.Math.Vector3(ReferencePosition.X, ReferencePosition.Y, ReferencePosition.Z);
-			mat.NearDistance = NearDistance;
-			mat.FarDistance = FarDistance;
-			return mat;
+			if (cachedMaterial == null)
+			{
+				cachedMaterial = new THREE.Materials.MeshDistanceMaterial();
+				(cachedMaterial as THREE.Materials.MeshDistanceMaterial).ReferencePosition = new THREE.Math.Vector3(ReferencePosition.X, ReferencePosition.Y, ReferencePosition.Z);
+				(cachedMaterial as THREE.Materials.MeshDistanceMaterial).NearDistance = NearDistance;
+				(cachedMaterial as THREE.Materials.MeshDistanceMaterial).FarDistance = FarDistance;
+				base.SetupBaseMaterialSettings(cachedMaterial);
+			}
+
+			return cachedMaterial;
 		}
 
 		protected override MaterialType Type { get { return MaterialType.MeshDistance; } }

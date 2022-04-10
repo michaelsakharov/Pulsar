@@ -11,7 +11,7 @@ namespace Duality.Resources
 	/// <summary>
 	/// Represents an Three Material.
 	/// </summary>
-	[EditorHintCategory(CoreResNames.CategoryGraphics)]
+	[EditorHintCategory(CoreResNames.CategoryMaterials)]
 	[EditorHintImage(CoreResNames.ImageMaterial)]
 	public class SpriteMaterial : Material
 	{
@@ -31,11 +31,14 @@ namespace Duality.Resources
 		// Methods
 		public override THREE.Materials.Material GetThreeMaterial()
 		{
-			var mat = new THREE.Materials.SpriteMaterial();
-			base.SetupBaseMaterialSettings(mat);
-			mat.Rotation = Rotation;
-			mat.SizeAttenuation = SizeAttenuation;
-			return mat;
+			if (cachedMaterial == null)
+			{
+				cachedMaterial = new THREE.Materials.SpriteMaterial();
+				base.SetupBaseMaterialSettings(cachedMaterial);
+				cachedMaterial.Rotation = Rotation;
+				cachedMaterial.SizeAttenuation = SizeAttenuation;
+			}
+			return cachedMaterial;
 		}
 
 		protected override MaterialType Type { get { return MaterialType.Sprite; } }

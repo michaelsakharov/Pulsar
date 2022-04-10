@@ -14,7 +14,7 @@ namespace Duality.Resources
 	/// <summary>
 	/// Represents an Three Material.
 	/// </summary>
-	[EditorHintCategory(CoreResNames.CategoryGraphics)]
+	[EditorHintCategory(CoreResNames.CategoryMaterials)]
 	[EditorHintImage(CoreResNames.ImageMaterial)]
 	public class ShaderMaterial : Material
 	{
@@ -43,22 +43,21 @@ namespace Duality.Resources
 		}
 
 		[NonSerialized] bool _isDirty;
-		[NonSerialized] THREE.Materials.ShaderMaterial ThreeMaterial;
 
 		// Methods
 		public override THREE.Materials.Material GetThreeMaterial()
 		{
-			if (ThreeMaterial == null || _isDirty)
+			if (cachedMaterial == null || _isDirty)
 			{
-				if(ThreeMaterial != null) ThreeMaterial.Dispose();
+				if(cachedMaterial != null) cachedMaterial.Dispose();
 
-				ThreeMaterial = new THREE.Materials.ShaderMaterial();
-				base.SetupBaseMaterialSettings(ThreeMaterial);
-				ThreeMaterial.FragmentShader = Fragment.IsAvailable ? Fragment.Res.Source : FragmentShader.Default.Res.Source;
-				ThreeMaterial.VertexShader = Vertex.IsAvailable ? Vertex.Res.Source : VertexShader.Default.Res.Source;
+				cachedMaterial = new THREE.Materials.ShaderMaterial();
+				base.SetupBaseMaterialSettings(cachedMaterial);
+				(cachedMaterial as THREE.Materials.ShaderMaterial).FragmentShader = Fragment.IsAvailable ? Fragment.Res.Source : FragmentShader.Default.Res.Source;
+				(cachedMaterial as THREE.Materials.ShaderMaterial).VertexShader = Vertex.IsAvailable ? Vertex.Res.Source : VertexShader.Default.Res.Source;
 			}
 	
-			return ThreeMaterial;
+			return cachedMaterial;
 		}
 		
 		public void SetUniforms(GLUniforms Uniforms)

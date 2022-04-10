@@ -30,10 +30,14 @@ namespace Duality.Resources
 		// Methods
 		public override THREE.Materials.Material GetThreeMaterial()
 		{
-			var mat = new THREE.Materials.PointCloudMaterial();
-			base.SetupBaseMaterialSettings(mat);
-			mat.Size = Size;
-			return mat;
+			if (cachedMaterial == null)
+			{
+				cachedMaterial = new THREE.Materials.PointCloudMaterial();
+				base.SetupBaseMaterialSettings(cachedMaterial);
+				(cachedMaterial as THREE.Materials.PointCloudMaterial).Size = Size;
+			}
+
+			return cachedMaterial;
 		}
 
 		protected override MaterialType Type { get { return MaterialType.PointCloud; } }
