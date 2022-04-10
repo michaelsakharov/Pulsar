@@ -30,7 +30,7 @@ namespace Duality.Graphics.Components
 		public ContentRef<Mesh> Mesh
 		{
 			get { return this._mesh; }
-			set { this._mesh = value; }
+			set { this._mesh = value; _meshDirty = true; }
 		}
 
 		public ContentRef<Material> _defaultMaterial = MeshPhongMaterial.Default.As<Material>();
@@ -90,7 +90,25 @@ namespace Duality.Graphics.Components
 		{
 			if (_meshDirty)
 			{
+				_meshDirty = false;
 				// Mesh was changed
+				if (threeMesh != null)
+				{
+					// Destroy the old Mesh
+					_inScene = false;
+					foreach (var submesh in threeMesh)
+						Scene.ThreeScene.Remove(submesh);
+					threeMesh = null;
+					// If the new Mesh is loaded and is in memory
+					if (Mesh.IsAvailable)
+					{
+						// Load the new mesh into this component
+						CreateThreeMesh();
+						_inScene = true;
+						foreach (var submesh in threeMesh)
+							Scene.ThreeScene.Add(submesh);
+					}
+				}
 			}
 
 			if (threeMesh != null && Mesh.IsAvailable)
