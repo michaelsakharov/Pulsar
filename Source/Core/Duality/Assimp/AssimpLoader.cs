@@ -169,28 +169,6 @@ namespace Duality.Assimp
 					subMesh.SkinWeights.Add(new Vector4(vertices[i].BoneAssignments[0].Weight, vertices[i].BoneAssignments[1].Weight, vertices[i].BoneAssignments[2].Weight, vertices[i].BoneAssignments[3].Weight));
 				}
 
-
-				//var indices = new List<int>((int)meshToImport->MNumFaces * 3);
-				//for (uint f = 0; f < meshToImport->MNumFaces; f++)
-				//{
-				//	var face = meshToImport->MFaces[f];
-				//
-				//	for (uint i = 0; i < face.MNumIndices; i++)
-				//		indices.Add((int)face.MIndices[i]);
-				//}
-				//
-				//using (var memStream = new MemoryStream(sizeof(int) * indices.Count))
-				//{
-				//	using (var writer = new BinaryWriter(memStream))
-				//	{
-				//		foreach (var index in indices)
-				//		{
-				//			writer.Write(index);
-				//		}
-				//		subMesh.Indices = memStream.GetBuffer();
-				//	}
-				//}
-
 				// Cannot load Materials from Models at the time of writing this in 
 				//if (model.HasMaterials)
 				//{
