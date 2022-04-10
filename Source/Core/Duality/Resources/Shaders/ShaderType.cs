@@ -28,7 +28,7 @@ namespace Duality.Resources
 		PointCloud,
 		Points,
 		RawShader, // Not Implemented
-		Shader, // Not Implemented
+		Shader,
 		Shadow,
 		Sprite,
 	}
