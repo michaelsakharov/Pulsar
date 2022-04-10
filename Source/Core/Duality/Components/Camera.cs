@@ -19,12 +19,13 @@ namespace Duality.Components
 	[EditorHintImage(CoreResNames.ImageCamera)]
 	public sealed class Camera : Component, ICmpInitializable
 	{
-		public bool Orthographic = false;
+		private bool orthographic = false;
 
 		[DontSerialize] public Matrix4? CustomViewMatrix = null;
 
 		public float NearClipDistance = 0.1f;
 		public float FarClipDistance = 1000f;
+		private float orthographicSize = 1000f;
 
 		public float Fov = 70;
 
@@ -88,20 +89,62 @@ namespace Duality.Components
 			get { return this.Fov; }
 			set { this.Fov = MathF.Max(value, 1f); }
 		}
+		/// <summary>
+		/// [GET / SET] Orthographic projection mode size
+		/// </summary>
+		[EditorHintDecimalPlaces(1)]
+		[EditorHintIncrement(1.0f)]
+		[EditorHintRange(0.1f, 1000, 1.0f, 100.0f)]
+		public float OrthographicSize
+		{
+			get { return this.orthographicSize; }
+			set { this.orthographicSize = value; }
+		}
+		/// <summary>
+		/// [GET / SET] The projection mode
+		/// </summary>
+		public bool Orthographic
+		{
+			get { return this.orthographic; }
+			set { this.orthographic = value; }
+		}
 
 		public THREE.Cameras.Camera GetTHREECamera()
 		{
-			THREE.Cameras.PerspectiveCamera camera = new THREE.Cameras.PerspectiveCamera();
-			camera.Fov = FieldOfView;
-			camera.Aspect = DualityApp.GraphicsBackend.AspectRatio;
-			camera.Near = NearZ;
-			camera.Far = FarZ;
-			camera.Position.X = this.GameObj.Transform.Pos.X;
-			camera.Position.Y = this.GameObj.Transform.Pos.Y;
-			camera.Position.Z = this.GameObj.Transform.Pos.Z;
-			camera.Rotation.Set(this.GameObj.Transform.Rotation.X, this.GameObj.Transform.Rotation.Y, this.GameObj.Transform.Rotation.Z, THREE.Math.RotationOrder.YXZ);
-			camera.UpdateProjectionMatrix();
-			return camera;
+			if (Orthographic == false)
+			{
+				THREE.Cameras.PerspectiveCamera camera = new THREE.Cameras.PerspectiveCamera();
+				camera.Fov = FieldOfView;
+				camera.Aspect = DualityApp.GraphicsBackend.AspectRatio;
+				camera.Near = NearZ;
+				camera.Far = FarZ;
+				camera.Position.X = this.GameObj.Transform.Pos.X;
+				camera.Position.Y = this.GameObj.Transform.Pos.Y;
+				camera.Position.Z = this.GameObj.Transform.Pos.Z;
+				camera.Rotation.Set(this.GameObj.Transform.Rotation.X, this.GameObj.Transform.Rotation.Y, this.GameObj.Transform.Rotation.Z, THREE.Math.RotationOrder.YXZ);
+				camera.UpdateProjectionMatrix();
+				return camera;
+			}
+			else
+			{
+				THREE.Cameras.OrthographicCamera camera = new THREE.Cameras.OrthographicCamera();
+
+				camera.Left = -OrthographicSize;
+				camera.CameraRight = OrthographicSize;
+				camera.Top = OrthographicSize;
+				camera.Bottom = -OrthographicSize;
+
+				camera.Fov = FieldOfView;
+				camera.Aspect = DualityApp.GraphicsBackend.AspectRatio;
+				camera.Near = NearZ;
+				camera.Far = FarZ;
+				camera.Position.X = this.GameObj.Transform.Pos.X;
+				camera.Position.Y = this.GameObj.Transform.Pos.Y;
+				camera.Position.Z = this.GameObj.Transform.Pos.Z;
+				camera.Rotation.Set(this.GameObj.Transform.Rotation.X, this.GameObj.Transform.Rotation.Y, this.GameObj.Transform.Rotation.Z, THREE.Math.RotationOrder.YXZ);
+				camera.UpdateProjectionMatrix();
+				return camera;
+			}
 		}
 
 		void ICmpInitializable.OnActivate()
