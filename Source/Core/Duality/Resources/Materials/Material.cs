@@ -74,17 +74,17 @@ namespace Duality.Resources
 
 		protected void SetupBaseMaterialSettings(THREE.Materials.Material mat)
 		{
-			mat.Map = Map.IsAvailable ? Map.Res.THREE : null;
-			mat.NormalMap = NormalMap.IsAvailable ? NormalMap.Res.THREE : null;
-			mat.SpecularMap = SpecularMap.IsAvailable ? SpecularMap.Res.THREE : null;
-			mat.AlphaMap = AlphaMap.IsAvailable ? AlphaMap.Res.THREE : null;
-			mat.MetalnessMap = MetalnessMap.IsAvailable ? MetalnessMap.Res.THREE : null;
-			mat.RoughnessMap = RoughnessMap.IsAvailable ? RoughnessMap.Res.THREE : null;
-			mat.BumpMap = BumpMap.IsAvailable ? BumpMap.Res.THREE : null;
-			mat.EmissiveMap = EmissiveMap.IsAvailable ? EmissiveMap.Res.THREE : null;
-			mat.DisplacementMap = DisplacementMap.IsAvailable ? DisplacementMap.Res.THREE : null;
-			mat.AoMap = AoMap.IsAvailable ? AoMap.Res.THREE : null;
-			mat.EnvMap = EnvMap.IsAvailable ? EnvMap.Res.THREE : null;
+			mat.Map = Map.IsAvailable ? Map.Res.ThreeTexture : null;
+			mat.NormalMap = NormalMap.IsAvailable ? NormalMap.Res.ThreeTexture : null;
+			mat.SpecularMap = SpecularMap.IsAvailable ? SpecularMap.Res.ThreeTexture : null;
+			mat.AlphaMap = AlphaMap.IsAvailable ? AlphaMap.Res.ThreeTexture : null;
+			mat.MetalnessMap = MetalnessMap.IsAvailable ? MetalnessMap.Res.ThreeTexture : null;
+			mat.RoughnessMap = RoughnessMap.IsAvailable ? RoughnessMap.Res.ThreeTexture : null;
+			mat.BumpMap = BumpMap.IsAvailable ? BumpMap.Res.ThreeTexture : null;
+			mat.EmissiveMap = EmissiveMap.IsAvailable ? EmissiveMap.Res.ThreeTexture : null;
+			mat.DisplacementMap = DisplacementMap.IsAvailable ? DisplacementMap.Res.ThreeTexture : null;
+			mat.AoMap = AoMap.IsAvailable ? AoMap.Res.ThreeTexture : null;
+			mat.EnvMap = EnvMap.IsAvailable ? EnvMap.Res.ThreeTexture : null;
 
 			mat.Color = new THREE.Math.Color(Color.R / 255f, Color.G / 255f, Color.B / 255f);
 			mat.Specular = new THREE.Math.Color(Specular.R / 255f, Specular.G / 255f, Specular.B / 255f);

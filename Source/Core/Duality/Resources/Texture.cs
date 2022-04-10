@@ -192,7 +192,7 @@ namespace Duality.Resources
 		/// [GET] The backends native texture. You shouldn't use this unless you know exactly what you're doing.
 		/// </summary>
 		[EditorHintFlags(MemberFlags.Invisible)]
-		public THREE.Textures.Texture THREE
+		public THREE.Textures.Texture ThreeTexture
 		{
 			get { return this.threeTex; }
 		}
@@ -352,6 +352,8 @@ namespace Duality.Resources
 				threeTex = new THREE.Textures.Texture(pixelData.ToBitmap(), (int)this.Mapping, (int)this.WrapS, (int)this.WrapT, (int)this.MagFilter, (int)this.MinFilter, anisotropy: this.Anisotropy);
 				threeTex.flipY = FlipY;
 				threeTex.Rotation = Rotation;
+				threeTex.Format = THREE.Constants.RGBFormat;
+				threeTex.NeedsUpdate = true;
 
 				// Adjust atlas to represent UV coordinates
 				if (this.atlas != null)
