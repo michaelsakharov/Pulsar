@@ -25,11 +25,11 @@ namespace Duality.Resources
 		MeshPhysical,
 		MeshStandard,
 		MeshToon,
-		PointCloud, // Not Implemented
-		Points, // Not Implemented
+		PointCloud,
+		Points,
 		RawShader, // Not Implemented
 		Shader, // Not Implemented
-		Shadow, // Not Implemented
-		Sprite, // Not Implemented
+		Shadow,
+		Sprite,
 	}
 }
