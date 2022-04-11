@@ -546,7 +546,8 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 
 					DualityApp.InvokePreRender(Scene.Current, Scene.Camera);
 
-					DualityApp.GraphicsBackend.Render(Scene.ThreeScene, camera.GetTHREECamera());
+					//DualityApp.GraphicsBackend.Render(Scene.ThreeScene, camera.GetTHREECamera());
+					camera.Render();
 
 					DualityApp.InvokePostRender(Scene.Current, Scene.Camera);
 				}

@@ -637,7 +637,8 @@ namespace Duality
 
 				DualityApp.InvokePreRender(Scene.Current, Scene.Camera);
 
-				DualityApp.GraphicsBackend.Render(Scene.ThreeScene, Scene.Camera.GetTHREECamera());
+				//DualityApp.GraphicsBackend.Render(Scene.ThreeScene, Scene.Camera.GetTHREECamera());
+				Scene.Camera.Render();
 
 				DualityApp.InvokePostRender(Scene.Current, Scene.Camera);
 

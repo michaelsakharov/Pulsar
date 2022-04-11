@@ -8,6 +8,7 @@ using Duality.Cloning;
 using Duality.Drawing;
 using Duality.Resources;
 using Duality.Properties;
+using THREE.Postprocessing;
 
 namespace Duality.Components
 {
@@ -112,6 +113,25 @@ namespace Duality.Components
 		}
 
 		[DontSerialize] private THREE.Cameras.Camera cachedCamera;
+		[DontSerialize] private EffectComposer EffectComposer;
+
+		/// <summary>
+		/// This gets called whenever the Cached Camera is created, this occurs on Camera Activate or IsDirty was true
+		/// </summary>
+		void CreateEffectComposer()
+		{
+			if (DualityApp.GraphicsBackend == null) return;
+			// if effectomposet is not null we should probably Dispose of it, but theres no Dispose function at the time of writing this
+			EffectComposer = new EffectComposer(DualityApp.GraphicsBackend);
+			EffectComposer.AddPass(new RenderPass(Scene.ThreeScene, GetTHREECamera()));
+		}
+
+		public void Render()
+		{
+			if (DualityApp.GraphicsBackend == null) return;
+			GetTHREECamera();
+			EffectComposer.Render(Time.DeltaTime);
+		}
 
 		public THREE.Cameras.Camera GetTHREECamera()
 		{
@@ -133,6 +153,7 @@ namespace Duality.Components
 				{
 					cachedCamera = new THREE.Cameras.OrthographicCamera();
 				}
+				CreateEffectComposer();
 			}
 
 			// Update Cached Camera, and Return it
@@ -164,6 +185,7 @@ namespace Duality.Components
 		}
 		void ICmpInitializable.OnDeactivate()
 		{
+			isDirty = true;
 		}
 	}
 }
