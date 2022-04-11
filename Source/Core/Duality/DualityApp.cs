@@ -23,6 +23,7 @@ using System.Diagnostics;
 using THREE.Math;
 using THREE;
 using Duality.Components;
+using Duality.DebugDraw;
 
 namespace Duality
 {
@@ -97,9 +98,11 @@ namespace Duality
 		private static ExecutionEnvironment     environment        = ExecutionEnvironment.Unknown;
 		private static ExecutionContext         execContext        = ExecutionContext.Terminated;
 		private static List<object>             disposeSchedule    = new List<object>();
+		private static GizmosRenderer			gizmosRenderer    = new GizmosRenderer();
 
 		public static float ResolutionScale { get; set; }
 		public static bool CursorVisible { get; set; } = true;
+		public static GizmosRenderer Gizmos { get { return gizmosRenderer; } }
 
 		/// <summary>
 		/// Called when the game becomes focused or loses focus.
@@ -359,6 +362,8 @@ namespace Duality
 				"Command line arguments: {1}",
 				System.Diagnostics.Debugger.IsAttached,
 				launcherArgs.ToString());
+
+			GizmosRenderer.Instance = gizmosRenderer;
 		}
 		/// <summary>
 		/// Opens up a window for Duality to render into. This also initializes the part of Duality that requires a 

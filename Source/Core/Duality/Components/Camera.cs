@@ -115,6 +115,7 @@ namespace Duality.Components
 		public void Render()
 		{
 			if (DualityApp.GraphicsBackend == null) return;
+			DualityApp.Gizmos.Update(Scene.ThreeScene);
 			DualityApp.GraphicsBackend.Render(Scene.ThreeScene, GetTHREECamera());
 		}
 
