@@ -1422,6 +1422,17 @@ namespace Duality
 		}
 
 		/// <summary>
+		/// Transforms value by matrix
+		/// </summary>
+		/// <param name="value">Source <see cref="Vector3"/> on the left of the mul sign.</param>
+		/// <param name="matrix">Matrix4 value on the left of the mul sign.</param>
+		/// <returns>Result of the vector transformation with a matrix.</returns>
+		public static Vector3 operator *(Vector3 value, Matrix4 matrix)
+		{
+			return Transform(value, matrix);
+		}
+
+		/// <summary>
 		/// Divides the components of a <see cref="Vector3"/> by the components of another <see cref="Vector3"/>.
 		/// </summary>
 		/// <param name="value1">Source <see cref="Vector3"/> on the left of the div sign.</param>
