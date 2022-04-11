@@ -5,6 +5,7 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 using Duality.Components;
+using Duality.DebugDraw;
 using Duality.Drawing;
 using Duality.Editor;
 using Duality.Properties;
@@ -73,6 +74,8 @@ namespace Duality.Graphics.Components
 
 		void ICmpEditorUpdatable.OnUpdate()
 		{
+			Gizmos.DrawCone(this.GameObj.Transform.Pos, this.GameObj.Transform.Rotation, Distance, Angle, Color);
+
 			UpdateLight();
 		}
 

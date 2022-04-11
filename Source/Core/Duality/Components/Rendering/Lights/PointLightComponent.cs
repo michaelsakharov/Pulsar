@@ -9,6 +9,7 @@ using Duality.Drawing;
 using Duality.Editor;
 using Duality.Properties;
 using Duality.Resources;
+using Duality.DebugDraw;
 using THREE.Cameras;
 using THREE.Lights;
 using THREE.Math;
@@ -66,6 +67,13 @@ namespace Duality.Graphics.Components
 
 		void ICmpEditorUpdatable.OnUpdate()
 		{
+			Gizmos.Matrix = Matrix4.CreateScale(Distance) * Matrix4.CreateTranslation(this.GameObj.Transform.Pos);
+			Gizmos.DrawSphere(Color);
+			Gizmos.Matrix = Matrix4.Identity; // Were done so make sure to set it back
+
+			Gizmos.DrawLine(new Vector3(0, 0, 0), new Vector3(0, 1, 0), Color);
+			Gizmos.DrawLine(new Vector3(0, 0, 1), new Vector3(0, 1, 1), Color);
+
 			UpdateLight();
 		}
 
