@@ -8,6 +8,7 @@ using Duality.Components;
 using Duality.Cloning;
 using Duality.Properties;
 using Duality.Utility.Coroutines;
+using Duality.Drawing;
 
 namespace Duality.Resources
 {
@@ -253,6 +254,11 @@ namespace Duality.Resources
 		private Vector2                     globalGravity      = Vector2.UnitY * 33.0f;
 		private GameObject[]                serializeObj       = null;
 
+		private ColorRgba                   backgroundColor	   = ColorRgba.Black;
+		private ColorRgba                   fogColor		   = ColorRgba.Grey;
+		private float						fogNear			   = 10f;
+		private float						fogFar			   = 30f;
+
 		[DontSerialize] private bool active = false;
 		[DontSerialize] private bool isUpdating = false;
 		[DontSerialize] private bool isRendering = false;
@@ -342,6 +348,26 @@ namespace Duality.Resources
 		{
 			get { return this.isRendering || this.isUpdating; }
 		}
+		public ColorRgba BackgroundColor
+		{
+			get { return this.backgroundColor; }
+			set { this.backgroundColor = value; }
+		}
+		public ColorRgba FogColor
+		{
+			get { return this.fogColor; }
+			set { this.fogColor = value; }
+		}
+		public float FogNear
+		{
+			get { return this.fogNear; }
+			set { this.fogNear = value; }
+		}
+		public float FogFar
+		{
+			get { return this.fogFar; }
+			set { this.fogFar = value; }
+		}
 
 
 		/// <summary>
@@ -364,6 +390,9 @@ namespace Duality.Resources
 			// Set state to active immediately, so the scene will be treated as
 			// such when reacting to added objects and similar events.
 			this.active = true;
+
+			//ThreeScene.Fog = new THREE.Scenes.Fog(System.Drawing.Color.FromArgb(255, FogColor.R, FogColor.G, FogColor.B), FogNear, FogFar);
+			ThreeScene.Background = new THREE.Math.Color(BackgroundColor.R / 255f, BackgroundColor.G / 255f, BackgroundColor.B / 255f);
 
 			// When in the editor, apply prefab links
 			if (DualityApp.ExecEnvironment == DualityApp.ExecutionEnvironment.Editor)
@@ -432,6 +461,9 @@ namespace Duality.Resources
 			this.isUpdating = true;
 			try
 			{
+				//ThreeScene.Fog = new THREE.Scenes.Fog(System.Drawing.Color.FromArgb(255, FogColor.R, FogColor.G, FogColor.B), FogNear, FogFar);
+				ThreeScene.Background = new THREE.Math.Color(BackgroundColor.R / 255f, BackgroundColor.G / 255f, BackgroundColor.B / 255f);
+
 				// Remove disposed objects from managers
 				this.CleanupDisposedObjects();
 
@@ -462,6 +494,8 @@ namespace Duality.Resources
 			this.isUpdating = true;
 			try
 			{
+				//ThreeScene.Fog = new THREE.Scenes.Fog(System.Drawing.Color.FromArgb(255, FogColor.R, FogColor.G, FogColor.B), FogNear, FogFar);
+				ThreeScene.Background = new THREE.Math.Color(BackgroundColor.R / 255f, BackgroundColor.G / 255f, BackgroundColor.B / 255f);
 				Profile.TimeUpdateScene.BeginMeasure();
 				DualityApp.EditorGuard(() =>
 				{
