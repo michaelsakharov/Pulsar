@@ -11,18 +11,6 @@ namespace Duality.DebugDraw
 	{
 		const float DEG_TO_RAD = (float)Math.PI / 180f;
 
-		static Matrix4 _matrix = Matrix4.Identity;
-		public static Matrix4 Matrix { 
-			get 
-			{ 
-				return _matrix; 
-			} 
-			set
-			{
-				_matrix = (value == null) ? Matrix4.Identity : value;
-			} 
-		}
-
 		static List<Vector3> SphereVertices;
 		static List<Vector3> BoxVertices;
 
@@ -94,22 +82,19 @@ namespace Duality.DebugDraw
 			}
 		}
 
-		public static void DrawLine(Vector3 v0, Vector3 v1, ColorRgba color)
+		public static void DrawLine(Vector3 v0, Vector3 v1, ColorRgba color) { DrawLine(v0, v1, color, Matrix4.Identity); }
+
+		public static void DrawLine(Vector3 v0, Vector3 v1, ColorRgba color, Matrix4 matrix)
 		{
 			var p = new GizmosPrimitive();
-			p.matrix = Matrix;
+			p.matrix = matrix;
 			p.vertices = new List<Vector3>() { v0, v1 };
 			p.color = color;
 			GizmosRenderer.Instance.AddPrimitive(p);
 		}
 
-		/// <summary>
-		/// WARNING! This method is performed in World State REGARDLESS of the matrix value set inside this class!
-		/// Please make sure your Points are Set in Normal World Space and Not inside the Matrix!
-		/// </summary>
-		/// <param name="points"></param>
-		/// <param name="color"></param>
-		public static void DrawLineStrip(List<Vector3> points, ColorRgba color)
+		public static void DrawLineStrip(List<Vector3> points, ColorRgba color) { DrawLineStrip(points, color, Matrix4.Identity); }
+		public static void DrawLineStrip(List<Vector3> points, ColorRgba color, Matrix4 matrix)
 		{
 			if (points == null)
 			{
@@ -122,16 +107,18 @@ namespace Duality.DebugDraw
 				return;
 			}
 			var p = new GizmosPrimitive();
-			p.matrix = Matrix;
+			p.matrix = matrix;
 			p.vertices = points;
 			p.color = color;
 			GizmosRenderer.Instance.AddPrimitive(p);
 		}
 
-		public static void DrawArrow(Vector3 pStart, Vector3 pEnd, float arrowSize, ColorRgba color)
+		public static void DrawArrow(Vector3 pStart, Vector3 pEnd, float arrowSize, ColorRgba color) { DrawArrow(pStart, pEnd, arrowSize, color, Matrix4.Identity); }
+
+		public static void DrawArrow(Vector3 pStart, Vector3 pEnd, float arrowSize, ColorRgba color, Matrix4 matrix)
 		{
 			var p = new GizmosPrimitive();
-			p.matrix = Matrix;
+			p.matrix = matrix;
 			p.color = color;
 			p.vertices = new List<Vector3>();
 
@@ -179,19 +166,39 @@ namespace Duality.DebugDraw
 			GizmosRenderer.Instance.AddPrimitive(p);
 		}
 
-		public static void DrawBoundingBox(ColorRgba color)
+		public static void DrawBoundingBox(Vector3 center, Vector3 size, Vector3 rotation, ColorRgba color)
+		{
+			Matrix4 matrix = Matrix4.Identity;
+			matrix *= Matrix4.CreateScale(size);
+			matrix *= Matrix4.CreateFromYawPitchRoll(rotation.Y, rotation.X, rotation.Z);
+			matrix *= Matrix4.CreateTranslation(center);
+			DrawBoundingBox(color, matrix); 
+		}
+		public static void DrawBoundingBox(ColorRgba color, Matrix4 matrix)
 		{
 			var p = new GizmosPrimitive();
-			p.matrix = Matrix;
+
+			p.matrix = matrix; ;
+
 			p.color = color;
 			p.vertices = BoxVertices;
 			GizmosRenderer.Instance.AddPrimitive(p);
 		}
 
-		public static void DrawSphere(ColorRgba color)
+
+		public static void DrawSphere(Vector3 center, Vector3 size, ColorRgba color)
+		{
+			Matrix4 matrix = Matrix4.Identity;
+			matrix *= Matrix4.CreateScale(size);
+			matrix *= Matrix4.CreateTranslation(center);
+			DrawSphere(color, matrix);
+		}
+		public static void DrawSphere(ColorRgba color, Matrix4 matrix)
 		{
 			var p = new GizmosPrimitive();
-			p.matrix = Matrix;
+
+			p.matrix = matrix;
+
 			p.color = color;
 			p.vertices = SphereVertices;
 			GizmosRenderer.Instance.AddPrimitive(p);
@@ -229,8 +236,8 @@ namespace Duality.DebugDraw
 		/// Construct a circle in space
 		/// </summary>
 		/// <param name="origin">The center point of the circle</param>
-		/// <param name="normalRadius">
-		/// The normal and radius of the circle, the radius of the circle will be
+		/// <param name="normal">
+		/// The normal of the circle, the radius of the circle will be
 		/// equivalent to this vector's magnitude.
 		/// </param>
 		/// <param name="color">The color of the circle</param>
@@ -238,8 +245,13 @@ namespace Duality.DebugDraw
 		/// Optional, the number of segments to construct the circle out of.
 		/// Defaults to 32.
 		/// </param>
-		public static void DrawCircle(ColorRgba color, int segments = 32)
+		public static void DrawCircle(Vector3 origin, Vector3 normal, Vector2 size, ColorRgba color, int segments = 32)
 		{
+			var (left, up) = GetComponentsFromNormal(normal);
+
+			left *= size.X;
+			up *= size.Y;
+
 			for (int i = 0; i < segments; i++)
 			{
 				float theta0 = 2f * (float)Math.PI * (float)i / segments;
@@ -250,41 +262,31 @@ namespace Duality.DebugDraw
 				float x1 = (float)Math.Cos(theta1);
 				float y1 = (float)Math.Sin(theta1);
 
-				DrawLine((Vector3.Left * x0 + Vector3.Up * y0), (Vector3.Left * x1 + Vector3.Up * y1), color);
+				DrawLine(origin + (left * x0 + up * y0), origin + (left * x1 + up * y1), color);
 			}
 		}
 
-		public static Matrix4 CreateConeScaledMatrix(float distance, float angle)
-		{
-			float coneWidth = distance * MathF.Tan(angle);
-			return Matrix4.CreateScale(coneWidth, coneWidth, distance);
-		}
 
 		public static void DrawCone(Vector3 position, Vector3 rotation, float distance, float angle, ColorRgba color)
 		{
-			Matrix4 tmp = Matrix;
-
 			float coneWidth = distance * MathF.Tan(angle);
 
-			Gizmos.Matrix = Matrix4.Identity;
-			Gizmos.Matrix *= Matrix4.CreateScale(coneWidth, coneWidth, 1f);
-			Gizmos.Matrix *= Matrix4.CreateFromYawPitchRoll(rotation.Y, rotation.X, rotation.Z);
-			Gizmos.Matrix *= Matrix4.CreateTranslation(position + (Matrix4.CreateFromYawPitchRoll(rotation.Y, rotation.X, rotation.Z).Forward * distance));
-			DrawCircle(color);
+			Matrix4 Matrix = Matrix4.Identity;
+			Matrix *= Matrix4.CreateScale(coneWidth, coneWidth, 1f);
+			Matrix *= Matrix4.CreateFromYawPitchRoll(rotation.Y, rotation.X, rotation.Z);
+			Matrix *= Matrix4.CreateTranslation(position + (Matrix4.CreateFromYawPitchRoll(rotation.Y, rotation.X, rotation.Z).Forward * distance));
+			DrawCircle(Matrix.Translation, Matrix.Forward, new Vector2(coneWidth, coneWidth), color);
 
-			Gizmos.Matrix = Matrix4.Identity;
-			Gizmos.Matrix *= Matrix4.CreateScale(coneWidth, coneWidth, -distance);
-			Gizmos.Matrix *= Matrix4.CreateFromYawPitchRoll(rotation.Y, rotation.X, rotation.Z);
-			Gizmos.Matrix *= Matrix4.CreateTranslation(position);
+			Matrix = Matrix4.Identity;
+			Matrix *= Matrix4.CreateScale(coneWidth, coneWidth, -distance);
+			Matrix *= Matrix4.CreateFromYawPitchRoll(rotation.Y, rotation.X, rotation.Z);
+			Matrix *= Matrix4.CreateTranslation(position);
 
-			DrawLine(new Vector3(0, 0, 0), new Vector3(0, 0, 1), color);
-			DrawLine(new Vector3(0, 0, 0), new Vector3(1, 0, 1), color);
-			DrawLine(new Vector3(0, 0, 0), new Vector3(-1, 0, 1), color);
-			DrawLine(new Vector3(0, 0, 0), new Vector3(0, 1, 1), color);
-			DrawLine(new Vector3(0, 0, 0), new Vector3(0, -1, 1), color);
-
-			// Reset Matrix
-			Gizmos.Matrix = tmp;
+			DrawLine(new Vector3(0, 0, 0), new Vector3(0, 0, 1), color, Matrix);
+			DrawLine(new Vector3(0, 0, 0), new Vector3(1, 0, 1), color, Matrix);
+			DrawLine(new Vector3(0, 0, 0), new Vector3(-1, 0, 1), color, Matrix);
+			DrawLine(new Vector3(0, 0, 0), new Vector3(0, 1, 1), color, Matrix);
+			DrawLine(new Vector3(0, 0, 0), new Vector3(0, -1, 1), color, Matrix);
 		}
 
 		public static void DrawDirectionalLight(Vector3 position, Vector3 rotation, float size, float nearClip, float farClip, ColorRgba color)
@@ -300,16 +302,16 @@ namespace Duality.DebugDraw
 			Vector3 bl = position - up * size + left * size;
 			Vector3 br = position - up * size - left * size;
 
-			DrawLine(tl, tl + (normal * farClip), color);
-			DrawLine(tr, tr + (normal * farClip), color);
-			DrawLine(bl, bl + (normal * farClip), color);
-			DrawLine(br, br + (normal * farClip), color);
+			DrawLine(tl + (normal * nearClip), tl + (normal * farClip), color);
+			DrawLine(tr + (normal * nearClip), tr + (normal * farClip), color);
+			DrawLine(bl + (normal * nearClip), bl + (normal * farClip), color);
+			DrawLine(br + (normal * nearClip), br + (normal * farClip), color);
 
 
-			DrawLine(position, tl, ColorRgba.Red);
-			DrawLine(position, tr, ColorRgba.Red);
-			DrawLine(position, bl, ColorRgba.Red);
-			DrawLine(position, br, ColorRgba.Red);
+			DrawLine(position, tl + (normal * nearClip), ColorRgba.Red);
+			DrawLine(position, tr + (normal * nearClip), ColorRgba.Red);
+			DrawLine(position, bl + (normal * nearClip), ColorRgba.Red);
+			DrawLine(position, br + (normal * nearClip), ColorRgba.Red);
 
 
 			DrawLine(position, position + (normal * farClip), ColorRgba.Black);

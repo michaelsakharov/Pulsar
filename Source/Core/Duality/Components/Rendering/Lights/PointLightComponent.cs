@@ -67,12 +67,7 @@ namespace Duality.Graphics.Components
 
 		void ICmpEditorUpdatable.OnUpdate()
 		{
-			Gizmos.Matrix = Matrix4.CreateScale(Distance) * Matrix4.CreateTranslation(this.GameObj.Transform.Pos);
-			Gizmos.DrawSphere(Color);
-			Gizmos.Matrix = Matrix4.Identity; // Were done so make sure to set it back
-
-			Gizmos.DrawLine(new Vector3(0, 0, 0), new Vector3(0, 1, 0), Color);
-			Gizmos.DrawLine(new Vector3(0, 0, 1), new Vector3(0, 1, 1), Color);
+			Gizmos.DrawSphere(this.GameObj.Transform.Pos, Vector3.One * Distance, Color);
 
 			UpdateLight();
 		}
