@@ -79,10 +79,13 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 		public override ObjectEditorSelObj PickSelObjAt(int x, int y)
 		{
 			int picked = this._GPUWorldPicker.Pick(x, y, DualityApp.GraphicsBackend, Scene.ThreeScene, CameraComponent.GetTHREECamera());
-			var obj = Scene.ThreeScene.GetObjectById(picked);
 			if (picked == -1 || picked == 0) return null;
-			//if (DesignTimeObjectData.Get(picked.GameObj).IsLocked) return null;
-			//return new SceneEditorSelGameObj(picked.GameObj);
+			var obj = Scene.GetGameobjectByThreeID(picked);
+			if (obj != null)
+			{
+				if (DesignTimeObjectData.Get(obj).IsLocked) return null;
+				return new SceneEditorSelGameObj(obj);
+			}
 			return null;
 		}
 

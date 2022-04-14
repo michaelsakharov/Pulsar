@@ -9,6 +9,8 @@ using Duality.Cloning;
 using Duality.Properties;
 using Duality.Utility.Coroutines;
 using Duality.Drawing;
+using System.Collections;
+using THREE.Core;
 
 namespace Duality.Resources
 {
@@ -22,14 +24,15 @@ namespace Duality.Resources
 	[EditorHintImage(CoreResNames.ImageScene)]
 	public sealed class Scene : Resource
 	{
-		private static ContentRef<Scene>   current           = null;
-		private static bool                curAutoGen        = false;
-		private static bool                isSwitching       = false;
-		private static int                 switchLock        = 0;
-		private static bool                switchToScheduled = false;
-		private static ContentRef<Scene>   switchToTarget    = null;
-		private static THREE.Scenes.Scene  threeScene		 = null;
-		private static Camera			   camera			 = null;
+		private static ContentRef<Scene>			current           = null;
+		private static bool							curAutoGen        = false;
+		private static bool							isSwitching       = false;
+		private static int							switchLock        = 0;
+		private static bool							switchToScheduled = false;
+		private static ContentRef<Scene>			switchToTarget    = null;
+		private static THREE.Scenes.Scene			threeScene		  = null;
+		private static Camera						camera			  = null;
+		private static Dictionary<int, GameObject>	threeIDs		  = null;
 
 		/// <summary>
 		/// [GET / SET] The Scene that is currently active i.e. updated and rendered. This is never null.
@@ -108,6 +111,10 @@ namespace Duality.Resources
 		{
 			get { return threeScene; }
 		}
+		public static Dictionary<int, GameObject> ThreeIDs
+		{
+			get { return threeIDs; }
+		}
 		public static Camera Camera
 		{
 			get { return camera; }
@@ -148,6 +155,7 @@ namespace Duality.Resources
 		static Scene()
 		{
 			threeScene = new  THREE.Scenes.Scene();
+			threeIDs = new Dictionary<int, GameObject>();
 			Current = new Scene();
 		}
 
@@ -180,6 +188,7 @@ namespace Duality.Resources
 			{
 				if (threeScene != null) threeScene.Dispose();
 				threeScene = new THREE.Scenes.Scene();
+				threeIDs = new Dictionary<int, GameObject>();
 				Scene.Current = scene.Res;
 			}
 		}
@@ -223,6 +232,7 @@ namespace Duality.Resources
 			// Perform the scheduled switch
 			if (threeScene != null) threeScene.Dispose();
 			threeScene = new THREE.Scenes.Scene();
+			threeIDs = new Dictionary<int, GameObject>();
 			Scene.Current = target;
 
 			// If we now end up with another scheduled switch, we might be
@@ -243,6 +253,24 @@ namespace Duality.Resources
 			return true;
 		}
 
+		public static void AddToThreeScene(Object3D obj3D, GameObject Owner)
+		{
+			threeScene.Add(obj3D);
+			if (!threeIDs.ContainsKey(obj3D.Id))
+				threeIDs.Add(obj3D.Id, Owner);
+		}
+
+		public static void RemoveFromThreeScene(Object3D obj3D)
+		{
+			threeScene.Remove(obj3D);
+			if (threeIDs.ContainsKey(obj3D.Id))
+				threeIDs.Remove(obj3D.Id);
+		}
+
+		public static GameObject GetGameobjectByThreeID(int ThreeID)
+		{
+			return threeIDs.ContainsKey(ThreeID) ? threeIDs[ThreeID] : null;
+		}
 
 		private struct UpdateEntry
 		{

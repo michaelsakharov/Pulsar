@@ -60,7 +60,7 @@ namespace Duality.Graphics.Components
 				CreateThreeMesh();
 				_inScene = true;
 				foreach (var submesh in threeMesh)
-					Scene.ThreeScene.Add(submesh);
+					Scene.AddToThreeScene(submesh, GameObj);
 			}
 			UpdateMeshObject();
 		}
@@ -71,7 +71,7 @@ namespace Duality.Graphics.Components
 			{
 				_inScene = false;
 				foreach (var submesh in threeMesh)
-					Scene.ThreeScene.Remove(submesh);
+					Scene.RemoveFromThreeScene(submesh);
 				threeMesh = null;
 			}
 		}
@@ -97,7 +97,7 @@ namespace Duality.Graphics.Components
 					// Destroy the old Mesh
 					_inScene = false;
 					foreach (var submesh in threeMesh)
-						Scene.ThreeScene.Remove(submesh);
+						Scene.RemoveFromThreeScene(submesh);
 					threeMesh = null;
 					// If the new Mesh is loaded and is in memory
 					if (Mesh.IsAvailable)
@@ -106,7 +106,7 @@ namespace Duality.Graphics.Components
 						CreateThreeMesh();
 						_inScene = true;
 						foreach (var submesh in threeMesh)
-							Scene.ThreeScene.Add(submesh);
+							Scene.AddToThreeScene(submesh, GameObj);
 					}
 				}
 			}
@@ -191,9 +191,11 @@ namespace Duality.Graphics.Components
 			if (threeMesh != null)
 			{
 				foreach (var submesh in threeMesh)
+				{
+					if (_inScene)
+						Scene.RemoveFromThreeScene(submesh);
 					submesh.Dispose();
-				if(_inScene)
-					Scene.ThreeScene.Remove(threeMesh);
+				}
 			}
 		}
 	}
