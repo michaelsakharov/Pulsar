@@ -290,64 +290,8 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 			if (this.IsActive) this.RestoreObjectVisibility();
 		}
 
-		protected virtual void OnCollectStateDrawcalls()
+		protected virtual void DrawSelection()
 		{
-			// Collect the views layer drawcalls
-			this.CollectLayerDrawcalls();
-		}
-		protected virtual void OnCollectStateWorldOverlayDrawcalls()
-		{
-			// Collect the views layer drawcalls
-			this.CollectLayerWorldOverlayDrawcalls();
-		}
-		protected virtual void OnCollectStateOverlayDrawcalls()
-		{
-			// Gather general data
-			Point cursorPos = this.PointToClient(Cursor.Position);
-
-			// Collect the views overlay layer drawcalls
-			this.CollectLayerOverlayDrawcalls();
-
-			// Collect the states overlay drawcalls
-			//canvas.PushState();
-			//{
-			//	// Draw camera movement indicators
-			//	if (this.camAction != CameraAction.None)
-			//	{
-			//		canvas.PushState();
-			//		canvas.State.ColorTint *= ColorRgba.White.WithAlpha(0.5f);
-			//		if (this.camAction == CameraAction.DragScene)
-			//		{
-			//			// Don't draw anything.
-			//		}
-			//		else if (this.camAction == CameraAction.MoveWASD)
-			//		{
-			//			// Don't draw anything.
-			//		}
-			//		else if (this.camAction == CameraAction.Move)
-			//		{
-			//			canvas.FillCircle(this.camActionBeginLoc.X, this.camActionBeginLoc.Y, 3);
-			//			canvas.DrawLine(this.camActionBeginLoc.X, this.camActionBeginLoc.Y, cursorPos.X, cursorPos.Y);
-			//		}
-			//		canvas.PopState();
-			//	}
-			//}
-			//canvas.PopState();
-			//
-			//// Draw a focus indicator at the view border
-			//canvas.PushState();
-			//{
-			//	ColorRgba focusColor = ColorRgba.Lerp(this.FgColor, this.BgColor, 0.25f).WithAlpha(255);
-			//	ColorRgba noFocusColor = ColorRgba.Lerp(this.FgColor, this.BgColor, 0.75f).WithAlpha(255);
-			//	canvas.State.ColorTint *= this.Focused ? focusColor : noFocusColor;
-			//	canvas.DrawRect(0, 0, canvas.DrawDevice.TargetSize.X, canvas.DrawDevice.TargetSize.Y);
-			//}
-			//canvas.PopState();
-		}
-		protected virtual void OnCollectStateBackgroundDrawcalls()
-		{
-			// Collect the views overlay layer drawcalls
-			this.CollectLayerBackgroundDrawcalls();
 		}
 
 		protected virtual void OnRenderState()
@@ -357,6 +301,8 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 			DualityApp.GraphicsBackend.ShadowMap.type = THREE.Constants.PCFSoftShadowMap;
 
 			DualityApp.InvokePreRender(Scene.Current, Scene.Camera);
+
+			DrawSelection();
 
 			//DualityApp.GraphicsBackend.Render(Scene.ThreeScene, CameraComponent.GetTHREECamera());
 			CameraComponent.Render();
