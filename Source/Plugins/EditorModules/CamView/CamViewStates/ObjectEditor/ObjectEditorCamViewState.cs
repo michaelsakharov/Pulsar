@@ -373,36 +373,39 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 			
 				// Determine action variables
 				//Vector3 mouseSpaceCoord = this.GetWorldPos(new Vector3(mouseLoc.X, mouseLoc.Y, this.selectionCenter.Z));
-				////float scale = this.GetScaleAtZ(this.selectionCenter.Z);
-				//float scale = 1f;
-				//const float boundaryThickness = 10.0f;
-				//bool tooSmall = this.selectionRadius * scale <= boundaryThickness * 2.0f;
+				//float scale = this.GetScaleAtZ(this.selectionCenter.Z);
+				float scale = 1f;
+				const float boundaryThickness = 10.0f;
+				bool tooSmall = this.selectionRadius * scale <= boundaryThickness * 2.0f;
 				//bool mouseOverBoundary = MathF.Abs((mouseSpaceCoord - this.selectionCenter).Length - this.selectionRadius) * scale < boundaryThickness;
 				//bool mouseInsideBoundary = !mouseOverBoundary && (mouseSpaceCoord - this.selectionCenter).Length < this.selectionRadius;
 				//bool mouseAtCenterAxis = MathF.Abs(mouseSpaceCoord.X - this.selectionCenter.X) * scale < boundaryThickness || MathF.Abs(mouseSpaceCoord.Y - this.selectionCenter.Y) * scale < boundaryThickness;
-				//bool shift = (Control.ModifierKeys & Keys.Shift) != Keys.None;
-				//bool ctrl = (Control.ModifierKeys & Keys.Control) != Keys.None;
-				//
-				//bool anySelection = this.actionObjSel.Count > 0;
-				//bool canMove = this.actionObjSel.Any(s => s.IsActionAvailable(ObjectEditorAction.Move));
-				//bool canRotate = (canMove && this.actionObjSel.Count > 1) || this.actionObjSel.Any(s => s.IsActionAvailable(ObjectEditorAction.Rotate));
-				//bool canScale = (canMove && this.actionObjSel.Count > 1) || this.actionObjSel.Any(s => s.IsActionAvailable(ObjectEditorAction.Scale));
-				//
-				//// Select which action to propose
-				//this.mouseoverSelect = false;
-				//if (anySelection && !tooSmall && mouseOverBoundary && mouseAtCenterAxis && this.selectionRadius > 0.0f && canScale)
-				//	this.mouseoverAction = ObjectEditorAction.Scale;
-				//else if (anySelection && !tooSmall && mouseOverBoundary && canRotate)
-				//	this.mouseoverAction = ObjectEditorAction.Rotate;
-				//else if (anySelection && mouseInsideBoundary && canMove)
-				//	this.mouseoverAction = ObjectEditorAction.Move;
-				//else if (this.mouseoverObject != null && this.mouseoverObject.IsActionAvailable(ObjectEditorAction.Move))
-				//{
-				//	this.mouseoverAction = ObjectEditorAction.Move; 
-				//	this.mouseoverSelect = true;
-				//}
-				//else
-				//	this.mouseoverAction = ObjectEditorAction.None;
+				bool mouseOverBoundary = false;
+				bool mouseInsideBoundary = false;
+				bool mouseAtCenterAxis = false;
+				bool shift = (Control.ModifierKeys & Keys.Shift) != Keys.None;
+				bool ctrl = (Control.ModifierKeys & Keys.Control) != Keys.None;
+				
+				bool anySelection = this.actionObjSel.Count > 0;
+				bool canMove = this.actionObjSel.Any(s => s.IsActionAvailable(ObjectEditorAction.Move));
+				bool canRotate = (canMove && this.actionObjSel.Count > 1) || this.actionObjSel.Any(s => s.IsActionAvailable(ObjectEditorAction.Rotate));
+				bool canScale = (canMove && this.actionObjSel.Count > 1) || this.actionObjSel.Any(s => s.IsActionAvailable(ObjectEditorAction.Scale));
+				
+				// Select which action to propose
+				this.mouseoverSelect = false;
+				if (anySelection && !tooSmall && mouseOverBoundary && mouseAtCenterAxis && this.selectionRadius > 0.0f && canScale)
+					this.mouseoverAction = ObjectEditorAction.Scale;
+				else if (anySelection && !tooSmall && mouseOverBoundary && canRotate)
+					this.mouseoverAction = ObjectEditorAction.Rotate;
+				else if (anySelection && mouseInsideBoundary && canMove)
+					this.mouseoverAction = ObjectEditorAction.Move;
+				else if (this.mouseoverObject != null && this.mouseoverObject.IsActionAvailable(ObjectEditorAction.Move))
+				{
+					this.mouseoverAction = ObjectEditorAction.Move; 
+					this.mouseoverSelect = true;
+				}
+				else
+					this.mouseoverAction = ObjectEditorAction.None;
 			}
 			else
 			{
