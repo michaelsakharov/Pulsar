@@ -272,6 +272,16 @@ namespace Duality.Resources
 			return threeIDs.ContainsKey(ThreeID) ? threeIDs[ThreeID] : null;
 		}
 
+		public static List<int> GetThreeIDsByGameObject(GameObject gameObj)
+		{
+			// TODO: This should probably keep track of Gameobjects and IDs would save on some performance
+			List<int> objectsFound = new List<int>();
+			foreach(int id in threeIDs.Keys)
+				if (threeIDs[id] == gameObj)
+					objectsFound.Add(id);
+			return objectsFound;
+		}
+
 		private struct UpdateEntry
 		{
 			public TypeInfo Type;

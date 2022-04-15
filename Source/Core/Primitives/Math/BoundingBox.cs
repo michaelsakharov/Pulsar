@@ -23,6 +23,7 @@ namespace Duality
         public const int CornerCount = 8;
 
 		public Vector3 Center { get { return (this.Min + this.Max) / 2.0f; } }
+		public Vector3 Size { get { return new Vector3(Width, Height, Depth); } }
 
 		public float Width { get { return this.Max.X - this.Min.X; } }
 

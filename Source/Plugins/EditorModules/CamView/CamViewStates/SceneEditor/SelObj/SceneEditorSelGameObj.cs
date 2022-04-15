@@ -42,11 +42,26 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 			get { return this.gameObj.Transform.Scale; }
 			set { this.gameObj.Transform.Scale = value; }
 		}
-		public override Vector3 BoundRadius
+		public override THREE.Math.Box3 BoundRadius
 		{
 			get
 			{
-				return this.gameObj.Transform.Scale;
+				List<int> ids = Scene.GetThreeIDsByGameObject(this.gameObj);
+				THREE.Math.Box3 boundingBox = null;
+				foreach (int id in ids)
+				{
+					var obj = Scene.ThreeScene.GetObjectById(id);
+					if (obj != null)
+					{
+						if (boundingBox == null)
+							boundingBox = new THREE.Math.Box3().SetFromObject(obj);
+						else
+							boundingBox.ExpandByObject(obj);
+					}
+				}
+				//return new Vector3(boundingBox.GetSize().X, boundingBox.GetSize().Y, boundingBox.GetSize().Z);
+				//return boundingBox != null ? new BoundingBox(new Vector3(boundingBox.Min.X, boundingBox.Min.Y, boundingBox.Min.Z), new Vector3(boundingBox.Max.X, boundingBox.Max.Y, boundingBox.Max.Z)) : new BoundingBox(Vector3.Zero, Vector3.Zero);
+				return boundingBox != null ? boundingBox : new THREE.Math.Box3(new THREE.Math.Vector3(-0.1f, -0.1f, -0.1f), new THREE.Math.Vector3(0.1f, 0.1f, 0.1f));
 			}
 		}
 		public override bool ShowAngle

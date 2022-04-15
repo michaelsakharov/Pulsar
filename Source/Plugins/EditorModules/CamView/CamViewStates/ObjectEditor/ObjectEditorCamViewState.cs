@@ -169,7 +169,7 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 			{
 				if (!selObj.HasTransform) continue;
 				Vector3 posTemp = selObj.Pos;
-				Vector3 radTemp = selObj.BoundRadius;
+				THREE.Math.Box3 radTemp = selObj.BoundRadius;
 		
 				// Draw selection marker
 				if (selObj.ShowPos)
@@ -196,9 +196,13 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 				}
 
 				// Draw boundary
-				if (selObj.ShowBoundRadius && radTemp.Length > 0.0f)
+				if (selObj.ShowBoundRadius && radTemp.GetSize().Length() > 0.0f)
 				{
-					Gizmos.DrawBoundingBox(posTemp, radTemp, selObj.Angle, ColorRgba.White);
+					var pos = radTemp.GetCenter(new THREE.Math.Vector3());
+					pos = pos.Length() == 0 ? new THREE.Math.Vector3(posTemp.X, posTemp.Y, posTemp.Z) : pos;
+					var size = radTemp.GetSize();
+					//Gizmos.DrawBoundingBox(new Vector3(pos.X, pos.Y, pos.Z), new Vector3(size.X, size.Y, size.Z), selObj.Angle, ColorRgba.White);
+					Gizmos.DrawBoundingBox(new Vector3(pos.X, pos.Y, pos.Z), new Vector3(size.X, size.Y, size.Z), Vector3.Zero, ColorRgba.White);
 				}
 			}
 		}
@@ -342,7 +346,7 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 		private void ValidateSelectionStats()
 		{
 			if (this.selectionStatsValid) return;
-			
+
 			List<ObjectEditorSelObj> transformObjSel = this.allObjSel.Where(s => s.HasTransform).ToList();
 
 			this.selectionCenter = Vector3.Zero;
@@ -353,7 +357,10 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 			if (transformObjSel.Count > 0) this.selectionCenter /= transformObjSel.Count;
 
 			foreach (ObjectEditorSelObj s in transformObjSel)
-				this.selectionRadius = MathF.Max(this.selectionRadius, (s.BoundRadius + (s.Pos - this.selectionCenter)).Length);
+			{
+				var size = s.BoundRadius.GetSize();
+				this.selectionRadius = MathF.Max(this.selectionRadius, (new Vector3(size.X, size.Y, size.Z) + (s.Pos - this.selectionCenter)).Length);
+			}
 
 			this.selectionStatsValid = true;
 		}
@@ -528,16 +535,7 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 			// Draw overall selection boundary
 			if (transformObjSel.Count > 1)
 			{
-				float midZ = transformObjSel.Average(t => t.Pos.Z);
-				float maxZDiff = transformObjSel.Max(t => MathF.Abs(t.Pos.Z - midZ));
-				if (maxZDiff > 0.001f)
-				{
-					Gizmos.DrawSphere(this.selectionCenter, Vector3.One * this.selectionRadius, ColorRgba.White);
-				}
-				else
-				{
-					Gizmos.DrawCircle(this.selectionCenter, Vector3.Up, Vector2.One * this.selectionRadius, ColorRgba.White);
-				}
+				Gizmos.DrawBoundingBox(this.selectionCenter, (Vector3.One * this.selectionRadius) * 2f, Vector3.Zero, ColorRgba.White);
 			}
 			
 			if (this.action != ObjectEditorAction.None)
