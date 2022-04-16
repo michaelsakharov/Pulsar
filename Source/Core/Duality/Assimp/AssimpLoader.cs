@@ -96,7 +96,6 @@ namespace Duality.Assimp
 				subMesh.SkinIndices = new List<Vector4>();
 				subMesh.SkinWeights = new List<Vector4>();
 				subMesh.Groups = new List<Vector3>();
-				subMesh.Material = MeshPhongMaterial.Default.As<Material>();
 
 				Vertex[] vertices = new Vertex[meshToImport->MNumVertices];
 				var positions = meshToImport->MVertices;
