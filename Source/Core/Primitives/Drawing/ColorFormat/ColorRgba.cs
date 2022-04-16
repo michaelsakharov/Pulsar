@@ -30,6 +30,10 @@ namespace Duality.Drawing
 		/// Fully saturated and max-brightness blue. Also known as [0,0,255].
 		/// </summary>
 		public static readonly ColorRgba Blue				= new ColorRgba(0,		0,		255);
+		/// <summary>
+		/// Fully saturated and max-brightness yellow. Also known as [255,255,0].
+		/// </summary>
+		public static readonly ColorRgba Yellow				= new ColorRgba(255,	255,	0);
 
 		/// <summary>
 		/// A very light grey. Value: 224.
