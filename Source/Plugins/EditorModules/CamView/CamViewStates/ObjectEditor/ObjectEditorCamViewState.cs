@@ -122,7 +122,7 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 			THREE.Math.Vector3 cameraPosition = new THREE.Math.Vector3().SetFromMatrixPosition(CameraComponent.GetTHREECamera().MatrixWorld);
 			THREE.Math.Vector3 direction = new THREE.Math.Vector3().Set(mousePos.X, mousePos.Y, 0.5f).UnProject(CameraComponent.GetTHREECamera()).Sub(cameraPosition).Normalize();
 
-			Vector3 mouseSpaceCoord = new Vector3(cameraPosition.X, cameraPosition.Y, cameraPosition.Z) + (new Vector3(direction.X, direction.Y, direction.Z) * 10f);
+			Vector3 mouseSpaceCoord = cameraPosition + (direction * 10f);
 			
 			// Apply user guide snapping
 			if ((this.SnapToUserGuides & UserGuideType.Position) != UserGuideType.None)
@@ -169,7 +169,7 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 			{
 				if (!selObj.HasTransform) continue;
 				Vector3 posTemp = selObj.Pos;
-				THREE.Math.Box3 radTemp = selObj.BoundRadius;
+				BoundingBox radTemp = selObj.BoundRadius;
 		
 				// Draw selection marker
 				if (selObj.ShowPos)
@@ -196,11 +196,11 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 				}
 
 				// Draw boundary
-				if (selObj.ShowBoundRadius && radTemp.GetSize().Length() > 0.0f)
+				if (selObj.ShowBoundRadius && radTemp.Size.Length > 0.0f)
 				{
-					var pos = radTemp.GetCenter(new THREE.Math.Vector3());
-					pos = pos.Length() == 0 ? new THREE.Math.Vector3(posTemp.X, posTemp.Y, posTemp.Z) : pos;
-					var size = radTemp.GetSize();
+					var pos = radTemp.Center;
+					pos = pos.Length == 0 ? posTemp : pos;
+					var size = radTemp.Size;
 					//Gizmos.DrawBoundingBox(new Vector3(pos.X, pos.Y, pos.Z), new Vector3(size.X, size.Y, size.Z), selObj.Angle, ColorRgba.White);
 					Gizmos.DrawBoundingBox(new Vector3(pos.X, pos.Y, pos.Z), new Vector3(size.X, size.Y, size.Z), Vector3.Zero, ColorRgba.White);
 				}
@@ -358,8 +358,8 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 
 			foreach (ObjectEditorSelObj s in transformObjSel)
 			{
-				var size = s.BoundRadius.GetSize();
-				this.selectionRadius = MathF.Max(this.selectionRadius, (new Vector3(size.X, size.Y, size.Z) + (s.Pos - this.selectionCenter)).Length);
+				var size = s.BoundRadius.Size;
+				this.selectionRadius = MathF.Max(this.selectionRadius, (size + (s.Pos - this.selectionCenter)).Length);
 			}
 
 			this.selectionStatsValid = true;

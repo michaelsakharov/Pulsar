@@ -225,9 +225,19 @@ namespace Duality
         public static bool operator ==(Ray a, Ray b)
         {
             return a.Equals(b);
-        }
+		}
 
-        internal string DebugDisplayString
+		public static implicit operator THREE.Math.Ray(Ray s)
+		{
+			return new THREE.Math.Ray(s.Position, s.Direction);
+		}
+
+		public static implicit operator Ray(THREE.Math.Ray s)
+		{
+			return new Ray(s.origin, s.direction);
+		}
+
+		internal string DebugDisplayString
         {
             get
             {

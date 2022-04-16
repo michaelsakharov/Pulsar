@@ -117,25 +117,25 @@ namespace Duality.Graphics.Components
 				THREE.Core.DirectGeometry geometry = new THREE.Core.DirectGeometry();
 
 				foreach (var vertex in submesh.Vertices)
-					geometry.Vertices.Add(new THREE.Math.Vector3(vertex.X, vertex.Y, vertex.Z));
+					geometry.Vertices.Add(vertex);
 
 				foreach (var color in submesh.Colors)
-					geometry.Colors.Add(new THREE.Math.Color(color.R, color.G, color.B));
+					geometry.Colors.Add(color);
 
 				//foreach (var normal in submesh.Normals)
-				//	geometry.Normals.Add(new THREE.Math.Vector3(normal.X, normal.Y, normal.Z));
+				//	geometry.Normals.Add(normal);
 				//
 				//foreach (var uv in submesh.Uvs)
-				//	geometry.Uvs.Add(new THREE.Math.Vector2(uv.X, uv.Y));
+				//	geometry.Uvs.Add(Vector2);
 				//
 				//foreach (var uv2 in submesh.Uvs2)
-				//	geometry.Uvs2.Add(new THREE.Math.Vector2(uv2.X, uv2.Y));
+				//	geometry.Uvs2.Add(Vector2);
 				//
 				//foreach (var skin in submesh.SkinIndices)
-				//	geometry.SkinIndices.Add(new THREE.Math.Vector4(skin.X, skin.Y, skin.Z, skin.W));
+				//	geometry.SkinIndices.Add(Vector4);
 				//
 				//foreach (var skin in submesh.SkinWeights)
-				//	geometry.SkinWeights.Add(new THREE.Math.Vector4(skin.X, skin.Y, skin.Z, skin.W));
+				//	geometry.SkinWeights.Add(Vector4);
 
 				//foreach (var draw in submesh.Groups)
 				//	geometry.Groups.Add(new THREE.Core.DrawRange() { Count = (int)draw.X, Start = (int)draw.Y, MaterialIndex = (int)draw.Z });

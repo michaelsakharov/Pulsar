@@ -42,7 +42,7 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 			get { return this.gameObj.Transform.Scale; }
 			set { this.gameObj.Transform.Scale = value; }
 		}
-		public override THREE.Math.Box3 BoundRadius
+		public override BoundingBox BoundRadius
 		{
 			get
 			{

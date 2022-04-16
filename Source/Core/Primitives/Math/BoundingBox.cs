@@ -529,9 +529,19 @@ namespace Duality
         public static bool operator !=(BoundingBox a, BoundingBox b)
         {
             return !a.Equals(b);
-        }
+		}
 
-        internal string DebugDisplayString
+		public static implicit operator THREE.Math.Box3(BoundingBox s)
+		{
+			return new THREE.Math.Box3(s.Min, s.Max);
+		}
+
+		public static implicit operator BoundingBox(THREE.Math.Box3 s)
+		{
+			return new BoundingBox(s.Min, s.Max);
+		}
+
+		internal string DebugDisplayString
         {
             get
             {

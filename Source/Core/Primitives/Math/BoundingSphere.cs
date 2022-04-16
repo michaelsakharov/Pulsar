@@ -399,9 +399,19 @@ namespace Duality
         public static bool operator != (BoundingSphere a, BoundingSphere b)
         {
             return !a.Equals(b);
-        }
+		}
 
-        internal string DebugDisplayString
+		public static implicit operator THREE.Math.Sphere(BoundingSphere s)
+		{
+			return new THREE.Math.Sphere(s.Center, s.Radius);
+		}
+
+		public static implicit operator BoundingSphere(THREE.Math.Sphere s)
+		{
+			return new BoundingSphere(s.Center, s.Radius);
+		}
+
+		internal string DebugDisplayString
         {
             get
             {

@@ -40,7 +40,7 @@ namespace Duality.Resources
 			if (cachedMaterial == null)
 				cachedMaterial = new THREE.Materials.MeshDistanceMaterial();
 			base.SetupBaseMaterialSettings(cachedMaterial);
-			(cachedMaterial as THREE.Materials.MeshDistanceMaterial).ReferencePosition = new THREE.Math.Vector3(ReferencePosition.X, ReferencePosition.Y, ReferencePosition.Z);
+			(cachedMaterial as THREE.Materials.MeshDistanceMaterial).ReferencePosition = ReferencePosition;
 			(cachedMaterial as THREE.Materials.MeshDistanceMaterial).NearDistance = NearDistance;
 			(cachedMaterial as THREE.Materials.MeshDistanceMaterial).FarDistance = FarDistance;
 			return cachedMaterial;

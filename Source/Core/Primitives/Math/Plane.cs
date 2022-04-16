@@ -208,9 +208,19 @@ namespace Duality
         public static bool operator ==(Plane plane1, Plane plane2)
         {
             return plane1.Equals(plane2);
-        }
+		}
 
-        public override bool Equals(object other)
+		public static implicit operator THREE.Math.Plane(Plane s)
+		{
+			return new THREE.Math.Plane(s.Normal, s.D);
+		}
+
+		public static implicit operator Plane(THREE.Math.Plane s)
+		{
+			return new Plane(s.Normal, s.Constant);
+		}
+
+		public override bool Equals(object other)
         {
             return (other is Plane) ? this.Equals((Plane)other) : false;
         }

@@ -553,6 +553,16 @@ namespace Duality
 			return !left.Equals(right);
 		}
 
+		public static implicit operator THREE.Math.Vector2(Vector2 s)
+		{
+			return new THREE.Math.Vector2(s.X, s.Y);
+		}
+
+		public static implicit operator Vector2(THREE.Math.Vector2 s)
+		{
+			return new Vector2(s.X, s.Y);
+		}
+
 		/// <summary>
 		/// Returns a System.String that represents the current Vector2.
 		/// </summary>

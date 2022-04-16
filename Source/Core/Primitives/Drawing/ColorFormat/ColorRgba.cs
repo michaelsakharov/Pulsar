@@ -435,7 +435,17 @@ namespace Duality.Drawing
 				ClampToByte((float)Math.Round(left.B * right)), 
 				ClampToByte((float)Math.Round(left.A * right)));
 		}
-		
+
+		public static implicit operator THREE.Math.Color(ColorRgba s)
+		{
+			return new THREE.Math.Color(s.R / 255f, s.G / 255f, s.B / 255f);
+		}
+
+		public static implicit operator ColorRgba(THREE.Math.Color s)
+		{
+			return new ColorRgba(s.R, s.G, s.B, 1.0f);
+		}
+
 		/// <summary>
 		/// Adds two colors component-wise.
 		/// </summary>

@@ -1461,6 +1461,16 @@ namespace Duality
 			return value1;
 		}
 
+		public static implicit operator THREE.Math.Vector3(Vector3 s)
+		{
+			return new THREE.Math.Vector3(s.X, s.Y, s.Z);
+		}
+
+		public static implicit operator Vector3(THREE.Math.Vector3 s)
+		{
+			return new Vector3(s.X, s.Y, s.Z);
+		}
+
 		#endregion
 	}
 }

@@ -164,20 +164,25 @@ namespace Duality
         public static bool operator !=(BoundingFrustum a, BoundingFrustum b)
         {
             return !(a == b);
-        }
+		}
 
-        #endregion
+		public static implicit operator THREE.Math.Frustum(BoundingFrustum s)
+		{
+			return new THREE.Math.Frustum(s._planes[0], s._planes[1], s._planes[2], s._planes[3], s._planes[4], s._planes[5]);
+		}
 
-        #region Public Methods
+		#endregion
 
-        #region Contains
+		#region Public Methods
 
-        /// <summary>
-        /// Containment test between this <see cref="BoundingFrustum"/> and specified <see cref="BoundingBox"/>.
-        /// </summary>
-        /// <param name="box">A <see cref="BoundingBox"/> for testing.</param>
-        /// <returns>Result of testing for containment between this <see cref="BoundingFrustum"/> and specified <see cref="BoundingBox"/>.</returns>
-        public ContainmentType Contains(BoundingBox box)
+		#region Contains
+
+		/// <summary>
+		/// Containment test between this <see cref="BoundingFrustum"/> and specified <see cref="BoundingBox"/>.
+		/// </summary>
+		/// <param name="box">A <see cref="BoundingBox"/> for testing.</param>
+		/// <returns>Result of testing for containment between this <see cref="BoundingFrustum"/> and specified <see cref="BoundingBox"/>.</returns>
+		public ContainmentType Contains(BoundingBox box)
         {
             var result = default(ContainmentType);
             this.Contains(ref box, out result);

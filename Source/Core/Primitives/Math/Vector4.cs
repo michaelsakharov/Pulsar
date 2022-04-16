@@ -620,6 +620,15 @@ namespace Duality
 			return !left.Equals(right);
 		}
 
+		public static implicit operator THREE.Math.Vector4(Vector4 s)
+		{
+			return new THREE.Math.Vector4(s.X, s.Y, s.Z, s.W);
+		}
+
+		public static implicit operator Vector4(THREE.Math.Vector4 s)
+		{
+			return new Vector4(s.X, s.Y, s.Z, s.W);
+		}
 
 		/// <summary>
 		/// Returns a System.String that represents the current Vector4.
