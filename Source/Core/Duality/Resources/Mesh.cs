@@ -46,7 +46,7 @@ namespace Duality.Resources
 					if(obj3D is THREE.Objects.Mesh)
 					{
 						SubMeshes[i] = new SubMesh();
-						SubMeshes[i].Material = MeshPhongMaterial.Default;
+						SubMeshes[i].Material = MeshPhongMaterial.Default.As<Material>();
 						SubMeshes[i].Vertices = new List<Vector3>();
 						SubMeshes[i].Colors = new List<ColorRgba>();
 						SubMeshes[i].Normals = new List<Vector3>();
@@ -113,7 +113,7 @@ namespace Duality.Resources
 	[Serializable]
 	public class SubMesh
 	{
-		public ContentRef<MeshPhongMaterial> Material;
+		public ContentRef<Material> Material;
 		public List<Vector3> Vertices;
 		public List<ColorRgba> Colors;
 		public List<Vector3> Normals;

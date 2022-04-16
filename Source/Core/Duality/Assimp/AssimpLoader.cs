@@ -87,7 +87,7 @@ namespace Duality.Assimp
 				}
 
 				var subMesh = new SubMesh();
-				subMesh.Material = MeshPhongMaterial.Default;
+				subMesh.Material = MeshPhongMaterial.Default.As<Material>();
 				subMesh.Vertices = new List<Vector3>();
 				subMesh.Colors = new List<ColorRgba>();
 				subMesh.Normals = new List<Vector3>();
@@ -96,7 +96,7 @@ namespace Duality.Assimp
 				subMesh.SkinIndices = new List<Vector4>();
 				subMesh.SkinWeights = new List<Vector4>();
 				subMesh.Groups = new List<Vector3>();
-				subMesh.Material = MeshPhongMaterial.Default;
+				subMesh.Material = MeshPhongMaterial.Default.As<Material>();
 
 				Vertex[] vertices = new Vertex[meshToImport->MNumVertices];
 				var positions = meshToImport->MVertices;
