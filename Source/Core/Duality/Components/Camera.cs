@@ -8,7 +8,7 @@ using Duality.Cloning;
 using Duality.Drawing;
 using Duality.Resources;
 using Duality.Properties;
-using THREE.Postprocessing;
+using Duality.Postprocessing;
 
 namespace Duality.Components
 {
@@ -26,14 +26,11 @@ namespace Duality.Components
 
 		[DontSerialize] public Matrix4? CustomViewMatrix = null;
 
-		public float NearClipDistance = 0.1f;
-		public float FarClipDistance = 1000f;
+		private float NearClipDistance = 0.1f;
+		private float FarClipDistance = 1000f;
 		private float orthographicSize = 1000f;
 
-		public float Fov = 70;
-
-
-		[DontSerialize] private BoundingFrustum Frustum = new BoundingFrustum(Matrix4.Identity);
+		private float Fov = 70;
 
 		[EditorHintFlags(MemberFlags.Invisible)]
 		public Quaternion Orientation
@@ -112,11 +109,42 @@ namespace Duality.Components
 			set { this.orthographic = value; isDirty = true; }
 		}
 
+		[DontSerialize] private EffectComposer composer;
+
+		void SetupComposer()
+		{
+			composer = new EffectComposer();
+			composer.AddPass(new RenderPass());
+			DualityApp.OnResize += DualityApp_OnResize;
+		}
+
+		private void DualityApp_OnResize(int width, int height, float pixelRatio)
+		{
+			composer.SetPixelRatioAndSize(width, height, pixelRatio);
+		}
+
+		public void AddPass(Pass pass)
+		{
+			if (composer == null) SetupComposer();
+			composer.AddPass(pass);
+		}
+
+		public void RemovePass(Pass pass)
+		{
+			if (composer == null) SetupComposer();
+			composer.Passes.Remove(pass);
+		}
+
 		public void Render()
 		{
 			if (DualityApp.GraphicsBackend == null) return;
+			if (composer == null) SetupComposer();
+
+			// Update Gizmos, so any call to gizmos will be processed
 			DualityApp.Gizmos.Update(Scene.ThreeScene);
-			DualityApp.GraphicsBackend.Render(Scene.ThreeScene, GetTHREECamera());
+
+			composer.Render(Scene.ThreeScene, GetTHREECamera());
+			//DualityApp.GraphicsBackend.Render(Scene.ThreeScene, GetTHREECamera());
 		}
 
 		[DontSerialize] private THREE.Cameras.Camera cachedCamera;

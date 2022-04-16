@@ -131,6 +131,9 @@ namespace Duality
 		public static event RenderEventHandler PreRender;
 		public static event RenderEventHandler PostRender;
 
+		public delegate void ResizeEventHandler(int width, int height, float pixelRatio);
+		public static event ResizeEventHandler OnResize;
+
 		/// <summary>
 		/// [GET] The plugin manager that is used by Duality. Don't use this unless you know exactly what you're doing.
 		/// If you want to load a plugin, use the <see cref="CorePluginManager"/> from this property.
@@ -671,6 +674,8 @@ namespace Duality
 			GraphicsBackend.Width = width;
 			GraphicsBackend.Height = height;
 			GraphicsBackend.Resize(width, height);
+
+			OnResize?.Invoke(width, height, GraphicsBackend.GetPixelRatio());
 		}
 
 		/// <summary>
