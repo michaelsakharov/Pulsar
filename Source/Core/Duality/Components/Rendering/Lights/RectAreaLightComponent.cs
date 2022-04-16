@@ -30,6 +30,12 @@ namespace Duality.Graphics.Components
 		private float intensity = 0.6f;
 		public float Intensity { get { return this.intensity; } set { this.intensity = value; } }
 
+		private float decay = 1;
+		public float Decay { get { return this.decay; } set { this.decay = value; } }
+
+		private float penumbra = 0.1f;
+		public float Penumbra { get { return this.penumbra; } set { this.penumbra = value; } }
+
 		private int width = 1;
 		public int Width { get { return this.width; } set { this.width = value; } }
 
@@ -73,6 +79,8 @@ namespace Duality.Graphics.Components
 
 			Light.Color = new THREE.Math.Color(Color.R / 255f, Color.G / 255f, Color.B / 255f);
 			Light.Intensity = Intensity;
+			Light.Decay = Decay;
+			Light.Penumbra = Penumbra;
 
 			Light.Width = Width;
 			Light.Height = Height;
@@ -97,8 +105,8 @@ namespace Duality.Graphics.Components
 
 			Light.Color = new THREE.Math.Color(Color.R / 255f, Color.G / 255f, Color.B / 255f);
 			Light.Intensity = Intensity;
-			Light.Decay = 2;
-			Light.Penumbra = 0.05f;
+			Light.Decay = Decay;
+			Light.Penumbra = Penumbra;
 
 			Light.Width = Width;
 			Light.Height = Height;

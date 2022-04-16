@@ -414,7 +414,6 @@
 
 	<ItemGroup>
 	  <Folder Include="Components\Rendering\Post Processing\" />
-	  <Folder Include="Three\" />
 	</ItemGroup>
 
 	<Target Name="AggregateOutput" BeforeTargets="AfterBuild">

@@ -36,6 +36,9 @@ namespace Duality.Graphics.Components
 		private float decay = 1;
 		public float Decay { get { return this.decay; } set { this.decay = value; } }
 
+		private float penumbra = 0.1f;
+		public float Penumbra { get { return this.penumbra; } set { this.penumbra = value; } }
+
 		private float angle = 0.4f;
 		public float Angle { get { return this.angle; } set { this.angle = value; } }
 
@@ -87,6 +90,7 @@ namespace Duality.Graphics.Components
 			Light.Intensity = Intensity;
 			Light.Distance = Distance;
 			Light.Decay = Decay;
+			Light.Penumbra = Penumbra;
 			Light.Angle = Angle;
 
 			Vector3 forward = GameObj.Transform.Forward;
@@ -123,6 +127,7 @@ namespace Duality.Graphics.Components
 			Light.Intensity = Intensity;
 			Light.Distance = Distance;
 			Light.Decay = Decay;
+			Light.Penumbra = Penumbra;
 			Light.Angle = Angle;
 
 			Vector3 forward = GameObj.Transform.Forward;
