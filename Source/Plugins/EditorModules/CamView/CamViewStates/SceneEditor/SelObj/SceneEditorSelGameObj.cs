@@ -61,7 +61,8 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 				}
 				//return new Vector3(boundingBox.GetSize().X, boundingBox.GetSize().Y, boundingBox.GetSize().Z);
 				//return boundingBox != null ? new BoundingBox(new Vector3(boundingBox.Min.X, boundingBox.Min.Y, boundingBox.Min.Z), new Vector3(boundingBox.Max.X, boundingBox.Max.Y, boundingBox.Max.Z)) : new BoundingBox(Vector3.Zero, Vector3.Zero);
-				return boundingBox != null ? boundingBox : new THREE.Math.Box3(new THREE.Math.Vector3(-0.1f, -0.1f, -0.1f), new THREE.Math.Vector3(0.1f, 0.1f, 0.1f));
+				//return boundingBox != null ? boundingBox : new THREE.Math.Box3(new THREE.Math.Vector3(-0.1f, -0.1f, -0.1f), new THREE.Math.Vector3(0.1f, 0.1f, 0.1f));
+				return boundingBox != null ? boundingBox : new THREE.Math.Box3(new THREE.Math.Vector3(-(Scale.X * 0.5f), -(Scale.Y * 0.5f), -(Scale.Z * 0.5f)), new THREE.Math.Vector3((Scale.X * 0.5f), (Scale.Y * 0.5f), (Scale.Z * 0.5f)));
 			}
 		}
 		public override bool ShowAngle
