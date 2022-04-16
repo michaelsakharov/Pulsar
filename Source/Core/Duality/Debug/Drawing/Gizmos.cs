@@ -289,6 +289,32 @@ namespace Duality.DebugDraw
 			DrawLine(new Vector3(0, 0, 0), new Vector3(0, -1, 1), color, Matrix);
 		}
 
+
+		public static void DrawConeWithDirection(Vector3 position, Vector3 direction, float distance, float angle, ColorRgba color)
+		{
+			float coneWidth = distance * MathF.Tan(angle);
+
+
+			Matrix4 MatrixWorld = Matrix4.CreateWorld(Vector3.Zero, direction, Vector3.Up);
+
+			Matrix4 Matrix = Matrix4.Identity;
+			Matrix *= Matrix4.CreateScale(coneWidth, coneWidth, 1f);
+			Matrix *= MatrixWorld;
+			Matrix *= Matrix4.CreateTranslation(position + (direction * distance));
+			DrawCircle(Matrix.Translation, Matrix.Forward, new Vector2(coneWidth, coneWidth), color);
+
+			Matrix = Matrix4.Identity;
+			Matrix *= Matrix4.CreateScale(coneWidth, coneWidth, -distance);
+			Matrix *= MatrixWorld;
+			Matrix *= Matrix4.CreateTranslation(position);
+
+			DrawLine(new Vector3(0, 0, 0), new Vector3(0, 0, 1), color, Matrix);
+			DrawLine(new Vector3(0, 0, 0), new Vector3(1, 0, 1), color, Matrix);
+			DrawLine(new Vector3(0, 0, 0), new Vector3(-1, 0, 1), color, Matrix);
+			DrawLine(new Vector3(0, 0, 0), new Vector3(0, 1, 1), color, Matrix);
+			DrawLine(new Vector3(0, 0, 0), new Vector3(0, -1, 1), color, Matrix);
+		}
+
 		public static void DrawDirectionalLight(Vector3 position, Vector3 rotation, float size, float nearClip, float farClip, ColorRgba color)
 		{
 			Vector3 normal = Matrix4.CreateFromYawPitchRoll(rotation.Y, rotation.X, rotation.Z).Forward;
