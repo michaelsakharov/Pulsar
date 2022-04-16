@@ -53,6 +53,15 @@ namespace Duality.Graphics.Components
 			set { this._materials = value; }
 		}
 
+		private bool castShadow = true;
+		public bool CastShadow { get { return this.castShadow; } set { this.castShadow = value; } }
+
+		private bool receiveShadow = true;
+		public bool ReceiveShadow { get { return this.receiveShadow; } set { this.receiveShadow = value; } }
+
+		private bool frustumCulled = true;
+		public bool FrustumCulled { get { return this.frustumCulled; } set { this.frustumCulled = value; } }
+
 		void ICmpInitializable.OnActivate()
 		{
 			if (threeMesh == null && Mesh.IsAvailable)
@@ -131,11 +140,14 @@ namespace Duality.Graphics.Components
 					{
 						submesh.Material = ((DefaultMaterial != null && DefaultMaterial.IsAvailable) ? DefaultMaterial.Res : MeshBasicMaterial.Default.Res).GetThreeMaterial();
 					}
-					submesh.CastShadow = true;
-					submesh.ReceiveShadow = true;
+					submesh.CastShadow = CastShadow;
+					submesh.ReceiveShadow = ReceiveShadow;
+					submesh.FrustumCulled = FrustumCulled;
 					submesh.Position.Set(this.GameObj.Transform.Pos.X, this.GameObj.Transform.Pos.Y, this.GameObj.Transform.Pos.Z);
 					submesh.Rotation.Set(this.GameObj.Transform.Rotation.X, this.GameObj.Transform.Rotation.Y, this.GameObj.Transform.Rotation.Z, THREE.Math.RotationOrder.YXZ);
 					submesh.Scale.Set(this.GameObj.Transform.Scale.X, this.GameObj.Transform.Scale.Y, this.GameObj.Transform.Scale.Z);
+
+
 					matID++;
 				}
 			}
