@@ -199,11 +199,11 @@ namespace Duality.Resources
 
 		public int Width
 		{
-			get { return this.threeTex.ImageSize.Width; }
+			get { return this.threeTex != null ? this.threeTex.ImageSize.Width : 0; }
 		}
 		public int Height
 		{
-			get { return this.threeTex.ImageSize.Height; }
+			get { return this.threeTex != null ? this.threeTex.ImageSize.Height : 0; }
 		}
 		public bool NeedsReload
 		{
