@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using THREE.Math;
 using THREE.Renderers;
 using THREE.Shaders;
+using THREE.Textures;
 
 namespace Duality.Postprocessing
 {
@@ -29,33 +30,33 @@ namespace Duality.Postprocessing
         public ShaderPass CopyPass;
         public ToScreenPass ToScreenPass;
 
-        private float pixelRatio;
+		internal float pixelRatio;
 
-        private int width;
-        private int height;
+		internal int width;
+		internal int height;
 
         private CopyShader copyShader = new CopyShader();
 
         public EffectComposer(GLRenderTarget renderTarget = null)
         {
-            Hashtable parameters = new Hashtable();
 
             if(renderTarget==null)
             {
 				// Use Graphics backend as Target
-                parameters.Add("minFilter", THREE.Constants.LinearFilter);
-                parameters.Add("magFilter", THREE.Constants.LinearFilter);
-                parameters.Add("format", THREE.Constants.RGBAFormat);
-
                 var size = DualityApp.GraphicsBackend.GetSize();
+				width = (int)size.X;
+				height = (int)size.Y;
 
-                pixelRatio = DualityApp.GraphicsBackend.GetPixelRatio();
-                width = (int)size.X;
-                height = (int)size.Y;
+				pixelRatio = DualityApp.GraphicsBackend.GetPixelRatio();
 
-                renderTarget = new GLRenderTarget((int)(width * pixelRatio), (int)(height * pixelRatio), parameters);
-                renderTarget.Texture.Name = "EffectComposer.rt1";
-            }
+				Hashtable parameters = new Hashtable();
+				parameters.Add("minFilter", THREE.Constants.LinearFilter);
+				parameters.Add("magFilter", THREE.Constants.LinearFilter);
+				parameters.Add("format", THREE.Constants.RGBAFormat);
+
+				renderTarget = new GLRenderTarget((int)(width * pixelRatio), (int)(height * pixelRatio), parameters);
+				renderTarget.Texture.Name = "EffectComposer.rt1";
+			}
             else
             {
                 this.pixelRatio = 1;
@@ -71,8 +72,10 @@ namespace Duality.Postprocessing
             this.ReadBuffer = this.RenderTarget2;
 
             CopyPass = new ShaderPass(copyShader);
+			CopyPass.composer = this;
 			ToScreenPass = new ToScreenPass();
-        }
+			ToScreenPass.composer = this;
+		}
 
         public void SwapBuffers()
         {
@@ -150,6 +153,9 @@ namespace Duality.Postprocessing
                 }
 			}
 
+
+			ToScreenPass.camera = camera;
+			ToScreenPass.scene = scene;
 			this.ToScreenPass.Render(this.WriteBuffer, this.ReadBuffer);
 
 			DualityApp.GraphicsBackend.SetRenderTarget(currentRenderTarget );
