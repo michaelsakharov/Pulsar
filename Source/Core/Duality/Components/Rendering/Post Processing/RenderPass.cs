@@ -23,6 +23,7 @@ namespace Duality.Postprocessing
         public bool ClearDepth;
 
 		private MeshDepthMaterial materialDepth;
+		private MeshNormalMaterial normalMaterial;
 
 		public RenderPass(Material overrideMaterial=null,Color? clearColor=null,float? clearAlpha=null)
         {
@@ -43,6 +44,11 @@ namespace Duality.Postprocessing
 			this.materialDepth = new MeshDepthMaterial();
 			this.materialDepth.DepthPacking = THREE.Constants.RGBADepthPacking;
 			this.materialDepth.Blending = THREE.Constants.NoBlending;
+
+			// normal material
+
+			this.normalMaterial = new MeshNormalMaterial();
+			this.normalMaterial.Blending = THREE.Constants.NoBlending;
 		}
 
         public override void Render(GLRenderTarget writeBuffer, GLRenderTarget readBuffer,bool? maskActive=null)
@@ -55,8 +61,15 @@ namespace Duality.Postprocessing
 				this.composer.DepthBuffer.GenerateMipmaps = false;
 				this.composer.DepthBuffer.Texture.Name = "RenderPass.depth";
 			}
+			if (composer.NormalBuffer == null)
+			{
+				var pars = new Hashtable { { "minFilter", THREE.Constants.LinearFilter }, { "magFilter", THREE.Constants.LinearFilter }, { "format", THREE.Constants.RGBAFormat } };
+				this.composer.NormalBuffer = new GLRenderTarget(DualityApp.WindowSize.X, DualityApp.WindowSize.Y, pars);
+				this.composer.NormalBuffer.GenerateMipmaps = false;
+				this.composer.NormalBuffer.Texture.Name = "RenderPass.normal";
+			}
 
-            var oldAutoClear = DualityApp.GraphicsBackend.AutoClear;
+			var oldAutoClear = DualityApp.GraphicsBackend.AutoClear;
             DualityApp.GraphicsBackend.AutoClear = false;
 
             Color oldClearColor = DualityApp.GraphicsBackend.GetClearColor();
@@ -65,15 +78,13 @@ namespace Duality.Postprocessing
 			Material oldOverrideMaterial = this.scene.OverrideMaterial;
 
 			// First Render Depth
-			this.scene.OverrideMaterial = this.materialDepth;
-			DualityApp.GraphicsBackend.SetClearColor(Color.Hex(0xffffff));
-			DualityApp.GraphicsBackend.SetClearAlpha(1.0f);
-			DualityApp.GraphicsBackend.SetRenderTarget(this.composer.DepthBuffer);
-			DualityApp.GraphicsBackend.Clear();
-			DualityApp.GraphicsBackend.Render(this.scene, this.camera);
+			RenderOverride(materialDepth, composer.DepthBuffer, Color.Hex(0xffffff), 1.0f);
+
+			// second Render Depth
+			RenderOverride(normalMaterial, composer.NormalBuffer, Color.Hex(0x7777ff), 1.0f);
 
 			// then Render Color/Diffuse
-            this.scene.OverrideMaterial = this.OverrideMaterial;
+			this.scene.OverrideMaterial = this.OverrideMaterial;
             if (this.ClearDepth) DualityApp.GraphicsBackend.ClearDepth();
 			if (this.ClearColor != null) DualityApp.GraphicsBackend.SetClearColor(this.ClearColor.Value, this.ClearAlpha);
 			DualityApp.GraphicsBackend.SetRenderTarget(readBuffer);
@@ -88,9 +99,40 @@ namespace Duality.Postprocessing
                 DualityApp.GraphicsBackend.SetClearColor(oldClearColor, oldClearAlpha);
 
             DualityApp.GraphicsBackend.AutoClear = oldAutoClear;
-        }
+		}
 
-        public override void SetSize(float width, float height)
+		private void RenderOverride(Material overrideMaterial, GLRenderTarget renderTarget, Color? clearColor = null, float? clearAlpha = 0.0f)
+		{
+			var originalClearColor = DualityApp.GraphicsBackend.GetClearColor();
+			var originalClearAlpha = DualityApp.GraphicsBackend.GetClearAlpha();
+			var originalAutoClear = DualityApp.GraphicsBackend.AutoClear;
+
+			if (clearAlpha == null) clearAlpha = 0.0f;
+
+			DualityApp.GraphicsBackend.SetRenderTarget(renderTarget);
+			DualityApp.GraphicsBackend.AutoClear = false;
+
+			if ((clearColor != null) && (clearAlpha != null))
+			{
+
+				DualityApp.GraphicsBackend.SetClearColor(clearColor.Value);
+				DualityApp.GraphicsBackend.SetClearAlpha(clearAlpha.Value);
+				DualityApp.GraphicsBackend.Clear();
+
+			}
+
+			this.scene.OverrideMaterial = overrideMaterial;
+			DualityApp.GraphicsBackend.Render(this.scene, this.camera);
+			this.scene.OverrideMaterial = null;
+
+			// restore original state
+
+			DualityApp.GraphicsBackend.AutoClear = originalAutoClear;
+			DualityApp.GraphicsBackend.SetClearColor(originalClearColor);
+			DualityApp.GraphicsBackend.SetClearAlpha(originalClearAlpha);
+		}
+
+		public override void SetSize(float width, float height)
         {
            
         }

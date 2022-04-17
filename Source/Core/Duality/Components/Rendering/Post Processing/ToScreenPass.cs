@@ -47,6 +47,7 @@ namespace Duality.Postprocessing
 			if (true)
 			{
 				(this.uniforms["tDiffuse"] as GLUniform)["value"] = readBuffer.Texture;
+				//(this.uniforms["tDiffuse"] as GLUniform)["value"] = composer.NormalBuffer.Texture;
 				this.fullScreenQuad.material = material;
 			}
 			else
