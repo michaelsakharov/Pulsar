@@ -55,17 +55,17 @@ namespace Duality.Graphics.Components
 			if (Light == null)
 				CreateLight(camera);
 
+			Vector3 forward = GameObj.Transform.Forward;
 			if (Duality.Resources.Scene.Current.MoveWorldInsteadOfCamera)
 			{
 				Vector3 Pos = this.GameObj.Transform.Pos - camera.GameObj.Transform.Pos;
 				Light.Position.Set((float)Pos.X, (float)Pos.Y, (float)Pos.Z);
-
-				Vector3 forward = GameObj.Transform.Forward;
 				Light.Target.Position.Set((float)Pos.X + (float)forward.X, (float)Pos.Y + (float)forward.Y, (float)Pos.Z + (float)forward.Z);
 			}
 			else
 			{
 				Light.Position.Set((float)this.GameObj.Transform.Pos.X, (float)this.GameObj.Transform.Pos.Y, (float)this.GameObj.Transform.Pos.Z);
+				Light.Target.Position.Set((float)this.GameObj.Transform.Pos.X + (float)forward.X, (float)this.GameObj.Transform.Pos.Y + (float)forward.Y, (float)this.GameObj.Transform.Pos.Z + (float)forward.Z);
 			}
 			Light.Rotation.Set((float)this.GameObj.Transform.Rotation.X, (float)this.GameObj.Transform.Rotation.Y, (float)this.GameObj.Transform.Rotation.Z, THREE.Math.RotationOrder.XYZ);
 			Light.Scale.Set((float)this.GameObj.Transform.Scale.X, (float)this.GameObj.Transform.Scale.Y, (float)this.GameObj.Transform.Scale.Z);
@@ -114,17 +114,17 @@ namespace Duality.Graphics.Components
 			(Light.Shadow.Camera as OrthographicCamera).Bottom = -Size;
 			Light.Shadow.MapSize.Set(2048, 2048);
 
+			Vector3 forward = GameObj.Transform.Forward;
 			if (Duality.Resources.Scene.Current.MoveWorldInsteadOfCamera)
 			{
 				Vector3 Pos = this.GameObj.Transform.Pos - camera.GameObj.Transform.Pos;
 				Light.Position.Set((float)Pos.X, (float)Pos.Y, (float)Pos.Z);
-
-				Vector3 forward = GameObj.Transform.Forward;
 				Light.Target.Position.Set((float)Pos.X + (float)forward.X, (float)Pos.Y + (float)forward.Y, (float)Pos.Z + (float)forward.Z);
 			}
 			else
 			{
 				Light.Position.Set((float)this.GameObj.Transform.Pos.X, (float)this.GameObj.Transform.Pos.Y, (float)this.GameObj.Transform.Pos.Z);
+				Light.Target.Position.Set((float)this.GameObj.Transform.Pos.X + (float)forward.X, (float)this.GameObj.Transform.Pos.Y + (float)forward.Y, (float)this.GameObj.Transform.Pos.Z + (float)forward.Z);
 			}
 
 			Light.Rotation.Set((float)this.GameObj.Transform.Rotation.X, (float)this.GameObj.Transform.Rotation.Y, (float)this.GameObj.Transform.Rotation.Z, THREE.Math.RotationOrder.YXZ);

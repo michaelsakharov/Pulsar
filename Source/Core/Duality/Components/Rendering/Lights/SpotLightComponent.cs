@@ -67,17 +67,17 @@ namespace Duality.Graphics.Components
 			if(Gizmos.DrawLightGizmos)
 				Gizmos.DrawCone(this.GameObj.Transform.Pos, this.GameObj.Transform.Rotation, Distance, Angle, Color);
 
+			Vector3 forward = GameObj.Transform.Forward;
 			if (Duality.Resources.Scene.Current.MoveWorldInsteadOfCamera)
 			{
 				Vector3 Pos = this.GameObj.Transform.Pos - camera.GameObj.Transform.Pos;
 				Light.Position.Set((float)Pos.X, (float)Pos.Y, (float)Pos.Z);
-
-				Vector3 forward = GameObj.Transform.Forward;
 				Light.Target.Position.Set((float)Pos.X + (float)forward.X, (float)Pos.Y + (float)forward.Y, (float)Pos.Z + (float)forward.Z);
 			}
 			else
 			{
 				Light.Position.Set((float)this.GameObj.Transform.Pos.X, (float)this.GameObj.Transform.Pos.Y, (float)this.GameObj.Transform.Pos.Z);
+				Light.Target.Position.Set((float)this.GameObj.Transform.Pos.X + (float)forward.X, (float)this.GameObj.Transform.Pos.Y + (float)forward.Y, (float)this.GameObj.Transform.Pos.Z + (float)forward.Z);
 			}
 
 			Light.Color = new THREE.Math.Color(Color.R / 255f, Color.G / 255f, Color.B / 255f);
@@ -116,17 +116,17 @@ namespace Duality.Graphics.Components
 			Light.Shadow.Camera.Fov = Fov;
 			Light.Shadow.MapSize.Set(512, 512);
 
+			Vector3 forward = GameObj.Transform.Forward;
 			if (Duality.Resources.Scene.Current.MoveWorldInsteadOfCamera)
 			{
 				Vector3 Pos = this.GameObj.Transform.Pos - camera.GameObj.Transform.Pos;
 				Light.Position.Set((float)Pos.X, (float)Pos.Y, (float)Pos.Z);
-
-				Vector3 forward = GameObj.Transform.Forward;
 				Light.Target.Position.Set((float)Pos.X + (float)forward.X, (float)Pos.Y + (float)forward.Y, (float)Pos.Z + (float)forward.Z);
 			}
 			else
 			{
 				Light.Position.Set((float)this.GameObj.Transform.Pos.X, (float)this.GameObj.Transform.Pos.Y, (float)this.GameObj.Transform.Pos.Z);
+				Light.Target.Position.Set((float)this.GameObj.Transform.Pos.X + (float)forward.X, (float)this.GameObj.Transform.Pos.Y + (float)forward.Y, (float)this.GameObj.Transform.Pos.Z + (float)forward.Z);
 			}
 
 			Light.Color = new THREE.Math.Color(Color.R / 255f, Color.G / 255f, Color.B / 255f);

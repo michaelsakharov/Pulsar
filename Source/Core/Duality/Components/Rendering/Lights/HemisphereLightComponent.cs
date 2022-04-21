@@ -40,15 +40,15 @@ namespace Duality.Graphics.Components
 
 		private void DualityApp_PreRender(Scene scene, Duality.Components.Camera camera)
 		{
-			if (Duality.Resources.Scene.Current.MoveWorldInsteadOfCamera)
-			{
-				Vector3 Pos = this.GameObj.Transform.Pos - camera.GameObj.Transform.Pos;
-				Light.Position.Set((float)Pos.X, (float)Pos.Y, (float)Pos.Z);
-			}
-			else
-			{
+			//if (Duality.Resources.Scene.Current.MoveWorldInsteadOfCamera)
+			//{
+			//	Vector3 Pos = this.GameObj.Transform.Pos - camera.GameObj.Transform.Pos;
+			//	Light.Position.Set((float)Pos.X, (float)Pos.Y, (float)Pos.Z);
+			//}
+			//else
+			//{
 				Light.Position.Set((float)this.GameObj.Transform.Pos.X, (float)this.GameObj.Transform.Pos.Y, (float)this.GameObj.Transform.Pos.Z);
-			}
+			//}
 
 			Light.Rotation.Set((float)this.GameObj.Transform.Rotation.X, (float)this.GameObj.Transform.Rotation.Y, (float)this.GameObj.Transform.Rotation.Z, THREE.Math.RotationOrder.XYZ);
 			Light.Scale.Set((float)this.GameObj.Transform.Scale.X, (float)this.GameObj.Transform.Scale.Y, (float)this.GameObj.Transform.Scale.Z);
