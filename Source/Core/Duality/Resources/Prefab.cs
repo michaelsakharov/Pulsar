@@ -489,7 +489,7 @@ namespace Duality.Resources
 
 			GameObject targetObj = target as GameObject;
 			Component targetComp = target as Component;
-			if (targetObj == null && targetComp != null) targetObj = targetComp.gameobj;
+			if (targetObj == null && targetComp != null) targetObj = targetComp.GameObj;
 
 			if (targetObj == null) 
 				throw new ArgumentException("Target object is not a valid child of this PrefabLinks GameObject", "target");
@@ -538,7 +538,7 @@ namespace Duality.Resources
 		{
 			GameObject targetObj = target as GameObject;
 			Component targetComp = target as Component;
-			if (targetObj == null && targetComp != null) targetObj = targetComp.gameobj;
+			if (targetObj == null && targetComp != null) targetObj = targetComp.GameObj;
 
 			if (targetObj == null) 
 				throw new ArgumentException("Target object is not a valid child of this PrefabLinks GameObject", "target");
@@ -572,7 +572,7 @@ namespace Duality.Resources
 
 			GameObject targetObj = target as GameObject;
 			Component targetComp = target as Component;
-			if (targetObj == null && targetComp != null) targetObj = targetComp.gameobj;
+			if (targetObj == null && targetComp != null) targetObj = targetComp.GameObj;
 
 			if (targetObj == null) 
 				throw new ArgumentException("Target object is not a valid child of this PrefabLinks GameObject", "target");
