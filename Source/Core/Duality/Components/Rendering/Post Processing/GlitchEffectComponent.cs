@@ -17,7 +17,7 @@ using THREE.Objects;
 
 namespace Duality.Graphics.Components.PostProcessing
 {
-	[RequiredComponent(typeof(Transform))]
+	[RequiredComponent(typeof(Duality.Components.Camera))]
 	[EditorHintCategory(CoreResNames.CategoryGraphics)]
 	[EditorHintImage(CoreResNames.ImageFragmentShader)]
 	public class GlitchEffectComponent : Component, ICmpInitializable, ICmpUpdatable, IDisposable
