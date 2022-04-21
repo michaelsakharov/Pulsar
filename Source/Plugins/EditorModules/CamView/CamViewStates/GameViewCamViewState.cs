@@ -544,12 +544,12 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 					DualityApp.GraphicsBackend.ShadowMap.Enabled = true;
 					DualityApp.GraphicsBackend.ShadowMap.type = THREE.Constants.PCFSoftShadowMap;
 
-					DualityApp.InvokePreRender(Scene.Current, Scene.Camera);
+					DualityApp.InvokePreRender(Scene.Current, camera);
 
 					//DualityApp.GraphicsBackend.Render(Scene.ThreeScene, camera.GetTHREECamera());
 					camera.Render();
 
-					DualityApp.InvokePostRender(Scene.Current, Scene.Camera);
+					DualityApp.InvokePostRender(Scene.Current, camera);
 				}
 			}
 		}
