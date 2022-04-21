@@ -274,7 +274,7 @@ namespace Duality.Editor.Controls.PropertyEditors
 		{
 			base.UpdateGeometry();
 
-			int horNum = MathF.RoundToInt((float)this.editor.Length / (float)this.lines);
+			int horNum = MathF.RoundToInt(this.editor.Length / this.lines);
 			int verNum = this.lines;
 
 			const int subEditSpace = 1;

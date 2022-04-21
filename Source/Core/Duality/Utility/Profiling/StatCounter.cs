@@ -69,7 +69,7 @@ namespace Duality
 		public override void GetReportData(out ProfileReportCounterData data)
 		{
 			data = new ProfileReportCounterData();
-			data.Severity = 0.5f;
+			data.Severity = 0.5;
 			data.LastValue = string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0}", this.lastValue);
 			if (this.IsSingleValue)
 			{

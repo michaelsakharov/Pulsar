@@ -22,14 +22,14 @@ namespace Duality.Utility.Coroutines
 		public static readonly WaitUntil NextFrame = new WaitUntil(1, WaitType.Frames);
 
 		private readonly WaitType type;
-		private float internalValue;
+		private double internalValue;
 
 		public bool IsComplete
 		{
 			get { return this.internalValue <= 0; }
 		}
 
-		private WaitUntil(float startingValue, WaitType type)
+		private WaitUntil(double startingValue, WaitType type)
 		{
 			this.internalValue = startingValue;
 			this.type = type;
@@ -69,7 +69,7 @@ namespace Duality.Utility.Coroutines
 		/// <param name="seconds">The amount of seconds to wait</param>
 		/// <param name="realTime">If true, the countdown is made based on real time, game time (default) otherwise</param>
 		/// <returns>A new WaitUntil struct</returns>
-		public static WaitUntil Seconds(float seconds, bool realTime = false)
+		public static WaitUntil Seconds(double seconds, bool realTime = false)
 		{
 			return new WaitUntil(seconds, realTime ? WaitType.RealTime : WaitType.GameTime);
 		}
@@ -82,7 +82,7 @@ namespace Duality.Utility.Coroutines
 		/// <returns>A new WaitUntil struct</returns>
 		public static WaitUntil TimeSpan(TimeSpan timeSpan, bool realTime = false)
 		{
-			return WaitUntil.Seconds((float)timeSpan.TotalSeconds, realTime);
+			return WaitUntil.Seconds((double)timeSpan.TotalSeconds, realTime);
 		}
 	}
 }

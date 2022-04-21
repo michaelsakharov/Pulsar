@@ -26,7 +26,7 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 		private   ObjectEditorAction   action              = ObjectEditorAction.None;
 		private   bool                 selectionStatsValid = false;
 		private   Vector3              selectionCenter     = Vector3.Zero;
-		private   float                selectionRadius     = 0.0f;
+		private   double			   selectionRadius     = 0.0;
 		private   ObjectEditorAction   mouseoverAction     = ObjectEditorAction.None;
 		private   ObjectEditorSelObj   mouseoverObject     = null;
 		private   bool                 mouseoverSelect     = false;
@@ -207,7 +207,7 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 			}
 		}
 
-		protected void DrawLockedAxes(float x, float y, float z, float r)
+		protected void DrawLockedAxes(double x, double y, double z, double r)
 		{
 			if (this.actionLockedAxis == ObjectEditorAxisLock.X)
 			{
@@ -240,9 +240,9 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 			}
 			else
 			{
-				float xWeight = MathF.Abs(Vector3.Dot(beginToTarget.Normalized, Vector3.UnitX));
-				float yWeight = MathF.Abs(Vector3.Dot(beginToTarget.Normalized, Vector3.UnitY));
-				float zWeight = MathF.Abs(Vector3.Dot(beginToTarget.Normalized, Vector3.UnitZ));
+				double xWeight = MathF.Abs(Vector3.Dot(beginToTarget.Normalized, Vector3.UnitX));
+				double yWeight = MathF.Abs(Vector3.Dot(beginToTarget.Normalized, Vector3.UnitY));
+				double zWeight = MathF.Abs(Vector3.Dot(beginToTarget.Normalized, Vector3.UnitZ));
 				
 				if (xWeight >= yWeight && xWeight >= zWeight)
 				{

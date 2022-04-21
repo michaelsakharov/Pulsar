@@ -719,8 +719,8 @@ namespace Duality
 				renderTargetSize = forcedSize;
 				windowViewport = Rect.Align(
 					Alignment.Center, 
-					windowViewport.Size.X * 0.5f, 
-					windowViewport.Size.Y * 0.5f, 
+					windowViewport.Size.X * 0.5, 
+					windowViewport.Size.Y * 0.5, 
 					adjustedViewportSize.X, 
 					adjustedViewportSize.Y);
 			}

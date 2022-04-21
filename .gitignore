@@ -59,3 +59,4 @@ Build/NUnit/nunit3-console.exe
 Samples/**/Content/Plugins
 Benchmarks/DualityBenchmarks/BenchmarkDotNet.Artifacts
 .idea
+Build/OutputOld/

@@ -45,22 +45,22 @@ namespace Duality
 		/// <summary>
 		/// The x coordinate of this <see cref="Quaternion"/>.
 		/// </summary>
-		public float X;
+		public double X;
 
 		/// <summary>
 		/// The y coordinate of this <see cref="Quaternion"/>.
 		/// </summary>
-		public float Y;
+		public double Y;
 
 		/// <summary>
 		/// The z coordinate of this <see cref="Quaternion"/>.
 		/// </summary>
-		public float Z;
+		public double Z;
 
 		/// <summary>
 		/// The rotation component of this <see cref="Quaternion"/>.
 		/// </summary>
-		public float W;
+		public double W;
 
 		public Vector3 Xyz { get { return new Vector3(this.X, this.Y, this.Z); } set { this.X = value.X; this.Y = value.Y; this.Z = value.Z; } }
 
@@ -75,7 +75,7 @@ namespace Duality
 		/// <param name="y">The y coordinate in 3d-space.</param>
 		/// <param name="z">The z coordinate in 3d-space.</param>
 		/// <param name="w">The rotation component.</param>
-		public Quaternion(float x, float y, float z, float w)
+		public Quaternion(double x, double y, double z, double w)
 		{
 			this.X = x;
 			this.Y = y;
@@ -88,7 +88,7 @@ namespace Duality
 		/// </summary>
 		/// <param name="value">The x, y, z coordinates in 3d-space.</param>
 		/// <param name="w">The rotation component.</param>
-		public Quaternion(Vector3 value, float w)
+		public Quaternion(Vector3 value, double w)
 		{
 			this.X = value.X;
 			this.Y = value.Y;
@@ -164,23 +164,23 @@ namespace Duality
 
 		#region Euler
 
-		public static float ArcTanAngle(float X, float Y)
+		public static double ArcTanAngle(double X, double Y)
 		{
 			if (X == 0)
 			{
 				if (Y == 1)
-					return (float)MathF.PiOver2;
+					return (double)MathF.PiOver2;
 				else
-					return (float)-MathF.PiOver2;
+					return (double)-MathF.PiOver2;
 			}
 			else if (X > 0)
-				return (float)Math.Atan(Y / X);
+				return (double)Math.Atan(Y / X);
 			else if (X < 0)
 			{
 				if (Y > 0)
-					return (float)Math.Atan(Y / X) + MathF.Pi;
+					return (double)Math.Atan(Y / X) + MathF.Pi;
 				else
-					return (float)Math.Atan(Y / X) - MathF.Pi;
+					return (double)Math.Atan(Y / X) - MathF.Pi;
 			}
 			else
 				return 0;
@@ -191,12 +191,12 @@ namespace Duality
 		{
 			Vector3 angle = new Vector3();
 			Vector3 v3 = Vector3.Normalize(location - from);
-			angle.X = (float)Math.Asin(v3.Y);
+			angle.X = (double)Math.Asin(v3.Y);
 			angle.Y = ArcTanAngle(-v3.Z, -v3.X);
 			return angle;
 		}
 
-		public static void ToEuler(float x, float y, float z, float w, ref Vector3 result)
+		public static void ToEuler(double x, double y, double z, double w, ref Vector3 result)
 		{
 			var rotation = new Quaternion(x, y, z, w);
 			var forward = Vector3.Transform(Vector3.Forward, rotation);
@@ -232,7 +232,7 @@ namespace Duality
 			return result;
 		}
 
-		public static Quaternion Euler(float x, float y, float z)
+		public static Quaternion Euler(double x, double y, double z)
 		{
 			return Quaternion.CreateFromYawPitchRoll(y, x, z);
 		}
@@ -289,15 +289,15 @@ namespace Duality
 		{
 			Quaternion quaternion;
 
-			float x1 = value1.X;
-			float y1 = value1.Y;
-			float z1 = value1.Z;
-			float w1 = value1.W;
+			double x1 = value1.X;
+			double y1 = value1.Y;
+			double z1 = value1.Z;
+			double w1 = value1.W;
 
-			float x2 = value2.X;
-			float y2 = value2.Y;
-			float z2 = value2.Z;
-			float w2 = value2.W;
+			double x2 = value2.X;
+			double y2 = value2.Y;
+			double z2 = value2.Z;
+			double w2 = value2.W;
 
 			quaternion.X = ((x2 * w1) + (x1 * w2)) + ((y2 * z1) - (z2 * y1));
 			quaternion.Y = ((y2 * w1) + (y1 * w2)) + ((z2 * x1) - (x2 * z1));
@@ -315,15 +315,15 @@ namespace Duality
 		/// <param name="result">The result of rotation of <paramref name="value1"/> followed by <paramref name="value2"/> rotation as an output parameter.</param>
 		public static void Concatenate(ref Quaternion value1, ref Quaternion value2, out Quaternion result)
 		{
-			float x1 = value1.X;
-			float y1 = value1.Y;
-			float z1 = value1.Z;
-			float w1 = value1.W;
+			double x1 = value1.X;
+			double y1 = value1.Y;
+			double z1 = value1.Z;
+			double w1 = value1.W;
 
-			float x2 = value2.X;
-			float y2 = value2.Y;
-			float z2 = value2.Z;
-			float w2 = value2.W;
+			double x2 = value2.X;
+			double y2 = value2.Y;
+			double z2 = value2.Z;
+			double w2 = value2.W;
 
 			result.X = ((x2 * w1) + (x1 * w2)) + ((y2 * z1) - (z2 * y1));
 			result.Y = ((y2 * w1) + (y1 * w2)) + ((z2 * x1) - (x2 * z1));
@@ -378,7 +378,7 @@ namespace Duality
 		/// </summary>
 		/// <param name="axis">The resultant axis</param>
 		/// <param name="angle">The resultant angle</param>
-		public void ToAxisAngle(out Vector3 axis, out float angle)
+		public void ToAxisAngle(out Vector3 axis, out double angle)
 		{
 			Vector4 result = this.ToAxisAngle();
 			axis = result.Xyz;
@@ -395,8 +395,8 @@ namespace Duality
 			if (Math.Abs(q.W) > 1.0f)
 				q.Normalize();
 			Vector4 result = new Vector4();
-			result.W = 2.0f * (float)System.Math.Acos(q.W); // angle
-			float den = (float)System.Math.Sqrt(1.0 - q.W * q.W);
+			result.W = 2.0 * (double)System.Math.Acos(q.W); // angle
+			double den = (double)System.Math.Sqrt(1.0 - q.W * q.W);
 			if (den > 0.0001f)
 			{
 				result.Xyz = q.Xyz / den;
@@ -416,11 +416,11 @@ namespace Duality
 		/// <param name="axis">The axis of rotation.</param>
 		/// <param name="angle">The angle in radians.</param>
 		/// <param name="result">The new quaternion builded from axis and angle as an output parameter.</param>
-		public static void CreateFromAxisAngle(ref Vector3 axis, float angle, out Quaternion result)
+		public static void CreateFromAxisAngle(ref Vector3 axis, double angle, out Quaternion result)
 		{
-			float half = angle * 0.5f;
-			float sin = MathF.Sin(half);
-			float cos = MathF.Cos(half);
+			double half = angle * 0.5;
+			double sin = MathF.Sin(half);
+			double cos = MathF.Cos(half);
 			result.X = axis.X * sin;
 			result.Y = axis.Y * sin;
 			result.Z = axis.Z * sin;
@@ -432,11 +432,11 @@ namespace Duality
 		/// </summary>
 		/// <param name="axis">The axis of rotation.</param>
 		/// <param name="angle">The angle in radians.</param>
-		public static Quaternion CreateFromAxisAngle(Vector3 axis, float angle)
+		public static Quaternion CreateFromAxisAngle(Vector3 axis, double angle)
 		{
-			float half = angle * 0.5f;
-			float sin = MathF.Sin(half);
-			float cos = MathF.Cos(half);
+			double half = angle * 0.5;
+			double sin = MathF.Sin(half);
+			double cos = MathF.Cos(half);
 			return new Quaternion(axis.X * sin, axis.Y * sin, axis.Z * sin, cos);
 		}
 
@@ -452,15 +452,15 @@ namespace Duality
 		public static Quaternion CreateFromRotationMatrix(Matrix4 matrix)
 		{
 			Quaternion quaternion;
-			float sqrt;
-			float half;
-			float scale = matrix.M11 + matrix.M22 + matrix.M33;
+			double sqrt;
+			double half;
+			double scale = matrix.M11 + matrix.M22 + matrix.M33;
 
 			if (scale > 0.0f)
 			{
 				sqrt = MathF.Sqrt(scale + 1.0f);
-				quaternion.W = sqrt * 0.5f;
-				sqrt = 0.5f / sqrt;
+				quaternion.W = sqrt * 0.5;
+				sqrt = 0.5 / sqrt;
 
 				quaternion.X = (matrix.M23 - matrix.M32) * sqrt;
 				quaternion.Y = (matrix.M31 - matrix.M13) * sqrt;
@@ -470,10 +470,10 @@ namespace Duality
 			}
 			if ((matrix.M11 >= matrix.M22) && (matrix.M11 >= matrix.M33))
 			{
-				sqrt = MathF.Sqrt(1.0f + matrix.M11 - matrix.M22 - matrix.M33);
-				half = 0.5f / sqrt;
+				sqrt = MathF.Sqrt(1.0 + matrix.M11 - matrix.M22 - matrix.M33);
+				half = 0.5 / sqrt;
 
-				quaternion.X = 0.5f * sqrt;
+				quaternion.X = 0.5 * sqrt;
 				quaternion.Y = (matrix.M12 + matrix.M21) * half;
 				quaternion.Z = (matrix.M13 + matrix.M31) * half;
 				quaternion.W = (matrix.M23 - matrix.M32) * half;
@@ -482,22 +482,22 @@ namespace Duality
 			}
 			if (matrix.M22 > matrix.M33)
 			{
-				sqrt = MathF.Sqrt(1.0f + matrix.M22 - matrix.M11 - matrix.M33);
-				half = 0.5f / sqrt;
+				sqrt = MathF.Sqrt(1.0 + matrix.M22 - matrix.M11 - matrix.M33);
+				half = 0.5 / sqrt;
 
 				quaternion.X = (matrix.M21 + matrix.M12) * half;
-				quaternion.Y = 0.5f * sqrt;
+				quaternion.Y = 0.5 * sqrt;
 				quaternion.Z = (matrix.M32 + matrix.M23) * half;
 				quaternion.W = (matrix.M31 - matrix.M13) * half;
 
 				return quaternion;
 			}
-			sqrt = MathF.Sqrt(1.0f + matrix.M33 - matrix.M11 - matrix.M22);
-			half = 0.5f / sqrt;
+			sqrt = MathF.Sqrt(1.0 + matrix.M33 - matrix.M11 - matrix.M22);
+			half = 0.5 / sqrt;
 
 			quaternion.X = (matrix.M31 + matrix.M13) * half;
 			quaternion.Y = (matrix.M32 + matrix.M23) * half;
-			quaternion.Z = 0.5f * sqrt;
+			quaternion.Z = 0.5 * sqrt;
 			quaternion.W = (matrix.M12 - matrix.M21) * half;
 
 			return quaternion;
@@ -510,15 +510,15 @@ namespace Duality
 		/// <param name="result">A quaternion composed from the rotation part of the matrix as an output parameter.</param>
 		public static void CreateFromRotationMatrix(ref Matrix4 matrix, out Quaternion result)
 		{
-			float sqrt;
-			float half;
-			float scale = matrix.M11 + matrix.M22 + matrix.M33;
+			double sqrt;
+			double half;
+			double scale = matrix.M11 + matrix.M22 + matrix.M33;
 
 			if (scale > 0.0f)
 			{
 				sqrt = MathF.Sqrt(scale + 1.0f);
-				result.W = sqrt * 0.5f;
-				sqrt = 0.5f / sqrt;
+				result.W = sqrt * 0.5;
+				sqrt = 0.5 / sqrt;
 
 				result.X = (matrix.M23 - matrix.M32) * sqrt;
 				result.Y = (matrix.M31 - matrix.M13) * sqrt;
@@ -527,32 +527,32 @@ namespace Duality
 			else
 			if ((matrix.M11 >= matrix.M22) && (matrix.M11 >= matrix.M33))
 			{
-				sqrt = MathF.Sqrt(1.0f + matrix.M11 - matrix.M22 - matrix.M33);
-				half = 0.5f / sqrt;
+				sqrt = MathF.Sqrt(1.0 + matrix.M11 - matrix.M22 - matrix.M33);
+				half = 0.5 / sqrt;
 
-				result.X = 0.5f * sqrt;
+				result.X = 0.5 * sqrt;
 				result.Y = (matrix.M12 + matrix.M21) * half;
 				result.Z = (matrix.M13 + matrix.M31) * half;
 				result.W = (matrix.M23 - matrix.M32) * half;
 			}
 			else if (matrix.M22 > matrix.M33)
 			{
-				sqrt = MathF.Sqrt(1.0f + matrix.M22 - matrix.M11 - matrix.M33);
-				half = 0.5f / sqrt;
+				sqrt = MathF.Sqrt(1.0 + matrix.M22 - matrix.M11 - matrix.M33);
+				half = 0.5 / sqrt;
 
 				result.X = (matrix.M21 + matrix.M12) * half;
-				result.Y = 0.5f * sqrt;
+				result.Y = 0.5 * sqrt;
 				result.Z = (matrix.M32 + matrix.M23) * half;
 				result.W = (matrix.M31 - matrix.M13) * half;
 			}
 			else
 			{
-				sqrt = MathF.Sqrt(1.0f + matrix.M33 - matrix.M11 - matrix.M22);
-				half = 0.5f / sqrt;
+				sqrt = MathF.Sqrt(1.0 + matrix.M33 - matrix.M11 - matrix.M22);
+				half = 0.5 / sqrt;
 
 				result.X = (matrix.M31 + matrix.M13) * half;
 				result.Y = (matrix.M32 + matrix.M23) * half;
-				result.Z = 0.5f * sqrt;
+				result.Z = 0.5 * sqrt;
 				result.W = (matrix.M12 - matrix.M21) * half;
 			}
 		}
@@ -568,18 +568,18 @@ namespace Duality
 		/// <param name="pitch">Pitch around the x axis in radians.</param>
 		/// <param name="roll">Roll around the z axis in radians.</param>
 		/// <returns>A new quaternion from the concatenated yaw, pitch, and roll angles.</returns>
-		public static Quaternion CreateFromYawPitchRoll(float yaw, float pitch, float roll)
+		public static Quaternion CreateFromYawPitchRoll(double yaw, double pitch, double roll)
 		{
-			float halfRoll = roll * 0.5f;
-			float halfPitch = pitch * 0.5f;
-			float halfYaw = yaw * 0.5f;
+			double halfRoll = roll * 0.5;
+			double halfPitch = pitch * 0.5;
+			double halfYaw = yaw * 0.5;
 
-			float sinRoll = MathF.Sin(halfRoll);
-			float cosRoll = MathF.Cos(halfRoll);
-			float sinPitch = MathF.Sin(halfPitch);
-			float cosPitch = MathF.Cos(halfPitch);
-			float sinYaw = MathF.Sin(halfYaw);
-			float cosYaw = MathF.Cos(halfYaw);
+			double sinRoll = MathF.Sin(halfRoll);
+			double cosRoll = MathF.Cos(halfRoll);
+			double sinPitch = MathF.Sin(halfPitch);
+			double cosPitch = MathF.Cos(halfPitch);
+			double sinYaw = MathF.Sin(halfYaw);
+			double cosYaw = MathF.Cos(halfYaw);
 
 			return new Quaternion((cosYaw * sinPitch * cosRoll) + (sinYaw * cosPitch * sinRoll),
 								  (sinYaw * cosPitch * cosRoll) - (cosYaw * sinPitch * sinRoll),
@@ -594,18 +594,18 @@ namespace Duality
 		/// <param name="pitch">Pitch around the x axis in radians.</param>
 		/// <param name="roll">Roll around the z axis in radians.</param>
 		/// <param name="result">A new quaternion from the concatenated yaw, pitch, and roll angles as an output parameter.</param>
-		public static void CreateFromYawPitchRoll(float yaw, float pitch, float roll, out Quaternion result)
+		public static void CreateFromYawPitchRoll(double yaw, double pitch, double roll, out Quaternion result)
 		{
-			float halfRoll = roll * 0.5f;
-			float halfPitch = pitch * 0.5f;
-			float halfYaw = yaw * 0.5f;
+			double halfRoll = roll * 0.5;
+			double halfPitch = pitch * 0.5;
+			double halfYaw = yaw * 0.5;
 
-			float sinRoll = MathF.Sin(halfRoll);
-			float cosRoll = MathF.Cos(halfRoll);
-			float sinPitch = MathF.Sin(halfPitch);
-			float cosPitch = MathF.Cos(halfPitch);
-			float sinYaw = MathF.Sin(halfYaw);
-			float cosYaw = MathF.Cos(halfYaw);
+			double sinRoll = MathF.Sin(halfRoll);
+			double cosRoll = MathF.Cos(halfRoll);
+			double sinPitch = MathF.Sin(halfPitch);
+			double cosPitch = MathF.Cos(halfPitch);
+			double sinYaw = MathF.Sin(halfYaw);
+			double cosYaw = MathF.Cos(halfYaw);
 
 			result.X = (cosYaw * sinPitch * cosRoll) + (sinYaw * cosPitch * sinRoll);
 			result.Y = (sinYaw * cosPitch * cosRoll) - (cosYaw * sinPitch * sinRoll);
@@ -626,20 +626,20 @@ namespace Duality
 		public static Quaternion Divide(Quaternion quaternion1, Quaternion quaternion2)
 		{
 			Quaternion quaternion;
-			float x = quaternion1.X;
-			float y = quaternion1.Y;
-			float z = quaternion1.Z;
-			float w = quaternion1.W;
-			float num14 = (((quaternion2.X * quaternion2.X) + (quaternion2.Y * quaternion2.Y)) + (quaternion2.Z * quaternion2.Z)) + (quaternion2.W * quaternion2.W);
-			float num5 = 1f / num14;
-			float num4 = -quaternion2.X * num5;
-			float num3 = -quaternion2.Y * num5;
-			float num2 = -quaternion2.Z * num5;
-			float num = quaternion2.W * num5;
-			float num13 = (y * num2) - (z * num3);
-			float num12 = (z * num4) - (x * num2);
-			float num11 = (x * num3) - (y * num4);
-			float num10 = ((x * num4) + (y * num3)) + (z * num2);
+			double x = quaternion1.X;
+			double y = quaternion1.Y;
+			double z = quaternion1.Z;
+			double w = quaternion1.W;
+			double num14 = (((quaternion2.X * quaternion2.X) + (quaternion2.Y * quaternion2.Y)) + (quaternion2.Z * quaternion2.Z)) + (quaternion2.W * quaternion2.W);
+			double num5 = 1 / num14;
+			double num4 = -quaternion2.X * num5;
+			double num3 = -quaternion2.Y * num5;
+			double num2 = -quaternion2.Z * num5;
+			double num = quaternion2.W * num5;
+			double num13 = (y * num2) - (z * num3);
+			double num12 = (z * num4) - (x * num2);
+			double num11 = (x * num3) - (y * num4);
+			double num10 = ((x * num4) + (y * num3)) + (z * num2);
 			quaternion.X = ((x * num) + (num4 * w)) + num13;
 			quaternion.Y = ((y * num) + (num3 * w)) + num12;
 			quaternion.Z = ((z * num) + (num2 * w)) + num11;
@@ -655,20 +655,20 @@ namespace Duality
 		/// <param name="result">The result of dividing the quaternions as an output parameter.</param>
 		public static void Divide(ref Quaternion quaternion1, ref Quaternion quaternion2, out Quaternion result)
 		{
-			float x = quaternion1.X;
-			float y = quaternion1.Y;
-			float z = quaternion1.Z;
-			float w = quaternion1.W;
-			float num14 = (((quaternion2.X * quaternion2.X) + (quaternion2.Y * quaternion2.Y)) + (quaternion2.Z * quaternion2.Z)) + (quaternion2.W * quaternion2.W);
-			float num5 = 1f / num14;
-			float num4 = -quaternion2.X * num5;
-			float num3 = -quaternion2.Y * num5;
-			float num2 = -quaternion2.Z * num5;
-			float num = quaternion2.W * num5;
-			float num13 = (y * num2) - (z * num3);
-			float num12 = (z * num4) - (x * num2);
-			float num11 = (x * num3) - (y * num4);
-			float num10 = ((x * num4) + (y * num3)) + (z * num2);
+			double x = quaternion1.X;
+			double y = quaternion1.Y;
+			double z = quaternion1.Z;
+			double w = quaternion1.W;
+			double num14 = (((quaternion2.X * quaternion2.X) + (quaternion2.Y * quaternion2.Y)) + (quaternion2.Z * quaternion2.Z)) + (quaternion2.W * quaternion2.W);
+			double num5 = 1 / num14;
+			double num4 = -quaternion2.X * num5;
+			double num3 = -quaternion2.Y * num5;
+			double num2 = -quaternion2.Z * num5;
+			double num = quaternion2.W * num5;
+			double num13 = (y * num2) - (z * num3);
+			double num12 = (z * num4) - (x * num2);
+			double num11 = (x * num3) - (y * num4);
+			double num10 = ((x * num4) + (y * num3)) + (z * num2);
 			result.X = ((x * num) + (num4 * w)) + num13;
 			result.Y = ((y * num) + (num3 * w)) + num12;
 			result.Z = ((z * num) + (num2 * w)) + num11;
@@ -685,7 +685,7 @@ namespace Duality
 		/// <param name="quaternion1">The first quaternion.</param>
 		/// <param name="quaternion2">The second quaternion.</param>
 		/// <returns>The dot product of two quaternions.</returns>
-		public static float Dot(Quaternion quaternion1, Quaternion quaternion2)
+		public static double Dot(Quaternion quaternion1, Quaternion quaternion2)
 		{
 			return ((((quaternion1.X * quaternion2.X) + (quaternion1.Y * quaternion2.Y)) + (quaternion1.Z * quaternion2.Z)) + (quaternion1.W * quaternion2.W));
 		}
@@ -696,7 +696,7 @@ namespace Duality
 		/// <param name="quaternion1">The first quaternion.</param>
 		/// <param name="quaternion2">The second quaternion.</param>
 		/// <param name="result">The dot product of two quaternions as an output parameter.</param>
-		public static void Dot(ref Quaternion quaternion1, ref Quaternion quaternion2, out float result)
+		public static void Dot(ref Quaternion quaternion1, ref Quaternion quaternion2, out double result)
 		{
 			result = (((quaternion1.X * quaternion2.X) + (quaternion1.Y * quaternion2.Y)) + (quaternion1.Z * quaternion2.Z)) + (quaternion1.W * quaternion2.W);
 		}
@@ -751,8 +751,8 @@ namespace Duality
 		public static Quaternion Inverse(Quaternion quaternion)
 		{
 			Quaternion quaternion2;
-			float num2 = (((quaternion.X * quaternion.X) + (quaternion.Y * quaternion.Y)) + (quaternion.Z * quaternion.Z)) + (quaternion.W * quaternion.W);
-			float num = 1f / num2;
+			double num2 = (((quaternion.X * quaternion.X) + (quaternion.Y * quaternion.Y)) + (quaternion.Z * quaternion.Z)) + (quaternion.W * quaternion.W);
+			double num = 1 / num2;
 			quaternion2.X = -quaternion.X * num;
 			quaternion2.Y = -quaternion.Y * num;
 			quaternion2.Z = -quaternion.Z * num;
@@ -767,8 +767,8 @@ namespace Duality
 		/// <param name="result">The inverse quaternion as an output parameter.</param>
 		public static void Inverse(ref Quaternion quaternion, out Quaternion result)
 		{
-			float num2 = (((quaternion.X * quaternion.X) + (quaternion.Y * quaternion.Y)) + (quaternion.Z * quaternion.Z)) + (quaternion.W * quaternion.W);
-			float num = 1f / num2;
+			double num2 = (((quaternion.X * quaternion.X) + (quaternion.Y * quaternion.Y)) + (quaternion.Z * quaternion.Z)) + (quaternion.W * quaternion.W);
+			double num = 1 / num2;
 			result.X = -quaternion.X * num;
 			result.Y = -quaternion.Y * num;
 			result.Z = -quaternion.Z * num;
@@ -783,10 +783,10 @@ namespace Duality
 		/// <param name="result">The inverse of the given quaternion</param>
 		public static void Invert(ref Quaternion q, out Quaternion result)
 		{
-			float lengthSq = q.LengthSquared();
+			double lengthSq = q.LengthSquared();
 			if (lengthSq != 0.0)
 			{
-				float i = 1.0f / lengthSq;
+				double i = 1.0 / lengthSq;
 				result = new Quaternion(q.Xyz * -i, q.W * i);
 			}
 			else
@@ -801,7 +801,7 @@ namespace Duality
 		/// Returns the magnitude of the quaternion components.
 		/// </summary>
 		/// <returns>The magnitude of the quaternion components.</returns>
-		public float Length()
+		public double Length()
 		{
 			return MathF.Sqrt((this.X * this.X) + (this.Y * this.Y) + (this.Z * this.Z) + (this.W * this.W));
 		}
@@ -810,7 +810,7 @@ namespace Duality
 		/// Returns the squared magnitude of the quaternion components.
 		/// </summary>
 		/// <returns>The squared magnitude of the quaternion components.</returns>
-		public float LengthSquared()
+		public double LengthSquared()
 		{
 			return (this.X * this.X) + (this.Y * this.Y) + (this.Z * this.Z) + (this.W * this.W);
 		}
@@ -824,12 +824,12 @@ namespace Duality
 		/// <param name="quaternion2">Source <see cref="Quaternion"/>.</param>
 		/// <param name="amount">The blend amount where 0 returns <paramref name="quaternion1"/> and 1 <paramref name="quaternion2"/>.</param>
 		/// <returns>The result of linear blending between two quaternions.</returns>
-		public static Quaternion Lerp(Quaternion quaternion1, Quaternion quaternion2, float amount)
+		public static Quaternion Lerp(Quaternion quaternion1, Quaternion quaternion2, double amount)
 		{
-			float num = amount;
-			float num2 = 1f - num;
+			double num = amount;
+			double num2 = 1 - num;
 			Quaternion quaternion = new Quaternion();
-			float num5 = (((quaternion1.X * quaternion2.X) + (quaternion1.Y * quaternion2.Y)) + (quaternion1.Z * quaternion2.Z)) + (quaternion1.W * quaternion2.W);
+			double num5 = (((quaternion1.X * quaternion2.X) + (quaternion1.Y * quaternion2.Y)) + (quaternion1.Z * quaternion2.Z)) + (quaternion1.W * quaternion2.W);
 			if (num5 >= 0f)
 			{
 				quaternion.X = (num2 * quaternion1.X) + (num * quaternion2.X);
@@ -844,8 +844,8 @@ namespace Duality
 				quaternion.Z = (num2 * quaternion1.Z) - (num * quaternion2.Z);
 				quaternion.W = (num2 * quaternion1.W) - (num * quaternion2.W);
 			}
-			float num4 = (((quaternion.X * quaternion.X) + (quaternion.Y * quaternion.Y)) + (quaternion.Z * quaternion.Z)) + (quaternion.W * quaternion.W);
-			float num3 = 1f / MathF.Sqrt(num4);
+			double num4 = (((quaternion.X * quaternion.X) + (quaternion.Y * quaternion.Y)) + (quaternion.Z * quaternion.Z)) + (quaternion.W * quaternion.W);
+			double num3 = 1 / MathF.Sqrt(num4);
 			quaternion.X *= num3;
 			quaternion.Y *= num3;
 			quaternion.Z *= num3;
@@ -860,11 +860,11 @@ namespace Duality
 		/// <param name="quaternion2">Source <see cref="Quaternion"/>.</param>
 		/// <param name="amount">The blend amount where 0 returns <paramref name="quaternion1"/> and 1 <paramref name="quaternion2"/>.</param>
 		/// <param name="result">The result of linear blending between two quaternions as an output parameter.</param>
-		public static void Lerp(ref Quaternion quaternion1, ref Quaternion quaternion2, float amount, out Quaternion result)
+		public static void Lerp(ref Quaternion quaternion1, ref Quaternion quaternion2, double amount, out Quaternion result)
 		{
-			float num = amount;
-			float num2 = 1f - num;
-			float num5 = (((quaternion1.X * quaternion2.X) + (quaternion1.Y * quaternion2.Y)) + (quaternion1.Z * quaternion2.Z)) + (quaternion1.W * quaternion2.W);
+			double num = amount;
+			double num2 = 1 - num;
+			double num5 = (((quaternion1.X * quaternion2.X) + (quaternion1.Y * quaternion2.Y)) + (quaternion1.Z * quaternion2.Z)) + (quaternion1.W * quaternion2.W);
 			if (num5 >= 0f)
 			{
 				result.X = (num2 * quaternion1.X) + (num * quaternion2.X);
@@ -879,8 +879,8 @@ namespace Duality
 				result.Z = (num2 * quaternion1.Z) - (num * quaternion2.Z);
 				result.W = (num2 * quaternion1.W) - (num * quaternion2.W);
 			}
-			float num4 = (((result.X * result.X) + (result.Y * result.Y)) + (result.Z * result.Z)) + (result.W * result.W);
-			float num3 = 1f / MathF.Sqrt(num4);
+			double num4 = (((result.X * result.X) + (result.Y * result.Y)) + (result.Z * result.Z)) + (result.W * result.W);
+			double num3 = 1 / MathF.Sqrt(num4);
 			result.X *= num3;
 			result.Y *= num3;
 			result.Z *= num3;
@@ -899,13 +899,13 @@ namespace Duality
 		/// <param name="quaternion2">Source <see cref="Quaternion"/>.</param>
 		/// <param name="amount">The blend amount where 0 returns <paramref name="quaternion1"/> and 1 <paramref name="quaternion2"/>.</param>
 		/// <returns>The result of spherical linear blending between two quaternions.</returns>
-		public static Quaternion Slerp(Quaternion quaternion1, Quaternion quaternion2, float amount)
+		public static Quaternion Slerp(Quaternion quaternion1, Quaternion quaternion2, double amount)
 		{
-			float num2;
-			float num3;
+			double num2;
+			double num3;
 			Quaternion quaternion;
-			float num = amount;
-			float num4 = (((quaternion1.X * quaternion2.X) + (quaternion1.Y * quaternion2.Y)) + (quaternion1.Z * quaternion2.Z)) + (quaternion1.W * quaternion2.W);
+			double num = amount;
+			double num4 = (((quaternion1.X * quaternion2.X) + (quaternion1.Y * quaternion2.Y)) + (quaternion1.Z * quaternion2.Z)) + (quaternion1.W * quaternion2.W);
 			bool flag = false;
 			if (num4 < 0f)
 			{
@@ -914,14 +914,14 @@ namespace Duality
 			}
 			if (num4 > 0.999999f)
 			{
-				num3 = 1f - num;
+				num3 = 1 - num;
 				num2 = flag ? -num : num;
 			}
 			else
 			{
-				float num5 = MathF.Acos(num4);
-				float num6 = (float)(1.0 / Math.Sin((double)num5));
-				num3 = MathF.Sin((1f - num) * num5) * num6;
+				double num5 = MathF.Acos(num4);
+				double num6 = (double)(1.0 / Math.Sin((double)num5));
+				num3 = MathF.Sin((1 - num) * num5) * num6;
 				num2 = flag ? (-MathF.Sin(num * num5) * num6) : (MathF.Sin(num * num5) * num6);
 			}
 			quaternion.X = (num3 * quaternion1.X) + (num2 * quaternion2.X);
@@ -938,12 +938,12 @@ namespace Duality
 		/// <param name="quaternion2">Source <see cref="Quaternion"/>.</param>
 		/// <param name="amount">The blend amount where 0 returns <paramref name="quaternion1"/> and 1 <paramref name="quaternion2"/>.</param>
 		/// <param name="result">The result of spherical linear blending between two quaternions as an output parameter.</param>
-		public static void Slerp(ref Quaternion quaternion1, ref Quaternion quaternion2, float amount, out Quaternion result)
+		public static void Slerp(ref Quaternion quaternion1, ref Quaternion quaternion2, double amount, out Quaternion result)
 		{
-			float num2;
-			float num3;
-			float num = amount;
-			float num4 = (((quaternion1.X * quaternion2.X) + (quaternion1.Y * quaternion2.Y)) + (quaternion1.Z * quaternion2.Z)) + (quaternion1.W * quaternion2.W);
+			double num2;
+			double num3;
+			double num = amount;
+			double num4 = (((quaternion1.X * quaternion2.X) + (quaternion1.Y * quaternion2.Y)) + (quaternion1.Z * quaternion2.Z)) + (quaternion1.W * quaternion2.W);
 			bool flag = false;
 			if (num4 < 0f)
 			{
@@ -952,14 +952,14 @@ namespace Duality
 			}
 			if (num4 > 0.999999f)
 			{
-				num3 = 1f - num;
+				num3 = 1 - num;
 				num2 = flag ? -num : num;
 			}
 			else
 			{
-				float num5 = MathF.Acos(num4);
-				float num6 = (float)(1.0 / Math.Sin((double)num5));
-				num3 = MathF.Sin((1f - num) * num5) * num6;
+				double num5 = MathF.Acos(num4);
+				double num6 = (double)(1.0 / Math.Sin((double)num5));
+				num3 = MathF.Sin((1 - num) * num5) * num6;
 				num2 = flag ? (-MathF.Sin(num * num5) * num6) : (MathF.Sin(num * num5) * num6);
 			}
 			result.X = (num3 * quaternion1.X) + (num2 * quaternion2.X);
@@ -1015,18 +1015,18 @@ namespace Duality
 		public static Quaternion Multiply(Quaternion quaternion1, Quaternion quaternion2)
 		{
 			Quaternion quaternion;
-			float x = quaternion1.X;
-			float y = quaternion1.Y;
-			float z = quaternion1.Z;
-			float w = quaternion1.W;
-			float num4 = quaternion2.X;
-			float num3 = quaternion2.Y;
-			float num2 = quaternion2.Z;
-			float num = quaternion2.W;
-			float num12 = (y * num2) - (z * num3);
-			float num11 = (z * num4) - (x * num2);
-			float num10 = (x * num3) - (y * num4);
-			float num9 = ((x * num4) + (y * num3)) + (z * num2);
+			double x = quaternion1.X;
+			double y = quaternion1.Y;
+			double z = quaternion1.Z;
+			double w = quaternion1.W;
+			double num4 = quaternion2.X;
+			double num3 = quaternion2.Y;
+			double num2 = quaternion2.Z;
+			double num = quaternion2.W;
+			double num12 = (y * num2) - (z * num3);
+			double num11 = (z * num4) - (x * num2);
+			double num10 = (x * num3) - (y * num4);
+			double num9 = ((x * num4) + (y * num3)) + (z * num2);
 			quaternion.X = ((x * num) + (num4 * w)) + num12;
 			quaternion.Y = ((y * num) + (num3 * w)) + num11;
 			quaternion.Z = ((z * num) + (num2 * w)) + num10;
@@ -1040,7 +1040,7 @@ namespace Duality
 		/// <param name="quaternion1">Source <see cref="Quaternion"/>.</param>
 		/// <param name="scaleFactor">Scalar value.</param>
 		/// <returns>The result of the quaternion multiplication with a scalar.</returns>
-		public static Quaternion Multiply(Quaternion quaternion1, float scaleFactor)
+		public static Quaternion Multiply(Quaternion quaternion1, double scaleFactor)
 		{
 			Quaternion quaternion;
 			quaternion.X = quaternion1.X * scaleFactor;
@@ -1056,7 +1056,7 @@ namespace Duality
 		/// <param name="quaternion1">Source <see cref="Quaternion"/>.</param>
 		/// <param name="scaleFactor">Scalar value.</param>
 		/// <param name="result">The result of the quaternion multiplication with a scalar as an output parameter.</param>
-		public static void Multiply(ref Quaternion quaternion1, float scaleFactor, out Quaternion result)
+		public static void Multiply(ref Quaternion quaternion1, double scaleFactor, out Quaternion result)
 		{
 			result.X = quaternion1.X * scaleFactor;
 			result.Y = quaternion1.Y * scaleFactor;
@@ -1072,18 +1072,18 @@ namespace Duality
 		/// <param name="result">The result of the quaternion multiplication as an output parameter.</param>
 		public static void Multiply(ref Quaternion quaternion1, ref Quaternion quaternion2, out Quaternion result)
 		{
-			float x = quaternion1.X;
-			float y = quaternion1.Y;
-			float z = quaternion1.Z;
-			float w = quaternion1.W;
-			float num4 = quaternion2.X;
-			float num3 = quaternion2.Y;
-			float num2 = quaternion2.Z;
-			float num = quaternion2.W;
-			float num12 = (y * num2) - (z * num3);
-			float num11 = (z * num4) - (x * num2);
-			float num10 = (x * num3) - (y * num4);
-			float num9 = ((x * num4) + (y * num3)) + (z * num2);
+			double x = quaternion1.X;
+			double y = quaternion1.Y;
+			double z = quaternion1.Z;
+			double w = quaternion1.W;
+			double num4 = quaternion2.X;
+			double num3 = quaternion2.Y;
+			double num2 = quaternion2.Z;
+			double num = quaternion2.W;
+			double num12 = (y * num2) - (z * num3);
+			double num11 = (z * num4) - (x * num2);
+			double num10 = (x * num3) - (y * num4);
+			double num9 = ((x * num4) + (y * num3)) + (z * num2);
 			result.X = ((x * num) + (num4 * w)) + num12;
 			result.Y = ((y * num) + (num3 * w)) + num11;
 			result.Z = ((z * num) + (num2 * w)) + num10;
@@ -1126,7 +1126,7 @@ namespace Duality
 		/// </summary>
 		public void Normalize()
 		{
-			float num = 1f / MathF.Sqrt((this.X * this.X) + (this.Y * this.Y) + (this.Z * this.Z) + (this.W * this.W));
+			double num = 1 / MathF.Sqrt((this.X * this.X) + (this.Y * this.Y) + (this.Z * this.Z) + (this.W * this.W));
 			this.X *= num;
 			this.Y *= num;
 			this.Z *= num;
@@ -1141,7 +1141,7 @@ namespace Duality
 		public static Quaternion Normalize(Quaternion quaternion)
 		{
 			Quaternion result;
-			float num = 1f / MathF.Sqrt((quaternion.X * quaternion.X) + (quaternion.Y * quaternion.Y) + (quaternion.Z * quaternion.Z) + (quaternion.W * quaternion.W));
+			double num = 1 / MathF.Sqrt((quaternion.X * quaternion.X) + (quaternion.Y * quaternion.Y) + (quaternion.Z * quaternion.Z) + (quaternion.W * quaternion.W));
 			result.X = quaternion.X * num;
 			result.Y = quaternion.Y * num;
 			result.Z = quaternion.Z * num;
@@ -1156,7 +1156,7 @@ namespace Duality
 		/// <param name="result">The unit length quaternion an output parameter.</param>
 		public static void Normalize(ref Quaternion quaternion, out Quaternion result)
 		{
-			float num = 1f / MathF.Sqrt((quaternion.X * quaternion.X) + (quaternion.Y * quaternion.Y) + (quaternion.Z * quaternion.Z) + (quaternion.W * quaternion.W));
+			double num = 1 / MathF.Sqrt((quaternion.X * quaternion.X) + (quaternion.Y * quaternion.Y) + (quaternion.Z * quaternion.Z) + (quaternion.W * quaternion.W));
 			result.X = quaternion.X * num;
 			result.Y = quaternion.Y * num;
 			result.Z = quaternion.Z * num;
@@ -1184,7 +1184,7 @@ namespace Duality
 			return new Vector4(this.X, this.Y, this.Z, this.W);
 		}
 
-		public void Deconstruct(out float x, out float y, out float z, out float w)
+		public void Deconstruct(out double x, out double y, out double z, out double w)
 		{
 			x = this.X;
 			y = this.Y;
@@ -1221,20 +1221,20 @@ namespace Duality
 		public static Quaternion operator /(Quaternion quaternion1, Quaternion quaternion2)
 		{
 			Quaternion quaternion;
-			float x = quaternion1.X;
-			float y = quaternion1.Y;
-			float z = quaternion1.Z;
-			float w = quaternion1.W;
-			float num14 = (((quaternion2.X * quaternion2.X) + (quaternion2.Y * quaternion2.Y)) + (quaternion2.Z * quaternion2.Z)) + (quaternion2.W * quaternion2.W);
-			float num5 = 1f / num14;
-			float num4 = -quaternion2.X * num5;
-			float num3 = -quaternion2.Y * num5;
-			float num2 = -quaternion2.Z * num5;
-			float num = quaternion2.W * num5;
-			float num13 = (y * num2) - (z * num3);
-			float num12 = (z * num4) - (x * num2);
-			float num11 = (x * num3) - (y * num4);
-			float num10 = ((x * num4) + (y * num3)) + (z * num2);
+			double x = quaternion1.X;
+			double y = quaternion1.Y;
+			double z = quaternion1.Z;
+			double w = quaternion1.W;
+			double num14 = (((quaternion2.X * quaternion2.X) + (quaternion2.Y * quaternion2.Y)) + (quaternion2.Z * quaternion2.Z)) + (quaternion2.W * quaternion2.W);
+			double num5 = 1 / num14;
+			double num4 = -quaternion2.X * num5;
+			double num3 = -quaternion2.Y * num5;
+			double num2 = -quaternion2.Z * num5;
+			double num = quaternion2.W * num5;
+			double num13 = (y * num2) - (z * num3);
+			double num12 = (z * num4) - (x * num2);
+			double num11 = (x * num3) - (y * num4);
+			double num10 = ((x * num4) + (y * num3)) + (z * num2);
 			quaternion.X = ((x * num) + (num4 * w)) + num13;
 			quaternion.Y = ((y * num) + (num3 * w)) + num12;
 			quaternion.Z = ((z * num) + (num2 * w)) + num11;
@@ -1277,18 +1277,18 @@ namespace Duality
 		public static Quaternion operator *(Quaternion quaternion1, Quaternion quaternion2)
 		{
 			Quaternion quaternion;
-			float x = quaternion1.X;
-			float y = quaternion1.Y;
-			float z = quaternion1.Z;
-			float w = quaternion1.W;
-			float num4 = quaternion2.X;
-			float num3 = quaternion2.Y;
-			float num2 = quaternion2.Z;
-			float num = quaternion2.W;
-			float num12 = (y * num2) - (z * num3);
-			float num11 = (z * num4) - (x * num2);
-			float num10 = (x * num3) - (y * num4);
-			float num9 = ((x * num4) + (y * num3)) + (z * num2);
+			double x = quaternion1.X;
+			double y = quaternion1.Y;
+			double z = quaternion1.Z;
+			double w = quaternion1.W;
+			double num4 = quaternion2.X;
+			double num3 = quaternion2.Y;
+			double num2 = quaternion2.Z;
+			double num = quaternion2.W;
+			double num12 = (y * num2) - (z * num3);
+			double num11 = (z * num4) - (x * num2);
+			double num10 = (x * num3) - (y * num4);
+			double num9 = ((x * num4) + (y * num3)) + (z * num2);
 			quaternion.X = ((x * num) + (num4 * w)) + num12;
 			quaternion.Y = ((y * num) + (num3 * w)) + num11;
 			quaternion.Z = ((z * num) + (num2 * w)) + num10;
@@ -1302,7 +1302,7 @@ namespace Duality
 		/// <param name="quaternion1">Source <see cref="Vector3"/> on the left of the mul sign.</param>
 		/// <param name="scaleFactor">Scalar value on the right of the mul sign.</param>
 		/// <returns>Result of the quaternion multiplication with a scalar.</returns>
-		public static Quaternion operator *(Quaternion quaternion1, float scaleFactor)
+		public static Quaternion operator *(Quaternion quaternion1, double scaleFactor)
 		{
 			Quaternion quaternion;
 			quaternion.X = quaternion1.X * scaleFactor;

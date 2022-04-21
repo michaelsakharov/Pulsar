@@ -19,14 +19,14 @@ namespace Duality
 
         public Vector3 Center;
 
-        public float Radius;
+        public double Radius;
 
         #endregion Public Fields
 
 
         #region Constructors
 
-        public BoundingSphere(Vector3 center, float radius)
+        public BoundingSphere(Vector3 center, double radius)
         {
             this.Center = center;
             this.Radius = radius;
@@ -41,14 +41,14 @@ namespace Duality
         {
             BoundingSphere sphere = new BoundingSphere();
             sphere.Center = Vector3.Transform(this.Center, matrix);
-            sphere.Radius = this.Radius * ((float)Math.Sqrt((double)Math.Max(((matrix.M11 * matrix.M11) + (matrix.M12 * matrix.M12)) + (matrix.M13 * matrix.M13), Math.Max(((matrix.M21 * matrix.M21) + (matrix.M22 * matrix.M22)) + (matrix.M23 * matrix.M23), ((matrix.M31 * matrix.M31) + (matrix.M32 * matrix.M32)) + (matrix.M33 * matrix.M33)))));
+            sphere.Radius = this.Radius * ((double)Math.Sqrt((double)Math.Max(((matrix.M11 * matrix.M11) + (matrix.M12 * matrix.M12)) + (matrix.M13 * matrix.M13), Math.Max(((matrix.M21 * matrix.M21) + (matrix.M22 * matrix.M22)) + (matrix.M23 * matrix.M23), ((matrix.M31 * matrix.M31) + (matrix.M32 * matrix.M32)) + (matrix.M33 * matrix.M33)))));
             return sphere;
         }
 
         public void Transform(ref Matrix4 matrix, out BoundingSphere result)
         {
             result.Center = Vector3.Transform(this.Center, matrix);
-            result.Radius = this.Radius * ((float)Math.Sqrt((double)Math.Max(((matrix.M11 * matrix.M11) + (matrix.M12 * matrix.M12)) + (matrix.M13 * matrix.M13), Math.Max(((matrix.M21 * matrix.M21) + (matrix.M22 * matrix.M22)) + (matrix.M23 * matrix.M23), ((matrix.M31 * matrix.M31) + (matrix.M32 * matrix.M32)) + (matrix.M33 * matrix.M33)))));
+            result.Radius = this.Radius * ((double)Math.Sqrt((double)Math.Max(((matrix.M11 * matrix.M11) + (matrix.M12 * matrix.M12)) + (matrix.M13 * matrix.M13), Math.Max(((matrix.M21 * matrix.M21) + (matrix.M22 * matrix.M22)) + (matrix.M23 * matrix.M23), ((matrix.M31 * matrix.M31) + (matrix.M32 * matrix.M32)) + (matrix.M33 * matrix.M33)))));
         }
 
         public ContainmentType Contains(BoundingBox box)
@@ -137,7 +137,7 @@ namespace Duality
 
         public void Contains(ref BoundingSphere sphere, out ContainmentType result)
         {
-            float sqDistance;
+            double sqDistance;
             Vector3.DistanceSquared(ref sphere.Center, ref this.Center, out sqDistance);
 
             if (sqDistance > (sphere.Radius + this.Radius) * (sphere.Radius + this.Radius))
@@ -159,8 +159,8 @@ namespace Duality
 
         public void Contains(ref Vector3 point, out ContainmentType result)
         {
-            float sqRadius = this.Radius * this.Radius;
-            float sqDistance;
+            double sqRadius = this.Radius * this.Radius;
+            double sqDistance;
             Vector3.DistanceSquared(ref point, ref this.Center, out sqDistance);
             
             if (sqDistance > sqRadius)
@@ -183,12 +183,12 @@ namespace Duality
         public static void CreateFromBoundingBox(ref BoundingBox box, out BoundingSphere result)
         {
             // Find the center of the box.
-            Vector3 center = new Vector3((box.Min.X + box.Max.X) / 2.0f,
-                                         (box.Min.Y + box.Max.Y) / 2.0f,
-                                         (box.Min.Z + box.Max.Z) / 2.0f);
+            Vector3 center = new Vector3((box.Min.X + box.Max.X) / 2.0,
+                                         (box.Min.Y + box.Max.Y) / 2.0,
+                                         (box.Min.Z + box.Max.Z) / 2.0);
 
             // Find the distance between the center and one of the corners of the box.
-            float radius = Vector3.Distance(center, box.Max);
+            double radius = Vector3.Distance(center, box.Max);
 
             result = new BoundingSphere(center, radius);
         }
@@ -205,7 +205,7 @@ namespace Duality
 
             // From "Real-Time Collision Detection" (Page 89)
 
-            var minx = new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
+            var minx = new Vector3(double.MaxValue, double.MaxValue, double.MaxValue);
             var maxx = -minx;
             var miny = minx;
             var maxy = -minx;
@@ -235,9 +235,9 @@ namespace Duality
             if (numPoints == 0)
                 throw new ArgumentException("You should have at least one point in points.");
 
-            float sqDistX = Vector3.DistanceSquared(maxx, minx);
-            float sqDistY = Vector3.DistanceSquared(maxy, miny);
-			float sqDistZ = Vector3.DistanceSquared(maxz, minz);
+            double sqDistX = Vector3.DistanceSquared(maxx, minx);
+            double sqDistY = Vector3.DistanceSquared(maxy, miny);
+			double sqDistZ = Vector3.DistanceSquared(maxz, minz);
 
             // Pick the pair of most distant points.
             var min = minx;
@@ -253,21 +253,21 @@ namespace Duality
                 min = minz;
             }
             
-            var center = (min + max) * 0.5f;
-			float radius = Vector3.Distance(max, center);
+            var center = (min + max) * 0.5;
+			double radius = Vector3.Distance(max, center);
             
             // Test every point and expand the sphere.
             // The current bounding sphere is just a good approximation and may not enclose all points.            
             // From: Mathematics for 3D Game Programming and Computer Graphics, Eric Lengyel, Third Edition.
             // Page 218
-            float sqRadius = radius * radius;
+            double sqRadius = radius * radius;
             foreach (var pt in points)
             {
                 Vector3 diff = (pt-center);
-                float sqDist = diff.LengthSquared;
+                double sqDist = diff.LengthSquared;
                 if (sqDist > sqRadius)
                 {
-                    float distance = (float)Math.Sqrt(sqDist); // equal to diff.Length();
+                    double distance = (double)Math.Sqrt(sqDist); // equal to diff.Length();
                     Vector3 direction = diff / distance;
                     Vector3 G = center - radius * direction;
                     center = (G + pt) / 2;
@@ -289,7 +289,7 @@ namespace Duality
         public static void CreateMerged(ref BoundingSphere original, ref BoundingSphere additional, out BoundingSphere result)
         {
             Vector3 ocenterToaCenter = Vector3.Subtract(additional.Center, original.Center);
-            float distance = ocenterToaCenter.Length;
+            double distance = ocenterToaCenter.Length;
             if (distance <= original.Radius + additional.Radius)//intersect
             {
                 if (distance <= original.Radius - additional.Radius)//original contain additional
@@ -304,8 +304,8 @@ namespace Duality
                 }
             }
             //else find center of new sphere and radius
-            float leftRadius = Math.Max(original.Radius - distance, additional.Radius);
-            float Rightradius = Math.Max(original.Radius + distance, additional.Radius);
+            double leftRadius = Math.Max(original.Radius - distance, additional.Radius);
+            double Rightradius = Math.Max(original.Radius + distance, additional.Radius);
             ocenterToaCenter = ocenterToaCenter + (((leftRadius - Rightradius) / (2 * ocenterToaCenter.Length)) * ocenterToaCenter);//oCenterToResultCenter
 
             result = new BoundingSphere();
@@ -350,7 +350,7 @@ namespace Duality
 
         public void Intersects(ref BoundingSphere sphere, out bool result)
         {
-            float sqDistance;
+            double sqDistance;
             Vector3.DistanceSquared(ref sphere.Center, ref this.Center, out sqDistance);
 
             if (sqDistance > (sphere.Radius + this.Radius) * (sphere.Radius + this.Radius))
@@ -369,7 +369,7 @@ namespace Duality
 
         public void Intersects(ref Plane plane, out PlaneIntersectionType result)
         {
-			float distance = default(float);
+			double distance = default(double);
             // TODO: we might want to inline this for performance reasons
             Vector3.Dot(ref plane.Normal, ref this.Center, out distance);
             distance += plane.D;
@@ -381,12 +381,12 @@ namespace Duality
                 result = PlaneIntersectionType.Intersecting;
         }
 
-        public Nullable<float> Intersects(Ray ray)
+        public Nullable<double> Intersects(Ray ray)
         {
             return ray.Intersects(this);
         }
 
-        public void Intersects(ref Ray ray, out Nullable<float> result)
+        public void Intersects(ref Ray ray, out Nullable<double> result)
         {
             ray.Intersects(ref this, out result);
         }
@@ -403,7 +403,7 @@ namespace Duality
 
 		public static implicit operator THREE.Math.Sphere(BoundingSphere s)
 		{
-			return new THREE.Math.Sphere(s.Center, s.Radius);
+			return new THREE.Math.Sphere(s.Center, (float)s.Radius);
 		}
 
 		public static implicit operator BoundingSphere(THREE.Math.Sphere s)

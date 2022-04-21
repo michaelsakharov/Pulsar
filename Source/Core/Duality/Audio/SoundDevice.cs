@@ -215,7 +215,7 @@ namespace Duality.Audio
 			DualityApp.AudioBackend.UpdateListener(
 				this.ListenerPos * AudioUnit.LengthToPhysical,
 				this.ListenerVel * AudioUnit.VelocityToPhysical,
-				0f * AudioUnit.AngleToPhysical,
+				0f * (float)AudioUnit.AngleToPhysical,
 				this.mute);
 		}
 		private void UpdateWorldSettings()

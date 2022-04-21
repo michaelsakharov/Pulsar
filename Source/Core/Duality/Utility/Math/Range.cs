@@ -13,26 +13,26 @@ namespace Duality
 		/// <summary>
 		/// The minimum value of this Range.
 		/// </summary>
-		public float MinValue;
+		public double MinValue;
 		/// <summary>
 		/// The maximum value of this Range.
 		/// </summary>
-		public float MaxValue;
+		public double MaxValue;
 
 		/// <summary>
 		/// [GET] The total width of this Range. This value may be negative for irregular ranges, 
 		/// i.e. ranges with a higher minimum value than their maximum value.
 		/// </summary>
-		public float Width
+		public double Width
 		{
 			get { return this.MaxValue - this.MinValue; }
 		}
 		/// <summary>
 		/// [GET] The center value of this Range.
 		/// </summary>
-		public float Center
+		public double Center
 		{
-			get { return (this.MaxValue + this.MinValue) * 0.5f; }
+			get { return (this.MaxValue + this.MinValue) * 0.5; }
 		}
 		/// <summary>
 		/// [GET] Returns a normalized version of this Range where the minimum is guaranteed to be smaller than the maximum value.
@@ -52,7 +52,7 @@ namespace Duality
 		/// </summary>
 		/// <param name="min"></param>
 		/// <param name="max"></param>
-		public Range(float min, float max)
+		public Range(double min, double max)
 		{
 			this.MinValue = min;
 			this.MaxValue = max;
@@ -61,7 +61,7 @@ namespace Duality
 		/// Creates a new Range with zero-width from a single value.
 		/// </summary>
 		/// <param name="value"></param>
-		public Range(float value)
+		public Range(double value)
 		{
 			this.MinValue = value;
 			this.MaxValue = value;
@@ -71,7 +71,7 @@ namespace Duality
 		/// Performs a linear interpolation between the Ranges minimum and maximum value using the specified blend factor.
 		/// </summary>
 		/// <param name="ratio"></param>
-		public float Lerp(float ratio)
+		public double Lerp(double ratio)
 		{
 			return MathF.Lerp(this.MinValue, this.MaxValue, ratio);
 		}
@@ -89,7 +89,7 @@ namespace Duality
 		/// Returns whether this Range contains a certain value.
 		/// </summary>
 		/// <param name="value"></param>
-		public bool Contains(float value)
+		public bool Contains(double value)
 		{
 			return this.MinValue <= value && this.MaxValue >= value;
 		}
@@ -192,7 +192,7 @@ namespace Duality
 		/// Performs an implicit conversion from a single value to a ranged value.
 		/// </summary>
 		/// <param name="value"></param>
-		public static implicit operator Range(float value)
+		public static implicit operator Range(double value)
 		{
 			return new Range(value);
 		}

@@ -87,7 +87,7 @@ namespace Duality.Components
 		public float FieldOfView
 		{
 			get { return this.Fov; }
-			set { this.Fov = MathF.Max(value, 1f); }
+			set { this.Fov = (float)MathF.Max(value, 1f); }
 		}
 		/// <summary>
 		/// [GET / SET] Orthographic projection mode size
@@ -141,7 +141,7 @@ namespace Duality.Components
 			if (composer == null) SetupComposer();
 
 			// Update Gizmos, so any call to gizmos will be processed
-			DualityApp.Gizmos.Update(Scene.ThreeScene);
+			DualityApp.Gizmos.Update(Scene.ThreeScene, this);
 
 			composer.Render(Scene.ThreeScene, GetTHREECamera());
 			//DualityApp.GraphicsBackend.Render(Scene.ThreeScene, GetTHREECamera());
@@ -183,10 +183,10 @@ namespace Duality.Components
 			cachedCamera.Aspect = DualityApp.GraphicsBackend.AspectRatio;
 			cachedCamera.Near = NearZ;
 			cachedCamera.Far = FarZ;
-			cachedCamera.Position.X = this.GameObj.Transform.Pos.X;
-			cachedCamera.Position.Y = this.GameObj.Transform.Pos.Y;
-			cachedCamera.Position.Z = this.GameObj.Transform.Pos.Z;
-			cachedCamera.Rotation.Set(this.GameObj.Transform.Rotation.X, this.GameObj.Transform.Rotation.Y, this.GameObj.Transform.Rotation.Z, THREE.Math.RotationOrder.YXZ);
+			cachedCamera.Position.X = (float)this.GameObj.Transform.Pos.X;
+			cachedCamera.Position.Y = (float)this.GameObj.Transform.Pos.Y;
+			cachedCamera.Position.Z = (float)this.GameObj.Transform.Pos.Z;
+			cachedCamera.Rotation.Set((float)this.GameObj.Transform.Rotation.X, (float)this.GameObj.Transform.Rotation.Y, (float)this.GameObj.Transform.Rotation.Z, THREE.Math.RotationOrder.YXZ);
 			cachedCamera.UpdateProjectionMatrix();
 			return cachedCamera;
 		}

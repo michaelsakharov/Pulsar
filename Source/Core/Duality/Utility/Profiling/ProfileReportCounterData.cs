@@ -7,7 +7,7 @@ namespace Duality
 {
 	public struct ProfileReportCounterData
 	{
-		public float  Severity;
+		public double Severity;
 		public string LastValue;
 		public string AverageValue;
 		public string MinValue;

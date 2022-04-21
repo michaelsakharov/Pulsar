@@ -13,7 +13,7 @@ namespace Duality
 		public static Vector2 Apply(this TargetResize mode, Vector2 baseSize, Vector2 targetSize)
 		{
 			Vector2 sizeRatio;
-			float scale;
+			double scale;
 			switch (mode)
 			{
 				default:

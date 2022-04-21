@@ -20,8 +20,6 @@ namespace Duality
 		private TargetResize            forcedRenderResizeMode = TargetResize.Fit;
 		private float                   speedOfSound           = 360.0f;
 		private float                   soundDopplerFactor     = 1.0f;
-		private float                   physicsVelThreshold    = 0.5f * PhysicsUnit.VelocityToDuality;
-		private bool                    physicsFixedTime       = false;
 		private bool                    multisampleBackBuffer  = true;
 		private string[]                skipBackends           = null;
 		private object                  customData             = null;
@@ -87,23 +85,6 @@ namespace Duality
 		{
 			get { return this.soundDopplerFactor; }
 			set { this.soundDopplerFactor = value; }
-		}
-		/// <summary>
-		/// [GET / SET] Any velocity below this value will be resolved using inelastic equations i.e. won't lead to "bouncing".
-		/// </summary>
-		public float PhysicsVelocityThreshold
-		{
-			get { return this.physicsVelThreshold; }
-			set { this.physicsVelThreshold = value; }
-		}
-		/// <summary>
-		/// [GET / SET] Does the physics simulation use fixed time steps? However, this setting may be overwritten dynamically due
-		/// to frame timing restrictions. To check whether fixed-timestep physics is currently active, use <see cref="Duality.Components.Physics.PhysicsWorld.IsFixedTimestep"/>.
-		/// </summary>
-		public bool PhysicsFixedTime
-		{
-			get { return this.physicsFixedTime; }
-			set { this.physicsFixedTime = value; }
 		}
 		/// <summary>
 		/// [GET / SET] Determines whether or not the backbuffer uses multisampling based on <see cref="DualityUserData.AntialiasingQuality"/>.

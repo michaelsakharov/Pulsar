@@ -22,14 +22,14 @@ namespace Duality
 
         public const int CornerCount = 8;
 
-		public Vector3 Center { get { return (this.Min + this.Max) / 2.0f; } }
+		public Vector3 Center { get { return (this.Min + this.Max) / 2.0; } }
 		public Vector3 Size { get { return new Vector3(Width, Height, Depth); } }
 
-		public float Width { get { return this.Max.X - this.Min.X; } }
+		public double Width { get { return this.Max.X - this.Min.X; } }
 
-		public float Height { get { return this.Max.Y - this.Min.Y; } }
+		public double Height { get { return this.Max.Y - this.Min.Y; } }
 
-		public float Depth { get { return this.Max.Z - this.Min.Z; } }
+		public double Depth { get { return this.Max.Z - this.Min.Z; } }
 		#endregion Public Fields
 
 
@@ -232,8 +232,8 @@ namespace Duality
                 result = ContainmentType.Contains;
         }
 
-        private static readonly Vector3 MaxVector3 = new Vector3(float.MaxValue);
-        private static readonly Vector3 MinVector3 = new Vector3(float.MinValue);
+        private static readonly Vector3 MaxVector3 = new Vector3(double.MaxValue);
+        private static readonly Vector3 MinVector3 = new Vector3(double.MinValue);
 
         /// <summary>
         /// Create a bounding box from the given list of points.
@@ -290,7 +290,7 @@ namespace Duality
 
 		public static void CreateFromCenterSize(Vector3 center,  Vector3 size, out BoundingBox result)
 		{
-			var halfSize = size / 2f;
+			var halfSize = size / 2;
 			result.Min = center - halfSize;
 			result.Max = center + halfSize;
 		}
@@ -493,7 +493,7 @@ namespace Duality
             }
 
 			// Inline Vector3.Dot(plane.Normal, negativeVertex) + plane.D;
-			float distance = plane.Normal.X * negativeVertex.X + plane.Normal.Y * negativeVertex.Y + plane.Normal.Z * negativeVertex.Z + plane.D;
+			double distance = plane.Normal.X * negativeVertex.X + plane.Normal.Y * negativeVertex.Y + plane.Normal.Z * negativeVertex.Z + plane.D;
             if (distance > 0)
             {
                 result = PlaneIntersectionType.Front;
@@ -511,12 +511,12 @@ namespace Duality
             result = PlaneIntersectionType.Intersecting;
         }
 
-        public Nullable<float> Intersects(Ray ray)
+        public Nullable<double> Intersects(Ray ray)
         {
             return ray.Intersects(this);
         }
 
-        public void Intersects(ref Ray ray, out Nullable<float> result)
+        public void Intersects(ref Ray ray, out Nullable<double> result)
         {
             result = this.Intersects(ray);
         }

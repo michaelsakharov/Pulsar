@@ -57,17 +57,17 @@ namespace Duality
 		/// <summary>
 		/// The X component of the Vector2.
 		/// </summary>
-		public float X;
+		public double X;
 		/// <summary>
 		/// The Y component of the Vector2.
 		/// </summary>
-		public float Y;
+		public double Y;
 
 		/// <summary>
 		/// Constructs a new instance.
 		/// </summary>
 		/// <param name="value">The value that will initialize this instance.</param>
-		public Vector2(float value)
+		public Vector2(double value)
 		{
 			this.X = value;
 			this.Y = value;
@@ -77,7 +77,7 @@ namespace Duality
 		/// </summary>
 		/// <param name="x">The x coordinate of the net Vector2.</param>
 		/// <param name="y">The y coordinate of the net Vector2.</param>
-		public Vector2(float x, float y)
+		public Vector2(double x, double y)
 		{
 			this.X = x;
 			this.Y = y;
@@ -87,20 +87,20 @@ namespace Duality
 		/// </summary>
 		/// <param name="angle"></param>
 		/// <param name="length"></param>
-		public static Vector2 FromAngleLength(float angle, float length)
+		public static Vector2 FromAngleLength(double angle, double length)
 		{
-			return new Vector2((float)Math.Sin(angle) * length, (float)Math.Cos(angle) * -length);
+			return new Vector2((double)Math.Sin(angle) * length, (double)Math.Cos(angle) * -length);
 		}
 
 		/// <summary>
 		/// Gets the length (magnitude) of the vector.
 		/// </summary>
 		/// <seealso cref="LengthSquared"/>
-		public float Length
+		public double Length
 		{
 			get
 			{
-				return (float)System.Math.Sqrt(this.X * this.X + this.Y * this.Y);
+				return (double)System.Math.Sqrt(this.X * this.X + this.Y * this.Y);
 			}
 		}
 		/// <summary>
@@ -111,7 +111,7 @@ namespace Duality
 		/// for comparisons.
 		/// </remarks>
 		/// <see cref="Length"/>
-		public float LengthSquared
+		public double LengthSquared
 		{
 			get
 			{
@@ -121,11 +121,11 @@ namespace Duality
 		/// <summary>
 		/// Returns the vectors angle
 		/// </summary>
-		public float Angle
+		public double Angle
 		{
 			get
 			{
-				return (float)((Math.Atan2(this.Y, this.X) + Math.PI * 2.5) % (Math.PI * 2));
+				return (double)((Math.Atan2(this.Y, this.X) + Math.PI * 2.5) % (Math.PI * 2));
 			}
 		}
 
@@ -156,10 +156,10 @@ namespace Duality
 		{
 			get
 			{
-				float length = this.Length;
-				if (length < 1e-15f) return Vector2.Zero;
+				double length = this.Length;
+				if (length < 1e-15) return Vector2.Zero;
 
-				float scale = 1.0f / length;
+				double scale = 1.0 / length;
 				return new Vector2(
 					this.X * scale,
 					this.Y * scale);
@@ -169,7 +169,7 @@ namespace Duality
 		/// <summary>
 		/// Gets or sets the value at the index of the Vector.
 		/// </summary>
-		public float this[int index]
+		public double this[int index]
 		{
 			get
 			{
@@ -197,14 +197,14 @@ namespace Duality
 		/// </summary>
 		public void Normalize()
 		{
-			float length = this.Length;
-			if (length < 1e-15f)
+			double length = this.Length;
+			if (length < 1e-15)
 			{
 				this = Vector2.Zero;
 		}
 			else
 			{
-				float scale = 1.0f / length;
+				double scale = 1.0 / length;
 				this.X *= scale;
 				this.Y *= scale;
 			}
@@ -236,7 +236,7 @@ namespace Duality
 		/// <param name="vector">Left operand.</param>
 		/// <param name="scale">Right operand.</param>
 		/// <param name="result">Result of the operation.</param>
-		public static void Multiply(ref Vector2 vector, float scale, out Vector2 result)
+		public static void Multiply(ref Vector2 vector, double scale, out Vector2 result)
 		{
 			result = new Vector2(vector.X * scale, vector.Y * scale);
 		}
@@ -256,9 +256,9 @@ namespace Duality
 		/// <param name="vector">Left operand.</param>
 		/// <param name="scale">Right operand.</param>
 		/// <param name="result">Result of the operation.</param>
-		public static void Divide(ref Vector2 vector, float scale, out Vector2 result)
+		public static void Divide(ref Vector2 vector, double scale, out Vector2 result)
 		{
-			Multiply(ref vector, 1 / scale, out result);
+			Multiply(ref vector, 1.0 / scale, out result);
 		}
 		/// <summary>
 		/// Divide a vector by the components of a vector (scale).
@@ -325,7 +325,7 @@ namespace Duality
 		/// <param name="left">First operand</param>
 		/// <param name="right">Second operand</param>
 		/// <returns>The dot product of the two inputs</returns>
-		public static float Dot(Vector2 left, Vector2 right)
+		public static double Dot(Vector2 left, Vector2 right)
 		{
 			return left.X * right.X + left.Y * right.Y;
 		}
@@ -335,7 +335,7 @@ namespace Duality
 		/// <param name="left">First operand</param>
 		/// <param name="right">Second operand</param>
 		/// <param name="result">The dot product of the two inputs</param>
-		public static void Dot(ref Vector2 left, ref Vector2 right, out float result)
+		public static void Dot(ref Vector2 left, ref Vector2 right, out double result)
 		{
 			result = left.X * right.X + left.Y * right.Y;
 		}
@@ -347,7 +347,7 @@ namespace Duality
 		/// <param name="b">Second input vector</param>
 		/// <param name="blend">The blend factor. a when blend=0, b when blend=1.</param>
 		/// <returns>a when blend=0, b when blend=1, and a linear combination otherwise</returns>
-		public static Vector2 Lerp(Vector2 a, Vector2 b, float blend)
+		public static Vector2 Lerp(Vector2 a, Vector2 b, double blend)
 		{
 			a.X = blend * (b.X - a.X) + a.X;
 			a.Y = blend * (b.Y - a.Y) + a.Y;
@@ -360,7 +360,7 @@ namespace Duality
 		/// <param name="b">Second input vector</param>
 		/// <param name="blend">The blend factor. a when blend=0, b when blend=1.</param>
 		/// <param name="result">a when blend=0, b when blend=1, and a linear combination otherwise</param>
-		public static void Lerp(ref Vector2 a, ref Vector2 b, float blend, out Vector2 result)
+		public static void Lerp(ref Vector2 a, ref Vector2 b, double blend, out Vector2 result)
 		{
 			result.X = blend * (b.X - a.X) + a.X;
 			result.Y = blend * (b.Y - a.Y) + a.Y;
@@ -373,9 +373,9 @@ namespace Duality
 		/// <param name="second">The second vector.</param>
 		/// <returns>Angle (in radians) between the vectors.</returns>
 		/// <remarks>Note that the returned angle is never bigger than the constant Pi.</remarks>
-		public static float AngleBetween(Vector2 first, Vector2 second)
+		public static double AngleBetween(Vector2 first, Vector2 second)
 		{
-			return (float)System.Math.Acos((Vector2.Dot(first, second)) / (first.Length * second.Length));
+			return (double)System.Math.Acos((Vector2.Dot(first, second)) / (first.Length * second.Length));
 		}
 		/// <summary>
 		/// Calculates the angle (in radians) between two vectors.
@@ -384,11 +384,11 @@ namespace Duality
 		/// <param name="second">The second vector.</param>
 		/// <param name="result">Angle (in radians) between the vectors.</param>
 		/// <remarks>Note that the returned angle is never bigger than the constant Pi.</remarks>
-		public static void AngleBetween(ref Vector2 first, ref Vector2 second, out float result)
+		public static void AngleBetween(ref Vector2 first, ref Vector2 second, out double result)
 		{
-			float temp;
+			double temp;
 			Vector2.Dot(ref first, ref second, out temp);
-			result = (float)System.Math.Acos(temp / (first.Length * second.Length));
+			result = (double)System.Math.Acos(temp / (first.Length * second.Length));
 		}
 
 		/// <summary>
@@ -482,7 +482,7 @@ namespace Duality
 		/// <param name="vec">Left operand.</param>
 		/// <param name="scale">Right operand.</param>
 		/// <returns>Result of multiplication.</returns>
-		public static Vector2 operator *(Vector2 vec, float scale)
+		public static Vector2 operator *(Vector2 vec, double scale)
 		{
 			return new Vector2(
 				vec.X * scale, 
@@ -494,7 +494,7 @@ namespace Duality
 		/// <param name="scale">Left operand.</param>
 		/// <param name="vec">Right operand.</param>
 		/// <returns>Result of multiplication.</returns>
-		public static Vector2 operator *(float scale, Vector2 vec)
+		public static Vector2 operator *(double scale, Vector2 vec)
 		{
 			return vec * scale;
 		}
@@ -516,7 +516,7 @@ namespace Duality
 		/// <param name="vec">Left operand</param>
 		/// <param name="scale">Right operand</param>
 		/// <returns>Result of the division.</returns>
-		public static Vector2 operator /(Vector2 vec, float scale)
+		public static Vector2 operator /(Vector2 vec, double scale)
 		{
 			return vec * (1.0f / scale);
 		}
@@ -555,7 +555,7 @@ namespace Duality
 
 		public static implicit operator THREE.Math.Vector2(Vector2 s)
 		{
-			return new THREE.Math.Vector2(s.X, s.Y);
+			return new THREE.Math.Vector2((float)s.X, (float)s.Y);
 		}
 
 		public static implicit operator Vector2(THREE.Math.Vector2 s)

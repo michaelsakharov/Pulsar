@@ -24,7 +24,7 @@ namespace Duality.Editor
 		{
 			this.inc = inc;
 		}
-		public EditorHintIncrementAttribute(float inc)
+		public EditorHintIncrementAttribute(double inc)
 		{
 			this.inc = (decimal)inc;
 		}

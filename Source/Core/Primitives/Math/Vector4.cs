@@ -64,19 +64,19 @@ namespace Duality
 		/// <summary>
 		/// The X component of the Vector4.
 		/// </summary>
-		public float X;
+		public double X;
 		/// <summary>
 		/// The Y component of the Vector4.
 		/// </summary>
-		public float Y;
+		public double Y;
 		/// <summary>
 		/// The Z component of the Vector4.
 		/// </summary>
-		public float Z;
+		public double Z;
 		/// <summary>
 		/// The W component of the Vector4.
 		/// </summary>
-		public float W;
+		public double W;
 
 		/// <summary>
 		/// Gets or sets an OpenTK.Vector2 with the X and Y components of this instance.
@@ -92,11 +92,11 @@ namespace Duality
 		/// Gets the length (magnitude) of the vector.
 		/// </summary>
 		/// <seealso cref="LengthSquared"/>
-		public float Length
+		public double Length
 		{
 			get
 			{
-				return (float)System.Math.Sqrt(
+				return (double)System.Math.Sqrt(
 					this.X * this.X + 
 					this.Y * this.Y + 
 					this.Z * this.Z + 
@@ -111,7 +111,7 @@ namespace Duality
 		/// for comparisons.
 		/// </remarks>
 		/// <see cref="Length"/>
-		public float LengthSquared
+		public double LengthSquared
 		{
 			get
 			{
@@ -129,10 +129,10 @@ namespace Duality
 		{
 			get
 			{
-				float length = this.Length;
-				if (length < 1e-15f) return Vector4.Zero;
+				double length = this.Length;
+				if (length < 1e-15) return Vector4.Zero;
 
-				float scale = 1.0f / length;
+				double scale = 1.0 / length;
 				return new Vector4(
 					this.X * scale, 
 					this.Y * scale, 
@@ -144,7 +144,7 @@ namespace Duality
 		/// <summary>
 		/// Gets or sets the value at the index of the Vector.
 		/// </summary>
-		public float this[int index]
+		public double this[int index]
 		{
 			get
 			{
@@ -175,14 +175,14 @@ namespace Duality
 		/// </summary>
 		public void Normalize()
 		{
-			float length = this.Length;
-			if (length < 1e-15f)
+			double length = this.Length;
+			if (length < 1e-15)
 			{
 				this = Vector4.Zero;
 		}
 			else
 			{
-				float scale = 1.0f / length;
+				double scale = 1.0 / length;
 				this.X *= scale;
 				this.Y *= scale;
 				this.Z *= scale;
@@ -194,7 +194,7 @@ namespace Duality
 		/// Constructs a new instance.
 		/// </summary>
 		/// <param name="value">The value that will initialize this instance.</param>
-		public Vector4(float value)
+		public Vector4(double value)
 		{
 			this.X = value;
 			this.Y = value;
@@ -208,7 +208,7 @@ namespace Duality
 		/// <param name="y">The y component of the Vector4.</param>
 		/// <param name="z">The z component of the Vector4.</param>
 		/// <param name="w">The w component of the Vector4.</param>
-		public Vector4(float x, float y, float z, float w)
+		public Vector4(double x, double y, double z, double w)
 		{
 			this.X = x;
 			this.Y = y;
@@ -231,7 +231,7 @@ namespace Duality
 		/// </summary>
 		/// <param name="v">The Vector2 to copy components from.</param>
 		/// <param name="z"></param>
-		public Vector4(Vector2 v, float z)
+		public Vector4(Vector2 v, double z)
 		{
 			this.X = v.X;
 			this.Y = v.Y;
@@ -244,7 +244,7 @@ namespace Duality
 		/// <param name="v">The Vector2 to copy components from.</param>
 		/// <param name="z"></param>
 		/// <param name="w"></param>
-		public Vector4(Vector2 v, float z, float w)
+		public Vector4(Vector2 v, double z, double w)
 		{
 			this.X = v.X;
 			this.Y = v.Y;
@@ -256,7 +256,7 @@ namespace Duality
 		/// The w component is initialized to 0.
 		/// </summary>
 		/// <param name="v">The Vector3 to copy components from.</param>
-		/// <remarks><seealso cref="Vector4(Vector3, float)"/></remarks>
+		/// <remarks><seealso cref="Vector4(Vector3, double)"/></remarks>
 		public Vector4(Vector3 v)
 		{
 			this.X = v.X;
@@ -269,7 +269,7 @@ namespace Duality
 		/// </summary>
 		/// <param name="v">The Vector3 to copy components from.</param>
 		/// <param name="w">The w component of the new Vector4.</param>
-		public Vector4(Vector3 v, float w)
+		public Vector4(Vector3 v, double w)
 		{
 			this.X = v.X;
 			this.Y = v.Y;
@@ -303,7 +303,7 @@ namespace Duality
 		/// <param name="vector">Left operand.</param>
 		/// <param name="scale">Right operand.</param>
 		/// <param name="result">Result of the operation.</param>
-		public static void Multiply(ref Vector4 vector, float scale, out Vector4 result)
+		public static void Multiply(ref Vector4 vector, double scale, out Vector4 result)
 		{
 			result = new Vector4(vector.X * scale, vector.Y * scale, vector.Z * scale, vector.W * scale);
 		}
@@ -323,7 +323,7 @@ namespace Duality
 		/// <param name="vector">Left operand.</param>
 		/// <param name="scale">Right operand.</param>
 		/// <param name="result">Result of the operation.</param>
-		public static void Divide(ref Vector4 vector, float scale, out Vector4 result)
+		public static void Divide(ref Vector4 vector, double scale, out Vector4 result)
 		{
 			Multiply(ref vector, 1 / scale, out result);
 		}
@@ -400,7 +400,7 @@ namespace Duality
 		/// <param name="left">First operand</param>
 		/// <param name="right">Second operand</param>
 		/// <returns>The dot product of the two inputs</returns>
-		public static float Dot(Vector4 left, Vector4 right)
+		public static double Dot(Vector4 left, Vector4 right)
 		{
 			return left.X * right.X + left.Y * right.Y + left.Z * right.Z + left.W * right.W;
 		}
@@ -410,7 +410,7 @@ namespace Duality
 		/// <param name="left">First operand</param>
 		/// <param name="right">Second operand</param>
 		/// <param name="result">The dot product of the two inputs</param>
-		public static void Dot(ref Vector4 left, ref Vector4 right, out float result)
+		public static void Dot(ref Vector4 left, ref Vector4 right, out double result)
 		{
 			result = left.X * right.X + left.Y * right.Y + left.Z * right.Z + left.W * right.W;
 		}
@@ -422,7 +422,7 @@ namespace Duality
 		/// <param name="b">Second input vector</param>
 		/// <param name="blend">The blend factor. a when blend=0, b when blend=1.</param>
 		/// <returns>a when blend=0, b when blend=1, and a linear combination otherwise</returns>
-		public static Vector4 Lerp(Vector4 a, Vector4 b, float blend)
+		public static Vector4 Lerp(Vector4 a, Vector4 b, double blend)
 		{
 			a.X = blend * (b.X - a.X) + a.X;
 			a.Y = blend * (b.Y - a.Y) + a.Y;
@@ -437,7 +437,7 @@ namespace Duality
 		/// <param name="b">Second input vector</param>
 		/// <param name="blend">The blend factor. a when blend=0, b when blend=1.</param>
 		/// <param name="result">a when blend=0, b when blend=1, and a linear combination otherwise</param>
-		public static void Lerp(ref Vector4 a, ref Vector4 b, float blend, out Vector4 result)
+		public static void Lerp(ref Vector4 a, ref Vector4 b, double blend, out Vector4 result)
 		{
 			result.X = blend * (b.X - a.X) + a.X;
 			result.Y = blend * (b.Y - a.Y) + a.Y;
@@ -543,7 +543,7 @@ namespace Duality
 		/// <param name="vec">The instance.</param>
 		/// <param name="scale">The scalar.</param>
 		/// <returns>The result of the calculation.</returns>
-		public static Vector4 operator *(Vector4 vec, float scale)
+		public static Vector4 operator *(Vector4 vec, double scale)
 		{
 			return new Vector4(
 				vec.X * scale, 
@@ -571,7 +571,7 @@ namespace Duality
 		/// <param name="scale">The scalar.</param>
 		/// <param name="vec">The instance.</param>
 		/// <returns>The result of the calculation.</returns>
-		public static Vector4 operator *(float scale, Vector4 vec)
+		public static Vector4 operator *(double scale, Vector4 vec)
 		{
 			return vec * scale;
 		}
@@ -581,7 +581,7 @@ namespace Duality
 		/// <param name="vec">The instance.</param>
 		/// <param name="scale">The scalar.</param>
 		/// <returns>The result of the calculation.</returns>
-		public static Vector4 operator /(Vector4 vec, float scale)
+		public static Vector4 operator /(Vector4 vec, double scale)
 		{
 			return vec * (1.0f / scale);
 		}
@@ -622,7 +622,7 @@ namespace Duality
 
 		public static implicit operator THREE.Math.Vector4(Vector4 s)
 		{
-			return new THREE.Math.Vector4(s.X, s.Y, s.Z, s.W);
+			return new THREE.Math.Vector4((float)s.X, (float)s.Y, (float)s.Z, (float)s.W);
 		}
 
 		public static implicit operator Vector4(THREE.Math.Vector4 s)

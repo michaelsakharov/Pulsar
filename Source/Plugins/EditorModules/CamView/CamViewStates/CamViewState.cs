@@ -319,7 +319,7 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 			GameObject camObj = this.CameraObj;
 			Point cursorPos = this.PointToClient(Cursor.Position);
 
-			float unscaledTimeMult = Time.TimeMult / Time.TimeScale;
+			double unscaledTimeMult = Time.TimeMult / Time.TimeScale;
 
 			this.camTransformChanged = false;
 			
@@ -329,7 +329,7 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 				Vector2 lastPos = new Vector2(this.camActionBeginLoc.X, this.camActionBeginLoc.Y);
 				this.camActionBeginLoc = new Point((int)curPos.X, (int)curPos.Y);
 
-				float refZ = (this.HasCameraFocusPosition && camObj.Transform.Pos.Z < this.CameraFocusPosition.Z - cam.NearZ) ? this.CameraFocusPosition.Z : 0.0f;
+				double refZ = (this.HasCameraFocusPosition && camObj.Transform.Pos.Z < this.CameraFocusPosition.Z - cam.NearZ) ? this.CameraFocusPosition.Z : 0.0f;
 				//if (camObj.Transform.Pos.Z >= refZ - cam.NearZ)
 				//	refZ = camObj.Transform.Pos.Z + MathF.Abs(cam.FocusDist);
 
@@ -364,8 +364,8 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 				Vector2 mouseVec = new Vector2(cursorPos.X - this.camActionBeginLoc.X, cursorPos.Y - this.camActionBeginLoc.Y);
 				this.camActionBeginLoc = cursorPos; // Update Begic Mouse Pos
 
-				this._currentYaw += mouseVec.X * 0.01f;
-				this._currentPitch += mouseVec.Y * 0.01f;
+				this._currentYaw += (float)mouseVec.X * 0.01f;
+				this._currentPitch += (float)mouseVec.Y * 0.01f;
 
 				//camObj.Transform.Rotation = new Vector3(this._currentYaw, this._currentPitch, 0f);
 				camObj.Transform.Rotation = Quaternion.CreateFromYawPitchRoll(this._currentYaw, this._currentPitch, 0f).EulerAngles;
@@ -652,7 +652,7 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 				if (this.View.Orthographic == false)
 				{
 					GameObject camObj = this.CameraObj;
-					float curVel = this.camVel.Length * MathF.Sign(this.camVel.Z);
+					double curVel = this.camVel.Length * MathF.Sign(this.camVel.Z);
 					Vector2 curTemp = new Vector2(
 						(e.X * 2.0f / this.ClientSize.Width) - 1.0f,
 						(e.Y * 2.0f / this.ClientSize.Height) - 1.0f);

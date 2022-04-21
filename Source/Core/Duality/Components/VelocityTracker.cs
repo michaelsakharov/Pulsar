@@ -52,7 +52,7 @@ namespace Duality.Components
 		void ICmpUpdatable.OnUpdate()
 		{
 			// Calculate velocity values from last frames movement
-			if (MathF.Abs(Time.TimeMult) > float.Epsilon)
+			if (MathF.Abs(Time.TimeMult) > (float.Epsilon))
 			{
 				Transform transform = this.GameObj.Transform;
 				Vector3 pos = transform.Pos;

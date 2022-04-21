@@ -80,43 +80,43 @@ namespace Duality
 		/// <summary>
 		/// Gets or sets the value at row 1, column 1 of this instance.
 		/// </summary>
-		public float M11 { get { return this.Row0.X; } set { this.Row0.X = value; } }
+		public double M11 { get { return this.Row0.X; } set { this.Row0.X = value; } }
 		/// <summary>
 		/// Gets or sets the value at row 1, column 2 of this instance.
 		/// </summary>
-		public float M12 { get { return this.Row0.Y; } set { this.Row0.Y = value; } }
+		public double M12 { get { return this.Row0.Y; } set { this.Row0.Y = value; } }
 		/// <summary>
 		/// Gets or sets the value at row 1, column 3 of this instance.
 		/// </summary>
-		public float M13 { get { return this.Row0.Z; } set { this.Row0.Z = value; } }
+		public double M13 { get { return this.Row0.Z; } set { this.Row0.Z = value; } }
 		/// <summary>
 		/// Gets or sets the value at row 2, column 1 of this instance.
 		/// </summary>
-		public float M21 { get { return this.Row1.X; } set { this.Row1.X = value; } }
+		public double M21 { get { return this.Row1.X; } set { this.Row1.X = value; } }
 		/// <summary>
 		/// Gets or sets the value at row 2, column 2 of this instance.
 		/// </summary>
-		public float M22 { get { return this.Row1.Y; } set { this.Row1.Y = value; } }
+		public double M22 { get { return this.Row1.Y; } set { this.Row1.Y = value; } }
 		/// <summary>
 		/// Gets or sets the value at row 2, column 3 of this instance.
 		/// </summary>
-		public float M23 { get { return this.Row1.Z; } set { this.Row1.Z = value; } }
+		public double M23 { get { return this.Row1.Z; } set { this.Row1.Z = value; } }
 		/// <summary>
 		/// Gets or sets the value at row 3, column 1 of this instance.
 		/// </summary>
-		public float M31 { get { return this.Row2.X; } set { this.Row2.X = value; } }
+		public double M31 { get { return this.Row2.X; } set { this.Row2.X = value; } }
 		/// <summary>
 		/// Gets or sets the value at row 3, column 2 of this instance.
 		/// </summary>
-		public float M32 { get { return this.Row2.Y; } set { this.Row2.Y = value; } }
+		public double M32 { get { return this.Row2.Y; } set { this.Row2.Y = value; } }
 		/// <summary>
 		/// Gets or sets the value at row 3, column 3 of this instance.
 		/// </summary>
-		public float M33 { get { return this.Row2.Z; } set { this.Row2.Z = value; } }
+		public double M33 { get { return this.Row2.Z; } set { this.Row2.Z = value; } }
 		/// <summary>
 		/// Gets or sets the value at a specified row and column.
 		/// </summary>
-		public float this[int rowIndex, int columnIndex]
+		public double this[int rowIndex, int columnIndex]
 		{
 			get
 			{
@@ -136,11 +136,11 @@ namespace Duality
 		/// <summary>
 		/// Gets the determinant of this matrix.
 		/// </summary>
-		public float Determinant
+		public double Determinant
 		{
 			get
 			{
-				float m11 = this.Row0.X, m12 = this.Row0.Y, m13 = this.Row0.Z,
+				double m11 = this.Row0.X, m12 = this.Row0.Y, m13 = this.Row0.Z,
 				m21 = this.Row1.X, m22 = this.Row1.Y, m23 = this.Row1.Z,
 				m31 = this.Row2.X, m32 = this.Row2.Y, m33 = this.Row2.Z;
                 
@@ -167,7 +167,7 @@ namespace Duality
 		/// <summary>
 		/// Gets the trace of the matrix, the sum of the values along the diagonal.
 		/// </summary>
-		public float Trace { get { return this.Row0.X + this.Row1.Y + this.Row2.Z; } }
+		public double Trace { get { return this.Row0.X + this.Row1.Y + this.Row2.Z; } }
 
 
 		/// <summary>
@@ -195,9 +195,9 @@ namespace Duality
 		/// <param name="m21">Second item of the third row of the matrix.</param>
 		/// <param name="m22">Third item of the third row of the matrix.</param>
 		public Matrix3(
-			float m00, float m01, float m02,
-			float m10, float m11, float m12,
-			float m20, float m21, float m22)
+			double m00, double m01, double m02,
+			double m10, double m11, double m12,
+			double m20, double m21, double m22)
 		{
 			this.Row0 = new Vector3(m00, m01, m02);
 			this.Row1 = new Vector3(m10, m11, m12);
@@ -233,7 +233,7 @@ namespace Duality
 		/// </summary>
 		public void Normalize()
 		{
-			float determinant = this.Determinant;
+			double determinant = this.Determinant;
 			this.Row0 /= determinant;
 			this.Row1 /= determinant;
 			this.Row2 /= determinant;
@@ -312,41 +312,41 @@ namespace Duality
 			{
 				double sq = Math.Sqrt(trace);
 
-				q.W = (float)sq;
+				q.W = (double)sq;
 				sq = 1.0 / (4.0 * sq);
-				q.X = (float)((row1[2] - row2[1]) * sq);
-				q.Y = (float)((row2[0] - row0[2]) * sq);
-				q.Z = (float)((row0[1] - row1[0]) * sq);
+				q.X = (double)((row1[2] - row2[1]) * sq);
+				q.Y = (double)((row2[0] - row0[2]) * sq);
+				q.Z = (double)((row0[1] - row1[0]) * sq);
 			}
 			else if (row0[0] > row1[1] && row0[0] > row2[2])
 			{
 				double sq = 2.0 * Math.Sqrt(1.0 + row0[0] - row1[1] - row2[2]);
 
-				q.X = (float)(0.25 * sq);
+				q.X = (double)(0.25 * sq);
 				sq = 1.0 / sq;
-				q.W = (float)((row2[1] - row1[2]) * sq);
-				q.Y = (float)((row1[0] + row0[1]) * sq);
-				q.Z = (float)((row2[0] + row0[2]) * sq);
+				q.W = (double)((row2[1] - row1[2]) * sq);
+				q.Y = (double)((row1[0] + row0[1]) * sq);
+				q.Z = (double)((row2[0] + row0[2]) * sq);
 			}
 			else if (row1[1] > row2[2])
 			{
 				double sq = 2.0 * Math.Sqrt(1.0 + row1[1] - row0[0] - row2[2]);
 
-				q.Y = (float)(0.25 * sq);
+				q.Y = (double)(0.25 * sq);
 				sq = 1.0 / sq;
-				q.W = (float)((row2[0] - row0[2]) * sq);
-				q.X = (float)((row1[0] + row0[1]) * sq);
-				q.Z = (float)((row2[1] + row1[2]) * sq);
+				q.W = (double)((row2[0] - row0[2]) * sq);
+				q.X = (double)((row1[0] + row0[1]) * sq);
+				q.Z = (double)((row2[1] + row1[2]) * sq);
 			}
 			else
 			{
 				double sq = 2.0 * Math.Sqrt(1.0 + row2[2] - row0[0] - row1[1]);
 
-				q.Z = (float)(0.25 * sq);
+				q.Z = (double)(0.25 * sq);
 				sq = 1.0 / sq;
-				q.W = (float)((row1[0] - row0[1]) * sq);
-				q.X = (float)((row2[0] + row0[2]) * sq);
-				q.Y = (float)((row2[1] + row1[2]) * sq);
+				q.W = (double)((row1[0] - row0[1]) * sq);
+				q.X = (double)((row2[0] + row0[2]) * sq);
+				q.Y = (double)((row2[1] + row1[2]) * sq);
 			}
 
 			q.Normalize();
@@ -359,26 +359,26 @@ namespace Duality
 		/// <param name="axis">The axis to rotate about.</param>
 		/// <param name="angle">Angle in radians to rotate counter-clockwise (looking in the direction of the given axis).</param>
 		/// <param name="result">A matrix instance.</param>
-		public static void CreateFromAxisAngle(Vector3 axis, float angle, out Matrix3 result)
+		public static void CreateFromAxisAngle(Vector3 axis, double angle, out Matrix3 result)
 		{
 			//normalize and create a local copy of the vector.
 			axis.Normalize();
-			float axisX = axis.X, axisY = axis.Y, axisZ = axis.Z;
+			double axisX = axis.X, axisY = axis.Y, axisZ = axis.Z;
             
 			//calculate angles
-			float cos = (float)System.Math.Cos(-angle);
-			float sin = (float)System.Math.Sin(-angle);
-			float t = 1.0f - cos;
+			double cos = (double)System.Math.Cos(-angle);
+			double sin = (double)System.Math.Sin(-angle);
+			double t = 1.0 - cos;
             
 			//do the conversion math once
-			float tXX = t * axisX * axisX,
+			double tXX = t * axisX * axisX,
 			tXY = t * axisX * axisY,
 			tXZ = t * axisX * axisZ,
 			tYY = t * axisY * axisY,
 			tYZ = t * axisY * axisZ,
 			tZZ = t * axisZ * axisZ;
             
-			float sinX = sin * axisX,
+			double sinX = sin * axisX,
 			sinY = sin * axisY,
 			sinZ = sin * axisZ;
             
@@ -398,7 +398,7 @@ namespace Duality
 		/// <param name="axis">The axis to rotate about.</param>
 		/// <param name="angle">Angle in radians to rotate counter-clockwise (looking in the direction of the given axis).</param>
 		/// <returns>A matrix instance.</returns>
-		public static Matrix3 CreateFromAxisAngle(Vector3 axis, float angle)
+		public static Matrix3 CreateFromAxisAngle(Vector3 axis, double angle)
 		{
 			Matrix3 result;
 			CreateFromAxisAngle(axis, angle, out result);
@@ -413,7 +413,7 @@ namespace Duality
 		public static void CreateFromQuaternion(ref Quaternion q, out Matrix3 result)
 		{
 			Vector3 axis;
-			float angle;
+			double angle;
 			q.ToAxisAngle(out axis, out angle);
 			CreateFromAxisAngle(axis, angle, out result);
 		}
@@ -434,10 +434,10 @@ namespace Duality
 		/// </summary>
 		/// <param name="angle">The counter-clockwise angle in radians.</param>
 		/// <param name="result">The resulting Matrix3 instance.</param>
-		public static void CreateRotationX(float angle, out Matrix3 result)
+		public static void CreateRotationX(double angle, out Matrix3 result)
 		{
-			float cos = (float)System.Math.Cos(angle);
-			float sin = (float)System.Math.Sin(angle);
+			double cos = (double)System.Math.Cos(angle);
+			double sin = (double)System.Math.Sin(angle);
             
 			result = Identity;
 			result.Row1.Y = cos;
@@ -450,7 +450,7 @@ namespace Duality
 		/// </summary>
 		/// <param name="angle">The counter-clockwise angle in radians.</param>
 		/// <returns>The resulting Matrix3 instance.</returns>
-		public static Matrix3 CreateRotationX(float angle)
+		public static Matrix3 CreateRotationX(double angle)
 		{
 			Matrix3 result;
 			CreateRotationX(angle, out result);
@@ -462,10 +462,10 @@ namespace Duality
 		/// </summary>
 		/// <param name="angle">The counter-clockwise angle in radians.</param>
 		/// <param name="result">The resulting Matrix3 instance.</param>
-		public static void CreateRotationY(float angle, out Matrix3 result)
+		public static void CreateRotationY(double angle, out Matrix3 result)
 		{
-			float cos = (float)System.Math.Cos(angle);
-			float sin = (float)System.Math.Sin(angle);
+			double cos = (double)System.Math.Cos(angle);
+			double sin = (double)System.Math.Sin(angle);
             
 			result = Identity;
 			result.Row0.X = cos;
@@ -478,7 +478,7 @@ namespace Duality
 		/// </summary>
 		/// <param name="angle">The counter-clockwise angle in radians.</param>
 		/// <returns>The resulting Matrix3 instance.</returns>
-		public static Matrix3 CreateRotationY(float angle)
+		public static Matrix3 CreateRotationY(double angle)
 		{
 			Matrix3 result;
 			CreateRotationY(angle, out result);
@@ -490,10 +490,10 @@ namespace Duality
 		/// </summary>
 		/// <param name="angle">The counter-clockwise angle in radians.</param>
 		/// <param name="result">The resulting Matrix3 instance.</param>
-		public static void CreateRotationZ(float angle, out Matrix3 result)
+		public static void CreateRotationZ(double angle, out Matrix3 result)
 		{
-			float cos = (float)System.Math.Cos(angle);
-			float sin = (float)System.Math.Sin(angle);
+			double cos = (double)System.Math.Cos(angle);
+			double sin = (double)System.Math.Sin(angle);
             
 			result = Identity;
 			result.Row0.X = cos;
@@ -506,7 +506,7 @@ namespace Duality
 		/// </summary>
 		/// <param name="angle">The counter-clockwise angle in radians.</param>
 		/// <returns>The resulting Matrix3 instance.</returns>
-		public static Matrix3 CreateRotationZ(float angle)
+		public static Matrix3 CreateRotationZ(double angle)
 		{
 			Matrix3 result;
 			CreateRotationZ(angle, out result);
@@ -518,7 +518,7 @@ namespace Duality
 		/// </summary>
 		/// <param name="scale">Single scale factor for the x, y, and z axes.</param>
 		/// <returns>A scale matrix.</returns>
-		public static Matrix3 CreateScale(float scale)
+		public static Matrix3 CreateScale(double scale)
 		{
 			Matrix3 result;
 			CreateScale(scale, out result);
@@ -542,7 +542,7 @@ namespace Duality
 		/// <param name="y">Scale factor for the y axis.</param>
 		/// <param name="z">Scale factor for the z axis.</param>
 		/// <returns>A scale matrix.</returns>
-		public static Matrix3 CreateScale(float x, float y, float z)
+		public static Matrix3 CreateScale(double x, double y, double z)
 		{
 			Matrix3 result;
 			CreateScale(x, y, z, out result);
@@ -553,7 +553,7 @@ namespace Duality
 		/// </summary>
 		/// <param name="scale">Single scale factor for the x, y, and z axes.</param>
 		/// <param name="result">A scale matrix.</param>
-		public static void CreateScale(float scale, out Matrix3 result)
+		public static void CreateScale(double scale, out Matrix3 result)
 		{
 			result = Identity;
 			result.Row0.X = scale;
@@ -579,7 +579,7 @@ namespace Duality
 		/// <param name="y">Scale factor for the y axis.</param>
 		/// <param name="z">Scale factor for the z axis.</param>
 		/// <param name="result">A scale matrix.</param>
-		public static void CreateScale(float x, float y, float z, out Matrix3 result)
+		public static void CreateScale(double x, double y, double z, out Matrix3 result)
 		{
 			result = Identity;
 			result.Row0.X = x;
@@ -607,7 +607,7 @@ namespace Duality
 		/// <param name="result">A new instance that is the result of the multiplication</param>
 		public static void Mult(ref Matrix3 left, ref Matrix3 right, out Matrix3 result)
 		{
-			float   lM11 = left.Row0.X, lM12 = left.Row0.Y, lM13 = left.Row0.Z,
+			double   lM11 = left.Row0.X, lM12 = left.Row0.Y, lM13 = left.Row0.Z,
 			lM21 = left.Row1.X, lM22 = left.Row1.Y, lM23 = left.Row1.Z,
 			lM31 = left.Row2.X, lM32 = left.Row2.Y, lM33 = left.Row2.Z,
 			rM11 = right.Row0.X, rM12 = right.Row0.Y, rM13 = right.Row0.Z,
@@ -637,7 +637,7 @@ namespace Duality
 			int[] rowIdx = { 0, 0, 0 };
 			int[] pivotIdx = { -1, -1, -1 };
             
-			float[,] inverse = {{mat.Row0.X, mat.Row0.Y, mat.Row0.Z},
+			double[,] inverse = {{mat.Row0.X, mat.Row0.Y, mat.Row0.Z},
 				{mat.Row1.X, mat.Row1.Y, mat.Row1.Z},
 				{mat.Row2.X, mat.Row2.Y, mat.Row2.Z}};
             
@@ -645,7 +645,7 @@ namespace Duality
 			int irow = 0;
 			for (int i = 0; i < 3; i++)
 			{
-				float maxPivot = 0.0f;
+				double maxPivot = 0.0;
 				for (int j = 0; j < 3; j++)
 				{
 					if (pivotIdx[j] != 0)
@@ -654,7 +654,7 @@ namespace Duality
 						{
 							if (pivotIdx[k] == -1)
 							{
-								float absVal = System.Math.Abs(inverse[j, k]);
+								double absVal = System.Math.Abs(inverse[j, k]);
 								if (absVal > maxPivot)
 								{
 									maxPivot = absVal;
@@ -677,7 +677,7 @@ namespace Duality
 				{
 					for (int k = 0; k < 3; ++k)
 					{
-						float f = inverse[irow, k];
+						double f = inverse[irow, k];
 						inverse[irow, k] = inverse[icol, k];
 						inverse[icol, k] = f;
 					}
@@ -686,15 +686,15 @@ namespace Duality
 				rowIdx[i] = irow;
 				colIdx[i] = icol;
                 
-				float pivot = inverse[icol, icol];
+				double pivot = inverse[icol, icol];
                 
-				if (pivot == 0.0f)
+				if (pivot == 0.0)
 				{
 					throw new InvalidOperationException("Matrix is singular and cannot be inverted.");
 				}
                 
-				float oneOverPivot = 1.0f / pivot;
-				inverse[icol, icol] = 1.0f;
+				double oneOverPivot = 1.0 / pivot;
+				inverse[icol, icol] = 1.0;
 				for (int k = 0; k < 3; ++k)
 					inverse[icol, k] *= oneOverPivot;
                 
@@ -702,8 +702,8 @@ namespace Duality
 				{
 					if (icol != j)
 					{
-						float f = inverse[j, icol];
-						inverse[j, icol] = 0.0f;
+						double f = inverse[j, icol];
+						inverse[j, icol] = 0.0;
 						for (int k = 0; k < 3; ++k)
 							inverse[j, k] -= inverse[icol, k] * f;
 					}
@@ -716,7 +716,7 @@ namespace Duality
 				int ic = colIdx[j];
 				for (int k = 0; k < 3; ++k)
 				{
-					float f = inverse[k, ir];
+					double f = inverse[k, ir];
 					inverse[k, ir] = inverse[k, ic];
 					inverse[k, ic] = f;
 				}

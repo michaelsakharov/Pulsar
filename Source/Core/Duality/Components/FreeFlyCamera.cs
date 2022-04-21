@@ -22,21 +22,21 @@ namespace Duality.Components
 
 		private float _currentYaw;
 		private float _currentPitch;
-		private float normalSpeed = 1;
-		private float fastSpeed = 10;
-		private float veryfastSpeed = 100;
+		private double normalSpeed = 1;
+		private double fastSpeed = 10;
+		private double veryfastSpeed = 100;
 		private Vector3 camVel;
 
 		void ICmpUpdatable.OnUpdate()
 		{
-			float speed = normalSpeed;
+			double speed = normalSpeed;
 			if (DualityApp.Keyboard.KeyPressed(Input.Key.ShiftLeft)) speed = fastSpeed;
 			if (DualityApp.Keyboard.KeyPressed(Input.Key.ControlLeft)) speed = veryfastSpeed;
 
 			if (DualityApp.Mouse.ButtonPressed(Input.MouseButton.Right))
 			{
-				this._currentYaw += DualityApp.Mouse.Vel.X * 0.01f;
-				this._currentPitch += DualityApp.Mouse.Vel.Y * 0.01f;
+				this._currentYaw += (float)(DualityApp.Mouse.Vel.X * 0.01);
+				this._currentPitch += (float)(DualityApp.Mouse.Vel.Y * 0.01);
 
 				//camObj.Transform.Rotation = new Vector3(this._currentYaw, this._currentPitch, 0f);
 				this.GameObj.Transform.Rotation = Quaternion.CreateFromYawPitchRoll(this._currentYaw, this._currentPitch, 0f).EulerAngles;

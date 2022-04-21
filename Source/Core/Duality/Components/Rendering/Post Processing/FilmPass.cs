@@ -40,7 +40,7 @@ namespace Duality.Postprocessing
 		public override void Render(GLRenderTarget writeBuffer, GLRenderTarget readBuffer, bool? maskActive = null)
 		{
 			(this.uniforms["tDiffuse"] as GLUniform)["value"] = readBuffer.Texture;
-			float currentDeltaTime = (float)(this.uniforms["time"] as GLUniform)["value"] + Time.DeltaTime;
+			float currentDeltaTime = (float)(this.uniforms["time"] as GLUniform)["value"] + (float)Time.DeltaTime;
 			(this.uniforms["time"] as GLUniform)["value"] = currentDeltaTime;
 
 			if (this.Clear) DualityApp.GraphicsBackend.Clear();

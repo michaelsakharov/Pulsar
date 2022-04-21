@@ -185,7 +185,7 @@ namespace Duality.Launcher
 				while (this.frameLimiterWatch.Elapsed.TotalMilliseconds < Time.MillisecondsPerFrame)
 				{
 					// Enough leftover time? Risk a short sleep, don't burn CPU waiting.
-					if (this.frameLimiterWatch.Elapsed.TotalMilliseconds < Time.MillisecondsPerFrame * 0.75f)
+					if (this.frameLimiterWatch.Elapsed.TotalMilliseconds < Time.MillisecondsPerFrame * 0.75)
 						System.Threading.Thread.Sleep(0);
 				}
 			}

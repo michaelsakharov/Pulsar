@@ -79,10 +79,10 @@ namespace Duality.Editor.Plugins.CamView
 		/// Snaps the specified size value according to match this editing guide.
 		/// </summary>
 		/// <param name="size"></param>
-		public float SnapSize(float size)
+		public double SnapSize(double size)
 		{
-			float snapOrigin = 1.0f;
-			float snapStep = 0.001f;
+			double snapOrigin = 1.0f;
+			double snapStep = 0.001f;
 			if (this.gridSize.X > snapStep)
 			{
 				snapStep = this.gridSize.X;

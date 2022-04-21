@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Duality.Components;
 using THREE;
 using THREE.Core;
 using THREE.Materials;
@@ -23,6 +24,8 @@ namespace Duality.DebugDraw
 
 		public BufferGeometry ConstructGeometry()
 		{
+			// TODO: Use Currently rendering camera and offset to Local Pos/Rotation
+
 			List<float> positions = new List<float>();
 			List<float> colors = new List<float>();
 			List<int> indices = new List<int>();
@@ -38,9 +41,9 @@ namespace Duality.DebugDraw
 				for (j = 0; j < p.vertices.Count; j++)
 				{
 					var v = p.vertices[j] * p.matrix;
-					positions.Add(v.X);
-					positions.Add(v.Y);
-					positions.Add(v.Z);
+					positions.Add((float)v.X);
+					positions.Add((float)v.Y);
+					positions.Add((float)v.Z);
 					colors.Add(p.color.R / 255f);
 					colors.Add(p.color.G / 255f);
 					colors.Add(p.color.B / 255f);
@@ -63,7 +66,7 @@ namespace Duality.DebugDraw
 			return geometry;
 		}
 
-		public void Update(Scene scene)
+		public void Update(Scene scene, Camera camera)
 		{
 			scene.Remove(activeMesh);
 			if (activeMesh != null)

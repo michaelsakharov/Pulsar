@@ -63,9 +63,9 @@ namespace Duality.Editor
 		public static Color ColorFromHSV(float hue, float saturation, float value)
 		{
 			hue *= 360.0f;
-			hue = Duality.MathF.NormalizeVar(hue, 0.0f, 360.0f);
-			saturation = Duality.MathF.Clamp(saturation, 0.0f, 1.0f);
-			value = Duality.MathF.Clamp(value, 0.0f, 1.0f);
+			hue = (float)Duality.MathF.NormalizeVar(hue, 0.0f, 360.0f);
+			saturation = (float)Duality.MathF.Clamp(saturation, 0.0f, 1.0f);
+			value = (float)Duality.MathF.Clamp(value, 0.0f, 1.0f);
 
 			int hi = Convert.ToInt32(Math.Floor(hue / 60)) % 6;
 			double f = hue / 60 - Math.Floor(hue / 60);

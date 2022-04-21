@@ -451,9 +451,9 @@ namespace Duality
         /// </summary>
         /// <param name="ray">A <see cref="Ray"/> for intersection test.</param>
         /// <returns>Distance at which ray intersects with this <see cref="BoundingFrustum"/> or null if no intersection happens.</returns>
-        public float? Intersects(Ray ray)
+        public double? Intersects(Ray ray)
         {
-            float? result;
+            double? result;
 			this.Intersects(ref ray, out result);
             return result;
         }
@@ -463,7 +463,7 @@ namespace Duality
         /// </summary>
         /// <param name="ray">A <see cref="Ray"/> for intersection test.</param>
         /// <param name="result">Distance at which ray intersects with this <see cref="BoundingFrustum"/> or null if no intersection happens as an output parameter.</param>
-        public void Intersects(ref Ray ray, out float? result)
+        public void Intersects(ref Ray ray, out double? result)
         {
             ContainmentType ctype;
             this.Contains(ref ray.Position, out ctype);
@@ -474,7 +474,7 @@ namespace Duality
                     result = null;
                     return;
                 case ContainmentType.Contains:
-                    result = 0.0f;
+                    result = 0.0;
                     return;
                 case ContainmentType.Intersects:
                     
@@ -482,16 +482,16 @@ namespace Duality
 
                     result = null;
 
-                    float min = float.MinValue;
-                    float max = float.MaxValue;
+                    double min = double.MinValue;
+                    double max = double.MaxValue;
                     foreach (Plane plane in this._planes)
                     {
                         var normal = plane.Normal;
 
-                        float result2;
+                        double result2;
                         Vector3.Dot(ref ray.Direction, ref normal, out result2);
 
-                        float result3;
+                        double result3;
                         Vector3.Dot(ref ray.Position, ref normal, out result3);
 
                         result3 += plane.D;
@@ -503,7 +503,7 @@ namespace Duality
                         }
                         else
                         {
-                            float result4 = -result3 / result2;
+                            double result4 = -result3 / result2;
                             if ((double)result2 < 0.0)
                             {
                                 if ((double)result4 > (double)max)
@@ -520,7 +520,7 @@ namespace Duality
                             }
                         }
 
-						float? distance = ray.Intersects(plane);
+						double? distance = ray.Intersects(plane);
                         if (distance.HasValue)
                         {
                             min = Math.Min(min, distance.Value);
@@ -528,7 +528,7 @@ namespace Duality
                         }
                     }
 
-                    float temp = min >= 0.0 ? min : max;
+                    double temp = min >= 0.0 ? min : max;
                     if (temp < 0.0)
                     {
                         return;
@@ -604,9 +604,9 @@ namespace Duality
             
             Vector3.Cross(ref b.Normal, ref c.Normal, out cross);
             
-            float f;
+            double f;
             Vector3.Dot(ref a.Normal, ref cross, out f);
-            f *= -1.0f;
+            f *= -1.0;
             
             Vector3.Cross(ref b.Normal, ref c.Normal, out cross);
             Vector3.Multiply(ref cross, a.D, out v1);
@@ -629,7 +629,7 @@ namespace Duality
         
         private void NormalizePlane(ref Plane p)
         {
-            float factor = 1f / p.Normal.Length;
+            double factor = 1 / p.Normal.Length;
             p.Normal.X *= factor;
             p.Normal.Y *= factor;
             p.Normal.Z *= factor;

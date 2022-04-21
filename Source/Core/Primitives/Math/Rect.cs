@@ -15,19 +15,19 @@ namespace Duality
 		/// <summary>
 		/// The Rects x-Coordinate.
 		/// </summary>
-		public	float	X;
+		public	double	X;
 		/// <summary>
 		/// The Rects y-Coordinate.
 		/// </summary>
-		public	float	Y;
+		public	double	Y;
 		/// <summary>
 		/// The Rects width.
 		/// </summary>
-		public	float	W;
+		public	double	W;
 		/// <summary>
 		/// The Rects height.
 		/// </summary>
-		public	float	H;
+		public	double	H;
 
 		/// <summary>
 		/// [GET / SET] The Rects position
@@ -49,44 +49,44 @@ namespace Duality
 		/// <summary>
 		/// [GET] The minimum x-Coordinate occupied by the Rect. Accounts for negative sizes.
 		/// </summary>
-		public float LeftX
+		public double LeftX
 		{
 			get { return MathF.Min(this.X, this.X + this.W); }
 		}
 		/// <summary>
 		/// [GET] The minimum y-Coordinate occupied by the Rect. Accounts for negative sizes.
 		/// </summary>
-		public float TopY
+		public double TopY
 		{
 			get { return MathF.Min(this.Y, this.Y + this.H); }
 		}
 		/// <summary>
 		/// [GET] The maximum y-Coordinate occupied by the Rect. Accounts for negative sizes.
 		/// </summary>
-		public float BottomY
+		public double BottomY
 		{
 			get { return MathF.Max(this.Y, this.Y + this.H); }
 		}
 		/// <summary>
 		/// [GET] The maximum x-Coordinate occupied by the Rect. Accounts for negative sizes.
 		/// </summary>
-		public float RightX
+		public double RightX
 		{
 			get { return MathF.Max(this.X, this.X + this.W); }
 		}
 		/// <summary>
 		/// [GET] The center x-Coordinate occupied by the Rect.
 		/// </summary>
-		public float CenterX
+		public double CenterX
 		{
-			get { return this.X + this.W * 0.5f; }
+			get { return this.X + this.W * 0.5; }
 		}
 		/// <summary>
 		/// [GET] The center y-Coordinate occupied by the Rect.
 		/// </summary>
-		public float CenterY
+		public double CenterY
 		{
-			get { return this.Y + this.H * 0.5f; }
+			get { return this.Y + this.H * 0.5; }
 		}
 
 		/// <summary>
@@ -161,7 +161,7 @@ namespace Duality
 		/// [GET] If this Rect was to fit inside a bounding circle originating from [0,0],
 		/// this would be its radius.
 		/// </summary>
-		public float BoundingRadius
+		public double BoundingRadius
 		{
 			get
 			{
@@ -187,7 +187,7 @@ namespace Duality
 		/// </summary>
 		/// <param name="w"></param>
 		/// <param name="h"></param>
-		public Rect(float w, float h)
+		public Rect(double w, double h)
 		{
 			this.X = 0;
 			this.Y = 0;
@@ -201,7 +201,7 @@ namespace Duality
 		/// <param name="y"></param>
 		/// <param name="w"></param>
 		/// <param name="h"></param>
-		public Rect(float x, float y, float w, float h)
+		public Rect(double x, double y, double w, double h)
 		{
 			this.X = x;
 			this.Y = y;
@@ -215,7 +215,7 @@ namespace Duality
 		/// <param name="x">Movement in x-Direction.</param>
 		/// <param name="y">Movement in y-Direction.</param>
 		/// <returns>A new Rect with the specified adjustments.</returns>
-		public Rect WithOffset(float x, float y)
+		public Rect WithOffset(double x, double y)
 		{
 			Rect newRect = this;
 			newRect.X += x;
@@ -242,7 +242,7 @@ namespace Duality
 		/// <param name="x">x-Scale factor.</param>
 		/// <param name="y">y-Scale factor.</param>
 		/// <returns>A new Rect with the specified adjustments.</returns>
-		public Rect Scaled(float x, float y)
+		public Rect Scaled(double x, double y)
 		{
 			Rect newRect = this;
 			newRect.W *= x;
@@ -269,7 +269,7 @@ namespace Duality
 		/// <param name="x">x-Scale factor.</param>
 		/// <param name="y">y-Scale factor.</param>
 		/// <returns>A new Rect with the specified adjustments.</returns>
-		public Rect Transformed(float x, float y)
+		public Rect Transformed(double x, double y)
 		{
 			Rect newRect = this;
 			newRect.X *= x;
@@ -303,7 +303,7 @@ namespace Duality
 		/// <param name="w">Width of the Rect to contain.</param>
 		/// <param name="h">Height of the Rect to contain.</param>
 		/// <returns>A new Rect with the specified adjustments.</returns>
-		public Rect ExpandedToContain(float x, float y, float w, float h)
+		public Rect ExpandedToContain(double x, double y, double w, double h)
 		{
 			return this.ExpandedToContain(x, y).ExpandedToContain(x + w, y + h);
 		}
@@ -324,7 +324,7 @@ namespace Duality
 		/// <param name="x">x-Coordinate of the point to contain.</param>
 		/// <param name="y">y-Coordinate of the point to contain.</param>
 		/// <returns>A new Rect with the specified adjustments.</returns>
-		public Rect ExpandedToContain(float x, float y)
+		public Rect ExpandedToContain(double x, double y)
 		{
 			Rect newRect = this;
 			if (x < newRect.X)
@@ -377,7 +377,7 @@ namespace Duality
 		/// <param name="x">x-Coordinate of the point to test.</param>
 		/// <param name="y">y-Coordinate of the point to test.</param>
 		/// <returns>True, if the Rect contains the point, false if not.</returns>
-		public bool Contains(float x, float y)
+		public bool Contains(double x, double y)
 		{
 			return x >= this.LeftX && x <= this.RightX && y >= this.TopY && y <= this.BottomY;
 		}
@@ -398,7 +398,7 @@ namespace Duality
 		/// <param name="w">Width of the Rect to test.</param>
 		/// <param name="h">Height of the Rect to test.</param>
 		/// <returns>True, if the Rect contains the other Rect, false if not.</returns>
-		public bool Contains(float x, float y, float w, float h)
+		public bool Contains(double x, double y, double w, double h)
 		{
 			return this.Contains(x, y) && this.Contains(x + w, y + h);
 		}
@@ -420,7 +420,7 @@ namespace Duality
 		/// <param name="w">Width of the Rect to test.</param>
 		/// <param name="h">Height of the Rect to test.</param>
 		/// <returns>True, if the Rect intersects the other Rect, false if not.</returns>
-		public bool Intersects(float x, float y, float w, float h)
+		public bool Intersects(double x, double y, double w, double h)
 		{
 			return this.Intersects(new Rect(x, y, w, h));
 		}
@@ -445,7 +445,7 @@ namespace Duality
 		/// <param name="w">Width of the Rect to intersect with.</param>
 		/// <param name="h">Height of the Rect to intersect with.</param>
 		/// <returns>A new Rect that describes both Rects intersection area. <see cref="Empty"/>, if there is no intersection.</returns>
-		public Rect Intersection(float x, float y, float w, float h)
+		public Rect Intersection(double x, double y, double w, double h)
 		{
 			return this.Intersection(new Rect(x, y, w, h));
 		}
@@ -459,8 +459,8 @@ namespace Duality
 			rect = rect.Normalized();
 			Rect norm = this.Normalized();
 
-			float tempWidth = Math.Min(rect.W, norm.W - (rect.X - norm.X));
-			float tempHeight = Math.Min(rect.H, norm.H - (rect.Y - norm.Y));
+			double tempWidth = Math.Min(rect.W, norm.W - (rect.X - norm.X));
+			double tempHeight = Math.Min(rect.H, norm.H - (rect.Y - norm.Y));
 			if ((norm.X - rect.X) > 0.0f) tempWidth -= (norm.X - rect.X);
 			if ((norm.Y - rect.Y) > 0.0f) tempHeight -= (norm.Y - rect.Y);
 
@@ -509,7 +509,7 @@ namespace Duality
 		/// <param name="y">The Rects y-Coordinate.</param>
 		/// <param name="w">The Rects width.</param>
 		/// <param name="h">The Rects height.</param>
-		public static Rect Align(Alignment align, float x, float y, float w, float h)
+		public static Rect Align(Alignment align, double x, double y, double w, double h)
 		{
 			switch (align)
 			{
@@ -518,11 +518,11 @@ namespace Duality
 				case Alignment.TopRight:	return new Rect(x - w, y, w, h);
 				case Alignment.BottomLeft:	return new Rect(x, y - h, w, h);
 				case Alignment.BottomRight:	return new Rect(x - w, y - h, w, h);
-				case Alignment.Center:		return new Rect(x - w * 0.5f, y - h * 0.5f, w, h);
-				case Alignment.Bottom:		return new Rect(x - w * 0.5f, y - h, w, h);
-				case Alignment.Left:		return new Rect(x, y - h * 0.5f, w, h);
-				case Alignment.Right:		return new Rect(x - w, y - h * 0.5f, w, h);
-				case Alignment.Top:			return new Rect(x - w * 0.5f, y, w, h);
+				case Alignment.Center:		return new Rect(x - w * 0.5, y - h * 0.5, w, h);
+				case Alignment.Bottom:		return new Rect(x - w * 0.5, y - h, w, h);
+				case Alignment.Left:		return new Rect(x, y - h * 0.5, w, h);
+				case Alignment.Right:		return new Rect(x - w, y - h * 0.5, w, h);
+				case Alignment.Top:			return new Rect(x - w * 0.5, y, w, h);
 			}
 		}
 

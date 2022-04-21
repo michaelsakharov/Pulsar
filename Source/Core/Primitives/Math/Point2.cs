@@ -88,7 +88,7 @@ namespace Duality
 		/// </summary>
 		/// <param name="left"></param>
 		/// <param name="right"></param>
-		public static float Distance(Point2 left, Point2 right)
+		public static double Distance(Point2 left, Point2 right)
 		{
 			Point2 diff;
 			diff.X = left.X - right.X;
@@ -170,7 +170,7 @@ namespace Duality
 		/// <summary>
 		/// Multiplies the specified point component-wise with the specified factor.
 		/// </summary>
-		public static Vector2 operator *(Point2 left, float right)
+		public static Vector2 operator *(Point2 left, double right)
 		{
 			return new Vector2(
 				left.X * right, 
@@ -179,16 +179,16 @@ namespace Duality
 		/// <summary>
 		/// Multiplies the specified point component-wise with the specified factor.
 		/// </summary>
-		public static Vector2 operator *(float left, Point2 right)
+		public static Vector2 operator *(double left, Point2 right)
 		{
 			return right * left;
 		}
 		/// <summary>
 		/// Divides the specified point component-wise with the specified value.
 		/// </summary>
-		public static Vector2 operator /(Point2 left, float right)
+		public static Vector2 operator /(Point2 left, double right)
 		{
-			float mult = 1.0f / right;
+			double mult = 1.0 / right;
 			return new Vector2(
 				left.X * mult, 
 				left.Y * mult);

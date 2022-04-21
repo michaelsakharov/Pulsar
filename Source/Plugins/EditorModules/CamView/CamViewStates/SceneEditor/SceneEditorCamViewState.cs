@@ -39,7 +39,7 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 		}
 		private float DragMustWaitProgress
 		{
-			get { return MathF.Clamp((float)(DateTime.Now - this.dragTime).TotalMilliseconds / 500.0f, 0.0f, 1.0f); }
+			get { return (float)MathF.Clamp((float)(DateTime.Now - this.dragTime).TotalMilliseconds / 500.0f, 0.0f, 1.0f); }
 		}
 
 
@@ -78,13 +78,16 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 
 		public override ObjectEditorSelObj PickSelObjAt(int x, int y)
 		{
-			int picked = this._GPUWorldPicker.Pick(x, y, DualityApp.GraphicsBackend, Scene.ThreeScene, CameraComponent.GetTHREECamera());
-			if (picked == -1 || picked == 0) return null;
-			var obj = Scene.GetGameobjectByThreeID(picked);
-			if (obj != null)
+			if (CameraComponent != null)
 			{
-				if (DesignTimeObjectData.Get(obj).IsLocked) return null;
-				return new SceneEditorSelGameObj(obj);
+				int picked = this._GPUWorldPicker.Pick(x, y, DualityApp.GraphicsBackend, Scene.ThreeScene, CameraComponent.GetTHREECamera());
+				if (picked == -1 || picked == 0) return null;
+				var obj = Scene.GetGameobjectByThreeID(picked);
+				if (obj != null)
+				{
+					if (DesignTimeObjectData.Get(obj).IsLocked) return null;
+					return new SceneEditorSelGameObj(obj);
+				}
 			}
 			return null;
 		}

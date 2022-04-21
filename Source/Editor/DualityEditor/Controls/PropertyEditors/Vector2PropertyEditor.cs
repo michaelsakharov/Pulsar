@@ -12,7 +12,7 @@ namespace Duality.Editor.Controls.PropertyEditors
 		{
 			get 
 			{ 
-				return new Vector2((float)this.editor[0].Value, (float)this.editor[1].Value);
+				return new Vector2((double)this.editor[0].Value, (double)this.editor[1].Value);
 			}
 		}
 
@@ -38,8 +38,8 @@ namespace Duality.Editor.Controls.PropertyEditors
 			else
 			{
 				var valNotNull = values.NotNull();
-				float avgX = valNotNull.Average(o => ((Vector2)o).X);
-				float avgY = valNotNull.Average(o => ((Vector2)o).Y);
+				double avgX = valNotNull.Average(o => ((Vector2)o).X);
+				double avgY = valNotNull.Average(o => ((Vector2)o).Y);
 
 				this.editor[0].Value = MathF.SafeToDecimal(avgX);
 				this.editor[1].Value = MathF.SafeToDecimal(avgY);

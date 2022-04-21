@@ -38,18 +38,18 @@ namespace Duality
 	{
 		#region Private Fields
 
-		private static readonly Vector3 zero = new Vector3(0f, 0f, 0f);
-		private static readonly Vector3 one = new Vector3(1f, 1f, 1f);
-		private static readonly Vector3 unitX = new Vector3(1f, 0f, 0f);
-		private static readonly Vector3 unitY = new Vector3(0f, 1f, 0f);
-		private static readonly Vector3 unitZ = new Vector3(0f, 0f, 1f);
-		private static readonly Vector3 up = new Vector3(0f, 1f, 0f);
-		private static readonly Vector3 down = new Vector3(0f, -1f, 0f);
-		private static readonly Vector3 right = new Vector3(1f, 0f, 0f);
-		private static readonly Vector3 left = new Vector3(-1f, 0f, 0f);
-		private static readonly Vector3 forward = new Vector3(0f, 0f, -1f);
-		private static readonly Vector3 backward = new Vector3(0f, 0f, 1f);
-		private static readonly Vector3 maxValue = new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
+		private static readonly Vector3 zero = new Vector3(0, 0, 0);
+		private static readonly Vector3 one = new Vector3(1, 1, 1);
+		private static readonly Vector3 unitX = new Vector3(1, 0, 0);
+		private static readonly Vector3 unitY = new Vector3(0, 1, 0);
+		private static readonly Vector3 unitZ = new Vector3(0, 0, 1);
+		private static readonly Vector3 up = new Vector3(0, 1, 0);
+		private static readonly Vector3 down = new Vector3(0, -1, 0);
+		private static readonly Vector3 right = new Vector3(1, 0, 0);
+		private static readonly Vector3 left = new Vector3(-1, 0, 0);
+		private static readonly Vector3 forward = new Vector3(0, 0, -1);
+		private static readonly Vector3 backward = new Vector3(0, 0, 1);
+		private static readonly Vector3 maxValue = new Vector3(double.MaxValue, double.MaxValue, double.MaxValue);
 
 		#endregion
 
@@ -58,17 +58,17 @@ namespace Duality
 		/// <summary>
 		/// The x coordinate of this <see cref="Vector3"/>.
 		/// </summary>
-		public float X;
+		public double X;
 
 		/// <summary>
 		/// The y coordinate of this <see cref="Vector3"/>.
 		/// </summary>
-		public float Y;
+		public double Y;
 
 		/// <summary>
 		/// The z coordinate of this <see cref="Vector3"/>.
 		/// </summary>
-		public float Z;
+		public double Z;
 
 		#endregion
 
@@ -163,7 +163,7 @@ namespace Duality
 		}
 
 		/// <summary>
-		/// Returns a <see cref="Vector3"/> with components float.MaxValue.
+		/// Returns a <see cref="Vector3"/> with components double.MaxValue.
 		/// </summary>
 		public static Vector3 MaxValue
 		{
@@ -174,7 +174,7 @@ namespace Duality
 		/// Returns the length of this <see cref="Vector3"/>.
 		/// </summary>
 		/// <returns>The length of this <see cref="Vector3"/>.</returns>
-		public float Length
+		public double Length
 		{
 			get { return MathF.Sqrt((this.X * this.X) + (this.Y * this.Y) + (this.Z * this.Z)); }
 		}
@@ -183,7 +183,7 @@ namespace Duality
 		/// Returns the squared length of this <see cref="Vector3"/>.
 		/// </summary>
 		/// <returns>The squared length of this <see cref="Vector3"/>.</returns>
-		public float LengthSquared
+		public double LengthSquared
 		{
 			get { return (this.X * this.X) + (this.Y * this.Y) + (this.Z * this.Z); }
 		}
@@ -227,7 +227,7 @@ namespace Duality
 		/// <param name="x">The x coordinate in 3d-space.</param>
 		/// <param name="y">The y coordinate in 3d-space.</param>
 		/// <param name="z">The z coordinate in 3d-space.</param>
-		public Vector3(float x, float y, float z)
+		public Vector3(double x, double y, double z)
 		{
 			this.X = x;
 			this.Y = y;
@@ -238,7 +238,7 @@ namespace Duality
 		/// Constructs a 3d vector with X, Y and Z set to the same value.
 		/// </summary>
 		/// <param name="value">The x, y and z coordinates in 3d-space.</param>
-		public Vector3(float value)
+		public Vector3(double value)
 		{
 			this.X = value;
 			this.Y = value;
@@ -250,7 +250,7 @@ namespace Duality
 		/// </summary>
 		/// <param name="value">The x and y coordinates in 3d-space.</param>
 		/// <param name="z">The z coordinate in 3d-space.</param>
-		public Vector3(Vector2 value, float z)
+		public Vector3(Vector2 value, double z)
 		{
 			this.X = value.X;
 			this.Y = value.Y;
@@ -265,13 +265,13 @@ namespace Duality
 		{
 			this.X = value.X;
 			this.Y = value.Y;
-			this.Z = 0f;
+			this.Z = 0;
 		}
 
 		/// <summary>
 		/// Gets or sets the value at the index of the Vector.
 		/// </summary>
-		public float this[int index]
+		public double this[int index]
 		{
 			get
 			{
@@ -306,9 +306,9 @@ namespace Duality
 		/// <param name="second">The second vector.</param>
 		/// <returns>Angle (in radians) between the vectors.</returns>
 		/// <remarks>Note that the returned angle is never bigger than the constant Pi.</remarks>
-		public static float AngleBetween(Vector3 first, Vector3 second)
+		public static double AngleBetween(Vector3 first, Vector3 second)
 		{
-			return (float)System.Math.Acos((Vector3.Dot(first, second)) / (first.Length * second.Length));
+			return (double)System.Math.Acos((Vector3.Dot(first, second)) / (first.Length * second.Length));
 		}
 		/// <summary>
 		/// Calculates the angle (in radians) between two vectors.
@@ -317,11 +317,11 @@ namespace Duality
 		/// <param name="second">The second vector.</param>
 		/// <param name="result">Angle (in radians) between the vectors.</param>
 		/// <remarks>Note that the returned angle is never bigger than the constant Pi.</remarks>
-		public static void AngleBetween(ref Vector3 first, ref Vector3 second, out float result)
+		public static void AngleBetween(ref Vector3 first, ref Vector3 second, out double result)
 		{
-			float temp;
+			double temp;
 			Vector3.Dot(ref first, ref second, out temp);
-			result = (float)System.Math.Acos(temp / (first.Length * second.Length));
+			result = (double)System.Math.Acos(temp / (first.Length * second.Length));
 		}
 
 		/// <summary>
@@ -437,9 +437,9 @@ namespace Duality
 		/// <param name="result">The cross product of two vectors as an output parameter.</param>
 		public static void Cross(ref Vector3 vector1, ref Vector3 vector2, out Vector3 result)
 		{
-			float x = vector1.Y * vector2.Z - vector2.Y * vector1.Z;
-			float y = -(vector1.X * vector2.Z - vector2.X * vector1.Z);
-			float z = vector1.X * vector2.Y - vector2.X * vector1.Y;
+			double x = vector1.Y * vector2.Z - vector2.Y * vector1.Z;
+			double y = -(vector1.X * vector2.Z - vector2.X * vector1.Z);
+			double z = vector1.X * vector2.Y - vector2.X * vector1.Y;
 			result.X = x;
 			result.Y = y;
 			result.Z = z;
@@ -451,9 +451,9 @@ namespace Duality
 		/// <param name="value1">The first vector.</param>
 		/// <param name="value2">The second vector.</param>
 		/// <returns>The distance between two vectors.</returns>
-		public static float Distance(Vector3 value1, Vector3 value2)
+		public static double Distance(Vector3 value1, Vector3 value2)
 		{
-			float result;
+			double result;
 			DistanceSquared(ref value1, ref value2, out result);
 			return MathF.Sqrt(result);
 		}
@@ -464,7 +464,7 @@ namespace Duality
 		/// <param name="value1">The first vector.</param>
 		/// <param name="value2">The second vector.</param>
 		/// <param name="result">The distance between two vectors as an output parameter.</param>
-		public static void Distance(ref Vector3 value1, ref Vector3 value2, out float result)
+		public static void Distance(ref Vector3 value1, ref Vector3 value2, out double result)
 		{
 			DistanceSquared(ref value1, ref value2, out result);
 			result = MathF.Sqrt(result);
@@ -476,7 +476,7 @@ namespace Duality
 		/// <param name="value1">The first vector.</param>
 		/// <param name="value2">The second vector.</param>
 		/// <returns>The squared distance between two vectors.</returns>
-		public static float DistanceSquared(Vector3 value1, Vector3 value2)
+		public static double DistanceSquared(Vector3 value1, Vector3 value2)
 		{
 			return (value1.X - value2.X) * (value1.X - value2.X) +
 					(value1.Y - value2.Y) * (value1.Y - value2.Y) +
@@ -489,7 +489,7 @@ namespace Duality
 		/// <param name="value1">The first vector.</param>
 		/// <param name="value2">The second vector.</param>
 		/// <param name="result">The squared distance between two vectors as an output parameter.</param>
-		public static void DistanceSquared(ref Vector3 value1, ref Vector3 value2, out float result)
+		public static void DistanceSquared(ref Vector3 value1, ref Vector3 value2, out double result)
 		{
 			result = (value1.X - value2.X) * (value1.X - value2.X) +
 					 (value1.Y - value2.Y) * (value1.Y - value2.Y) +
@@ -516,9 +516,9 @@ namespace Duality
 		/// <param name="value1">Source <see cref="Vector3"/>.</param>
 		/// <param name="divider">Divisor scalar.</param>
 		/// <returns>The result of dividing a vector by a scalar.</returns>
-		public static Vector3 Divide(Vector3 value1, float divider)
+		public static Vector3 Divide(Vector3 value1, double divider)
 		{
-			float factor = 1 / divider;
+			double factor = 1 / divider;
 			value1.X *= factor;
 			value1.Y *= factor;
 			value1.Z *= factor;
@@ -531,9 +531,9 @@ namespace Duality
 		/// <param name="value1">Source <see cref="Vector3"/>.</param>
 		/// <param name="divider">Divisor scalar.</param>
 		/// <param name="result">The result of dividing a vector by a scalar as an output parameter.</param>
-		public static void Divide(ref Vector3 value1, float divider, out Vector3 result)
+		public static void Divide(ref Vector3 value1, double divider, out Vector3 result)
 		{
-			float factor = 1 / divider;
+			double factor = 1 / divider;
 			result.X = value1.X * factor;
 			result.Y = value1.Y * factor;
 			result.Z = value1.Z * factor;
@@ -558,7 +558,7 @@ namespace Duality
 		/// <param name="value1">The first vector.</param>
 		/// <param name="value2">The second vector.</param>
 		/// <returns>The dot product of two vectors.</returns>
-		public static float Dot(Vector3 value1, Vector3 value2)
+		public static double Dot(Vector3 value1, Vector3 value2)
 		{
 			return value1.X * value2.X + value1.Y * value2.Y + value1.Z * value2.Z;
 		}
@@ -569,7 +569,7 @@ namespace Duality
 		/// <param name="value1">The first vector.</param>
 		/// <param name="value2">The second vector.</param>
 		/// <param name="result">The dot product of two vectors as an output parameter.</param>
-		public static void Dot(ref Vector3 value1, ref Vector3 value2, out float result)
+		public static void Dot(ref Vector3 value1, ref Vector3 value2, out double result)
 		{
 			result = value1.X * value2.X + value1.Y * value2.Y + value1.Z * value2.Z;
 		}
@@ -659,7 +659,7 @@ namespace Duality
 		/// <param name="value2">The second vector.</param>
 		/// <param name="amount">Weighting value(between 0.0 and 1.0).</param>
 		/// <returns>The result of linear interpolation of the specified vectors.</returns>
-		public static Vector3 Lerp(Vector3 value1, Vector3 value2, float amount)
+		public static Vector3 Lerp(Vector3 value1, Vector3 value2, double amount)
 		{
 			return new Vector3(
 				MathF.Lerp(value1.X, value2.X, amount),
@@ -674,7 +674,7 @@ namespace Duality
 		/// <param name="value2">The second vector.</param>
 		/// <param name="amount">Weighting value(between 0.0 and 1.0).</param>
 		/// <param name="result">The result of linear interpolation of the specified vectors as an output parameter.</param>
-		public static void Lerp(ref Vector3 value1, ref Vector3 value2, float amount, out Vector3 result)
+		public static void Lerp(ref Vector3 value1, ref Vector3 value2, double amount, out Vector3 result)
 		{
 			result.X = MathF.Lerp(value1.X, value2.X, amount);
 			result.Y = MathF.Lerp(value1.Y, value2.Y, amount);
@@ -755,7 +755,7 @@ namespace Duality
 		/// <param name="value1">Source <see cref="Vector3"/>.</param>
 		/// <param name="scaleFactor">Scalar value.</param>
 		/// <returns>The result of the vector multiplication with a scalar.</returns>
-		public static Vector3 Multiply(Vector3 value1, float scaleFactor)
+		public static Vector3 Multiply(Vector3 value1, double scaleFactor)
 		{
 			value1.X *= scaleFactor;
 			value1.Y *= scaleFactor;
@@ -769,7 +769,7 @@ namespace Duality
 		/// <param name="value1">Source <see cref="Vector3"/>.</param>
 		/// <param name="scaleFactor">Scalar value.</param>
 		/// <param name="result">The result of the multiplication with a scalar as an output parameter.</param>
-		public static void Multiply(ref Vector3 value1, float scaleFactor, out Vector3 result)
+		public static void Multiply(ref Vector3 value1, double scaleFactor, out Vector3 result)
 		{
 			result.X = value1.X * scaleFactor;
 			result.Y = value1.Y * scaleFactor;
@@ -817,10 +817,10 @@ namespace Duality
 		/// </summary>
 		public void Normalize()
 		{
-			float factor = MathF.Sqrt((this.X * this.X) + (this.Y * this.Y) + (this.Z * this.Z));
-			if (factor == 0.0f)
+			double factor = MathF.Sqrt((this.X * this.X) + (this.Y * this.Y) + (this.Z * this.Z));
+			if (factor == 0.0)
 				return; // Were 0, nothing to normalize
-			factor = 1f / factor;
+			factor = 1 / factor;
 			this.X *= factor;
 			this.Y *= factor;
 			this.Z *= factor;
@@ -833,10 +833,10 @@ namespace Duality
 		/// <returns>Unit vector.</returns>
 		public static Vector3 Normalize(Vector3 value)
 		{
-			float factor = MathF.Sqrt((value.X * value.X) + (value.Y * value.Y) + (value.Z * value.Z));
-			if (factor == 0.0f)
+			double factor = MathF.Sqrt((value.X * value.X) + (value.Y * value.Y) + (value.Z * value.Z));
+			if (factor == 0.0)
 				return Vector3.Zero; // Were 0, nothing to normalize
-			factor = 1f / factor;
+			factor = 1 / factor;
 			return new Vector3(value.X * factor, value.Y * factor, value.Z * factor);
 		}
 
@@ -847,13 +847,13 @@ namespace Duality
 		/// <param name="result">Unit vector as an output parameter.</param>
 		public static void Normalize(ref Vector3 value, out Vector3 result)
 		{
-			float factor = MathF.Sqrt((value.X * value.X) + (value.Y * value.Y) + (value.Z * value.Z));
-			if (factor == 0.0f)
+			double factor = MathF.Sqrt((value.X * value.X) + (value.Y * value.Y) + (value.Z * value.Z));
+			if (factor == 0.0)
 			{
 				result = Vector3.Zero;
 				return; // Were 0, nothing to normalize
 			}
-			factor = 1f / factor;
+			factor = 1 / factor;
 			result.X = value.X * factor;
 			result.Y = value.Y * factor;
 			result.Z = value.Z * factor;
@@ -872,10 +872,10 @@ namespace Duality
 			// R = I - (2 * N * ( DotProduct[ I,N] ))
 			Vector3 reflectedVector;
 			// inline the dotProduct here instead of calling method
-			float dotProduct = ((vector.X * normal.X) + (vector.Y * normal.Y)) + (vector.Z * normal.Z);
-			reflectedVector.X = vector.X - (2.0f * normal.X) * dotProduct;
-			reflectedVector.Y = vector.Y - (2.0f * normal.Y) * dotProduct;
-			reflectedVector.Z = vector.Z - (2.0f * normal.Z) * dotProduct;
+			double dotProduct = ((vector.X * normal.X) + (vector.Y * normal.Y)) + (vector.Z * normal.Z);
+			reflectedVector.X = vector.X - (2.0 * normal.X) * dotProduct;
+			reflectedVector.Y = vector.Y - (2.0 * normal.Y) * dotProduct;
+			reflectedVector.Z = vector.Z - (2.0 * normal.Z) * dotProduct;
 
 			return reflectedVector;
 		}
@@ -893,10 +893,10 @@ namespace Duality
 			// R = I - (2 * N * ( DotProduct[ I,N] ))
 
 			// inline the dotProduct here instead of calling method
-			float dotProduct = ((vector.X * normal.X) + (vector.Y * normal.Y)) + (vector.Z * normal.Z);
-			result.X = vector.X - (2.0f * normal.X) * dotProduct;
-			result.Y = vector.Y - (2.0f * normal.Y) * dotProduct;
-			result.Z = vector.Z - (2.0f * normal.Z) * dotProduct;
+			double dotProduct = ((vector.X * normal.X) + (vector.Y * normal.Y)) + (vector.Z * normal.Z);
+			result.X = vector.X - (2.0 * normal.X) * dotProduct;
+			result.Y = vector.Y - (2.0 * normal.Y) * dotProduct;
+			result.Z = vector.Z - (2.0 * normal.Z) * dotProduct;
 		}
 
 		/// <summary>
@@ -941,7 +941,7 @@ namespace Duality
 		/// <param name="value2">Source <see cref="Vector3"/>.</param>
 		/// <param name="amount">Weighting value.</param>
 		/// <returns>Cubic interpolation of the specified vectors.</returns>
-		public static Vector3 SmoothStep(Vector3 value1, Vector3 value2, float amount)
+		public static Vector3 SmoothStep(Vector3 value1, Vector3 value2, double amount)
 		{
 			return new Vector3(
 				MathF.SmoothStep(value1.X, value2.X, amount),
@@ -956,7 +956,7 @@ namespace Duality
 		/// <param name="value2">Source <see cref="Vector3"/>.</param>
 		/// <param name="amount">Weighting value.</param>
 		/// <param name="result">Cubic interpolation of the specified vectors as an output parameter.</param>
-		public static void SmoothStep(ref Vector3 value1, ref Vector3 value2, float amount, out Vector3 result)
+		public static void SmoothStep(ref Vector3 value1, ref Vector3 value2, double amount, out Vector3 result)
 		{
 			result.X = MathF.SmoothStep(value1.X, value2.X, amount);
 			result.Y = MathF.SmoothStep(value1.Y, value2.Y, amount);
@@ -1030,9 +1030,9 @@ namespace Duality
 		/// <param name="result">Transformed <see cref="Vector3"/> as an output parameter.</param>
 		public static void Transform(ref Vector3 position, ref Matrix4 matrix, out Vector3 result)
 		{
-			float x = (position.X * matrix.M11) + (position.Y * matrix.M21) + (position.Z * matrix.M31) + matrix.M41;
-			float y = (position.X * matrix.M12) + (position.Y * matrix.M22) + (position.Z * matrix.M32) + matrix.M42;
-			float z = (position.X * matrix.M13) + (position.Y * matrix.M23) + (position.Z * matrix.M33) + matrix.M43;
+			double x = (position.X * matrix.M11) + (position.Y * matrix.M21) + (position.Z * matrix.M31) + matrix.M41;
+			double y = (position.X * matrix.M12) + (position.Y * matrix.M22) + (position.Z * matrix.M32) + matrix.M42;
+			double z = (position.X * matrix.M13) + (position.Y * matrix.M23) + (position.Z * matrix.M33) + matrix.M43;
 			result.X = x;
 			result.Y = y;
 			result.Z = z;
@@ -1059,9 +1059,9 @@ namespace Duality
 		/// <param name="result">Transformed <see cref="Vector3"/> as an output parameter.</param>
 		public static void Transform(ref Vector3 value, ref Quaternion rotation, out Vector3 result)
 		{
-			float x = 2 * (rotation.Y * value.Z - rotation.Z * value.Y);
-			float y = 2 * (rotation.Z * value.X - rotation.X * value.Z);
-			float z = 2 * (rotation.X * value.Y - rotation.Y * value.X);
+			double x = 2 * (rotation.Y * value.Z - rotation.Z * value.Y);
+			double y = 2 * (rotation.Z * value.X - rotation.X * value.Z);
+			double z = 2 * (rotation.X * value.Y - rotation.Y * value.X);
 
 			result.X = value.X + x * rotation.W + (rotation.Y * z - rotation.Z * y);
 			result.Y = value.Y + y * rotation.W + (rotation.Z * x - rotation.X * z);
@@ -1127,9 +1127,9 @@ namespace Duality
 			{
 				var position = sourceArray[sourceIndex + i];
 
-				float x = 2 * (rotation.Y * position.Z - rotation.Z * position.Y);
-				float y = 2 * (rotation.Z * position.X - rotation.X * position.Z);
-				float z = 2 * (rotation.X * position.Y - rotation.Y * position.X);
+				double x = 2 * (rotation.Y * position.Z - rotation.Z * position.Y);
+				double y = 2 * (rotation.Z * position.X - rotation.X * position.Z);
+				double z = 2 * (rotation.X * position.Y - rotation.Y * position.X);
 
 				destinationArray[destinationIndex + i] =
 					new Vector3(
@@ -1188,9 +1188,9 @@ namespace Duality
 			{
 				var position = sourceArray[i];
 
-				float x = 2 * (rotation.Y * position.Z - rotation.Z * position.Y);
-				float y = 2 * (rotation.Z * position.X - rotation.X * position.Z);
-				float z = 2 * (rotation.X * position.Y - rotation.Y * position.X);
+				double x = 2 * (rotation.Y * position.Z - rotation.Z * position.Y);
+				double y = 2 * (rotation.Z * position.X - rotation.X * position.Z);
+				double z = 2 * (rotation.X * position.Y - rotation.Y * position.X);
 
 				destinationArray[i] =
 					new Vector3(
@@ -1224,9 +1224,9 @@ namespace Duality
 		/// <param name="result">Transformed normal as an output parameter.</param>
 		public static void TransformNormal(ref Vector3 normal, ref Matrix4 matrix, out Vector3 result)
 		{
-			float x = (normal.X * matrix.M11) + (normal.Y * matrix.M21) + (normal.Z * matrix.M31);
-			float y = (normal.X * matrix.M12) + (normal.Y * matrix.M22) + (normal.Z * matrix.M32);
-			float z = (normal.X * matrix.M13) + (normal.Y * matrix.M23) + (normal.Z * matrix.M33);
+			double x = (normal.X * matrix.M11) + (normal.Y * matrix.M21) + (normal.Z * matrix.M31);
+			double y = (normal.X * matrix.M12) + (normal.Y * matrix.M22) + (normal.Z * matrix.M32);
+			double z = (normal.X * matrix.M13) + (normal.Y * matrix.M23) + (normal.Z * matrix.M33);
 			result.X = x;
 			result.Y = y;
 			result.Z = z;
@@ -1304,7 +1304,7 @@ namespace Duality
 		/// <param name="x"></param>
 		/// <param name="y"></param>
 		/// <param name="z"></param>
-		public void Deconstruct(out float x, out float y, out float z)
+		public void Deconstruct(out double x, out double y, out double z)
 		{
 			x = this.X;
 			y = this.Y;
@@ -1399,7 +1399,7 @@ namespace Duality
 		/// <param name="value">Source <see cref="Vector3"/> on the left of the mul sign.</param>
 		/// <param name="scaleFactor">Scalar value on the right of the mul sign.</param>
 		/// <returns>Result of the vector multiplication with a scalar.</returns>
-		public static Vector3 operator *(Vector3 value, float scaleFactor)
+		public static Vector3 operator *(Vector3 value, double scaleFactor)
 		{
 			value.X *= scaleFactor;
 			value.Y *= scaleFactor;
@@ -1413,7 +1413,7 @@ namespace Duality
 		/// <param name="scaleFactor">Scalar value on the left of the mul sign.</param>
 		/// <param name="value">Source <see cref="Vector3"/> on the right of the mul sign.</param>
 		/// <returns>Result of the vector multiplication with a scalar.</returns>
-		public static Vector3 operator *(float scaleFactor, Vector3 value)
+		public static Vector3 operator *(double scaleFactor, Vector3 value)
 		{
 			value.X *= scaleFactor;
 			value.Y *= scaleFactor;
@@ -1452,9 +1452,9 @@ namespace Duality
 		/// <param name="value1">Source <see cref="Vector3"/> on the left of the div sign.</param>
 		/// <param name="divider">Divisor scalar on the right of the div sign.</param>
 		/// <returns>The result of dividing a vector by a scalar.</returns>
-		public static Vector3 operator /(Vector3 value1, float divider)
+		public static Vector3 operator /(Vector3 value1, double divider)
 		{
-			float factor = 1 / divider;
+			double factor = 1 / divider;
 			value1.X *= factor;
 			value1.Y *= factor;
 			value1.Z *= factor;
@@ -1463,7 +1463,7 @@ namespace Duality
 
 		public static implicit operator THREE.Math.Vector3(Vector3 s)
 		{
-			return new THREE.Math.Vector3(s.X, s.Y, s.Z);
+			return new THREE.Math.Vector3((float)s.X, (float)s.Y, (float)s.Z);
 		}
 
 		public static implicit operator Vector3(THREE.Math.Vector3 s)

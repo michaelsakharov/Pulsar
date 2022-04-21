@@ -13,29 +13,29 @@ namespace Duality
 		/// <summary>
 		/// The amount of frame per second at the desired refresh rate of 60 FPS.
 		/// </summary>
-		public const float FramesPerSecond = 60.0f;
+		public const double FramesPerSecond = 60.0;
 		/// <summary>
 		/// Milliseconds a frame takes at the desired refresh rate of 60 FPS
 		/// </summary>
-		public const float MillisecondsPerFrame = 1000.0f / FramesPerSecond;
+		public const double MillisecondsPerFrame = 1000.0 / FramesPerSecond;
 		/// <summary>
 		/// Seconds a frame takes at the desired refresh rate of 60 FPS
 		/// </summary>
-		public const float SecondsPerFrame = 1.0f / FramesPerSecond;
+		public const double SecondsPerFrame = 1.0 / FramesPerSecond;
 
 		private static DateTime  startup       = DateTime.Now;
 		private static Stopwatch watch         = new Stopwatch();
 		private static TimeSpan  gameTimer     = TimeSpan.Zero;
-		private static double    frameBegin    = 0.0d;
-		private static float     gameDelta     = 0.0f;
-		private static float     realDelta     = 0.0f;
-		private static float     timeMult      = 0.0f;
-		private static float     timeScale     = 1.0f;
+		private static double    frameBegin    = 0.0;
+		private static double    gameDelta     = 0.0;
+		private static double    realDelta     = 0.0;
+		private static double    timeMult      = 0.0;
+		private static double	 timeScale     = 1.0;
 		private static int       timeFreeze    = 0;
 		private static int       frameCount    = 0;
 		private static int       fps           = 0;
 		private static int       fpsFrameCount = 0;
-		private static double    fpsCountBegin = 0.0d;
+		private static double    fpsCountBegin = 0.0;
 
 		/// <summary>
 		/// [GET] Returns the date and time of engine startup.
@@ -63,21 +63,21 @@ namespace Duality
 		/// [GET] Returns the time passed since the last frame in seconds, affected by <see cref="TimeScale"/>.
 		/// You can multiply your "per second" updates with this value to make them framerate independent.
 		/// </summary>
-		public static float DeltaTime
+		public static double DeltaTime
 		{
 			get { return gameDelta; }
 		}
 		/// <summary>
 		/// [GET] Returns the real, unscaled and unclamped time passed since the last frame in seconds.
 		/// </summary>
-		public static float UnscaledDeltaTime
+		public static double UnscaledDeltaTime
 		{
 			get { return realDelta; }
 		}
 		/// <summary>
 		/// [GET] Frames per Second
 		/// </summary>
-		public static float Fps
+		public static double Fps
 		{
 			get { return fps; }
 		}
@@ -90,7 +90,7 @@ namespace Duality
 		/// You can multiply your "per frame" updates with this value to make them framerate independent
 		/// in the same way you can multiply your "per second" updates with <see cref="DeltaTime"/>.
 		/// </summary>
-		public static float TimeMult
+		public static double TimeMult
 		{
 			get { return timeMult; }
 		}
@@ -98,7 +98,7 @@ namespace Duality
 		/// [GET / SET] Specifies how fast game time runs compared to real time i.e. how
 		/// fast the game runs. May be used for slow motion effects.
 		/// </summary>
-		public static float TimeScale
+		public static double TimeScale
 		{
 			get { return timeScale; }
 			set { timeScale = value; }
@@ -158,12 +158,12 @@ namespace Duality
 			frameCount++;
 
 			double mainTimer = Time.MainTimer.TotalSeconds;
-			realDelta = (float)(mainTimer - frameBegin);
+			realDelta = (double)(mainTimer - frameBegin);
 			frameBegin = mainTimer;
 
 			if (timeFreeze == 0)
 			{
-				float clampedDelta = forceFixedStep ? SecondsPerFrame : MathF.Min(realDelta, SecondsPerFrame * 2);
+				double clampedDelta = forceFixedStep ? SecondsPerFrame : MathF.Min(realDelta, SecondsPerFrame * 2);
 				gameDelta = timeScale * clampedDelta;
 				timeMult = gameDelta / SecondsPerFrame;
 

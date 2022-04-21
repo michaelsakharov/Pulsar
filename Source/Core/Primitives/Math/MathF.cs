@@ -3,79 +3,79 @@
 namespace Duality
 {
 	/// <summary>
-	/// Provides math utility methods and float versions of <see cref="System.Math"/> to fit
-	/// Duality <see cref="float"/> arithmetics. 
+	/// Provides math utility methods and double versions of <see cref="System.Math"/> to fit
+	/// Duality <see cref="double"/> arithmetics. 
 	/// </summary>
 	public static class MathF
 	{
 		/// <summary>
 		/// Euler's number, base of the natural logarithm. Approximately 2.7182818284.
 		/// </summary>
-		public const float E = (float)System.Math.E;
+		public const double E = System.Math.E;
 		/// <summary>
 		/// Mmmhh... pie!
 		/// </summary>
-		public const float Pi = (float)System.Math.PI;
+		public const double Pi = System.Math.PI;
 
 		/// <summary>
 		/// Equals <see cref="Pi"/> / 2.
 		/// </summary>
-		public const float PiOver2 = Pi / 2.0f;
+		public const double PiOver2 = Pi / 2.0f;
 		/// <summary>
 		/// Equals <see cref="Pi"/> / 3.
 		/// </summary>
-		public const float PiOver3 = Pi / 3.0f;
+		public const double PiOver3 = Pi / 3.0f;
 		/// <summary>
 		/// Equals <see cref="Pi"/> / 4.
 		/// </summary>
-		public const float PiOver4 = Pi / 4.0f;
+		public const double PiOver4 = Pi / 4.0f;
 		/// <summary>
 		/// Equals <see cref="Pi"/> / 6.
 		/// </summary>
-		public const float PiOver6 = Pi / 6.0f;
+		public const double PiOver6 = Pi / 6.0f;
 		/// <summary>
 		/// Equals 2 * <see cref="Pi"/>.
 		/// </summary>
-		public const float TwoPi = Pi * 2.0f;
+		public const double TwoPi = Pi * 2.0f;
 		
 		/// <summary>
 		/// Another way to write RadAngle1
 		/// </summary>
-		public const float Deg2Rad = (Pi * 2f) / 360f;
+		public const double Deg2Rad = (Pi * 2f) / 360f;
 		
 		/// <summary>
 		/// Rad to Deg
 		/// </summary>
-		public const float Rad2Deg = 360f / (Pi * 2f);
+		public const double Rad2Deg = 360f / (Pi * 2f);
 		
 		/// <summary>
 		/// A one degree angle in radians.
 		/// </summary>
-		public const float RadAngle1 = TwoPi / 360.0f;
+		public const double RadAngle1 = TwoPi / 360.0f;
 		/// <summary>
 		/// A 30 degree angle in radians. Equals <see cref="PiOver6"/>.
 		/// </summary>
-		public const float RadAngle30 = PiOver6;
+		public const double RadAngle30 = PiOver6;
 		/// <summary>
 		/// A 45 degree angle in radians. Equals <see cref="PiOver4"/>.
 		/// </summary>
-		public const float RadAngle45 = PiOver4;
+		public const double RadAngle45 = PiOver4;
 		/// <summary>
 		/// A 90 degree angle in radians. Equals <see cref="PiOver2"/>.
 		/// </summary>
-		public const float RadAngle90 = PiOver2;
+		public const double RadAngle90 = PiOver2;
 		/// <summary>
 		/// A 180 degree angle in radians. Equals <see cref="Pi"/>.
 		/// </summary>
-		public const float RadAngle180 = Pi;
+		public const double RadAngle180 = Pi;
 		/// <summary>(PI * 2) / 360
 		/// A 270 degree angle in radians. Equals <see cref="Pi"/>.
 		/// </summary>
-		public const float RadAngle270 = Pi + PiOver2;
+		public const double RadAngle270 = Pi + PiOver2;
 		/// <summary>
 		/// A 360 degree angle in radians. Equals <see cref="TwoPi"/>.
 		/// </summary>
-		public const float RadAngle360 = TwoPi;
+		public const double RadAngle360 = TwoPi;
 
 		private static Random rnd = new Random((int)(DateTime.Now.Ticks % int.MaxValue));
 		/// <summary>
@@ -89,27 +89,27 @@ namespace Duality
 
 
 		/// <summary>
-		/// Converts the specified float value to decimal and clamps it if necessary.
+		/// Converts the specified double value to decimal and clamps it if necessary.
 		/// </summary>
 		/// <param name="v"></param>
-		public static decimal SafeToDecimal(float v)
+		public static decimal SafeToDecimal(double v)
 		{
-			if (float.IsNaN(v))
+			if (double.IsNaN(v))
 				return decimal.Zero;
-			else if (v <= (float)decimal.MinValue || float.IsNegativeInfinity(v))
+			else if (v <= (double)decimal.MinValue || double.IsNegativeInfinity(v))
 				return decimal.MinValue;
-			else if (v >= (float)decimal.MaxValue || float.IsPositiveInfinity(v))
+			else if (v >= (double)decimal.MaxValue || double.IsPositiveInfinity(v))
 				return decimal.MaxValue;
 			else
 				return (decimal)v;
 		}
 
 		/// <summary>
-		/// Returns the absolute value of a <see cref="float"/>.
+		/// Returns the absolute value of a <see cref="double"/>.
 		/// </summary>
 		/// <param name="v">A number.</param>
 		/// <returns>The absolute value of the number.</returns>
-		public static float Abs(float v)
+		public static double Abs(double v)
 		{
 			return v < 0 ? -v : v;
 		}
@@ -129,9 +129,9 @@ namespace Duality
 		/// <param name="v">A number.</param>
 		/// <returns>The rounded number.</returns>
 		/// <seealso cref="Floor"/>
-		public static float Ceiling(float v)
+		public static double Ceiling(double v)
 		{
-			return (float)System.Math.Ceiling(v);
+			return (double)System.Math.Ceiling(v);
 		}
 		/// <summary>
 		/// Returns the highest whole-number smaller than the specified one. (Rounds down)
@@ -139,9 +139,9 @@ namespace Duality
 		/// <param name="v">A number.</param>
 		/// <returns>The rounded number.</returns>
 		/// <seealso cref="Ceiling"/>
-		public static float Floor(float v)
+		public static double Floor(double v)
 		{
-			return (float)System.Math.Floor(v);
+			return (double)System.Math.Floor(v);
 		}
 
 		/// <summary>
@@ -149,9 +149,9 @@ namespace Duality
 		/// </summary>
 		/// <param name="v">A number.</param>
 		/// <returns>The rounded number.</returns>
-		public static float Round(float v)
+		public static double Round(double v)
 		{
-			return (float)System.Math.Round(v);
+			return (double)System.Math.Round(v);
 		}
 		/// <summary>
 		/// Rounds the specified value to a certain number of fraction digits.
@@ -159,9 +159,9 @@ namespace Duality
 		/// <param name="v">A number.</param>
 		/// <param name="digits">The number of fraction digits to round to.</param>
 		/// <returns>The rounded number.</returns>
-		public static float Round(float v, int digits)
+		public static double Round(double v, int digits)
 		{
-			return (float)System.Math.Round(v, digits);
+			return (double)System.Math.Round(v, digits);
 		}
 		/// <summary>
 		/// Rounds the specified value.
@@ -169,9 +169,9 @@ namespace Duality
 		/// <param name="v">A number.</param>
 		/// <param name="mode">Specifies what happens if the value is exactly inbetween two numbers.</param>
 		/// <returns>The rounded number.</returns>
-		public static float Round(float v, MidpointRounding mode)
+		public static double Round(double v, MidpointRounding mode)
 		{
-			return (float)System.Math.Round(v, mode);
+			return (double)System.Math.Round(v, mode);
 		}
 		/// <summary>
 		/// Rounds the specified value to a certain number of fraction digits.
@@ -180,9 +180,9 @@ namespace Duality
 		/// <param name="digits">The number of fraction digits to round to.</param>
 		/// <param name="mode">Specifies what happens if the value is exactly inbetween two numbers.</param>
 		/// <returns>The rounded number.</returns>
-		public static float Round(float v, int digits, MidpointRounding mode)
+		public static double Round(double v, int digits, MidpointRounding mode)
 		{
-			return (float)System.Math.Round(v, digits, mode);
+			return (double)System.Math.Round(v, digits, mode);
 		}
 
 		/// <summary>
@@ -190,8 +190,8 @@ namespace Duality
 		/// </summary>
 		/// <param name="v">A number.</param>
 		/// <returns>The rounded number as <see cref="int"/>.</returns>
-		/// <seealso cref="Round(float)"/>
-		public static int RoundToInt(float v)
+		/// <seealso cref="Round(double)"/>
+		public static int RoundToInt(double v)
 		{
 			return (int)System.Math.Round(v);
 		}
@@ -201,8 +201,8 @@ namespace Duality
 		/// <param name="v">A number.</param>
 		/// <param name="mode">Specifies what happens if the value is exactly inbetween two numbers.</param>
 		/// <returns>The rounded number as <see cref="int"/>.</returns>
-		/// <seealso cref="Round(float, MidpointRounding)"/>
-		public static int RoundToInt(float v, MidpointRounding mode)
+		/// <seealso cref="Round(double, MidpointRounding)"/>
+		public static int RoundToInt(double v, MidpointRounding mode)
 		{
 			return (int)System.Math.Round(v, mode);
 		}
@@ -212,7 +212,7 @@ namespace Duality
 		/// </summary>
 		/// <param name="v">A number.</param>
 		/// <returns>-1 if negative, 1 if positive and 0 if zero.</returns>
-		public static float Sign(float v)
+		public static double Sign(double v)
 		{
 			return v < 0.0f ? -1.0f : (v > 0.0f ? 1.0f : 0.0f);
 		}
@@ -231,9 +231,9 @@ namespace Duality
 		/// </summary>
 		/// <param name="v">A number.</param>
 		/// <returns>The numbers square root.</returns>
-		public static float Sqrt(float v)
+		public static double Sqrt(double v)
 		{
-			return (float)System.Math.Sqrt(v);
+			return (double)System.Math.Sqrt(v);
 		}
 
 		/// <summary>
@@ -254,7 +254,7 @@ namespace Duality
 		/// <param name="v1"></param>
 		/// <param name="v2"></param>
 		/// <returns>The lowest value.</returns>
-		public static float Min(float v1, float v2)
+		public static double Min(double v1, double v2)
 		{
 			return v1 < v2 ? v1 : v2;
 		}
@@ -265,9 +265,9 @@ namespace Duality
 		/// <param name="v2"></param>
 		/// <param name="v3"></param>
 		/// <returns>The lowest value.</returns>
-		public static float Min(float v1, float v2, float v3)
+		public static double Min(double v1, double v2, double v3)
 		{
-			float min = v1;
+			double min = v1;
 			if (v2 < min) min = v2;
 			if (v3 < min) min = v3;
 			return min;
@@ -280,9 +280,9 @@ namespace Duality
 		/// <param name="v3"></param>
 		/// <param name="v4"></param>
 		/// <returns>The lowest value.</returns>
-		public static float Min(float v1, float v2, float v3, float v4)
+		public static double Min(double v1, double v2, double v3, double v4)
 		{
-			float min = v1;
+			double min = v1;
 			if (v2 < min) min = v2;
 			if (v3 < min) min = v3;
 			if (v4 < min) min = v4;
@@ -293,9 +293,9 @@ namespace Duality
 		/// </summary>
 		/// <param name="v"></param>
 		/// <returns>The lowest value.</returns>
-		public static float Min(params float[] v)
+		public static double Min(params double[] v)
 		{
-			float min = v[0];
+			double min = v[0];
 			for (int i = 1; i < v.Length; i++)
 			{
 				if (v[i] < min) min = v[i];
@@ -363,7 +363,7 @@ namespace Duality
 		/// <param name="v1"></param>
 		/// <param name="v2"></param>
 		/// <returns>The highest value.</returns>
-		public static float Max(float v1, float v2)
+		public static double Max(double v1, double v2)
 		{
 			return v1 > v2 ? v1 : v2;
 		}
@@ -374,9 +374,9 @@ namespace Duality
 		/// <param name="v2"></param>
 		/// <param name="v3"></param>
 		/// <returns>The highest value.</returns>
-		public static float Max(float v1, float v2, float v3)
+		public static double Max(double v1, double v2, double v3)
 		{
-			float max = v1;
+			double max = v1;
 			if (v2 > max) max = v2;
 			if (v3 > max) max = v3;
 			return max;
@@ -389,9 +389,9 @@ namespace Duality
 		/// <param name="v3"></param>
 		/// <param name="v4"></param>
 		/// <returns>The highest value.</returns>
-		public static float Max(float v1, float v2, float v3, float v4)
+		public static double Max(double v1, double v2, double v3, double v4)
 		{
-			float max = v1;
+			double max = v1;
 			if (v2 > max) max = v2;
 			if (v3 > max) max = v3;
 			if (v4 > max) max = v4;
@@ -402,9 +402,9 @@ namespace Duality
 		/// </summary>
 		/// <param name="v"></param>
 		/// <returns>The highest value.</returns>
-		public static float Max(params float[] v)
+		public static double Max(params double[] v)
 		{
-			float max = v[0];
+			double max = v[0];
 			for (int i = 1; i < v.Length; i++)
 			{
 				if (v[i] > max) max = v[i];
@@ -473,7 +473,7 @@ namespace Duality
 		/// <param name="min">The minimum value that can't be deceeded.</param>
 		/// <param name="max">The maximum value that can't be exceeded.</param>
 		/// <returns>The clamped value.</returns>
-		public static float Clamp(float v, float min, float max)
+		public static double Clamp(double v, double min, double max)
 		{
 			return v < min ? min : (v > max ? max : v);
 		}
@@ -483,7 +483,7 @@ namespace Duality
 		/// </summary>
 		/// <param name="v">The value to clamp.</param>
 		/// <returns>The clamped value.</returns>
-		public static float Clamp01(float v)
+		public static double Clamp01(double v)
 		{
 			return v < 0.0f ? 0.0f : (v > 1.0f ? 1.0f : v);
 		}
@@ -506,7 +506,7 @@ namespace Duality
 		/// <param name="a">The first anchor value.</param>
 		/// <param name="b">The second anchor value.</param>
 		/// <param name="ratio">Ratio between first and second anchor. Zero will result in anchor a, one will result in anchor b.</param>
-		public static float Lerp(float a, float b, float ratio)
+		public static double Lerp(double a, double b, double ratio)
 		{
 			return a + ratio * (b - a);
 		}
@@ -517,7 +517,7 @@ namespace Duality
 		/// <param name="min">The first anchor value.</param>
 		/// <param name="max">The second anchor value.</param>
 		/// <param name="value">The value between both anchor values.</param>
-		public static float InvLerp(float min, float max, float value)
+		public static double InvLerp(double min, double max, double value)
 		{
 			return (value - min) / (max - min);
 		}
@@ -528,16 +528,16 @@ namespace Duality
 		/// <param name="min">The first anchor value.</param>
 		/// <param name="max">The second anchor value.</param>
 		/// <param name="value">The value between both anchor values.</param>
-		public static float InvLerp(int min, int max, int value)
+		public static double InvLerp(int min, int max, int value)
 		{
-			return (float) (value - min) / (max - min);
+			return (double) (value - min) / (max - min);
 		}
 
 		/// <summary>
 		/// Performs a SmoothStep interpolation between 0 and 1.
 		/// </summary>
 		/// <param name="value">The input value.</param>
-		public static float SmoothStep(float value)
+		public static double SmoothStep(double value)
 		{
 			value = Clamp01(value);
 			return (3 - 2 * value) * value * value;
@@ -549,7 +549,7 @@ namespace Duality
 		/// <param name="min">The lower bound anchor value</param>
 		/// <param name="max">The upper bound anchor value</param>
 		/// <param name="value">The input value.</param>
-		public static float SmoothStep(float min, float max, float value)
+		public static double SmoothStep(double min, double max, double value)
 		{
 			value = Clamp01(InvLerp(min, max, value));
 			return (3 - 2 * value) * value * value;
@@ -559,102 +559,102 @@ namespace Duality
 		/// Returns the specified power of <see cref="E"/>.
 		/// </summary>
 		/// <param name="v"></param>
-		public static float Exp(float v)
+		public static double Exp(double v)
 		{
-			return (float)System.Math.Exp(v);
+			return (double)System.Math.Exp(v);
 		}
 		/// <summary>
 		/// Returns the natural logarithm of a value.
 		/// </summary>
 		/// <param name="v"></param>
-		public static float Log(float v)
+		public static double Log(double v)
 		{
-			return (float)System.Math.Log(v);
+			return (double)System.Math.Log(v);
 		}
 		/// <summary>
 		/// Returns the specified power of a value.
 		/// </summary>
 		/// <param name="v">The base value.</param>
 		/// <param name="e">Specifies the power to return.</param>
-		public static float Pow(float v, float e)
+		public static double Pow(double v, double e)
 		{
-			return (float)System.Math.Pow(v, e);
+			return (double)System.Math.Pow(v, e);
 		}
 		/// <summary>
 		/// Returns the logarithm of a value.
 		/// </summary>
 		/// <param name="v">The value whichs logarithm is to be calculated.</param>
 		/// <param name="newBase">The base of the logarithm.</param>
-		public static float Log(float v, float newBase)
+		public static double Log(double v, double newBase)
 		{
-			return (float)System.Math.Log(v, newBase);
+			return (double)System.Math.Log(v, newBase);
 		}
 
 		/// <summary>
 		/// Returns the sine value of the specified (radian) angle.
 		/// </summary>
 		/// <param name="angle">A radian angle.</param>
-		public static float Sin(float angle)
+		public static double Sin(double angle)
 		{
-			return (float)System.Math.Sin(angle);
+			return (double)System.Math.Sin(angle);
 		}
 		/// <summary>
 		/// Returns the cosine value of the specified (radian) angle.
 		/// </summary>
 		/// <param name="angle">A radian angle.</param>
-		public static float Cos(float angle)
+		public static double Cos(double angle)
 		{
-			return (float)System.Math.Cos(angle);
+			return (double)System.Math.Cos(angle);
 		}
 		/// <summary>
 		/// Returns the tangent value of the specified (radian) angle.
 		/// </summary>
 		/// <param name="angle">A radian angle.</param>
-		public static float Tan(float angle)
+		public static double Tan(double angle)
 		{
-			return (float)System.Math.Tan(angle);
+			return (double)System.Math.Tan(angle);
 		}
 		/// <summary>
 		/// Returns the inverse sine value of the specified (radian) angle.
 		/// </summary>
 		/// <param name="sin">A radian angle.</param>
-		public static float Asin(float sin)
+		public static double Asin(double sin)
 		{
-			return (float)System.Math.Asin(sin);
+			return (double)System.Math.Asin(sin);
 		}
 		/// <summary>
 		/// Returns the inverse cosine value of the specified (radian) angle.
 		/// </summary>
 		/// <param name="cos">A radian angle.</param>
-		public static float Acos(float cos)
+		public static double Acos(double cos)
 		{
-			return (float)System.Math.Acos(cos);
+			return (double)System.Math.Acos(cos);
 		}
 		/// <summary>
 		/// Returns the inverse tangent value of the specified (radian) angle.
 		/// </summary>
 		/// <param name="tan">A radian angle.</param>
-		public static float Atan(float tan)
+		public static double Atan(double tan)
 		{
-			return (float)System.Math.Atan(tan);
+			return (double)System.Math.Atan(tan);
 		}
 		/// <summary>
 		/// Returns the (radian) angle whose tangent is the quotient of two specified numbers.
 		/// </summary>
 		/// <param name="y">The y coordinate of a point. </param>
 		/// <param name="x">The x coordinate of a point. </param>
-		public static float Atan2(float y, float x)
+		public static double Atan2(double y, double x)
 		{
-			return (float)System.Math.Atan2(y, x);
+			return (double)System.Math.Atan2(y, x);
 		}
 
 		/// <summary>
 		/// Converts degrees  to radians.
 		/// </summary>
 		/// <param name="deg"></param>
-		public static float DegToRad(float deg)
+		public static double DegToRad(double deg)
 		{
-			const float factor = (float)System.Math.PI / 180.0f;
+			const double factor = (double)System.Math.PI / 180.0f;
 			return deg * factor;
 		}
 
@@ -674,9 +674,9 @@ namespace Duality
 		/// Converts radians to degrees.
 		/// </summary>
 		/// <param name="rad"></param>
-		public static float RadToDeg(float rad)
+		public static double RadToDeg(double rad)
 		{
-			const float factor = 180.0f / (float)System.Math.PI;
+			const double factor = 180.0f / (double)System.Math.PI;
 			return rad * factor;
 		}
 
@@ -699,7 +699,7 @@ namespace Duality
 		/// <example>
 		/// <c>NormalizeVar(480, 0, 360)</c> will return 120.
 		/// </example>
-		public static float NormalizeVar(float var, float min, float max)
+		public static double NormalizeVar(double var, double min, double max)
 		{
 			if (var >= min && var < max) return var;
 
@@ -735,9 +735,9 @@ namespace Duality
 		/// <example>
 		/// <c>NormalizeAngle(<see cref="TwoPi"/> + <see cref="Pi"/>)</c> will return <see cref="Pi"/>.
 		/// </example>
-		public static float NormalizeAngle(float var)
+		public static double NormalizeAngle(double var)
 		{
-			float normalized = var % RadAngle360;
+			double normalized = var % RadAngle360;
 			if (normalized < 0.0f)
 				normalized += RadAngle360;
 			return normalized;
@@ -751,9 +751,9 @@ namespace Duality
 		/// <param name="x2">The x-Coordinate of the second point.</param>
 		/// <param name="y2">The y-Coordinate of the second point.</param>
 		/// <returns>The distance between both points.</returns>
-		public static float Distance(float x1, float y1, float x2, float y2)
+		public static double Distance(double x1, double y1, double x2, double y2)
 		{
-			return ((float)System.Math.Sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1)));
+			return ((double)System.Math.Sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1)));
 		}
 		/// <summary>
 		/// Returns the distance between a point and [0,0] in 2d space.
@@ -761,9 +761,9 @@ namespace Duality
 		/// <param name="x">The x-Coordinate of the point.</param>
 		/// <param name="y">The y-Coordinate of the point.</param>
 		/// <returns>The distance between the point and [0,0].</returns>
-		public static float Distance(float x, float y)
+		public static double Distance(double x, double y)
 		{
-			return ((float)System.Math.Sqrt(x * x + y * y));
+			return ((double)System.Math.Sqrt(x * x + y * y));
 		}
 		/// <summary>
 		/// Returns the squared distance between two points in 2d space.
@@ -774,10 +774,10 @@ namespace Duality
 		/// <param name="y2">The y-Coordinate of the second point.</param>
 		/// <returns>The distance between both points.</returns>
 		/// <remarks>
-		/// This method is faster than <see cref="Distance(float,float,float,float)"/>. 
+		/// This method is faster than <see cref="Distance(double,double,double,double)"/>. 
 		/// If sufficient, such as for distance comparison, consider using this method instead.
 		/// </remarks>
-		public static float DistanceQuad(float x1, float y1, float x2, float y2)
+		public static double DistanceQuad(double x1, double y1, double x2, double y2)
 		{
 			return (x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1);
 		}
@@ -788,10 +788,10 @@ namespace Duality
 		/// <param name="y">The y-Coordinate of the point.</param>
 		/// <returns>The distance between the point and [0,0].</returns>
 		/// <remarks>
-		/// This method is faster than <see cref="Distance(float,float)"/>. 
+		/// This method is faster than <see cref="Distance(double,double)"/>. 
 		/// If sufficient, such as for distance comparison, consider using this method instead.
 		/// </remarks>
-		public static float DistanceQuad(float x, float y)
+		public static double DistanceQuad(double x, double y)
 		{
 			return x * x + y * y;
 		}
@@ -804,9 +804,9 @@ namespace Duality
 		/// <param name="x2">The x-Coordinate of the second point.</param>
 		/// <param name="y2">The y-Coordinate of the second point.</param>
 		/// <returns>The angle between [x1,y1] and [x2,y2] in radians.</returns>
-		public static float Angle(float x1, float y1, float x2, float y2)
+		public static double Angle(double x1, double y1, double x2, double y2)
 		{
-			return (float)((System.Math.Atan2((y2 - y1), (x2 - x1)) + PiOver2 + TwoPi) % TwoPi);
+			return (double)((System.Math.Atan2((y2 - y1), (x2 - x1)) + PiOver2 + TwoPi) % TwoPi);
 		}
 		/// <summary>
 		/// Calculates the angle from [0,0] to a specified point in 2D space.
@@ -814,9 +814,9 @@ namespace Duality
 		/// <param name="x">The x-Coordinate of the point.</param>
 		/// <param name="y">The y-Coordinate of the point.</param>
 		/// <returns>The angle between [0,0] and [x,y] in radians.</returns>
-		public static float Angle(float x, float y)
+		public static double Angle(double x, double y)
 		{
-			return (float)((System.Math.Atan2(y, x) + PiOver2 + TwoPi) % TwoPi);
+			return (double)((System.Math.Atan2(y, x) + PiOver2 + TwoPi) % TwoPi);
 		}
 
 		/// <summary>
@@ -828,7 +828,7 @@ namespace Duality
 		/// <param name="minVal">Minimum value.</param>
 		/// <param name="maxVal">Maximum value.</param>
 		/// <returns>-1 for "left" / lower, 1 for "right" / higher and 0 for "stay" / equal</returns>
-		public static float TurnDir(float val1, float val2, float minVal, float maxVal)
+		public static double TurnDir(double val1, double val2, double minVal, double maxVal)
 		{
 			val1 = MathF.NormalizeVar(val1, minVal, maxVal);
 			val2 = MathF.NormalizeVar(val2, minVal, maxVal);
@@ -878,7 +878,7 @@ namespace Duality
 		/// <param name="val1">The first (source) value.</param>
 		/// <param name="val2">The second (destination) value.</param>
 		/// <returns>-1 for "left" / lower, 1 for "right" / higher and 0 for "stay" / equal</returns>
-		public static float TurnDir(float val1, float val2)
+		public static double TurnDir(double val1, double val2)
 		{
 			val1 = MathF.NormalizeAngle(val1);
 			val2 = MathF.NormalizeAngle(val2);
@@ -904,9 +904,9 @@ namespace Duality
 		/// <param name="vMin">Value area minimum</param>
 		/// <param name="vMax">Value area maximum</param>
 		/// <returns>Value distance</returns>
-		public static float CircularDist(float v1, float v2, float vMin, float vMax)
+		public static double CircularDist(double v1, double v2, double vMin, double vMax)
 		{
-			float vTemp = System.Math.Abs(NormalizeVar(v1, vMin, vMax) - NormalizeVar(v2, vMin, vMax));
+			double vTemp = System.Math.Abs(NormalizeVar(v1, vMin, vMax) - NormalizeVar(v2, vMin, vMax));
 			if (vTemp * 2.0f <= vMax - vMin)
 				return vTemp;
 			else
@@ -934,9 +934,9 @@ namespace Duality
 		/// <param name="v1">The first (radian) angle.</param>
 		/// <param name="v2">The second (radian) angle.</param>
 		/// <returns>The angular distance in radians between both angles.</returns>
-		public static float CircularDist(float v1, float v2)
+		public static double CircularDist(double v1, double v2)
 		{
-			float diff = Math.Abs(v1 - v2) % RadAngle360;
+			double diff = Math.Abs(v1 - v2) % RadAngle360;
 			if (diff > RadAngle180)
 				return RadAngle360 - diff;
 			else
@@ -944,52 +944,52 @@ namespace Duality
 		}
 
 
-		public static void TransformCoord(ref float xCoord, ref float yCoord, float rot, float scale)
+		public static void TransformCoord(ref double xCoord, ref double yCoord, double rot, double scale)
 		{
-			float sin = (float)System.Math.Sin(rot);
-			float cos = (float)System.Math.Cos(rot);
-			float lastX = xCoord;
+			double sin = (double)System.Math.Sin(rot);
+			double cos = (double)System.Math.Cos(rot);
+			double lastX = xCoord;
 			xCoord = (xCoord * cos - yCoord * sin) * scale;
 			yCoord = (lastX * sin + yCoord * cos) * scale;
 		}
-		public static void TransformCoord(ref float xCoord, ref float yCoord, float rot)
+		public static void TransformCoord(ref double xCoord, ref double yCoord, double rot)
 		{
-			float sin = (float)System.Math.Sin(rot);
-			float cos = (float)System.Math.Cos(rot);
-			float lastX = xCoord;
+			double sin = (double)System.Math.Sin(rot);
+			double cos = (double)System.Math.Cos(rot);
+			double lastX = xCoord;
 			xCoord = xCoord * cos - yCoord * sin;
 			yCoord = lastX * sin + yCoord * cos;
 		}
-		public static void GetTransformDotVec(float rot, float scale, out Vector2 xDot, out Vector2 yDot)
+		public static void GetTransformDotVec(double rot, double scale, out Vector2 xDot, out Vector2 yDot)
 		{
-			float sin = (float)System.Math.Sin(rot);
-			float cos = (float)System.Math.Cos(rot);
+			double sin = (double)System.Math.Sin(rot);
+			double cos = (double)System.Math.Cos(rot);
 			xDot = new Vector2(cos * scale, -sin * scale);
 			yDot = new Vector2(sin * scale, cos * scale);
 		}
-		public static void GetTransformDotVec(float rot, Vector2 scale, out Vector2 xDot, out Vector2 yDot)
+		public static void GetTransformDotVec(double rot, Vector2 scale, out Vector2 xDot, out Vector2 yDot)
 		{
-			float sin = (float)System.Math.Sin(rot);
-			float cos = (float)System.Math.Cos(rot);
+			double sin = (double)System.Math.Sin(rot);
+			double cos = (double)System.Math.Cos(rot);
 			xDot = new Vector2(cos * scale.X, -sin * scale.X);
 			yDot = new Vector2(sin * scale.Y, cos * scale.Y);
 		}
-		public static void GetTransformDotVec(float rot, out Vector2 xDot, out Vector2 yDot)
+		public static void GetTransformDotVec(double rot, out Vector2 xDot, out Vector2 yDot)
 		{
-			float sin = (float)System.Math.Sin(rot);
-			float cos = (float)System.Math.Cos(rot);
+			double sin = (double)System.Math.Sin(rot);
+			double cos = (double)System.Math.Cos(rot);
 			xDot = new Vector2(cos, -sin);
 			yDot = new Vector2(sin, cos);
 		}
 		public static void TransformDotVec(ref Vector2 vec, ref Vector2 xDot, ref Vector2 yDot)
 		{
-			float oldX = vec.X;
+			double oldX = vec.X;
 			vec.X = vec.X * xDot.X + vec.Y * xDot.Y;
 			vec.Y = oldX * yDot.X + vec.Y * yDot.Y;
 		}
 		public static void TransformDotVec(ref Vector3 vec, ref Vector2 xDot, ref Vector2 yDot)
 		{
-			float oldX = vec.X;
+			double oldX = vec.X;
 			vec.X = vec.X * xDot.X + vec.Y * xDot.Y;
 			vec.Y = oldX * yDot.X + vec.Y * yDot.Y;
 		}
@@ -1011,13 +1011,13 @@ namespace Duality
 		/// <param name="crossY">y-Coordinate at which both lines cross.</param>
 		/// <returns>True, if the lines cross, false if not.</returns>
 		public static bool LinesCross(
-			float startX1, float startY1, float endX1, float endY1,
-			float startX2, float startY2, float endX2, float endY2,
-			out float crossX, out float crossY,
+			double startX1, double startY1, double endX1, double endY1,
+			double startX2, double startY2, double endX2, double endY2,
+			out double crossX, out double crossY,
 			bool infinite = false)
 		{
-			float n = (startY1 - startY2) * (endX2 - startX2) - (startX1 - startX2) * (endY2 - startY2);
-			float d = (endX1 - startX1) * (endY2 - startY2) - (endY1 - startY1) * (endX2 - startX2);
+			double n = (startY1 - startY2) * (endX2 - startX2) - (startX1 - startX2) * (endY2 - startY2);
+			double d = (endX1 - startX1) * (endY2 - startY2) - (endY1 - startY1) * (endX2 - startX2);
 
 			crossX = 0.0f;
 			crossY = 0.0f;
@@ -1026,8 +1026,8 @@ namespace Duality
 				return false;
 			else
 			{
-				float sn = (startY1 - startY2) * (endX1 - startX1) - (startX1 - startX2) * (endY1 - startY1);
-				float ab = n / d;
+				double sn = (startY1 - startY2) * (endX1 - startX1) - (startX1 - startX2) * (endY1 - startY1);
+				double ab = n / d;
 				if (infinite)
 				{
 					crossX = startX1 + ab * (endX1 - startX1);
@@ -1036,7 +1036,7 @@ namespace Duality
 				}
 				else if (ab > 0.0 && ab < 1.0)
 				{
-					float cd = sn / d;
+					double cd = sn / d;
 					if (cd > 0.0 && cd < 1.0)
 					{
 						crossX = startX1 + ab * (endX1 - startX1);
@@ -1061,12 +1061,12 @@ namespace Duality
 		/// <param name="endY2">y-Coordinate of the second lines end.</param>
 		/// <param name="infinite">Whether the lines are considered infinite.</param>
 		/// <returns>True, if the lines cross, false if not.</returns>
-		public static bool LinesCross(float startX1, float startY1, float endX1, float endY1, float startX2, float startY2, float endX2, float endY2, bool infinite = false)
+		public static bool LinesCross(double startX1, double startY1, double endX1, double endY1, double startX2, double startY2, double endX2, double endY2, bool infinite = false)
 		{
 			return LinesCross(
 				startX1, startY1, endX1, endY1,
 				startX2, startY2, endX2, endY2,
-				out float crossX, out float crossY,
+				out double crossX, out double crossY,
 				infinite);
 		}
 
@@ -1083,8 +1083,8 @@ namespace Duality
 		/// <param name="infinite">Whether the line is considered infinite.</param>
 		/// <returns>A point located on the specified line that is as close as possible to the specified point.</returns>
 		public static Vector2 PointLineNearestPoint(
-			float pX, float pY,
-			float lX1, float lY1, float lX2, float lY2,
+			double pX, double pY,
+			double lX1, double lY1, double lX2, double lY2,
 			bool infinite = false)
 		{
 			if (lX1 == lX2 && lY1 == lY2) return new Vector2(lX1, lY1);
@@ -1098,7 +1098,7 @@ namespace Duality
 				if (q > 1.0) q = 1.0f;
 			}
 
-			return new Vector2((float)((1.0d - q) * lX1 + q * lX2), (float)((1.0d - q) * lY1 + q * lY2));
+			return new Vector2((double)((1.0d - q) * lX1 + q * lX2), (double)((1.0d - q) * lY1 + q * lY2));
 		}
 
 		/// <summary>
@@ -1112,9 +1112,9 @@ namespace Duality
 		/// <param name="lY2">y-Coordinate of the lines end.</param>
 		/// <param name="infinite">Whether the line is considered infinite.</param>
 		/// <returns>The distance between point and line.</returns>
-		public static float PointLineDistance(
-			float pX, float pY,
-			float lX1, float lY1, float lX2, float lY2,
+		public static double PointLineDistance(
+			double pX, double pY,
+			double lX1, double lY1, double lX2, double lY2,
 			bool infinite = false)
 		{
 			Vector2 n = PointLineNearestPoint(pX, pY, lX1, lY1, lX2, lY2, infinite);
@@ -1140,7 +1140,7 @@ namespace Duality
 				if (ab == Vector2.Zero) return false;
 				if (bc == Vector2.Zero) return false;
 
-				float dot_product = Vector2.Dot(ab.PerpendicularLeft, bc);
+				double dot_product = Vector2.Dot(ab.PerpendicularLeft, bc);
 				if (dot_product > 0.0f) pos = true;
 				else if (dot_product < 0.0f) neg = true;
 
@@ -1204,11 +1204,11 @@ namespace Duality
 		/// Throws an ArgumentOutOfRangeException, if the specified value is NaN or Infinity.
 		/// </summary>
 		/// <param name="value"></param>
-		public static void CheckValidValue(float value)
+		public static void CheckValidValue(double value)
 		{
-			if (float.IsNaN(value) || float.IsInfinity(value))
+			if (double.IsNaN(value) || double.IsInfinity(value))
 			{
-				throw new ArgumentOutOfRangeException("value", string.Format("Invalid float value detected: {0}", value));
+				throw new ArgumentOutOfRangeException("value", string.Format("Invalid double value detected: {0}", value));
 			}
 		}
 		/// <summary>
@@ -1217,10 +1217,10 @@ namespace Duality
 		/// <param name="value"></param>
 		public static void CheckValidValue(Vector2 value)
 		{
-			if (float.IsNaN(value.X) || float.IsInfinity(value.X) ||
-				float.IsNaN(value.Y) || float.IsInfinity(value.Y))
+			if (double.IsNaN(value.X) || double.IsInfinity(value.X) ||
+				double.IsNaN(value.Y) || double.IsInfinity(value.Y))
 			{
-				throw new ArgumentOutOfRangeException("value", string.Format("Invalid float value detected: {0}", value));
+				throw new ArgumentOutOfRangeException("value", string.Format("Invalid double value detected: {0}", value));
 			}
 		}
 		/// <summary>
@@ -1229,11 +1229,11 @@ namespace Duality
 		/// <param name="value"></param>
 		public static void CheckValidValue(Vector3 value)
 		{
-			if (float.IsNaN(value.X) || float.IsInfinity(value.X) ||
-				float.IsNaN(value.Y) || float.IsInfinity(value.Y) ||
-				float.IsNaN(value.Z) || float.IsInfinity(value.Z))
+			if (double.IsNaN(value.X) || double.IsInfinity(value.X) ||
+				double.IsNaN(value.Y) || double.IsInfinity(value.Y) ||
+				double.IsNaN(value.Z) || double.IsInfinity(value.Z))
 			{
-				throw new ArgumentOutOfRangeException("value", string.Format("Invalid float value detected: {0}", value));
+				throw new ArgumentOutOfRangeException("value", string.Format("Invalid double value detected: {0}", value));
 			}
 		}
 		/// <summary>
@@ -1242,12 +1242,12 @@ namespace Duality
 		/// <param name="value"></param>
 		public static void CheckValidValue(Quaternion value)
 		{
-			if (float.IsNaN(value.X) || float.IsInfinity(value.X) ||
-				float.IsNaN(value.Y) || float.IsInfinity(value.Y) ||
-				float.IsNaN(value.Z) || float.IsInfinity(value.Z) ||
-				float.IsNaN(value.W) || float.IsInfinity(value.W))
+			if (double.IsNaN(value.X) || double.IsInfinity(value.X) ||
+				double.IsNaN(value.Y) || double.IsInfinity(value.Y) ||
+				double.IsNaN(value.Z) || double.IsInfinity(value.Z) ||
+				double.IsNaN(value.W) || double.IsInfinity(value.W))
 			{
-				throw new ArgumentOutOfRangeException("value", string.Format("Invalid float value detected: {0}", value));
+				throw new ArgumentOutOfRangeException("value", string.Format("Invalid double value detected: {0}", value));
 			}
 		}
 	}

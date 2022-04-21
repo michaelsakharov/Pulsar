@@ -52,11 +52,11 @@ namespace Duality
         }
 
         // adapted from http://www.scratchapixel.com/lessons/3d-basic-lessons/lesson-7-intersecting-simple-shapes/ray-box-intersection/
-        public float? Intersects(BoundingBox box)
+        public double? Intersects(BoundingBox box)
         {
-            const float Epsilon = 1e-6f;
+            const double Epsilon = 1e-6;
 
-            float? tMin = null, tMax = null;
+            double? tMin = null, tMax = null;
 
             if (Math.Abs(this.Direction.X) < Epsilon)
             {
@@ -70,7 +70,7 @@ namespace Duality
 
                 if (tMin > tMax)
                 {
-                    float? temp = tMin;
+                    double? temp = tMin;
                     tMin = tMax;
                     tMax = temp;
                 }
@@ -83,12 +83,12 @@ namespace Duality
             }
             else
             {
-				float tMinY = (box.Min.Y - this.Position.Y) / this.Direction.Y;
-				float tMaxY = (box.Max.Y - this.Position.Y) / this.Direction.Y;
+				double tMinY = (box.Min.Y - this.Position.Y) / this.Direction.Y;
+				double tMaxY = (box.Max.Y - this.Position.Y) / this.Direction.Y;
 
                 if (tMinY > tMaxY)
                 {
-					float temp = tMinY;
+					double temp = tMinY;
                     tMinY = tMaxY;
                     tMaxY = temp;
                 }
@@ -107,12 +107,12 @@ namespace Duality
             }
             else
             {
-				float tMinZ = (box.Min.Z - this.Position.Z) / this.Direction.Z;
-				float tMaxZ = (box.Max.Z - this.Position.Z) / this.Direction.Z;
+				double tMinZ = (box.Min.Z - this.Position.Z) / this.Direction.Z;
+				double tMaxZ = (box.Max.Z - this.Position.Z) / this.Direction.Z;
 
                 if (tMinZ > tMaxZ)
                 {
-					float temp = tMinZ;
+					double temp = tMinZ;
                     tMinZ = tMaxZ;
                     tMaxZ = temp;
                 }
@@ -136,29 +136,29 @@ namespace Duality
         }
 
 
-        public void Intersects(ref BoundingBox box, out float? result)
+        public void Intersects(ref BoundingBox box, out double? result)
         {
 			result = this.Intersects(box);
         }
 
 
-        public float? Intersects(BoundingSphere sphere)
+        public double? Intersects(BoundingSphere sphere)
         {
-            float? result;
+            double? result;
 			this.Intersects(ref sphere, out result);
             return result;
         }
 
-        public float? Intersects(Plane plane)
+        public double? Intersects(Plane plane)
         {
-            float? result;
+            double? result;
 			this.Intersects(ref plane, out result);
             return result;
         }
 
-        public void Intersects(ref Plane plane, out float? result)
+        public void Intersects(ref Plane plane, out double? result)
         {
-			float den = Vector3.Dot(this.Direction, plane.Normal);
+			double den = Vector3.Dot(this.Direction, plane.Normal);
             if (Math.Abs(den) < 0.00001f)
             {
                 result = null;
@@ -175,25 +175,25 @@ namespace Duality
                     return;
                 }
 
-                result = 0.0f;
+                result = 0.0;
             }
         }
 
-        public void Intersects(ref BoundingSphere sphere, out float? result)
+        public void Intersects(ref BoundingSphere sphere, out double? result)
         {
             // Find the vector between where the ray starts the the sphere's centre
             Vector3 difference = sphere.Center - this.Position;
 
-            float differenceLengthSquared = difference.LengthSquared;
-            float sphereRadiusSquared = sphere.Radius * sphere.Radius;
+            double differenceLengthSquared = difference.LengthSquared;
+            double sphereRadiusSquared = sphere.Radius * sphere.Radius;
 
-            float distanceAlongRay;
+            double distanceAlongRay;
 
             // If the distance between the ray start and the sphere's centre is less than
             // the radius of the sphere, it means we've intersected. N.B. checking the LengthSquared is faster.
             if (differenceLengthSquared < sphereRadiusSquared)
             {
-                result = 0.0f;
+                result = 0.0;
                 return;
             }
 
@@ -210,9 +210,9 @@ namespace Duality
             // if y = distance between ray position and sphere centre
             // if z = the distance we've travelled along the ray
             // if x^2 + z^2 - y^2 < 0, we do not intersect
-            float dist = sphereRadiusSquared + distanceAlongRay * distanceAlongRay - differenceLengthSquared;
+            double dist = sphereRadiusSquared + distanceAlongRay * distanceAlongRay - differenceLengthSquared;
 
-            result = (dist < 0) ? null : distanceAlongRay - (float?)Math.Sqrt(dist);
+            result = (dist < 0) ? null : distanceAlongRay - (double?)Math.Sqrt(dist);
         }
 
 

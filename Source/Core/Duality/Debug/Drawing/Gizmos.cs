@@ -269,7 +269,7 @@ namespace Duality.DebugDraw
 
 		public static void DrawCone(Vector3 position, Vector3 rotation, float distance, float angle, ColorRgba color)
 		{
-			float coneWidth = distance * MathF.Tan(angle);
+			float coneWidth = distance * (float)MathF.Tan(angle);
 
 			Matrix4 Matrix = Matrix4.Identity;
 			Matrix *= Matrix4.CreateScale(coneWidth, coneWidth, 1f);
@@ -292,7 +292,7 @@ namespace Duality.DebugDraw
 
 		public static void DrawConeWithDirection(Vector3 position, Vector3 direction, float distance, float angle, ColorRgba color)
 		{
-			float coneWidth = distance * MathF.Tan(angle);
+			float coneWidth = distance * (float)MathF.Tan(angle);
 
 
 			Matrix4 MatrixWorld = Matrix4.CreateWorld(Vector3.Zero, direction, Vector3.Up);
@@ -400,7 +400,7 @@ namespace Duality.DebugDraw
 			// causing the circle to not draw correctly. To avoid this, we manually
 			// specify the left and up vectors so that the circle will draw correctly in
 			// the X-Z plane.
-			if (RoughlyEqual(left.LengthSquared, 0f))
+			if (RoughlyEqual(left.LengthSquared, 0))
 			{
 				left = Vector3.Left;
 				up = Vector3.Forward;
@@ -409,9 +409,9 @@ namespace Duality.DebugDraw
 			return (left, up);
 		}
 
-		static bool RoughlyEqual(float a, float b)
+		static bool RoughlyEqual(double a, double b)
 		{
-			return (Math.Abs(a - b) <= float.Epsilon);
+			return (Math.Abs(a - b) <= double.Epsilon);
 		}
 	}
 }

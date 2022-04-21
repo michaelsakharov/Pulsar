@@ -74,7 +74,7 @@ namespace Duality.Editor.Plugins.Base.PropertyEditors
 				this.ParentGrid.ConfigureEditor(this.editorAngle, new EditorHintAttribute[] { 
 					new EditorHintDecimalPlacesAttribute(1), 
 					new EditorHintIncrementAttribute(1),
-					new EditorHintRangeAttribute(float.MinValue, float.MaxValue, 0.0f, 359.999f) });
+					new EditorHintRangeAttribute(double.MinValue, double.MaxValue, 0.0f, 359.999f) });
 				this.AddPropertyEditor(this.editorAngle);
 				this.editorAngle.EndUpdate();
 			}

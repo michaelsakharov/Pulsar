@@ -71,72 +71,72 @@ namespace Duality
 		/// <summary>
 		/// Gets or sets the value at row 1, column 1 of this instance.
 		/// </summary>
-		public float M11 { get { return this.Row0.X; } set { this.Row0.X = value; } }
+		public double M11 { get { return this.Row0.X; } set { this.Row0.X = value; } }
 		/// <summary>
 		/// Gets or sets the value at row 1, column 2 of this instance.
 		/// </summary>
-		public float M12 { get { return this.Row0.Y; } set { this.Row0.Y = value; } }
+		public double M12 { get { return this.Row0.Y; } set { this.Row0.Y = value; } }
 		/// <summary>
 		/// Gets or sets the value at row 1, column 3 of this instance.
 		/// </summary>
-		public float M13 { get { return this.Row0.Z; } set { this.Row0.Z = value; } }
+		public double M13 { get { return this.Row0.Z; } set { this.Row0.Z = value; } }
 		/// <summary>
 		/// Gets or sets the value at row 1, column 4 of this instance.
 		/// </summary>
-		public float M14 { get { return this.Row0.W; } set { this.Row0.W = value; } }
+		public double M14 { get { return this.Row0.W; } set { this.Row0.W = value; } }
 		/// <summary>
 		/// Gets or sets the value at row 2, column 1 of this instance.
 		/// </summary>
-		public float M21 { get { return this.Row1.X; } set { this.Row1.X = value; } }
+		public double M21 { get { return this.Row1.X; } set { this.Row1.X = value; } }
 		/// <summary>
 		/// Gets or sets the value at row 2, column 2 of this instance.
 		/// </summary>
-		public float M22 { get { return this.Row1.Y; } set { this.Row1.Y = value; } }
+		public double M22 { get { return this.Row1.Y; } set { this.Row1.Y = value; } }
 		/// <summary>
 		/// Gets or sets the value at row 2, column 3 of this instance.
 		/// </summary>
-		public float M23 { get { return this.Row1.Z; } set { this.Row1.Z = value; } }
+		public double M23 { get { return this.Row1.Z; } set { this.Row1.Z = value; } }
 		/// <summary>
 		/// Gets or sets the value at row 2, column 4 of this instance.
 		/// </summary>
-		public float M24 { get { return this.Row1.W; } set { this.Row1.W = value; } }
+		public double M24 { get { return this.Row1.W; } set { this.Row1.W = value; } }
 		/// <summary>
 		/// Gets or sets the value at row 3, column 1 of this instance.
 		/// </summary>
-		public float M31 { get { return this.Row2.X; } set { this.Row2.X = value; } }
+		public double M31 { get { return this.Row2.X; } set { this.Row2.X = value; } }
 		/// <summary>
 		/// Gets or sets the value at row 3, column 2 of this instance.
 		/// </summary>
-		public float M32 { get { return this.Row2.Y; } set { this.Row2.Y = value; } }
+		public double M32 { get { return this.Row2.Y; } set { this.Row2.Y = value; } }
 		/// <summary>
 		/// Gets or sets the value at row 3, column 3 of this instance.
 		/// </summary>
-		public float M33 { get { return this.Row2.Z; } set { this.Row2.Z = value; } }
+		public double M33 { get { return this.Row2.Z; } set { this.Row2.Z = value; } }
 		/// <summary>
 		/// Gets or sets the value at row 3, column 4 of this instance.
 		/// </summary>
-		public float M34 { get { return this.Row2.W; } set { this.Row2.W = value; } }
+		public double M34 { get { return this.Row2.W; } set { this.Row2.W = value; } }
 		/// <summary>
 		/// Gets or sets the value at row 4, column 1 of this instance.
 		/// </summary>
-		public float M41 { get { return this.Row3.X; } set { this.Row3.X = value; } }
+		public double M41 { get { return this.Row3.X; } set { this.Row3.X = value; } }
 		/// <summary>
 		/// Gets or sets the value at row 4, column 2 of this instance.
 		/// </summary>
-		public float M42 { get { return this.Row3.Y; } set { this.Row3.Y = value; } }
+		public double M42 { get { return this.Row3.Y; } set { this.Row3.Y = value; } }
 		/// <summary>
 		/// Gets or sets the value at row 4, column 3 of this instance.
 		/// </summary>
-		public float M43 { get { return this.Row3.Z; } set { this.Row3.Z = value; } }
+		public double M43 { get { return this.Row3.Z; } set { this.Row3.Z = value; } }
 		/// <summary>
 		/// Gets or sets the value at row 4, column 4 of this instance.
 		/// </summary>
-		public float M44 { get { return this.Row3.W; } set { this.Row3.W = value; } }
+		public double M44 { get { return this.Row3.W; } set { this.Row3.W = value; } }
 
 		/// <summary>
 		/// Gets or sets the value at a specified row and column.
 		/// </summary>
-		public float this[int rowIndex, int columnIndex]
+		public double this[int rowIndex, int columnIndex]
 		{
 			get
 			{
@@ -159,11 +159,11 @@ namespace Duality
 		/// <summary>
 		/// Gets the determinant of this matrix.
 		/// </summary>
-		public float Determinant
+		public double Determinant
 		{
 			get
 			{
-				float m11 = this.Row0.X, m12 = this.Row0.Y, m13 = this.Row0.Z, m14 = this.Row0.W,
+				double m11 = this.Row0.X, m12 = this.Row0.Y, m13 = this.Row0.Z, m14 = this.Row0.W,
 						m21 = this.Row1.X, m22 = this.Row1.Y, m23 = this.Row1.Z, m24 = this.Row1.W,
 						m31 = this.Row2.X, m32 = this.Row2.Y, m33 = this.Row2.Z, m34 = this.Row2.W,
 						m41 = this.Row3.X, m42 = this.Row3.Y, m43 = this.Row3.Z, m44 = this.Row3.W;
@@ -198,7 +198,7 @@ namespace Duality
 		/// <summary>
 		/// Gets the trace of the matrix, the sum of the values along the diagonal.
 		/// </summary>
-		public float Trace { get { return this.Row0.X + this.Row1.Y + this.Row2.Z + this.Row3.W; } }
+		public double Trace { get { return this.Row0.X + this.Row1.Y + this.Row2.Z + this.Row3.W; } }
 
 		#region Public Constructors
 
@@ -236,10 +236,10 @@ namespace Duality
 		/// <param name="m32">Third item of the fourth row of the matrix.</param>
 		/// <param name="m33">Fourth item of the fourth row of the matrix.</param>
 		public Matrix4(
-			float m00, float m01, float m02, float m03,
-			float m10, float m11, float m12, float m13,
-			float m20, float m21, float m22, float m23,
-			float m30, float m31, float m32, float m33)
+			double m00, double m01, double m02, double m03,
+			double m10, double m11, double m12, double m13,
+			double m20, double m21, double m22, double m23,
+			double m30, double m31, double m32, double m33)
 		{
 			this.Row0 = new Vector4(m00, m01, m02, m03);
 			this.Row1 = new Vector4(m10, m11, m12, m13);
@@ -467,14 +467,14 @@ namespace Duality
 			vector.X = objectPosition.X - cameraPosition.X;
 			vector.Y = objectPosition.Y - cameraPosition.Y;
 			vector.Z = objectPosition.Z - cameraPosition.Z;
-			float num = vector.LengthSquared;
-			if (num < 0.0001f)
+			double num = vector.LengthSquared;
+			if (num < 0.0001)
 			{
 				vector = cameraForwardVector.HasValue ? -cameraForwardVector.Value : Vector3.Forward;
 			}
 			else
 			{
-				Vector3.Multiply(ref vector, 1f / MathF.Sqrt(num), out vector);
+				Vector3.Multiply(ref vector, 1 / MathF.Sqrt(num), out vector);
 			}
 			Vector3.Cross(ref cameraUpVector, ref vector, out vector3);
 			vector3.Normalize();
@@ -528,40 +528,40 @@ namespace Duality
 		public static void CreateConstrainedBillboard(ref Vector3 objectPosition, ref Vector3 cameraPosition,
 			ref Vector3 rotateAxis, Vector3? cameraForwardVector, Vector3? objectForwardVector, out Matrix4 result)
 		{
-			float num;
+			double num;
 			Vector3 vector;
 			Vector3 vector2;
 			Vector3 vector3;
 			vector2.X = objectPosition.X - cameraPosition.X;
 			vector2.Y = objectPosition.Y - cameraPosition.Y;
 			vector2.Z = objectPosition.Z - cameraPosition.Z;
-			float num2 = vector2.LengthSquared;
-			if (num2 < 0.0001f)
+			double num2 = vector2.LengthSquared;
+			if (num2 < 0.0001)
 			{
 				vector2 = cameraForwardVector.HasValue ? -cameraForwardVector.Value : Vector3.Forward;
 			}
 			else
 			{
-				Vector3.Multiply(ref vector2, 1f / MathF.Sqrt(num2), out vector2);
+				Vector3.Multiply(ref vector2, 1 / MathF.Sqrt(num2), out vector2);
 			}
 			Vector3 vector4 = rotateAxis;
 			Vector3.Dot(ref rotateAxis, ref vector2, out num);
-			if (Math.Abs(num) > 0.9982547f)
+			if (Math.Abs(num) > 0.9982547)
 			{
 				if (objectForwardVector.HasValue)
 				{
 					vector = objectForwardVector.Value;
 					Vector3.Dot(ref rotateAxis, ref vector, out num);
-					if (Math.Abs(num) > 0.9982547f)
+					if (Math.Abs(num) > 0.9982547)
 					{
 						num = ((rotateAxis.X * Vector3.Forward.X) + (rotateAxis.Y * Vector3.Forward.Y)) + (rotateAxis.Z * Vector3.Forward.Z);
-						vector = (Math.Abs(num) > 0.9982547f) ? Vector3.Right : Vector3.Forward;
+						vector = (Math.Abs(num) > 0.9982547) ? Vector3.Right : Vector3.Forward;
 					}
 				}
 				else
 				{
 					num = ((rotateAxis.X * Vector3.Forward.X) + (rotateAxis.Y * Vector3.Forward.Y)) + (rotateAxis.Z * Vector3.Forward.Z);
-					vector = (Math.Abs(num) > 0.9982547f) ? Vector3.Right : Vector3.Forward;
+					vector = (Math.Abs(num) > 0.9982547) ? Vector3.Right : Vector3.Forward;
 				}
 				Vector3.Cross(ref rotateAxis, ref vector, out vector3);
 				vector3.Normalize();
@@ -601,7 +601,7 @@ namespace Duality
 		/// <param name="axis">The axis of rotation.</param>
 		/// <param name="angle">The angle of rotation in radians.</param>
 		/// <returns>The rotation <see cref="Matrix4"/>.</returns>
-		public static Matrix4 CreateFromAxisAngle(Vector3 axis, float angle)
+		public static Matrix4 CreateFromAxisAngle(Vector3 axis, double angle)
 		{
 			Matrix4 result;
 			CreateFromAxisAngle(ref axis, angle, out result);
@@ -614,31 +614,31 @@ namespace Duality
 		/// <param name="axis">The axis of rotation.</param>
 		/// <param name="angle">The angle of rotation in radians.</param>
 		/// <param name="result">The rotation <see cref="Matrix4"/> as an output parameter.</param>
-		public static void CreateFromAxisAngle(ref Vector3 axis, float angle, out Matrix4 result)
+		public static void CreateFromAxisAngle(ref Vector3 axis, double angle, out Matrix4 result)
 		{
-			float x = axis.X;
-			float y = axis.Y;
-			float z = axis.Z;
-			float num2 = MathF.Sin(angle);
-			float num = MathF.Cos(angle);
-			float num11 = x * x;
-			float num10 = y * y;
-			float num9 = z * z;
-			float num8 = x * y;
-			float num7 = x * z;
-			float num6 = y * z;
+			double x = axis.X;
+			double y = axis.Y;
+			double z = axis.Z;
+			double num2 = MathF.Sin(angle);
+			double num = MathF.Cos(angle);
+			double num11 = x * x;
+			double num10 = y * y;
+			double num9 = z * z;
+			double num8 = x * y;
+			double num7 = x * z;
+			double num6 = y * z;
 			result = new Matrix4();
-			result.M11 = num11 + (num * (1f - num11));
+			result.M11 = num11 + (num * (1 - num11));
 			result.M12 = (num8 - (num * num8)) + (num2 * z);
 			result.M13 = (num7 - (num * num7)) - (num2 * y);
 			result.M14 = 0;
 			result.M21 = (num8 - (num * num8)) - (num2 * z);
-			result.M22 = num10 + (num * (1f - num10));
+			result.M22 = num10 + (num * (1 - num10));
 			result.M23 = (num6 - (num * num6)) + (num2 * x);
 			result.M24 = 0;
 			result.M31 = (num7 - (num * num7)) + (num2 * y);
 			result.M32 = (num6 - (num * num6)) - (num2 * x);
-			result.M33 = num9 + (num * (1f - num9));
+			result.M33 = num9 + (num * (1 - num9));
 			result.M34 = 0;
 			result.M41 = 0;
 			result.M42 = 0;
@@ -665,38 +665,38 @@ namespace Duality
 		/// <param name="result">The rotation <see cref="Matrix4"/> as an output parameter.</param>
 		public static void CreateFromQuaternion(ref Quaternion quaternion, out Matrix4 result)
 		{
-			float num9 = quaternion.X * quaternion.X;
-			float num8 = quaternion.Y * quaternion.Y;
-			float num7 = quaternion.Z * quaternion.Z;
-			float num6 = quaternion.X * quaternion.Y;
-			float num5 = quaternion.Z * quaternion.W;
-			float num4 = quaternion.Z * quaternion.X;
-			float num3 = quaternion.Y * quaternion.W;
-			float num2 = quaternion.Y * quaternion.Z;
-			float num = quaternion.X * quaternion.W;
+			double num9 = quaternion.X * quaternion.X;
+			double num8 = quaternion.Y * quaternion.Y;
+			double num7 = quaternion.Z * quaternion.Z;
+			double num6 = quaternion.X * quaternion.Y;
+			double num5 = quaternion.Z * quaternion.W;
+			double num4 = quaternion.Z * quaternion.X;
+			double num3 = quaternion.Y * quaternion.W;
+			double num2 = quaternion.Y * quaternion.Z;
+			double num = quaternion.X * quaternion.W;
 			result = new Matrix4();
-			result.M11 = 1f - (2f * (num8 + num7));
-			result.M12 = 2f * (num6 + num5);
-			result.M13 = 2f * (num4 - num3);
-			result.M14 = 0f;
-			result.M21 = 2f * (num6 - num5);
-			result.M22 = 1f - (2f * (num7 + num9));
-			result.M23 = 2f * (num2 + num);
-			result.M24 = 0f;
-			result.M31 = 2f * (num4 + num3);
-			result.M32 = 2f * (num2 - num);
-			result.M33 = 1f - (2f * (num8 + num9));
-			result.M34 = 0f;
-			result.M41 = 0f;
-			result.M42 = 0f;
-			result.M43 = 0f;
-			result.M44 = 1f;
+			result.M11 = 1 - (2 * (num8 + num7));
+			result.M12 = 2 * (num6 + num5);
+			result.M13 = 2 * (num4 - num3);
+			result.M14 = 0;
+			result.M21 = 2 * (num6 - num5);
+			result.M22 = 1 - (2 * (num7 + num9));
+			result.M23 = 2 * (num2 + num);
+			result.M24 = 0;
+			result.M31 = 2 * (num4 + num3);
+			result.M32 = 2 * (num2 - num);
+			result.M33 = 1 - (2 * (num8 + num9));
+			result.M34 = 0;
+			result.M41 = 0;
+			result.M42 = 0;
+			result.M43 = 0;
+			result.M44 = 1;
 		}
 
 		public static Matrix4 Rotate(Quaternion q)
 		{
 			Vector3 axis;
-			float angle;
+			double angle;
 			q.ToAxisAngle(out axis, out angle);
 			return CreateFromAxisAngle(axis, angle);
 		}
@@ -710,7 +710,7 @@ namespace Duality
 		/// <returns>The rotation <see cref="Matrix4"/>.</returns>
 		/// <remarks>For more information about yaw, pitch and roll visit http://en.wikipedia.org/wiki/Euler_angles.
 		/// </remarks>
-		public static Matrix4 CreateFromYawPitchRoll(float yaw, float pitch, float roll)
+		public static Matrix4 CreateFromYawPitchRoll(double yaw, double pitch, double roll)
 		{
 			Matrix4 matrix;
 			CreateFromYawPitchRoll(yaw, pitch, roll, out matrix);
@@ -726,7 +726,7 @@ namespace Duality
 		/// <param name="result">The rotation <see cref="Matrix4"/> as an output parameter.</param>
 		/// <remarks>For more information about yaw, pitch and roll visit http://en.wikipedia.org/wiki/Euler_angles.
 		/// </remarks>
-		public static void CreateFromYawPitchRoll(float yaw, float pitch, float roll, out Matrix4 result)
+		public static void CreateFromYawPitchRoll(double yaw, double pitch, double roll, out Matrix4 result)
 		{
 			Quaternion quaternion;
 			Quaternion.CreateFromYawPitchRoll(yaw, pitch, roll, out quaternion);
@@ -749,16 +749,16 @@ namespace Duality
 
 		public static void ExtractRotation(Matrix4 matrix, ref Quaternion rotation)
 		{
-			if (float.IsNaN(matrix.M11))
+			if (double.IsNaN(matrix.M11))
 				return;
 
-			float sx = (Math.Sign(matrix.M11 * matrix.M12 * matrix.M13 * matrix.M14) < 0) ? -1.0f : 1.0f;
-			float sy = (Math.Sign(matrix.M21 * matrix.M22 * matrix.M23 * matrix.M24) < 0) ? -1.0f : 1.0f;
-			float sz = (Math.Sign(matrix.M31 * matrix.M32 * matrix.M33 * matrix.M34) < 0) ? -1.0f : 1.0f;
+			double sx = (Math.Sign(matrix.M11 * matrix.M12 * matrix.M13 * matrix.M14) < 0) ? -1.0 : 1.0;
+			double sy = (Math.Sign(matrix.M21 * matrix.M22 * matrix.M23 * matrix.M24) < 0) ? -1.0 : 1.0;
+			double sz = (Math.Sign(matrix.M31 * matrix.M32 * matrix.M33 * matrix.M34) < 0) ? -1.0 : 1.0;
 
-			sx *= (float)Math.Sqrt(matrix.M11 * matrix.M11 + matrix.M12 * matrix.M12 + matrix.M13 * matrix.M13);
-			sy *= (float)Math.Sqrt(matrix.M21 * matrix.M21 + matrix.M22 * matrix.M22 + matrix.M23 * matrix.M23);
-			sz *= (float)Math.Sqrt(matrix.M31 * matrix.M31 + matrix.M32 * matrix.M32 + matrix.M33 * matrix.M33);
+			sx *= (double)Math.Sqrt(matrix.M11 * matrix.M11 + matrix.M12 * matrix.M12 + matrix.M13 * matrix.M13);
+			sy *= (double)Math.Sqrt(matrix.M21 * matrix.M21 + matrix.M22 * matrix.M22 + matrix.M23 * matrix.M23);
+			sz *= (double)Math.Sqrt(matrix.M31 * matrix.M31 + matrix.M32 * matrix.M32 + matrix.M33 * matrix.M33);
 
 			if (sx == 0.0 || sy == 0.0 || sz == 0.0)
 			{
@@ -766,10 +766,10 @@ namespace Duality
 				return;
 			}
 
-			var m = new Matrix4(matrix.M11 / sx, matrix.M12 / sx, matrix.M13 / sx, 0.0f,
-								   matrix.M21 / sy, matrix.M22 / sy, matrix.M23 / sy, 0.0f,
-								   matrix.M31 / sz, matrix.M32 / sz, matrix.M33 / sz, 0.0f,
-								   0.0f, 0.0f, 0.0f, 1.0f);
+			var m = new Matrix4(matrix.M11 / sx, matrix.M12 / sx, matrix.M13 / sx, 0.0,
+								   matrix.M21 / sy, matrix.M22 / sy, matrix.M23 / sy, 0.0,
+								   matrix.M31 / sz, matrix.M32 / sz, matrix.M33 / sz, 0.0,
+								   0.0, 0.0, 0.0, 1.0);
 
 			rotation = Quaternion.CreateFromRotationMatrix(m);
 		}
@@ -790,19 +790,19 @@ namespace Duality
 			result.M11 = vector2.X;
 			result.M12 = vector3.X;
 			result.M13 = vector.X;
-			result.M14 = 0f;
+			result.M14 = 0;
 			result.M21 = vector2.Y;
 			result.M22 = vector3.Y;
 			result.M23 = vector.Y;
-			result.M24 = 0f;
+			result.M24 = 0;
 			result.M31 = vector2.Z;
 			result.M32 = vector3.Z;
 			result.M33 = vector.Z;
-			result.M34 = 0f;
+			result.M34 = 0;
 			result.M41 = -Vector3.Dot(vector2, cameraPosition);
 			result.M42 = -Vector3.Dot(vector3, cameraPosition);
 			result.M43 = -Vector3.Dot(vector, cameraPosition);
-			result.M44 = 1f;
+			result.M44 = 1;
 		}
 
 		/// <summary>
@@ -813,7 +813,7 @@ namespace Duality
 		/// <param name="zNearPlane">Depth of the near plane.</param>
 		/// <param name="zFarPlane">Depth of the far plane.</param>
 		/// <returns>The new projection <see cref="Matrix4"/> for orthographic view.</returns>
-		public static Matrix4 CreateOrthographic(float width, float height, float zNearPlane, float zFarPlane)
+		public static Matrix4 CreateOrthographic(double width, double height, double zNearPlane, double zFarPlane)
 		{
 			Matrix4 matrix;
 			CreateOrthographic(width, height, zNearPlane, zFarPlane, out matrix);
@@ -828,18 +828,18 @@ namespace Duality
 		/// <param name="zNearPlane">Depth of the near plane.</param>
 		/// <param name="zFarPlane">Depth of the far plane.</param>
 		/// <param name="result">The new projection <see cref="Matrix4"/> for orthographic view as an output parameter.</param>
-		public static void CreateOrthographic(float width, float height, float zNearPlane, float zFarPlane, out Matrix4 result)
+		public static void CreateOrthographic(double width, double height, double zNearPlane, double zFarPlane, out Matrix4 result)
 		{
 			result = new Matrix4();
-			result.M11 = 2f / width;
-			result.M12 = result.M13 = result.M14 = 0f;
-			result.M22 = 2f / height;
-			result.M21 = result.M23 = result.M24 = 0f;
-			result.M33 = 1f / (zNearPlane - zFarPlane);
-			result.M31 = result.M32 = result.M34 = 0f;
-			result.M41 = result.M42 = 0f;
+			result.M11 = 2 / width;
+			result.M12 = result.M13 = result.M14 = 0;
+			result.M22 = 2 / height;
+			result.M21 = result.M23 = result.M24 = 0;
+			result.M33 = 1 / (zNearPlane - zFarPlane);
+			result.M31 = result.M32 = result.M34 = 0;
+			result.M41 = result.M42 = 0;
 			result.M43 = zNearPlane / (zNearPlane - zFarPlane);
-			result.M44 = 1f;
+			result.M44 = 1;
 		}
 
 		/// <summary>
@@ -852,25 +852,25 @@ namespace Duality
 		/// <param name="zNearPlane">Depth of the near plane.</param>
 		/// <param name="zFarPlane">Depth of the far plane.</param>
 		/// <param name="result">The new projection <see cref="Matrix4"/> for customized orthographic view as an output parameter.</param>
-		public static void CreateOrthographicOffCenter(float left, float right, float bottom, float top, float zNearPlane, float zFarPlane, out Matrix4 result)
+		public static void CreateOrthographicOffCenter(double left, double right, double bottom, double top, double zNearPlane, double zFarPlane, out Matrix4 result)
 		{
 			result = new Matrix4();
-			result.M11 = (float)(2.0 / ((double)right - (double)left));
-			result.M12 = 0.0f;
-			result.M13 = 0.0f;
-			result.M14 = 0.0f;
-			result.M21 = 0.0f;
-			result.M22 = (float)(2.0 / ((double)top - (double)bottom));
-			result.M23 = 0.0f;
-			result.M24 = 0.0f;
-			result.M31 = 0.0f;
-			result.M32 = 0.0f;
-			result.M33 = (float)(1.0 / ((double)zNearPlane - (double)zFarPlane));
-			result.M34 = 0.0f;
-			result.M41 = (float)(((double)left + (double)right) / ((double)left - (double)right));
-			result.M42 = (float)(((double)top + (double)bottom) / ((double)bottom - (double)top));
-			result.M43 = (float)((double)zNearPlane / ((double)zNearPlane - (double)zFarPlane));
-			result.M44 = 1.0f;
+			result.M11 = (double)(2.0 / ((double)right - (double)left));
+			result.M12 = 0.0;
+			result.M13 = 0.0;
+			result.M14 = 0.0;
+			result.M21 = 0.0;
+			result.M22 = (double)(2.0 / ((double)top - (double)bottom));
+			result.M23 = 0.0;
+			result.M24 = 0.0;
+			result.M31 = 0.0;
+			result.M32 = 0.0;
+			result.M33 = (double)(1.0 / ((double)zNearPlane - (double)zFarPlane));
+			result.M34 = 0.0;
+			result.M41 = (double)(((double)left + (double)right) / ((double)left - (double)right));
+			result.M42 = (double)(((double)top + (double)bottom) / ((double)bottom - (double)top));
+			result.M43 = (double)((double)zNearPlane / ((double)zNearPlane - (double)zFarPlane));
+			result.M44 = 1.0;
 		}
 
 		/// <summary>
@@ -881,7 +881,7 @@ namespace Duality
 		/// <param name="nearPlaneDistance">Distance to the near plane.</param>
 		/// <param name="farPlaneDistance">Distance to the far plane.</param>
 		/// <returns>The new projection <see cref="Matrix4"/> for perspective view.</returns>
-		public static Matrix4 CreatePerspective(float width, float height, float nearPlaneDistance, float farPlaneDistance)
+		public static Matrix4 CreatePerspective(double width, double height, double nearPlaneDistance, double farPlaneDistance)
 		{
 			Matrix4 matrix;
 			CreatePerspective(width, height, nearPlaneDistance, farPlaneDistance, out matrix);
@@ -894,15 +894,15 @@ namespace Duality
 		/// <param name="width">Width of the viewing volume.</param>
 		/// <param name="height">Height of the viewing volume.</param>
 		/// <param name="nearPlaneDistance">Distance to the near plane.</param>
-		/// <param name="farPlaneDistance">Distance to the far plane, or <see cref="float.PositiveInfinity"/>.</param>
+		/// <param name="farPlaneDistance">Distance to the far plane, or <see cref="double.PositiveInfinity"/>.</param>
 		/// <param name="result">The new projection <see cref="Matrix4"/> for perspective view as an output parameter.</param>
-		public static void CreatePerspective(float width, float height, float nearPlaneDistance, float farPlaneDistance, out Matrix4 result)
+		public static void CreatePerspective(double width, double height, double nearPlaneDistance, double farPlaneDistance, out Matrix4 result)
 		{
-			if (nearPlaneDistance <= 0f)
+			if (nearPlaneDistance <= 0)
 			{
 				throw new ArgumentException("nearPlaneDistance <= 0");
 			}
-			if (farPlaneDistance <= 0f)
+			if (farPlaneDistance <= 0)
 			{
 				throw new ArgumentException("farPlaneDistance <= 0");
 			}
@@ -911,17 +911,17 @@ namespace Duality
 				throw new ArgumentException("nearPlaneDistance >= farPlaneDistance");
 			}
 
-			float negFarRange = float.IsPositiveInfinity(farPlaneDistance) ? -1.0f : farPlaneDistance / (nearPlaneDistance - farPlaneDistance);
+			double negFarRange = double.IsPositiveInfinity(farPlaneDistance) ? -1.0 : farPlaneDistance / (nearPlaneDistance - farPlaneDistance);
 
 			result = new Matrix4();
-			result.M11 = (2.0f * nearPlaneDistance) / width;
-			result.M12 = result.M13 = result.M14 = 0.0f;
-			result.M22 = (2.0f * nearPlaneDistance) / height;
-			result.M21 = result.M23 = result.M24 = 0.0f;
+			result.M11 = (2.0 * nearPlaneDistance) / width;
+			result.M12 = result.M13 = result.M14 = 0.0;
+			result.M22 = (2.0 * nearPlaneDistance) / height;
+			result.M21 = result.M23 = result.M24 = 0.0;
 			result.M33 = negFarRange;
-			result.M31 = result.M32 = 0.0f;
-			result.M34 = -1.0f;
-			result.M41 = result.M42 = result.M44 = 0.0f;
+			result.M31 = result.M32 = 0.0;
+			result.M34 = -1.0;
+			result.M41 = result.M42 = result.M44 = 0.0;
 			result.M43 = nearPlaneDistance * negFarRange;
 		}
 
@@ -931,9 +931,9 @@ namespace Duality
 		/// <param name="fieldOfView">Field of view in the y direction in radians.</param>
 		/// <param name="aspectRatio">Width divided by height of the viewing volume.</param>
 		/// <param name="nearPlaneDistance">Distance to the near plane.</param>
-		/// <param name="farPlaneDistance">Distance to the far plane, or <see cref="float.PositiveInfinity"/>.</param>
+		/// <param name="farPlaneDistance">Distance to the far plane, or <see cref="double.PositiveInfinity"/>.</param>
 		/// <returns>The new projection <see cref="Matrix4"/> for perspective view with FOV.</returns>
-		public static Matrix4 CreatePerspectiveFieldOfView(float fieldOfView, float aspectRatio, float nearPlaneDistance, float farPlaneDistance)
+		public static Matrix4 CreatePerspectiveFieldOfView(double fieldOfView, double aspectRatio, double nearPlaneDistance, double farPlaneDistance)
 		{
 			Matrix4 result;
 			CreatePerspectiveFieldOfView(fieldOfView, aspectRatio, nearPlaneDistance, farPlaneDistance, out result);
@@ -946,19 +946,19 @@ namespace Duality
 		/// <param name="fieldOfView">Field of view in the y direction in radians.</param>
 		/// <param name="aspectRatio">Width divided by height of the viewing volume.</param>
 		/// <param name="nearPlaneDistance">Distance of the near plane.</param>
-		/// <param name="farPlaneDistance">Distance of the far plane, or <see cref="float.PositiveInfinity"/>.</param>
+		/// <param name="farPlaneDistance">Distance of the far plane, or <see cref="double.PositiveInfinity"/>.</param>
 		/// <param name="result">The new projection <see cref="Matrix4"/> for perspective view with FOV as an output parameter.</param>
-		public static void CreatePerspectiveFieldOfView(float fieldOfView, float aspectRatio, float nearPlaneDistance, float farPlaneDistance, out Matrix4 result)
+		public static void CreatePerspectiveFieldOfView(double fieldOfView, double aspectRatio, double nearPlaneDistance, double farPlaneDistance, out Matrix4 result)
 		{
-			if ((fieldOfView <= 0f) || (fieldOfView >= 3.141593f))
+			if ((fieldOfView <= 0) || (fieldOfView >= 3.141593))
 			{
 				throw new ArgumentException("fieldOfView <= 0 or >= PI");
 			}
-			if (nearPlaneDistance <= 0f)
+			if (nearPlaneDistance <= 0)
 			{
 				throw new ArgumentException("nearPlaneDistance <= 0");
 			}
-			if (farPlaneDistance <= 0f)
+			if (farPlaneDistance <= 0)
 			{
 				throw new ArgumentException("farPlaneDistance <= 0");
 			}
@@ -967,19 +967,19 @@ namespace Duality
 				throw new ArgumentException("nearPlaneDistance >= farPlaneDistance");
 			}
 
-			float yScale = 1.0f / (float)Math.Tan((double)fieldOfView * 0.5f);
-			float xScale = yScale / aspectRatio;
-			float negFarRange = float.IsPositiveInfinity(farPlaneDistance) ? -1.0f : farPlaneDistance / (nearPlaneDistance - farPlaneDistance);
+			double yScale = 1.0 / (double)Math.Tan((double)fieldOfView * 0.5);
+			double xScale = yScale / aspectRatio;
+			double negFarRange = double.IsPositiveInfinity(farPlaneDistance) ? -1.0 : farPlaneDistance / (nearPlaneDistance - farPlaneDistance);
 
 			result = new Matrix4();
 			result.M11 = xScale;
-			result.M12 = result.M13 = result.M14 = 0.0f;
+			result.M12 = result.M13 = result.M14 = 0.0;
 			result.M22 = yScale;
-			result.M21 = result.M23 = result.M24 = 0.0f;
-			result.M31 = result.M32 = 0.0f;
+			result.M21 = result.M23 = result.M24 = 0.0;
+			result.M31 = result.M32 = 0.0;
 			result.M33 = negFarRange;
-			result.M34 = -1.0f;
-			result.M41 = result.M42 = result.M44 = 0.0f;
+			result.M34 = -1.0;
+			result.M41 = result.M42 = result.M44 = 0.0;
 			result.M43 = nearPlaneDistance * negFarRange;
 		}
 
@@ -993,13 +993,13 @@ namespace Duality
 		/// <param name="nearPlaneDistance">Distance to the near plane.</param>
 		/// <param name="farPlaneDistance">Distance to the far plane.</param>
 		/// <param name="result">The new <see cref="Matrix4"/> for customized perspective view as an output parameter.</param>
-		public static void CreatePerspectiveOffCenter(float left, float right, float bottom, float top, float nearPlaneDistance, float farPlaneDistance, out Matrix4 result)
+		public static void CreatePerspectiveOffCenter(double left, double right, double bottom, double top, double nearPlaneDistance, double farPlaneDistance, out Matrix4 result)
 		{
-			if (nearPlaneDistance <= 0f)
+			if (nearPlaneDistance <= 0)
 			{
 				throw new ArgumentException("nearPlaneDistance <= 0");
 			}
-			if (farPlaneDistance <= 0f)
+			if (farPlaneDistance <= 0)
 			{
 				throw new ArgumentException("farPlaneDistance <= 0");
 			}
@@ -1008,9 +1008,9 @@ namespace Duality
 				throw new ArgumentException("nearPlaneDistance >= farPlaneDistance");
 			}
 			result = new Matrix4();
-			result.M11 = (2f * nearPlaneDistance) / (right - left);
+			result.M11 = (2 * nearPlaneDistance) / (right - left);
 			result.M12 = result.M13 = result.M14 = 0;
-			result.M22 = (2f * nearPlaneDistance) / (top - bottom);
+			result.M22 = (2 * nearPlaneDistance) / (top - bottom);
 			result.M21 = result.M23 = result.M24 = 0;
 			result.M31 = (left + right) / (right - left);
 			result.M32 = (top + bottom) / (top - bottom);
@@ -1025,7 +1025,7 @@ namespace Duality
 		/// </summary>
 		/// <param name="radians">Angle in radians.</param>
 		/// <returns>The rotation <see cref="Matrix4"/> around X axis.</returns>
-		public static Matrix4 CreateRotationX(float radians)
+		public static Matrix4 CreateRotationX(double radians)
 		{
 			Matrix4 result;
 			CreateRotationX(radians, out result);
@@ -1037,12 +1037,12 @@ namespace Duality
 		/// </summary>
 		/// <param name="radians">Angle in radians.</param>
 		/// <param name="result">The rotation <see cref="Matrix4"/> around X axis as an output parameter.</param>
-		public static void CreateRotationX(float radians, out Matrix4 result)
+		public static void CreateRotationX(double radians, out Matrix4 result)
 		{
 			result = Matrix4.Identity;
 
-			float val1 = MathF.Cos(radians);
-			float val2 = MathF.Sin(radians);
+			double val1 = MathF.Cos(radians);
+			double val2 = MathF.Sin(radians);
 
 			result.M22 = val1;
 			result.M23 = val2;
@@ -1055,7 +1055,7 @@ namespace Duality
 		/// </summary>
 		/// <param name="radians">Angle in radians.</param>
 		/// <returns>The rotation <see cref="Matrix4"/> around Y axis.</returns>
-		public static Matrix4 CreateRotationY(float radians)
+		public static Matrix4 CreateRotationY(double radians)
 		{
 			Matrix4 result;
 			CreateRotationY(radians, out result);
@@ -1067,12 +1067,12 @@ namespace Duality
 		/// </summary>
 		/// <param name="radians">Angle in radians.</param>
 		/// <param name="result">The rotation <see cref="Matrix4"/> around Y axis as an output parameter.</param>
-		public static void CreateRotationY(float radians, out Matrix4 result)
+		public static void CreateRotationY(double radians, out Matrix4 result)
 		{
 			result = Matrix4.Identity;
 
-			float val1 = MathF.Cos(radians);
-			float val2 = MathF.Sin(radians);
+			double val1 = MathF.Cos(radians);
+			double val2 = MathF.Sin(radians);
 
 			result.M11 = val1;
 			result.M13 = -val2;
@@ -1085,7 +1085,7 @@ namespace Duality
 		/// </summary>
 		/// <param name="radians">Angle in radians.</param>
 		/// <returns>The rotation <see cref="Matrix4"/> around Z axis.</returns>
-		public static Matrix4 CreateRotationZ(float radians)
+		public static Matrix4 CreateRotationZ(double radians)
 		{
 			Matrix4 result;
 			CreateRotationZ(radians, out result);
@@ -1097,12 +1097,12 @@ namespace Duality
 		/// </summary>
 		/// <param name="radians">Angle in radians.</param>
 		/// <param name="result">The rotation <see cref="Matrix4"/> around Z axis as an output parameter.</param>
-		public static void CreateRotationZ(float radians, out Matrix4 result)
+		public static void CreateRotationZ(double radians, out Matrix4 result)
 		{
 			result = Matrix4.Identity;
 
-			float val1 = MathF.Cos(radians);
-			float val2 = MathF.Sin(radians);
+			double val1 = MathF.Cos(radians);
+			double val2 = MathF.Sin(radians);
 
 			result.M11 = val1;
 			result.M12 = val2;
@@ -1115,7 +1115,7 @@ namespace Duality
 		/// </summary>
 		/// <param name="scale">Scale value for all three axises.</param>
 		/// <returns>The scaling <see cref="Matrix4"/>.</returns>
-		public static Matrix4 CreateScale(float scale)
+		public static Matrix4 CreateScale(double scale)
 		{
 			Matrix4 result;
 			CreateScale(scale, scale, scale, out result);
@@ -1127,7 +1127,7 @@ namespace Duality
 		/// </summary>
 		/// <param name="scale">Scale value for all three axises.</param>
 		/// <param name="result">The scaling <see cref="Matrix4"/> as an output parameter.</param>
-		public static void CreateScale(float scale, out Matrix4 result)
+		public static void CreateScale(double scale, out Matrix4 result)
 		{
 			CreateScale(scale, scale, scale, out result);
 		}
@@ -1139,7 +1139,7 @@ namespace Duality
 		/// <param name="yScale">Scale value for Y axis.</param>
 		/// <param name="zScale">Scale value for Z axis.</param>
 		/// <returns>The scaling <see cref="Matrix4"/>.</returns>
-		public static Matrix4 CreateScale(float xScale, float yScale, float zScale)
+		public static Matrix4 CreateScale(double xScale, double yScale, double zScale)
 		{
 			Matrix4 result;
 			CreateScale(xScale, yScale, zScale, out result);
@@ -1153,7 +1153,7 @@ namespace Duality
 		/// <param name="yScale">Scale value for Y axis.</param>
 		/// <param name="zScale">Scale value for Z axis.</param>
 		/// <param name="result">The scaling <see cref="Matrix4"/> as an output parameter.</param>
-		public static void CreateScale(float xScale, float yScale, float zScale, out Matrix4 result)
+		public static void CreateScale(double xScale, double yScale, double zScale, out Matrix4 result)
 		{
 			result = new Matrix4();
 			result.M11 = xScale;
@@ -1239,11 +1239,11 @@ namespace Duality
 		/// <param name="result">A <see cref="Matrix4"/> that can be used to flatten geometry onto the specified plane from the specified direction as an output parameter.</param>
 		public static void CreateShadow(ref Vector3 lightDirection, ref Plane plane, out Matrix4 result)
 		{
-			float dot = (plane.Normal.X * lightDirection.X) + (plane.Normal.Y * lightDirection.Y) + (plane.Normal.Z * lightDirection.Z);
-			float x = -plane.Normal.X;
-			float y = -plane.Normal.Y;
-			float z = -plane.Normal.Z;
-			float d = -plane.D;
+			double dot = (plane.Normal.X * lightDirection.X) + (plane.Normal.Y * lightDirection.Y) + (plane.Normal.Z * lightDirection.Z);
+			double x = -plane.Normal.X;
+			double y = -plane.Normal.Y;
+			double z = -plane.Normal.Z;
+			double d = -plane.D;
 
 			result = new Matrix4();
 			result.M11 = (x * lightDirection.X) + dot;
@@ -1271,7 +1271,7 @@ namespace Duality
 		/// <param name="yPosition">Y coordinate of translation.</param>
 		/// <param name="zPosition">Z coordinate of translation.</param>
 		/// <returns>The translation <see cref="Matrix"/>.</returns>
-		public static Matrix4 CreateTranslation(float xPosition, float yPosition, float zPosition)
+		public static Matrix4 CreateTranslation(double xPosition, double yPosition, double zPosition)
 		{
 			Matrix4 result;
 			CreateTranslation(xPosition, yPosition, zPosition, out result);
@@ -1323,7 +1323,7 @@ namespace Duality
 		/// <param name="yPosition">Y coordinate of translation.</param>
 		/// <param name="zPosition">Z coordinate of translation.</param>
 		/// <param name="result">The translation <see cref="Matrix4"/> as an output parameter.</param>
-		public static void CreateTranslation(float xPosition, float yPosition, float zPosition, out Matrix4 result)
+		public static void CreateTranslation(double xPosition, double yPosition, double zPosition, out Matrix4 result)
 		{
 			result = new Matrix4();
 			result.M11 = 1;
@@ -1365,15 +1365,15 @@ namespace Duality
 		{
 			Plane plane;
 			Plane.Normalize(ref value, out plane);
-			float x = plane.Normal.X;
-			float y = plane.Normal.Y;
-			float z = plane.Normal.Z;
-			float num3 = -2f * x;
-			float num2 = -2f * y;
-			float num = -2f * z;
+			double x = plane.Normal.X;
+			double y = plane.Normal.Y;
+			double z = plane.Normal.Z;
+			double num3 = -2 * x;
+			double num2 = -2 * y;
+			double num = -2 * z;
 
 			result = new Matrix4();
-			result.M11 = (num3 * x) + 1f;
+			result.M11 = (num3 * x) + 1;
 			result.M12 = num2 * x;
 			result.M13 = num * x;
 			result.M14 = 0;
@@ -1426,7 +1426,7 @@ namespace Duality
 			result.Up = y;
 			result.Forward = z;
 			result.Translation = position;
-			result.M44 = 1f;
+			result.M44 = 1;
 		}
 
 		/// <summary>
@@ -1442,9 +1442,9 @@ namespace Duality
 			translation.Y = this.M42;
 			translation.Z = this.M43;
 
-			float xs = (Math.Sign(this.M11 * this.M12 * this.M13 * this.M14) < 0) ? -1 : 1;
-			float ys = (Math.Sign(this.M21 * this.M22 * this.M23 * this.M24) < 0) ? -1 : 1;
-			float zs = (Math.Sign(this.M31 * this.M32 * this.M33 * this.M34) < 0) ? -1 : 1;
+			double xs = (Math.Sign(this.M11 * this.M12 * this.M13 * this.M14) < 0) ? -1 : 1;
+			double ys = (Math.Sign(this.M21 * this.M22 * this.M23 * this.M24) < 0) ? -1 : 1;
+			double zs = (Math.Sign(this.M31 * this.M32 * this.M33 * this.M34) < 0) ? -1 : 1;
 
 			scale.X = xs * MathF.Sqrt(this.M11 * this.M11 + this.M12 * this.M12 + this.M13 * this.M13);
 			scale.Y = ys * MathF.Sqrt(this.M21 * this.M21 + this.M22 * this.M22 + this.M23 * this.M23);
@@ -1525,9 +1525,9 @@ namespace Duality
 		/// <param name="matrix1">Source <see cref="Matrix4"/>.</param>
 		/// <param name="divider">Divisor scalar.</param>
 		/// <returns>The result of dividing a matrix by a scalar.</returns>
-		public static Matrix4 Divide(Matrix4 matrix1, float divider)
+		public static Matrix4 Divide(Matrix4 matrix1, double divider)
 		{
-			float num = 1f / divider;
+			double num = 1 / divider;
 			matrix1.M11 = matrix1.M11 * num;
 			matrix1.M12 = matrix1.M12 * num;
 			matrix1.M13 = matrix1.M13 * num;
@@ -1553,10 +1553,10 @@ namespace Duality
 		/// <param name="matrix1">Source <see cref="Matrix4"/>.</param>
 		/// <param name="divider">Divisor scalar.</param>
 		/// <param name="result">The result of dividing a matrix by a scalar as an output parameter.</param>
-		public static void Divide(ref Matrix4 matrix1, float divider, out Matrix4 result)
+		public static void Divide(ref Matrix4 matrix1, double divider, out Matrix4 result)
 		{
 			result = new Matrix4();
-			float num = 1f / divider;
+			double num = 1 / divider;
 			result.M11 = matrix1.M11 * num;
 			result.M12 = matrix1.M12 * num;
 			result.M13 = matrix1.M13 * num;
@@ -1630,63 +1630,63 @@ namespace Duality
 		/// <param name="result">The inverted matrix as output parameter.</param>
 		public static void Invert(ref Matrix4 matrix, out Matrix4 result)
 		{
-			float num1 = matrix.M11;
-			float num2 = matrix.M12;
-			float num3 = matrix.M13;
-			float num4 = matrix.M14;
-			float num5 = matrix.M21;
-			float num6 = matrix.M22;
-			float num7 = matrix.M23;
-			float num8 = matrix.M24;
-			float num9 = matrix.M31;
-			float num10 = matrix.M32;
-			float num11 = matrix.M33;
-			float num12 = matrix.M34;
-			float num13 = matrix.M41;
-			float num14 = matrix.M42;
-			float num15 = matrix.M43;
-			float num16 = matrix.M44;
-			float num17 = (float)((double)num11 * (double)num16 - (double)num12 * (double)num15);
-			float num18 = (float)((double)num10 * (double)num16 - (double)num12 * (double)num14);
-			float num19 = (float)((double)num10 * (double)num15 - (double)num11 * (double)num14);
-			float num20 = (float)((double)num9 * (double)num16 - (double)num12 * (double)num13);
-			float num21 = (float)((double)num9 * (double)num15 - (double)num11 * (double)num13);
-			float num22 = (float)((double)num9 * (double)num14 - (double)num10 * (double)num13);
-			float num23 = (float)((double)num6 * (double)num17 - (double)num7 * (double)num18 + (double)num8 * (double)num19);
-			float num24 = (float)-((double)num5 * (double)num17 - (double)num7 * (double)num20 + (double)num8 * (double)num21);
-			float num25 = (float)((double)num5 * (double)num18 - (double)num6 * (double)num20 + (double)num8 * (double)num22);
-			float num26 = (float)-((double)num5 * (double)num19 - (double)num6 * (double)num21 + (double)num7 * (double)num22);
-			float num27 = (float)(1.0 / ((double)num1 * (double)num23 + (double)num2 * (double)num24 + (double)num3 * (double)num25 + (double)num4 * (double)num26));
+			double num1 = matrix.M11;
+			double num2 = matrix.M12;
+			double num3 = matrix.M13;
+			double num4 = matrix.M14;
+			double num5 = matrix.M21;
+			double num6 = matrix.M22;
+			double num7 = matrix.M23;
+			double num8 = matrix.M24;
+			double num9 = matrix.M31;
+			double num10 = matrix.M32;
+			double num11 = matrix.M33;
+			double num12 = matrix.M34;
+			double num13 = matrix.M41;
+			double num14 = matrix.M42;
+			double num15 = matrix.M43;
+			double num16 = matrix.M44;
+			double num17 = (double)((double)num11 * (double)num16 - (double)num12 * (double)num15);
+			double num18 = (double)((double)num10 * (double)num16 - (double)num12 * (double)num14);
+			double num19 = (double)((double)num10 * (double)num15 - (double)num11 * (double)num14);
+			double num20 = (double)((double)num9 * (double)num16 - (double)num12 * (double)num13);
+			double num21 = (double)((double)num9 * (double)num15 - (double)num11 * (double)num13);
+			double num22 = (double)((double)num9 * (double)num14 - (double)num10 * (double)num13);
+			double num23 = (double)((double)num6 * (double)num17 - (double)num7 * (double)num18 + (double)num8 * (double)num19);
+			double num24 = (double)-((double)num5 * (double)num17 - (double)num7 * (double)num20 + (double)num8 * (double)num21);
+			double num25 = (double)((double)num5 * (double)num18 - (double)num6 * (double)num20 + (double)num8 * (double)num22);
+			double num26 = (double)-((double)num5 * (double)num19 - (double)num6 * (double)num21 + (double)num7 * (double)num22);
+			double num27 = (double)(1.0 / ((double)num1 * (double)num23 + (double)num2 * (double)num24 + (double)num3 * (double)num25 + (double)num4 * (double)num26));
 
 			result = new Matrix4();
 			result.M11 = num23 * num27;
 			result.M21 = num24 * num27;
 			result.M31 = num25 * num27;
 			result.M41 = num26 * num27;
-			result.M12 = (float)-((double)num2 * (double)num17 - (double)num3 * (double)num18 + (double)num4 * (double)num19) * num27;
-			result.M22 = (float)((double)num1 * (double)num17 - (double)num3 * (double)num20 + (double)num4 * (double)num21) * num27;
-			result.M32 = (float)-((double)num1 * (double)num18 - (double)num2 * (double)num20 + (double)num4 * (double)num22) * num27;
-			result.M42 = (float)((double)num1 * (double)num19 - (double)num2 * (double)num21 + (double)num3 * (double)num22) * num27;
-			float num28 = (float)((double)num7 * (double)num16 - (double)num8 * (double)num15);
-			float num29 = (float)((double)num6 * (double)num16 - (double)num8 * (double)num14);
-			float num30 = (float)((double)num6 * (double)num15 - (double)num7 * (double)num14);
-			float num31 = (float)((double)num5 * (double)num16 - (double)num8 * (double)num13);
-			float num32 = (float)((double)num5 * (double)num15 - (double)num7 * (double)num13);
-			float num33 = (float)((double)num5 * (double)num14 - (double)num6 * (double)num13);
-			result.M13 = (float)((double)num2 * (double)num28 - (double)num3 * (double)num29 + (double)num4 * (double)num30) * num27;
-			result.M23 = (float)-((double)num1 * (double)num28 - (double)num3 * (double)num31 + (double)num4 * (double)num32) * num27;
-			result.M33 = (float)((double)num1 * (double)num29 - (double)num2 * (double)num31 + (double)num4 * (double)num33) * num27;
-			result.M43 = (float)-((double)num1 * (double)num30 - (double)num2 * (double)num32 + (double)num3 * (double)num33) * num27;
-			float num34 = (float)((double)num7 * (double)num12 - (double)num8 * (double)num11);
-			float num35 = (float)((double)num6 * (double)num12 - (double)num8 * (double)num10);
-			float num36 = (float)((double)num6 * (double)num11 - (double)num7 * (double)num10);
-			float num37 = (float)((double)num5 * (double)num12 - (double)num8 * (double)num9);
-			float num38 = (float)((double)num5 * (double)num11 - (double)num7 * (double)num9);
-			float num39 = (float)((double)num5 * (double)num10 - (double)num6 * (double)num9);
-			result.M14 = (float)-((double)num2 * (double)num34 - (double)num3 * (double)num35 + (double)num4 * (double)num36) * num27;
-			result.M24 = (float)((double)num1 * (double)num34 - (double)num3 * (double)num37 + (double)num4 * (double)num38) * num27;
-			result.M34 = (float)-((double)num1 * (double)num35 - (double)num2 * (double)num37 + (double)num4 * (double)num39) * num27;
-			result.M44 = (float)((double)num1 * (double)num36 - (double)num2 * (double)num38 + (double)num3 * (double)num39) * num27;
+			result.M12 = (double)-((double)num2 * (double)num17 - (double)num3 * (double)num18 + (double)num4 * (double)num19) * num27;
+			result.M22 = (double)((double)num1 * (double)num17 - (double)num3 * (double)num20 + (double)num4 * (double)num21) * num27;
+			result.M32 = (double)-((double)num1 * (double)num18 - (double)num2 * (double)num20 + (double)num4 * (double)num22) * num27;
+			result.M42 = (double)((double)num1 * (double)num19 - (double)num2 * (double)num21 + (double)num3 * (double)num22) * num27;
+			double num28 = (double)((double)num7 * (double)num16 - (double)num8 * (double)num15);
+			double num29 = (double)((double)num6 * (double)num16 - (double)num8 * (double)num14);
+			double num30 = (double)((double)num6 * (double)num15 - (double)num7 * (double)num14);
+			double num31 = (double)((double)num5 * (double)num16 - (double)num8 * (double)num13);
+			double num32 = (double)((double)num5 * (double)num15 - (double)num7 * (double)num13);
+			double num33 = (double)((double)num5 * (double)num14 - (double)num6 * (double)num13);
+			result.M13 = (double)((double)num2 * (double)num28 - (double)num3 * (double)num29 + (double)num4 * (double)num30) * num27;
+			result.M23 = (double)-((double)num1 * (double)num28 - (double)num3 * (double)num31 + (double)num4 * (double)num32) * num27;
+			result.M33 = (double)((double)num1 * (double)num29 - (double)num2 * (double)num31 + (double)num4 * (double)num33) * num27;
+			result.M43 = (double)-((double)num1 * (double)num30 - (double)num2 * (double)num32 + (double)num3 * (double)num33) * num27;
+			double num34 = (double)((double)num7 * (double)num12 - (double)num8 * (double)num11);
+			double num35 = (double)((double)num6 * (double)num12 - (double)num8 * (double)num10);
+			double num36 = (double)((double)num6 * (double)num11 - (double)num7 * (double)num10);
+			double num37 = (double)((double)num5 * (double)num12 - (double)num8 * (double)num9);
+			double num38 = (double)((double)num5 * (double)num11 - (double)num7 * (double)num9);
+			double num39 = (double)((double)num5 * (double)num10 - (double)num6 * (double)num9);
+			result.M14 = (double)-((double)num2 * (double)num34 - (double)num3 * (double)num35 + (double)num4 * (double)num36) * num27;
+			result.M24 = (double)((double)num1 * (double)num34 - (double)num3 * (double)num37 + (double)num4 * (double)num38) * num27;
+			result.M34 = (double)-((double)num1 * (double)num35 - (double)num2 * (double)num37 + (double)num4 * (double)num39) * num27;
+			result.M44 = (double)((double)num1 * (double)num36 - (double)num2 * (double)num38 + (double)num3 * (double)num39) * num27;
 
 		}
 
@@ -1697,7 +1697,7 @@ namespace Duality
 		/// <param name="matrix2">The second <see cref="Vector2"/>.</param>
 		/// <param name="amount">Weighting value(between 0.0 and 1.0).</param>
 		/// <returns>>The result of linear interpolation of the specified matrixes.</returns>
-		public static Matrix4 Lerp(Matrix4 matrix1, Matrix4 matrix2, float amount)
+		public static Matrix4 Lerp(Matrix4 matrix1, Matrix4 matrix2, double amount)
 		{
 			matrix1.M11 = matrix1.M11 + ((matrix2.M11 - matrix1.M11) * amount);
 			matrix1.M12 = matrix1.M12 + ((matrix2.M12 - matrix1.M12) * amount);
@@ -1725,7 +1725,7 @@ namespace Duality
 		/// <param name="matrix2">The second <see cref="Vector2"/>.</param>
 		/// <param name="amount">Weighting value(between 0.0 and 1.0).</param>
 		/// <param name="result">The result of linear interpolation of the specified matrixes as an output parameter.</param>
-		public static void Lerp(ref Matrix4 matrix1, ref Matrix4 matrix2, float amount, out Matrix4 result)
+		public static void Lerp(ref Matrix4 matrix1, ref Matrix4 matrix2, double amount, out Matrix4 result)
 		{
 			result = new Matrix4();
 			result.M11 = matrix1.M11 + ((matrix2.M11 - matrix1.M11) * amount);
@@ -1754,22 +1754,22 @@ namespace Duality
 		/// <returns>Result of the matrix multiplication.</returns>
 		public static Matrix4 Multiply(Matrix4 matrix1, Matrix4 matrix2)
 		{
-			float m11 = (((matrix1.M11 * matrix2.M11) + (matrix1.M12 * matrix2.M21)) + (matrix1.M13 * matrix2.M31)) + (matrix1.M14 * matrix2.M41);
-			float m12 = (((matrix1.M11 * matrix2.M12) + (matrix1.M12 * matrix2.M22)) + (matrix1.M13 * matrix2.M32)) + (matrix1.M14 * matrix2.M42);
-			float m13 = (((matrix1.M11 * matrix2.M13) + (matrix1.M12 * matrix2.M23)) + (matrix1.M13 * matrix2.M33)) + (matrix1.M14 * matrix2.M43);
-			float m14 = (((matrix1.M11 * matrix2.M14) + (matrix1.M12 * matrix2.M24)) + (matrix1.M13 * matrix2.M34)) + (matrix1.M14 * matrix2.M44);
-			float m21 = (((matrix1.M21 * matrix2.M11) + (matrix1.M22 * matrix2.M21)) + (matrix1.M23 * matrix2.M31)) + (matrix1.M24 * matrix2.M41);
-			float m22 = (((matrix1.M21 * matrix2.M12) + (matrix1.M22 * matrix2.M22)) + (matrix1.M23 * matrix2.M32)) + (matrix1.M24 * matrix2.M42);
-			float m23 = (((matrix1.M21 * matrix2.M13) + (matrix1.M22 * matrix2.M23)) + (matrix1.M23 * matrix2.M33)) + (matrix1.M24 * matrix2.M43);
-			float m24 = (((matrix1.M21 * matrix2.M14) + (matrix1.M22 * matrix2.M24)) + (matrix1.M23 * matrix2.M34)) + (matrix1.M24 * matrix2.M44);
-			float m31 = (((matrix1.M31 * matrix2.M11) + (matrix1.M32 * matrix2.M21)) + (matrix1.M33 * matrix2.M31)) + (matrix1.M34 * matrix2.M41);
-			float m32 = (((matrix1.M31 * matrix2.M12) + (matrix1.M32 * matrix2.M22)) + (matrix1.M33 * matrix2.M32)) + (matrix1.M34 * matrix2.M42);
-			float m33 = (((matrix1.M31 * matrix2.M13) + (matrix1.M32 * matrix2.M23)) + (matrix1.M33 * matrix2.M33)) + (matrix1.M34 * matrix2.M43);
-			float m34 = (((matrix1.M31 * matrix2.M14) + (matrix1.M32 * matrix2.M24)) + (matrix1.M33 * matrix2.M34)) + (matrix1.M34 * matrix2.M44);
-			float m41 = (((matrix1.M41 * matrix2.M11) + (matrix1.M42 * matrix2.M21)) + (matrix1.M43 * matrix2.M31)) + (matrix1.M44 * matrix2.M41);
-			float m42 = (((matrix1.M41 * matrix2.M12) + (matrix1.M42 * matrix2.M22)) + (matrix1.M43 * matrix2.M32)) + (matrix1.M44 * matrix2.M42);
-			float m43 = (((matrix1.M41 * matrix2.M13) + (matrix1.M42 * matrix2.M23)) + (matrix1.M43 * matrix2.M33)) + (matrix1.M44 * matrix2.M43);
-			float m44 = (((matrix1.M41 * matrix2.M14) + (matrix1.M42 * matrix2.M24)) + (matrix1.M43 * matrix2.M34)) + (matrix1.M44 * matrix2.M44);
+			double m11 = (((matrix1.M11 * matrix2.M11) + (matrix1.M12 * matrix2.M21)) + (matrix1.M13 * matrix2.M31)) + (matrix1.M14 * matrix2.M41);
+			double m12 = (((matrix1.M11 * matrix2.M12) + (matrix1.M12 * matrix2.M22)) + (matrix1.M13 * matrix2.M32)) + (matrix1.M14 * matrix2.M42);
+			double m13 = (((matrix1.M11 * matrix2.M13) + (matrix1.M12 * matrix2.M23)) + (matrix1.M13 * matrix2.M33)) + (matrix1.M14 * matrix2.M43);
+			double m14 = (((matrix1.M11 * matrix2.M14) + (matrix1.M12 * matrix2.M24)) + (matrix1.M13 * matrix2.M34)) + (matrix1.M14 * matrix2.M44);
+			double m21 = (((matrix1.M21 * matrix2.M11) + (matrix1.M22 * matrix2.M21)) + (matrix1.M23 * matrix2.M31)) + (matrix1.M24 * matrix2.M41);
+			double m22 = (((matrix1.M21 * matrix2.M12) + (matrix1.M22 * matrix2.M22)) + (matrix1.M23 * matrix2.M32)) + (matrix1.M24 * matrix2.M42);
+			double m23 = (((matrix1.M21 * matrix2.M13) + (matrix1.M22 * matrix2.M23)) + (matrix1.M23 * matrix2.M33)) + (matrix1.M24 * matrix2.M43);
+			double m24 = (((matrix1.M21 * matrix2.M14) + (matrix1.M22 * matrix2.M24)) + (matrix1.M23 * matrix2.M34)) + (matrix1.M24 * matrix2.M44);
+			double m31 = (((matrix1.M31 * matrix2.M11) + (matrix1.M32 * matrix2.M21)) + (matrix1.M33 * matrix2.M31)) + (matrix1.M34 * matrix2.M41);
+			double m32 = (((matrix1.M31 * matrix2.M12) + (matrix1.M32 * matrix2.M22)) + (matrix1.M33 * matrix2.M32)) + (matrix1.M34 * matrix2.M42);
+			double m33 = (((matrix1.M31 * matrix2.M13) + (matrix1.M32 * matrix2.M23)) + (matrix1.M33 * matrix2.M33)) + (matrix1.M34 * matrix2.M43);
+			double m34 = (((matrix1.M31 * matrix2.M14) + (matrix1.M32 * matrix2.M24)) + (matrix1.M33 * matrix2.M34)) + (matrix1.M34 * matrix2.M44);
+			double m41 = (((matrix1.M41 * matrix2.M11) + (matrix1.M42 * matrix2.M21)) + (matrix1.M43 * matrix2.M31)) + (matrix1.M44 * matrix2.M41);
+			double m42 = (((matrix1.M41 * matrix2.M12) + (matrix1.M42 * matrix2.M22)) + (matrix1.M43 * matrix2.M32)) + (matrix1.M44 * matrix2.M42);
+			double m43 = (((matrix1.M41 * matrix2.M13) + (matrix1.M42 * matrix2.M23)) + (matrix1.M43 * matrix2.M33)) + (matrix1.M44 * matrix2.M43);
+			double m44 = (((matrix1.M41 * matrix2.M14) + (matrix1.M42 * matrix2.M24)) + (matrix1.M43 * matrix2.M34)) + (matrix1.M44 * matrix2.M44);
 			matrix1.M11 = m11;
 			matrix1.M12 = m12;
 			matrix1.M13 = m13;
@@ -1797,22 +1797,22 @@ namespace Duality
 		/// <param name="result">Result of the matrix multiplication as an output parameter.</param>
 		public static void Multiply(ref Matrix4 matrix1, ref Matrix4 matrix2, out Matrix4 result)
 		{
-			float m11 = (((matrix1.M11 * matrix2.M11) + (matrix1.M12 * matrix2.M21)) + (matrix1.M13 * matrix2.M31)) + (matrix1.M14 * matrix2.M41);
-			float m12 = (((matrix1.M11 * matrix2.M12) + (matrix1.M12 * matrix2.M22)) + (matrix1.M13 * matrix2.M32)) + (matrix1.M14 * matrix2.M42);
-			float m13 = (((matrix1.M11 * matrix2.M13) + (matrix1.M12 * matrix2.M23)) + (matrix1.M13 * matrix2.M33)) + (matrix1.M14 * matrix2.M43);
-			float m14 = (((matrix1.M11 * matrix2.M14) + (matrix1.M12 * matrix2.M24)) + (matrix1.M13 * matrix2.M34)) + (matrix1.M14 * matrix2.M44);
-			float m21 = (((matrix1.M21 * matrix2.M11) + (matrix1.M22 * matrix2.M21)) + (matrix1.M23 * matrix2.M31)) + (matrix1.M24 * matrix2.M41);
-			float m22 = (((matrix1.M21 * matrix2.M12) + (matrix1.M22 * matrix2.M22)) + (matrix1.M23 * matrix2.M32)) + (matrix1.M24 * matrix2.M42);
-			float m23 = (((matrix1.M21 * matrix2.M13) + (matrix1.M22 * matrix2.M23)) + (matrix1.M23 * matrix2.M33)) + (matrix1.M24 * matrix2.M43);
-			float m24 = (((matrix1.M21 * matrix2.M14) + (matrix1.M22 * matrix2.M24)) + (matrix1.M23 * matrix2.M34)) + (matrix1.M24 * matrix2.M44);
-			float m31 = (((matrix1.M31 * matrix2.M11) + (matrix1.M32 * matrix2.M21)) + (matrix1.M33 * matrix2.M31)) + (matrix1.M34 * matrix2.M41);
-			float m32 = (((matrix1.M31 * matrix2.M12) + (matrix1.M32 * matrix2.M22)) + (matrix1.M33 * matrix2.M32)) + (matrix1.M34 * matrix2.M42);
-			float m33 = (((matrix1.M31 * matrix2.M13) + (matrix1.M32 * matrix2.M23)) + (matrix1.M33 * matrix2.M33)) + (matrix1.M34 * matrix2.M43);
-			float m34 = (((matrix1.M31 * matrix2.M14) + (matrix1.M32 * matrix2.M24)) + (matrix1.M33 * matrix2.M34)) + (matrix1.M34 * matrix2.M44);
-			float m41 = (((matrix1.M41 * matrix2.M11) + (matrix1.M42 * matrix2.M21)) + (matrix1.M43 * matrix2.M31)) + (matrix1.M44 * matrix2.M41);
-			float m42 = (((matrix1.M41 * matrix2.M12) + (matrix1.M42 * matrix2.M22)) + (matrix1.M43 * matrix2.M32)) + (matrix1.M44 * matrix2.M42);
-			float m43 = (((matrix1.M41 * matrix2.M13) + (matrix1.M42 * matrix2.M23)) + (matrix1.M43 * matrix2.M33)) + (matrix1.M44 * matrix2.M43);
-			float m44 = (((matrix1.M41 * matrix2.M14) + (matrix1.M42 * matrix2.M24)) + (matrix1.M43 * matrix2.M34)) + (matrix1.M44 * matrix2.M44);
+			double m11 = (((matrix1.M11 * matrix2.M11) + (matrix1.M12 * matrix2.M21)) + (matrix1.M13 * matrix2.M31)) + (matrix1.M14 * matrix2.M41);
+			double m12 = (((matrix1.M11 * matrix2.M12) + (matrix1.M12 * matrix2.M22)) + (matrix1.M13 * matrix2.M32)) + (matrix1.M14 * matrix2.M42);
+			double m13 = (((matrix1.M11 * matrix2.M13) + (matrix1.M12 * matrix2.M23)) + (matrix1.M13 * matrix2.M33)) + (matrix1.M14 * matrix2.M43);
+			double m14 = (((matrix1.M11 * matrix2.M14) + (matrix1.M12 * matrix2.M24)) + (matrix1.M13 * matrix2.M34)) + (matrix1.M14 * matrix2.M44);
+			double m21 = (((matrix1.M21 * matrix2.M11) + (matrix1.M22 * matrix2.M21)) + (matrix1.M23 * matrix2.M31)) + (matrix1.M24 * matrix2.M41);
+			double m22 = (((matrix1.M21 * matrix2.M12) + (matrix1.M22 * matrix2.M22)) + (matrix1.M23 * matrix2.M32)) + (matrix1.M24 * matrix2.M42);
+			double m23 = (((matrix1.M21 * matrix2.M13) + (matrix1.M22 * matrix2.M23)) + (matrix1.M23 * matrix2.M33)) + (matrix1.M24 * matrix2.M43);
+			double m24 = (((matrix1.M21 * matrix2.M14) + (matrix1.M22 * matrix2.M24)) + (matrix1.M23 * matrix2.M34)) + (matrix1.M24 * matrix2.M44);
+			double m31 = (((matrix1.M31 * matrix2.M11) + (matrix1.M32 * matrix2.M21)) + (matrix1.M33 * matrix2.M31)) + (matrix1.M34 * matrix2.M41);
+			double m32 = (((matrix1.M31 * matrix2.M12) + (matrix1.M32 * matrix2.M22)) + (matrix1.M33 * matrix2.M32)) + (matrix1.M34 * matrix2.M42);
+			double m33 = (((matrix1.M31 * matrix2.M13) + (matrix1.M32 * matrix2.M23)) + (matrix1.M33 * matrix2.M33)) + (matrix1.M34 * matrix2.M43);
+			double m34 = (((matrix1.M31 * matrix2.M14) + (matrix1.M32 * matrix2.M24)) + (matrix1.M33 * matrix2.M34)) + (matrix1.M34 * matrix2.M44);
+			double m41 = (((matrix1.M41 * matrix2.M11) + (matrix1.M42 * matrix2.M21)) + (matrix1.M43 * matrix2.M31)) + (matrix1.M44 * matrix2.M41);
+			double m42 = (((matrix1.M41 * matrix2.M12) + (matrix1.M42 * matrix2.M22)) + (matrix1.M43 * matrix2.M32)) + (matrix1.M44 * matrix2.M42);
+			double m43 = (((matrix1.M41 * matrix2.M13) + (matrix1.M42 * matrix2.M23)) + (matrix1.M43 * matrix2.M33)) + (matrix1.M44 * matrix2.M43);
+			double m44 = (((matrix1.M41 * matrix2.M14) + (matrix1.M42 * matrix2.M24)) + (matrix1.M43 * matrix2.M34)) + (matrix1.M44 * matrix2.M44);
 			result = new Matrix4();
 			result.M11 = m11;
 			result.M12 = m12;
@@ -1838,7 +1838,7 @@ namespace Duality
 		/// <param name="matrix1">Source <see cref="Matrix4"/>.</param>
 		/// <param name="scaleFactor">Scalar value.</param>
 		/// <returns>Result of the matrix multiplication with a scalar.</returns>
-		public static Matrix4 Multiply(Matrix4 matrix1, float scaleFactor)
+		public static Matrix4 Multiply(Matrix4 matrix1, double scaleFactor)
 		{
 			matrix1.M11 *= scaleFactor;
 			matrix1.M12 *= scaleFactor;
@@ -1865,7 +1865,7 @@ namespace Duality
 		/// <param name="matrix1">Source <see cref="Matrix4"/>.</param>
 		/// <param name="scaleFactor">Scalar value.</param>
 		/// <param name="result">Result of the matrix multiplication with a scalar as an output parameter.</param>
-		public static void Multiply(ref Matrix4 matrix1, float scaleFactor, out Matrix4 result)
+		public static void Multiply(ref Matrix4 matrix1, double scaleFactor, out Matrix4 result)
 		{
 			result = new Matrix4();
 			result.M11 = matrix1.M11 * scaleFactor;
@@ -1888,16 +1888,16 @@ namespace Duality
 		}
 
 		/// <summary>
-		/// Copy the values of specified <see cref="Matrix4"/> to the float array.
+		/// Copy the values of specified <see cref="Matrix4"/> to the double array.
 		/// </summary>
 		/// <param name="matrix">The source <see cref="Matrix4"/>.</param>
 		/// <returns>The array which matrix values will be stored.</returns>
 		/// <remarks>
 		/// Required for OpenGL 2.0 projection matrix stuff.
 		/// </remarks>
-		public static float[] ToFloatArray(Matrix4 matrix)
+		public static double[] TodoubleArray(Matrix4 matrix)
 		{
-			float[] matarray = {
+			double[] matarray = {
 									matrix.M11, matrix.M12, matrix.M13, matrix.M14,
 									matrix.M21, matrix.M22, matrix.M23, matrix.M24,
 									matrix.M31, matrix.M32, matrix.M33, matrix.M34,
@@ -2018,9 +2018,9 @@ namespace Duality
 		/// <param name="matrix">Source <see cref="Matrix4"/> on the left of the div sign.</param>
 		/// <param name="divider">Divisor scalar on the right of the div sign.</param>
 		/// <returns>The result of dividing a matrix by a scalar.</returns>
-		public static Matrix4 operator /(Matrix4 matrix, float divider)
+		public static Matrix4 operator /(Matrix4 matrix, double divider)
 		{
-			float num = 1f / divider;
+			double num = 1f / divider;
 			matrix.M11 = matrix.M11 * num;
 			matrix.M12 = matrix.M12 * num;
 			matrix.M13 = matrix.M13 * num;
@@ -2107,22 +2107,22 @@ namespace Duality
 		/// </remarks>
 		public static Matrix4 operator *(Matrix4 matrix1, Matrix4 matrix2)
 		{
-			float m11 = (((matrix1.M11 * matrix2.M11) + (matrix1.M12 * matrix2.M21)) + (matrix1.M13 * matrix2.M31)) + (matrix1.M14 * matrix2.M41);
-			float m12 = (((matrix1.M11 * matrix2.M12) + (matrix1.M12 * matrix2.M22)) + (matrix1.M13 * matrix2.M32)) + (matrix1.M14 * matrix2.M42);
-			float m13 = (((matrix1.M11 * matrix2.M13) + (matrix1.M12 * matrix2.M23)) + (matrix1.M13 * matrix2.M33)) + (matrix1.M14 * matrix2.M43);
-			float m14 = (((matrix1.M11 * matrix2.M14) + (matrix1.M12 * matrix2.M24)) + (matrix1.M13 * matrix2.M34)) + (matrix1.M14 * matrix2.M44);
-			float m21 = (((matrix1.M21 * matrix2.M11) + (matrix1.M22 * matrix2.M21)) + (matrix1.M23 * matrix2.M31)) + (matrix1.M24 * matrix2.M41);
-			float m22 = (((matrix1.M21 * matrix2.M12) + (matrix1.M22 * matrix2.M22)) + (matrix1.M23 * matrix2.M32)) + (matrix1.M24 * matrix2.M42);
-			float m23 = (((matrix1.M21 * matrix2.M13) + (matrix1.M22 * matrix2.M23)) + (matrix1.M23 * matrix2.M33)) + (matrix1.M24 * matrix2.M43);
-			float m24 = (((matrix1.M21 * matrix2.M14) + (matrix1.M22 * matrix2.M24)) + (matrix1.M23 * matrix2.M34)) + (matrix1.M24 * matrix2.M44);
-			float m31 = (((matrix1.M31 * matrix2.M11) + (matrix1.M32 * matrix2.M21)) + (matrix1.M33 * matrix2.M31)) + (matrix1.M34 * matrix2.M41);
-			float m32 = (((matrix1.M31 * matrix2.M12) + (matrix1.M32 * matrix2.M22)) + (matrix1.M33 * matrix2.M32)) + (matrix1.M34 * matrix2.M42);
-			float m33 = (((matrix1.M31 * matrix2.M13) + (matrix1.M32 * matrix2.M23)) + (matrix1.M33 * matrix2.M33)) + (matrix1.M34 * matrix2.M43);
-			float m34 = (((matrix1.M31 * matrix2.M14) + (matrix1.M32 * matrix2.M24)) + (matrix1.M33 * matrix2.M34)) + (matrix1.M34 * matrix2.M44);
-			float m41 = (((matrix1.M41 * matrix2.M11) + (matrix1.M42 * matrix2.M21)) + (matrix1.M43 * matrix2.M31)) + (matrix1.M44 * matrix2.M41);
-			float m42 = (((matrix1.M41 * matrix2.M12) + (matrix1.M42 * matrix2.M22)) + (matrix1.M43 * matrix2.M32)) + (matrix1.M44 * matrix2.M42);
-			float m43 = (((matrix1.M41 * matrix2.M13) + (matrix1.M42 * matrix2.M23)) + (matrix1.M43 * matrix2.M33)) + (matrix1.M44 * matrix2.M43);
-			float m44 = (((matrix1.M41 * matrix2.M14) + (matrix1.M42 * matrix2.M24)) + (matrix1.M43 * matrix2.M34)) + (matrix1.M44 * matrix2.M44);
+			double m11 = (((matrix1.M11 * matrix2.M11) + (matrix1.M12 * matrix2.M21)) + (matrix1.M13 * matrix2.M31)) + (matrix1.M14 * matrix2.M41);
+			double m12 = (((matrix1.M11 * matrix2.M12) + (matrix1.M12 * matrix2.M22)) + (matrix1.M13 * matrix2.M32)) + (matrix1.M14 * matrix2.M42);
+			double m13 = (((matrix1.M11 * matrix2.M13) + (matrix1.M12 * matrix2.M23)) + (matrix1.M13 * matrix2.M33)) + (matrix1.M14 * matrix2.M43);
+			double m14 = (((matrix1.M11 * matrix2.M14) + (matrix1.M12 * matrix2.M24)) + (matrix1.M13 * matrix2.M34)) + (matrix1.M14 * matrix2.M44);
+			double m21 = (((matrix1.M21 * matrix2.M11) + (matrix1.M22 * matrix2.M21)) + (matrix1.M23 * matrix2.M31)) + (matrix1.M24 * matrix2.M41);
+			double m22 = (((matrix1.M21 * matrix2.M12) + (matrix1.M22 * matrix2.M22)) + (matrix1.M23 * matrix2.M32)) + (matrix1.M24 * matrix2.M42);
+			double m23 = (((matrix1.M21 * matrix2.M13) + (matrix1.M22 * matrix2.M23)) + (matrix1.M23 * matrix2.M33)) + (matrix1.M24 * matrix2.M43);
+			double m24 = (((matrix1.M21 * matrix2.M14) + (matrix1.M22 * matrix2.M24)) + (matrix1.M23 * matrix2.M34)) + (matrix1.M24 * matrix2.M44);
+			double m31 = (((matrix1.M31 * matrix2.M11) + (matrix1.M32 * matrix2.M21)) + (matrix1.M33 * matrix2.M31)) + (matrix1.M34 * matrix2.M41);
+			double m32 = (((matrix1.M31 * matrix2.M12) + (matrix1.M32 * matrix2.M22)) + (matrix1.M33 * matrix2.M32)) + (matrix1.M34 * matrix2.M42);
+			double m33 = (((matrix1.M31 * matrix2.M13) + (matrix1.M32 * matrix2.M23)) + (matrix1.M33 * matrix2.M33)) + (matrix1.M34 * matrix2.M43);
+			double m34 = (((matrix1.M31 * matrix2.M14) + (matrix1.M32 * matrix2.M24)) + (matrix1.M33 * matrix2.M34)) + (matrix1.M34 * matrix2.M44);
+			double m41 = (((matrix1.M41 * matrix2.M11) + (matrix1.M42 * matrix2.M21)) + (matrix1.M43 * matrix2.M31)) + (matrix1.M44 * matrix2.M41);
+			double m42 = (((matrix1.M41 * matrix2.M12) + (matrix1.M42 * matrix2.M22)) + (matrix1.M43 * matrix2.M32)) + (matrix1.M44 * matrix2.M42);
+			double m43 = (((matrix1.M41 * matrix2.M13) + (matrix1.M42 * matrix2.M23)) + (matrix1.M43 * matrix2.M33)) + (matrix1.M44 * matrix2.M43);
+			double m44 = (((matrix1.M41 * matrix2.M14) + (matrix1.M42 * matrix2.M24)) + (matrix1.M43 * matrix2.M34)) + (matrix1.M44 * matrix2.M44);
 			matrix1.M11 = m11;
 			matrix1.M12 = m12;
 			matrix1.M13 = m13;
@@ -2148,7 +2148,7 @@ namespace Duality
 		/// <param name="matrix">Source <see cref="Matrix4"/> on the left of the mul sign.</param>
 		/// <param name="scaleFactor">Scalar value on the right of the mul sign.</param>
 		/// <returns>Result of the matrix multiplication with a scalar.</returns>
-		public static Matrix4 operator *(Matrix4 matrix, float scaleFactor)
+		public static Matrix4 operator *(Matrix4 matrix, double scaleFactor)
 		{
 			matrix.M11 = matrix.M11 * scaleFactor;
 			matrix.M12 = matrix.M12 * scaleFactor;

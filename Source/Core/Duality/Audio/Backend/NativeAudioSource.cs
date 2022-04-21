@@ -113,12 +113,14 @@ namespace Duality.Backend.DefaultOpenTK
 				ALSourceState nativeState = AL.GetSourceState(this.handle);
 				bool looped = state.Looped && !this.isStreamed;
 
+				//TODO: Convert position to Camera Relative
+
 				if (this.isFirstUpdate || this.lastState.RelativeToListener != state.RelativeToListener)
 					AL.Source(handle, ALSourceb.SourceRelative, state.RelativeToListener);
 				if (this.isFirstUpdate || this.lastState.Position != state.Position)
-					AL.Source(handle, ALSource3f.Position, state.Position.X, -state.Position.Y, -state.Position.Z);
+					AL.Source(handle, ALSource3f.Position, (float)state.Position.X, (float)(-state.Position.Y), (float)(-state.Position.Z));
 				if (this.isFirstUpdate || this.lastState.Velocity != state.Velocity)
-					AL.Source(handle, ALSource3f.Velocity, state.Velocity.X, -state.Velocity.Y, -state.Velocity.Z);
+					AL.Source(handle, ALSource3f.Velocity, (float)state.Velocity.X, (float)(-state.Velocity.Y), (float)(-state.Velocity.Z));
 				if (this.isFirstUpdate || this.lastState.MaxDistance != state.MaxDistance)
 					AL.Source(handle, ALSourcef.MaxDistance, state.MaxDistance);
 				if (this.isFirstUpdate || this.lastState.MinDistance != state.MinDistance)
@@ -146,7 +148,7 @@ namespace Duality.Backend.DefaultOpenTK
 						// If there is a filter, keep it up-to-date
 						if (this.filterHandle != 0)
 						{
-							fx.Filter(this.filterHandle, EfxFilterf.LowpassGainHF, MathF.Clamp(state.Lowpass, 0.0f, 1.0f));
+							fx.Filter(this.filterHandle, EfxFilterf.LowpassGainHF, (float)MathF.Clamp(state.Lowpass, 0.0f, 1.0f));
 							fx.BindFilterToSource(this.handle, this.filterHandle);
 						}
 					}

@@ -177,13 +177,13 @@ namespace Duality
 		/// Queries this frames time measurement value from an existing <see cref="ProfileCounter"/> with the specified name.
 		/// </summary>
 		/// <param name="counter">The <see cref="ProfileCounter"/> name to use for this measurement. For nested measurements, use path strings, e.g. "ParentCounter\ChildCounter"</param>
-		public static float GetMeasure(string counter)
+		public static double GetMeasure(string counter)
 		{
 			TimeCounter tc = GetCounter<TimeCounter>(counter);
 			if (tc != null)
 				return tc.LastValue;
 			else
-				return 0.0f;
+				return 0.0;
 		}
 
 		/// <summary>
@@ -301,7 +301,7 @@ namespace Duality
 
 					ProfileReportCounterData data;
 					current.GetReportData(out data);
-					if (omitMinor && data.Severity <= 0.005f)
+					if (omitMinor && data.Severity <= 0.005)
 						continue;
 					
 					reportBuilder.Append(' ', current.ParentDepth * 2);

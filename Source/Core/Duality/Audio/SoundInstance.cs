@@ -34,14 +34,14 @@ namespace Duality.Audio
 		private	bool       paused         = false;
 		private	bool       registered     = false;
 		private	int        curPriority    = 0;
-		private	float      playTime       = 0.0f;
+		private	double     playTime       = 0.0;
 
 		// Fading
-		private	float curFade     = 1.0f;
-		private	float fadeTarget  = 1.0f;
-		private	float fadeTimeSec = 1.0f;
-		private	float pauseFade   = 1.0f;
-		private	float fadeWaitEnd = 0.0f;
+		private	double curFade     = 1.0;
+		private	double fadeTarget  = 1.0;
+		private	double fadeTimeSec = 1.0;
+		private	double pauseFade   = 1.0;
+		private	double fadeWaitEnd = 0.0;
 
 		// Streaming
 		private	VorbisStreamHandle strOvStr = null;
@@ -102,14 +102,14 @@ namespace Duality.Audio
 		/// <summary>
 		/// [GET] When fading in or out, this value represents the current fading state.
 		/// </summary>
-		public float CurrentFade
+		public double CurrentFade
 		{
 			get { return this.curFade; }
 		}
 		/// <summary>
 		/// [GET] The target value for the current fade. Usually 0.0f or 1.0f for fadint out / in.
 		/// </summary>
-		public float FadeTarget
+		public double FadeTarget
 		{
 			get { return this.fadeTarget; }
 		}
@@ -117,7 +117,7 @@ namespace Duality.Audio
 		/// [GET] The time in seconds that this SoundInstance has been playing its sound.
 		/// This value is affected by the sounds <see cref="Pitch"/>.
 		/// </summary>
-		public float PlayTime
+		public double PlayTime
 		{
 			get { return this.playTime; }
 		}
@@ -330,7 +330,7 @@ namespace Duality.Audio
 					if (!searchSimilar && this.is3D != inst.is3D) continue;
 					if (searchSimilar && this.sound.Res != inst.sound.Res) continue;
 						
-					float ownPrioMult = 1.0f;
+					double ownPrioMult = 1.0;
 					if (searchSimilar && !inst.Looped) ownPrioMult *= MathF.Sqrt(inst.playTime + 1.0f);
 							
 					if (this.curPriority * ownPrioMult > inst.curPriority + 
@@ -356,7 +356,7 @@ namespace Duality.Audio
 			// Don't take fade into account: If a yet-to-fade-in sound wants to grab
 			// the source of a already-playing sound, it should get its chance.
 			float volTemp = this.GetTypeVolFactor() * this.sound.Res.VolumeFactor * this.vol;
-			float priorityTemp = 1000.0f;
+			double priorityTemp = 1000.0;
 			priorityTemp *= volTemp;
 
 			if (this.is3D)
@@ -367,7 +367,7 @@ namespace Duality.Audio
 				Vector3 posTemp;
 				if (this.attachedTo != null)	posTemp = this.attachedTo.Transform.Pos + this.pos;
 				else							posTemp = this.pos;
-				float dist = MathF.Sqrt(
+				double dist = MathF.Sqrt(
 					(posTemp.X - listenerPos.X) * (posTemp.X - listenerPos.X) +
 					(posTemp.Y - listenerPos.Y) * (posTemp.Y - listenerPos.Y) +
 					(posTemp.Z - listenerPos.Z) * (posTemp.Z - listenerPos.Z) * 0.25f);
@@ -433,11 +433,11 @@ namespace Duality.Audio
 			// Set up local variables for state calculation
 			Vector3 listenerPos = DualityApp.Sound.ListenerPos;
 			float optVolFactor = this.GetTypeVolFactor();
-			float priorityTemp = 1000.0f;
+			double priorityTemp = 1000.0;
 			AudioSourceState nativeState = AudioSourceState.Default;
 			nativeState.MinDistance = soundRes.MinDist;
 			nativeState.MaxDistance = soundRes.MaxDist;
-			nativeState.Volume = optVolFactor * soundRes.VolumeFactor * this.vol * this.curFade * this.pauseFade;
+			nativeState.Volume = optVolFactor * soundRes.VolumeFactor * this.vol * (float)this.curFade * (float)this.pauseFade;
 			nativeState.Pitch = soundRes.PitchFactor * this.pitch;
 			nativeState.Lowpass = soundRes.LowpassFactor * this.lowpass;
 			priorityTemp *= nativeState.Volume;
@@ -460,7 +460,7 @@ namespace Duality.Audio
 				}
 
 				// Distance check
-				float dist = MathF.Sqrt(
+				double dist = MathF.Sqrt(
 					(nativeState.Position.X - listenerPos.X) * (nativeState.Position.X - listenerPos.X) +
 					(nativeState.Position.Y - listenerPos.Y) * (nativeState.Position.Y - listenerPos.Y) +
 					(nativeState.Position.Z - listenerPos.Z) * (nativeState.Position.Z - listenerPos.Z) * 0.25f);
@@ -501,7 +501,7 @@ namespace Duality.Audio
 			{
 				if (this.fadeTarget != this.curFade)
 				{
-					float fadeTemp = Time.TimeMult * Time.SecondsPerFrame / Math.Max(0.05f, this.fadeTimeSec);
+					double fadeTemp = Time.TimeMult * Time.SecondsPerFrame / Math.Max(0.05f, this.fadeTimeSec);
 
 					if (this.fadeTarget > this.curFade)
 						this.curFade += fadeTemp;
@@ -544,8 +544,8 @@ namespace Duality.Audio
 					// Convert from Duality units to (physical) audio backend units.
 					nativeState.Position *= AudioUnit.LengthToPhysical;
 					nativeState.Velocity *= AudioUnit.VelocityToPhysical;
-					nativeState.MinDistance *= AudioUnit.LengthToPhysical;
-					nativeState.MaxDistance *= AudioUnit.LengthToPhysical;
+					nativeState.MinDistance *= (float)AudioUnit.LengthToPhysical;
+					nativeState.MaxDistance *= (float)AudioUnit.LengthToPhysical;
 
 					// Post-process sound instance data in listener space
 					Vector3 adjustedPos = nativeState.RelativeToListener ? nativeState.Position : nativeState.Position - listenerPos * AudioUnit.LengthToPhysical;
@@ -553,7 +553,7 @@ namespace Duality.Audio
 					// Normalize audio position for smooth panning when near. Do it in physical
 					// units, so this remains constant regardless of unit changes.
 					float smoothPanRadius = 5.0f;
-					float listenerSpaceDist = adjustedPos.Length;
+					float listenerSpaceDist = (float)adjustedPos.Length;
 					if (listenerSpaceDist < smoothPanRadius)
 					{
 						float panningActive = listenerSpaceDist / smoothPanRadius;

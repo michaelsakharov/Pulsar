@@ -209,10 +209,11 @@ namespace Duality.Backend.DefaultOpenTK
 			orientation[1] = 0.0f;	// forward vector y value
 			orientation[2] = -1.0f;	// forward vector z value
 			orientation[5] = 0.0f;	// up vector z value
-			AL.Listener(ALListener3f.Position, position.X, -position.Y, -position.Z);
-			AL.Listener(ALListener3f.Velocity, velocity.X, -velocity.Y, -velocity.Z);
-			orientation[3] = MathF.Sin(angle);	// up vector x value
-			orientation[4] = MathF.Cos(angle);	// up vector y value
+			//TODO: Convert position to Camera Relative
+			AL.Listener(ALListener3f.Position, (float)position.X, (float)(-position.Y), (float)(-position.Z));
+			AL.Listener(ALListener3f.Velocity, (float)velocity.X, (float)(-velocity.Y), (float)(-velocity.Z));
+			orientation[3] = (float)MathF.Sin(angle);	// up vector x value
+			orientation[4] = (float)MathF.Cos(angle);	// up vector y value
 			//AL.Listener(ALListenerfv.Orientation, ref orientation);
 			AL.Listener(ALListenerf.Gain, mute ? 0.0f : 1.0f);
 

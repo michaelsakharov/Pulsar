@@ -148,7 +148,7 @@ namespace Duality
 				// Determine how big a single segment will be, and how many target segments
 				// we'll have to generate by merging from two source segments each.
 				int segmentSize = 1 << (i + 1);
-				int segmentCount = (int)Math.Ceiling((float)count / (float)segmentSize);
+				int segmentCount = (int)Math.Ceiling((double)count / (double)segmentSize);
 				for (int s = 0; s < segmentCount; s++)
 				{
 					// First determine the target segment we'll work on
@@ -235,7 +235,7 @@ namespace Duality
 				// Determine how big a single segment will be, and how many target segments
 				// we'll have to generate by merging from two source segments each.
 				int segmentSize = 1 << (iteration + 1);
-				int segmentCount = (int)Math.Ceiling((float)count / (float)segmentSize);
+				int segmentCount = (int)Math.Ceiling((double)count / (double)segmentSize);
 				for (int s = 0; s < segmentCount; s++)
 				{
 					// First determine the target segment we'll work on
@@ -409,10 +409,10 @@ namespace Duality
 		public static Rect BoundingBox(this IList<Vector2> list)
 		{
 			Rect pointBoundingRect = new Rect(
-				float.MaxValue, 
-				float.MaxValue, 
-				float.MinValue, 
-				float.MinValue);
+				double.MaxValue, 
+				double.MaxValue, 
+				double.MinValue, 
+				double.MinValue);
 			if (list is Vector2[])
 			{
 				Vector2[] array = list as Vector2[];
