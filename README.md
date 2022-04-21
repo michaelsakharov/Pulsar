@@ -27,9 +27,3 @@ Are you experienced with c# and wanna contribute to Pulsar? Feel free to make a 
 
 ### Maintainers of Pulsar
 - [Michael Sakharov](https://github.com/michaelsakharov) (Creator of Pulsar)
-
-
-### Maintainers of Duality
-- [SirePi](https://github.com/SirePi)
-- [Barsonax](https://github.com/Barsonax)
-- [Ilexp](https://github.com/ilexp)
