@@ -11,7 +11,7 @@ namespace Duality.Resources
 	/// <summary>
 	/// Represents an Three Material.
 	/// </summary>
-	[EditorHintCategory(CoreResNames.CategoryGraphics)]
+	[EditorHintCategory(CoreResNames.CategoryMaterials)]
 	[EditorHintImage(CoreResNames.ImageMaterial)]
 	public class LineDashedMaterial : Material
 	{
