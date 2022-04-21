@@ -18,7 +18,7 @@ namespace Duality.Graphics.Components
 	[RequiredComponent(typeof(Transform))]
 	[EditorHintCategory(CoreResNames.CategoryGraphics)]
 	[EditorHintImage(CoreResNames.ImageFragmentShader)]
-	public class HemisphereLightComponent : Component, ICmpInitializable, ICmpUpdatable, ICmpEditorUpdatable, IDisposable
+	public class HemisphereLightComponent : Component, ICmpInitializable, IDisposable
 	{
 
 		[DontSerialize] HemisphereLight Light;
@@ -35,33 +35,15 @@ namespace Duality.Graphics.Components
 		void ICmpInitializable.OnActivate()
 		{
 			CreateLight();
+			DualityApp.PreRender += DualityApp_PreRender;
 		}
 
-		void ICmpInitializable.OnDeactivate()
-		{
-			if (Light != null)
-			{
-				Scene.ThreeScene.Remove(Light);
-				Light.Dispose();
-				Light = null;
-			}
-		}
-
-		void ICmpUpdatable.OnUpdate()
-		{
-			UpdateLight();
-		}
-
-		void ICmpEditorUpdatable.OnUpdate()
-		{
-			UpdateLight();
-		}
-
-		void UpdateLight()
+		private void DualityApp_PreRender(Scene scene, Duality.Components.Camera camera)
 		{
 			if (Duality.Resources.Scene.Current.MoveWorldInsteadOfCamera)
 			{
-				Light.Position.Set((float)this.GameObj.Transform.RelativePosition.X, (float)this.GameObj.Transform.RelativePosition.Y, (float)this.GameObj.Transform.RelativePosition.Z);
+				Vector3 Pos = this.GameObj.Transform.Pos - camera.GameObj.Transform.Pos;
+				Light.Position.Set((float)Pos.X, (float)Pos.Y, (float)Pos.Z);
 			}
 			else
 			{
@@ -74,6 +56,17 @@ namespace Duality.Graphics.Components
 			Light.Color = new THREE.Math.Color(Color.R / 255f, Color.G / 255f, Color.B / 255f);
 			Light.GroundColor = new THREE.Math.Color(GroundColor.R / 255f, GroundColor.G / 255f, GroundColor.B / 255f);
 			Light.Intensity = Intensity;
+		}
+
+		void ICmpInitializable.OnDeactivate()
+		{
+			if (Light != null)
+			{
+				Scene.ThreeScene.Remove(Light);
+				Light.Dispose();
+				Light = null;
+			}
+			DualityApp.PreRender -= DualityApp_PreRender;
 		}
 
 		void CreateLight()

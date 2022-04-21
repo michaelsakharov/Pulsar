@@ -19,7 +19,7 @@ namespace Duality.Graphics.Components
 	[RequiredComponent(typeof(Transform))]
 	[EditorHintCategory(CoreResNames.CategoryGraphics)]
 	[EditorHintImage(CoreResNames.ImageFragmentShader)]
-	public class PointLightComponent : Component, ICmpInitializable, ICmpUpdatable, ICmpEditorUpdatable, IDisposable
+	public class PointLightComponent : Component, ICmpInitializable, IDisposable
 	{
 
 		[DontSerialize] PointLight Light;
@@ -48,35 +48,18 @@ namespace Duality.Graphics.Components
 		void ICmpInitializable.OnActivate()
 		{
 			CreateLight();
+			DualityApp.PreRender += DualityApp_PreRender;
 		}
 
-		void ICmpInitializable.OnDeactivate()
+		private void DualityApp_PreRender(Scene scene, Duality.Components.Camera camera)
 		{
-			if (Light != null)
-			{
-				Scene.ThreeScene.Remove(Light);
-				Light.Dispose();
-				Light = null;
-			}
-		}
+			if (Gizmos.DrawLightGizmos)
+				Gizmos.DrawSphere(this.GameObj.Transform.Pos, Vector3.One * Distance, Color);
 
-		void ICmpUpdatable.OnUpdate()
-		{
-			UpdateLight();
-		}
-
-		void ICmpEditorUpdatable.OnUpdate()
-		{
-			Gizmos.DrawSphere(this.GameObj.Transform.Pos, Vector3.One * Distance, Color);
-
-			UpdateLight();
-		}
-
-		void UpdateLight()
-		{
 			if (Duality.Resources.Scene.Current.MoveWorldInsteadOfCamera)
 			{
-				Light.Position.Set((float)this.GameObj.Transform.RelativePosition.X, (float)this.GameObj.Transform.RelativePosition.Y, (float)this.GameObj.Transform.RelativePosition.Z);
+				Vector3 Pos = this.GameObj.Transform.Pos - camera.GameObj.Transform.Pos;
+				Light.Position.Set((float)Pos.X, (float)Pos.Y, (float)Pos.Z);
 			}
 			else
 			{
@@ -92,6 +75,17 @@ namespace Duality.Graphics.Components
 			Light.Shadow.Camera.Near = NearClip;
 			Light.Shadow.Camera.Far = FarClip;
 			//Light.Shadow.MapSize.Set(2048, 2048);
+		}
+
+		void ICmpInitializable.OnDeactivate()
+		{
+			if (Light != null)
+			{
+				Scene.ThreeScene.Remove(Light);
+				Light.Dispose();
+				Light = null;
+			}
+			DualityApp.PreRender -= DualityApp_PreRender;
 		}
 
 		void CreateLight()

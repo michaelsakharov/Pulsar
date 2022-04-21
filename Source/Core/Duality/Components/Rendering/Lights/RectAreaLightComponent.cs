@@ -54,7 +54,8 @@ namespace Duality.Graphics.Components
 		{
 			if (Duality.Resources.Scene.Current.MoveWorldInsteadOfCamera)
 			{
-				Light.Position.Set((float)this.GameObj.Transform.RelativePosition.X, (float)this.GameObj.Transform.RelativePosition.Y, (float)this.GameObj.Transform.RelativePosition.Z);
+				Vector3 Pos = this.GameObj.Transform.Pos - camera.GameObj.Transform.Pos;
+				Light.Position.Set((float)Pos.X, (float)Pos.Y, (float)Pos.Z);
 			}
 			else
 			{

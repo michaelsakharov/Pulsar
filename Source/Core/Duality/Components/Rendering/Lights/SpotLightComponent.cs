@@ -56,18 +56,24 @@ namespace Duality.Graphics.Components
 
 		void ICmpInitializable.OnActivate()
 		{
-			CreateLight();
 			DualityApp.PreRender += DualityApp_PreRender;
 		}
 
 		private void DualityApp_PreRender(Scene scene, Duality.Components.Camera camera)
 		{
+			if(Light == null)
+				CreateLight(camera);
+
 			if(Gizmos.DrawLightGizmos)
 				Gizmos.DrawCone(this.GameObj.Transform.Pos, this.GameObj.Transform.Rotation, Distance, Angle, Color);
 
 			if (Duality.Resources.Scene.Current.MoveWorldInsteadOfCamera)
 			{
-				Light.Position.Set((float)this.GameObj.Transform.RelativePosition.X, (float)this.GameObj.Transform.RelativePosition.Y, (float)this.GameObj.Transform.RelativePosition.Z);
+				Vector3 Pos = this.GameObj.Transform.Pos - camera.GameObj.Transform.Pos;
+				Light.Position.Set((float)Pos.X, (float)Pos.Y, (float)Pos.Z);
+
+				Vector3 forward = GameObj.Transform.Forward;
+				Light.Target.Position.Set((float)Pos.X + (float)forward.X, (float)Pos.Y + (float)forward.Y, (float)Pos.Z + (float)forward.Z);
 			}
 			else
 			{
@@ -80,9 +86,6 @@ namespace Duality.Graphics.Components
 			Light.Decay = Decay;
 			Light.Penumbra = Penumbra;
 			Light.Angle = Angle;
-
-			Vector3 forward = GameObj.Transform.Forward;
-			Light.Target.Position.Set((float)this.GameObj.Transform.Pos.X + (float)forward.X, (float)this.GameObj.Transform.Pos.Y + (float)forward.Y, (float)this.GameObj.Transform.Pos.Z + (float)forward.Z);
 
 			Light.CastShadow = CastShadow;
 			Light.Shadow.Camera.Near = NearClip;
@@ -103,16 +106,8 @@ namespace Duality.Graphics.Components
 			DualityApp.PreRender -= DualityApp_PreRender;
 		}
 
-		void CreateLight()
+		void CreateLight(Duality.Components.Camera camera)
 		{
-			if(Light != null)
-			{
-				Scene.ThreeScene.Remove(Light);
-				Scene.ThreeScene.Remove(Light.Target);
-				Light.Dispose();
-				Light = null;
-			}
-
 			Light = new SpotLight(new Color().SetHex(0xffffff));
 
 			Light.CastShadow = CastShadow;
@@ -121,7 +116,18 @@ namespace Duality.Graphics.Components
 			Light.Shadow.Camera.Fov = Fov;
 			Light.Shadow.MapSize.Set(512, 512);
 
-			Light.Position.Set((float)this.GameObj.Transform.Pos.X, (float)this.GameObj.Transform.Pos.Y, (float)this.GameObj.Transform.Pos.Z);
+			if (Duality.Resources.Scene.Current.MoveWorldInsteadOfCamera)
+			{
+				Vector3 Pos = this.GameObj.Transform.Pos - camera.GameObj.Transform.Pos;
+				Light.Position.Set((float)Pos.X, (float)Pos.Y, (float)Pos.Z);
+
+				Vector3 forward = GameObj.Transform.Forward;
+				Light.Target.Position.Set((float)Pos.X + (float)forward.X, (float)Pos.Y + (float)forward.Y, (float)Pos.Z + (float)forward.Z);
+			}
+			else
+			{
+				Light.Position.Set((float)this.GameObj.Transform.Pos.X, (float)this.GameObj.Transform.Pos.Y, (float)this.GameObj.Transform.Pos.Z);
+			}
 
 			Light.Color = new THREE.Math.Color(Color.R / 255f, Color.G / 255f, Color.B / 255f);
 			Light.Intensity = Intensity;
@@ -129,9 +135,6 @@ namespace Duality.Graphics.Components
 			Light.Decay = Decay;
 			Light.Penumbra = Penumbra;
 			Light.Angle = Angle;
-
-			Vector3 forward = GameObj.Transform.Forward;
-			Light.Target.Position.Set((float)this.GameObj.Transform.Pos.X + (float)forward.X, (float)this.GameObj.Transform.Pos.Y + (float)forward.Y, (float)this.GameObj.Transform.Pos.Z + (float)forward.Z);
 
 			Scene.ThreeScene.Add(Light);
 			Scene.ThreeScene.Add(Light.Target);
