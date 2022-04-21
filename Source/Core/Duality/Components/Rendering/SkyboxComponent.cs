@@ -20,7 +20,7 @@ namespace Duality.Graphics.Components
 	[RequiredComponent(typeof(Transform))]
 	[EditorHintCategory(CoreResNames.CategoryGraphics)]
 	[EditorHintImage(CoreResNames.ImageFragmentShader)]
-	public class SkyboxComponent : Component, ICmpInitializable, ICmpUpdatable, ICmpEditorUpdatable, IDisposable
+	public class SkyboxComponent : Component, ICmpInitializable, IDisposable
 	{
 
 		[DontSerialize] Sky sky;
@@ -53,32 +53,28 @@ namespace Duality.Graphics.Components
 
 		void ICmpInitializable.OnActivate()
 		{
-			CreateSkybox();
+			DualityApp.PreRender += DualityApp_PreRender;
 		}
 
-		void ICmpInitializable.OnDeactivate()
+		private void DualityApp_PreRender(Scene scene, Duality.Components.Camera camera)
 		{
-			if (sky != null)
+			if(sky == null)
 			{
-				Scene.ThreeScene.Remove(sky);
-				sky.Dispose();
-				sky = null;
+				sky = new Sky();
+				Sunlight = new THREE.Math.Vector3();
+				Scene.ThreeScene.Add(sky);
 			}
-		}
 
-		void ICmpUpdatable.OnUpdate()
-		{
-			UpdateSkybox();
-		}
+			if (Duality.Resources.Scene.Current.MoveWorldInsteadOfCamera)
+			{
+				Vector3 Pos = this.GameObj.Transform.Pos - camera.GameObj.Transform.Pos;
+				sky.Position.Set((float)Pos.X, (float)Pos.Y, (float)Pos.Z);
+			}
+			else
+			{
+				sky.Position.Set((float)this.GameObj.Transform.Pos.X, (float)this.GameObj.Transform.Pos.Y, (float)this.GameObj.Transform.Pos.Z);
+			}
 
-		void ICmpEditorUpdatable.OnUpdate()
-		{
-			UpdateSkybox();
-		}
-
-		void UpdateSkybox()
-		{
-			sky.Position.Set((float)this.GameObj.Transform.Pos.X, (float)this.GameObj.Transform.Pos.Y, (float)this.GameObj.Transform.Pos.Z);
 			sky.Rotation.Set((float)this.GameObj.Transform.Rotation.X, (float)this.GameObj.Transform.Rotation.Y, (float)this.GameObj.Transform.Rotation.Z, THREE.Math.RotationOrder.XYZ);
 			sky.Scale.Set((float)this.GameObj.Transform.Scale.X, (float)this.GameObj.Transform.Scale.Y, (float)this.GameObj.Transform.Scale.Z);
 
@@ -94,7 +90,7 @@ namespace Duality.Graphics.Components
 			(sky.Material as THREE.Materials.ShaderMaterial).Uniforms["sunPosition"] = new GLUniform { { "value", Sunlight } };
 		}
 
-		void CreateSkybox()
+		void ICmpInitializable.OnDeactivate()
 		{
 			if (sky != null)
 			{
@@ -102,13 +98,7 @@ namespace Duality.Graphics.Components
 				sky.Dispose();
 				sky = null;
 			}
-
-			sky = new Sky();
-
-			Sunlight = new THREE.Math.Vector3();
-			UpdateSkybox();
-
-			Scene.ThreeScene.Add(sky);
+			DualityApp.PreRender -= DualityApp_PreRender;
 		}
 
 		void IDisposable.Dispose()

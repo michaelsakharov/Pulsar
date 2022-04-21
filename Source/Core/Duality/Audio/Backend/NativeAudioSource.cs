@@ -113,12 +113,23 @@ namespace Duality.Backend.DefaultOpenTK
 				ALSourceState nativeState = AL.GetSourceState(this.handle);
 				bool looped = state.Looped && !this.isStreamed;
 
-				//TODO: Convert position to Camera Relative
-
 				if (this.isFirstUpdate || this.lastState.RelativeToListener != state.RelativeToListener)
 					AL.Source(handle, ALSourceb.SourceRelative, state.RelativeToListener);
-				if (this.isFirstUpdate || this.lastState.Position != state.Position)
-					AL.Source(handle, ALSource3f.Position, (float)state.Position.X, (float)(-state.Position.Y), (float)(-state.Position.Z));
+
+				if (Duality.Resources.Scene.Current.MoveWorldInsteadOfCamera)
+				{
+					if (this.isFirstUpdate || this.lastState.Position != state.Position)
+					{
+						Vector3 cameraRelativePosition = state.Position - Duality.Resources.Scene.Camera.GameObj.Transform.Pos;
+						AL.Source(handle, ALSource3f.Position, (float)cameraRelativePosition.X, (float)(-cameraRelativePosition.Y), (float)(-cameraRelativePosition.Z));
+					}
+				}
+				else
+				{
+					if (this.isFirstUpdate || this.lastState.Position != state.Position)
+						AL.Source(handle, ALSource3f.Position, (float)state.Position.X, (float)(-state.Position.Y), (float)(-state.Position.Z));
+				}
+
 				if (this.isFirstUpdate || this.lastState.Velocity != state.Velocity)
 					AL.Source(handle, ALSource3f.Velocity, (float)state.Velocity.X, (float)(-state.Velocity.Y), (float)(-state.Velocity.Z));
 				if (this.isFirstUpdate || this.lastState.MaxDistance != state.MaxDistance)

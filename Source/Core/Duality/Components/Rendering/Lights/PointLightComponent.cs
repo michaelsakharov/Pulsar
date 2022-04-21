@@ -74,7 +74,14 @@ namespace Duality.Graphics.Components
 
 		void UpdateLight()
 		{
-			Light.Position.Set((float)this.GameObj.Transform.Pos.X, (float)this.GameObj.Transform.Pos.Y, (float)this.GameObj.Transform.Pos.Z);
+			if (Duality.Resources.Scene.Current.MoveWorldInsteadOfCamera)
+			{
+				Light.Position.Set((float)this.GameObj.Transform.RelativePosition.X, (float)this.GameObj.Transform.RelativePosition.Y, (float)this.GameObj.Transform.RelativePosition.Z);
+			}
+			else
+			{
+				Light.Position.Set((float)this.GameObj.Transform.Pos.X, (float)this.GameObj.Transform.Pos.Y, (float)this.GameObj.Transform.Pos.Z);
+			}
 
 			Light.Color = new THREE.Math.Color(Color.R / 255f, Color.G / 255f, Color.B / 255f);
 			Light.Intensity = Intensity;

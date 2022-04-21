@@ -19,7 +19,7 @@ namespace Duality.Graphics.Components
 	[RequiredComponent(typeof(Transform))]
 	[EditorHintCategory(CoreResNames.CategoryGraphics)]
 	[EditorHintImage(CoreResNames.ImageFragmentShader)]
-	public class LensflareComponent : Component, ICmpInitializable, ICmpUpdatable, ICmpEditorUpdatable, IDisposable
+	public class LensflareComponent : Component, ICmpInitializable,  IDisposable
 	{
 		[DontSerialize] Lensflare Lensflare;
 		[DontSerialize] bool _isDirty;
@@ -34,33 +34,21 @@ namespace Duality.Graphics.Components
 		void ICmpInitializable.OnActivate()
 		{
 			CreateLensflare();
+			DualityApp.PreRender += DualityApp_PreRender;
 		}
 
-		void ICmpInitializable.OnDeactivate()
+		private void DualityApp_PreRender(Scene scene, Duality.Components.Camera camera)
 		{
 			if (Lensflare != null)
 			{
-				Scene.ThreeScene.Remove(Lensflare);
-				Lensflare.Dispose();
-				Lensflare = null;
-			}
-		}
-
-		void ICmpUpdatable.OnUpdate()
-		{
-			UpdateLensflare();
-		}
-
-		void ICmpEditorUpdatable.OnUpdate()
-		{
-			UpdateLensflare();
-		}
-
-		void UpdateLensflare()
-		{
-			if (Lensflare != null)
-			{
-				Lensflare.Position.Set((float)this.GameObj.Transform.Pos.X, (float)this.GameObj.Transform.Pos.Y, (float)this.GameObj.Transform.Pos.Z);
+				if (Duality.Resources.Scene.Current.MoveWorldInsteadOfCamera)
+				{
+					Lensflare.Position.Set((float)this.GameObj.Transform.RelativePosition.X, (float)this.GameObj.Transform.RelativePosition.Y, (float)this.GameObj.Transform.RelativePosition.Z);
+				}
+				else
+				{
+					Lensflare.Position.Set((float)this.GameObj.Transform.Pos.X, (float)this.GameObj.Transform.Pos.Y, (float)this.GameObj.Transform.Pos.Z);
+				}
 				Lensflare.Rotation.Set((float)this.GameObj.Transform.Rotation.X, (float)this.GameObj.Transform.Rotation.Y, (float)this.GameObj.Transform.Rotation.Z, THREE.Math.RotationOrder.XYZ);
 				Lensflare.Scale.Set((float)this.GameObj.Transform.Scale.X, (float)this.GameObj.Transform.Scale.Y, (float)this.GameObj.Transform.Scale.Z);
 			}
@@ -71,6 +59,17 @@ namespace Duality.Graphics.Components
 				// Recreate the Flare
 				CreateLensflare();
 			}
+		}
+
+		void ICmpInitializable.OnDeactivate()
+		{
+			if (Lensflare != null)
+			{
+				Scene.ThreeScene.Remove(Lensflare);
+				Lensflare.Dispose();
+				Lensflare = null;
+			}
+			DualityApp.PreRender -= DualityApp_PreRender;
 		}
 
 		void CreateLensflare()

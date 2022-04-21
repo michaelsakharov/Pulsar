@@ -19,7 +19,7 @@ namespace Duality.Graphics.Components
 	[RequiredComponent(typeof(Transform))]
 	[EditorHintCategory(CoreResNames.CategoryGraphics)]
 	[EditorHintImage(CoreResNames.ImageFragmentShader)]
-	public class DirectionalLightComponent : Component, ICmpInitializable, ICmpUpdatable, ICmpEditorUpdatable, IDisposable
+	public class DirectionalLightComponent : Component, ICmpInitializable, IDisposable
 	{
 
 		[DontSerialize] DirectionalLight Light;
@@ -45,34 +45,22 @@ namespace Duality.Graphics.Components
 		void ICmpInitializable.OnActivate()
 		{
 			CreateLight();
+			DualityApp.PreRender += DualityApp_PreRender;
 		}
 
-		void ICmpInitializable.OnDeactivate()
+		private void DualityApp_PreRender(Scene scene, Duality.Components.Camera camera)
 		{
-			if (Light != null)
+			if (Gizmos.DrawLightGizmos)
+				Gizmos.DrawDirectionalLight(this.GameObj.Transform.Pos, this.GameObj.Transform.Rotation, Size, NearClip, FarClip, Color);
+
+			if (Duality.Resources.Scene.Current.MoveWorldInsteadOfCamera)
 			{
-				Scene.ThreeScene.Remove(Light);
-				Scene.ThreeScene.Remove(Light.Target);
-				Light.Dispose();
-				Light = null;
+				Light.Position.Set((float)this.GameObj.Transform.RelativePosition.X, (float)this.GameObj.Transform.RelativePosition.Y, (float)this.GameObj.Transform.RelativePosition.Z);
 			}
-		}
-
-		void ICmpUpdatable.OnUpdate()
-		{
-			UpdateLight();
-		}
-
-		void ICmpEditorUpdatable.OnUpdate()
-		{
-			Gizmos.DrawDirectionalLight(this.GameObj.Transform.Pos, this.GameObj.Transform.Rotation, Size, NearClip, FarClip, Color);
-
-			UpdateLight();
-		}
-
-		void UpdateLight()
-		{
-			Light.Position.Set((float)this.GameObj.Transform.Pos.X, (float)this.GameObj.Transform.Pos.Y, (float)this.GameObj.Transform.Pos.Z);
+			else
+			{
+				Light.Position.Set((float)this.GameObj.Transform.Pos.X, (float)this.GameObj.Transform.Pos.Y, (float)this.GameObj.Transform.Pos.Z);
+			}
 			Light.Rotation.Set((float)this.GameObj.Transform.Rotation.X, (float)this.GameObj.Transform.Rotation.Y, (float)this.GameObj.Transform.Rotation.Z, THREE.Math.RotationOrder.XYZ);
 			Light.Scale.Set((float)this.GameObj.Transform.Scale.X, (float)this.GameObj.Transform.Scale.Y, (float)this.GameObj.Transform.Scale.Z);
 
@@ -95,6 +83,18 @@ namespace Duality.Graphics.Components
 				(Light.Shadow.Camera as OrthographicCamera).UpdateProjectionMatrix();
 			}
 			//Light.Shadow.MapSize.Set(2048, 2048);
+		}
+
+		void ICmpInitializable.OnDeactivate()
+		{
+			if (Light != null)
+			{
+				Scene.ThreeScene.Remove(Light);
+				Scene.ThreeScene.Remove(Light.Target);
+				Light.Dispose();
+				Light = null;
+			}
+			DualityApp.PreRender -= DualityApp_PreRender;
 		}
 
 		void CreateLight()

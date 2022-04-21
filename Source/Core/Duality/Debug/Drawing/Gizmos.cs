@@ -14,6 +14,8 @@ namespace Duality.DebugDraw
 		static List<Vector3> SphereVertices;
 		static List<Vector3> BoxVertices;
 
+		public static bool DrawLightGizmos = true;
+
 		static Gizmos()
 		{
 			//SphereVertices

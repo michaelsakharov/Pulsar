@@ -19,7 +19,7 @@ namespace Duality.Graphics.Components
 	[RequiredComponent(typeof(Transform))]
 	[EditorHintCategory(CoreResNames.CategoryGraphics)]
 	[EditorHintImage(CoreResNames.ImageFragmentShader)]
-	public class RectAreaLightComponent : Component, ICmpInitializable, ICmpUpdatable, ICmpEditorUpdatable, IDisposable
+	public class RectAreaLightComponent : Component, ICmpInitializable, IDisposable
 	{
 
 		[DontSerialize] RectAreaLight Light;
@@ -47,6 +47,29 @@ namespace Duality.Graphics.Components
 		void ICmpInitializable.OnActivate()
 		{
 			CreateLight();
+			DualityApp.PreRender += DualityApp_PreRender;
+		}
+
+		private void DualityApp_PreRender(Scene scene, Duality.Components.Camera camera)
+		{
+			if (Duality.Resources.Scene.Current.MoveWorldInsteadOfCamera)
+			{
+				Light.Position.Set((float)this.GameObj.Transform.RelativePosition.X, (float)this.GameObj.Transform.RelativePosition.Y, (float)this.GameObj.Transform.RelativePosition.Z);
+			}
+			else
+			{
+				Light.Position.Set((float)this.GameObj.Transform.Pos.X, (float)this.GameObj.Transform.Pos.Y, (float)this.GameObj.Transform.Pos.Z);
+			}
+			Light.Rotation.Set((float)this.GameObj.Transform.Rotation.X, (float)this.GameObj.Transform.Rotation.Y, (float)this.GameObj.Transform.Rotation.Z, THREE.Math.RotationOrder.XYZ);
+			Light.Scale.Set((float)this.GameObj.Transform.Scale.X, (float)this.GameObj.Transform.Scale.Y, (float)this.GameObj.Transform.Scale.Z);
+
+			Light.Color = new THREE.Math.Color(Color.R / 255f, Color.G / 255f, Color.B / 255f);
+			Light.Intensity = Intensity;
+			Light.Decay = Decay;
+			Light.Penumbra = Penumbra;
+
+			Light.Width = Width;
+			Light.Height = Height;
 		}
 
 		void ICmpInitializable.OnDeactivate()
@@ -59,31 +82,7 @@ namespace Duality.Graphics.Components
 				Light.Dispose();
 				Light = null;
 			}
-		}
-
-		void ICmpUpdatable.OnUpdate()
-		{
-			UpdateLight();
-		}
-
-		void ICmpEditorUpdatable.OnUpdate()
-		{
-			UpdateLight();
-		}
-
-		void UpdateLight()
-		{
-			Light.Position.Set((float)this.GameObj.Transform.Pos.X, (float)this.GameObj.Transform.Pos.Y, (float)this.GameObj.Transform.Pos.Z);
-			Light.Rotation.Set((float)this.GameObj.Transform.Rotation.X, (float)this.GameObj.Transform.Rotation.Y, (float)this.GameObj.Transform.Rotation.Z, THREE.Math.RotationOrder.XYZ);
-			Light.Scale.Set((float)this.GameObj.Transform.Scale.X, (float)this.GameObj.Transform.Scale.Y, (float)this.GameObj.Transform.Scale.Z);
-
-			Light.Color = new THREE.Math.Color(Color.R / 255f, Color.G / 255f, Color.B / 255f);
-			Light.Intensity = Intensity;
-			Light.Decay = Decay;
-			Light.Penumbra = Penumbra;
-
-			Light.Width = Width;
-			Light.Height = Height;
+			DualityApp.PreRender -= DualityApp_PreRender;
 		}
 
 		void CreateLight()

@@ -10,7 +10,7 @@ namespace Duality.Backend
 		int MaxSourceCount { get; }
 
 		void UpdateWorldSettings(float speedOfSound, float dopplerFactor);
-		void UpdateListener(Vector3 position, Vector3 velocity, float angle, bool mute);
+		void UpdateListener(Vector3 position, Vector3 velocity, Vector3 angle, bool mute);
 
 		INativeAudioBuffer CreateBuffer();
 		INativeAudioSource CreateSource();

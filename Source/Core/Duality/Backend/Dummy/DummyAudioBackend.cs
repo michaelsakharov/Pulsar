@@ -54,7 +54,7 @@ namespace Duality.Backend.Dummy
 		}
 
 		void IAudioBackend.UpdateWorldSettings(float speedOfSound, float dopplerFactor) { }
-		void IAudioBackend.UpdateListener(Vector3 position, Vector3 velocity, float angle, bool mute) { }
+		void IAudioBackend.UpdateListener(Vector3 position, Vector3 velocity, Vector3 angle, bool mute) { }
 
 		INativeAudioBuffer IAudioBackend.CreateBuffer()
 		{

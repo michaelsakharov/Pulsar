@@ -16,7 +16,7 @@ namespace Duality.Graphics.Components
 	[RequiredComponent(typeof(Transform))]
 	[EditorHintCategory(CoreResNames.CategoryGraphics)]
 	[EditorHintImage(CoreResNames.ImageFragmentShader)]
-	public class PointsComponent : Component, ICmpInitializable, ICmpUpdatable, ICmpEditorUpdatable, IDisposable
+	public class PointsComponent : Component, ICmpInitializable, IDisposable
 	{
 		[DontSerialize] protected bool _meshDirty = true; // Start Dirty
 		[DontSerialize] protected bool _inScene = false;
@@ -50,30 +50,10 @@ namespace Duality.Graphics.Components
 			{
 				CreateThreeMesh();
 			}
-			UpdateMeshObject();
+			DualityApp.PreRender += DualityApp_PreRender;
 		}
 
-		void ICmpInitializable.OnDeactivate()
-		{
-			if(threeMesh != null)
-			{
-				_inScene = false;
-				Scene.ThreeScene.Remove(threeMesh);
-				threeMesh = null;
-			}
-		}
-
-		void ICmpUpdatable.OnUpdate()
-		{
-			UpdateMeshObject();
-		}
-
-		void ICmpEditorUpdatable.OnUpdate()
-		{
-			UpdateMeshObject();
-		}
-
-		void UpdateMeshObject()
+		private void DualityApp_PreRender(Scene scene, Camera camera)
 		{
 			if (_meshDirty)
 			{
@@ -82,7 +62,7 @@ namespace Duality.Graphics.Components
 				if (threeMesh != null)
 				{
 					// Destroy the old Mesh
-					if(_inScene)
+					if (_inScene)
 						Scene.ThreeScene.Remove(threeMesh);
 					_inScene = false;
 					threeMesh = null;
@@ -100,10 +80,32 @@ namespace Duality.Graphics.Components
 				threeMesh.Material = ((Material != null && Material.IsAvailable) ? Material.Res : PointsMaterial.Default.Res).GetThreeMaterial();
 				threeMesh.CastShadow = true;
 				threeMesh.ReceiveShadow = true;
-				threeMesh.Position.Set((float)this.GameObj.Transform.Pos.X, (float)this.GameObj.Transform.Pos.Y, (float)this.GameObj.Transform.Pos.Z);
+
+
+				if (Duality.Resources.Scene.Current.MoveWorldInsteadOfCamera)
+				{
+					Vector3 Pos = this.GameObj.Transform.Pos - camera.GameObj.Transform.Pos;
+					threeMesh.Position.Set((float)Pos.X, (float)Pos.Y, (float)Pos.Z);
+				}
+				else
+				{
+					threeMesh.Position.Set((float)this.GameObj.Transform.Pos.X, (float)this.GameObj.Transform.Pos.Y, (float)this.GameObj.Transform.Pos.Z);
+				}
+
 				threeMesh.Rotation.Set((float)this.GameObj.Transform.Rotation.X, (float)this.GameObj.Transform.Rotation.Y, (float)this.GameObj.Transform.Rotation.Z, THREE.Math.RotationOrder.YXZ);
 				threeMesh.Scale.Set((float)this.GameObj.Transform.Scale.X, (float)this.GameObj.Transform.Scale.Y, (float)this.GameObj.Transform.Scale.Z);
 			}
+		}
+
+		void ICmpInitializable.OnDeactivate()
+		{
+			if(threeMesh != null)
+			{
+				_inScene = false;
+				Scene.ThreeScene.Remove(threeMesh);
+				threeMesh = null;
+			}
+			DualityApp.PreRender -= DualityApp_PreRender;
 		}
 
 		void CreateThreeMesh()

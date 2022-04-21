@@ -200,20 +200,26 @@ namespace Duality.Backend.DefaultOpenTK
 			AL.DopplerFactor(dopplerFactor);
 			AL.SpeedOfSound(speedOfSound);
 		}
-		void IAudioBackend.UpdateListener(Vector3 position, Vector3 velocity, float angle, bool mute)
+		void IAudioBackend.UpdateListener(Vector3 position, Vector3 velocity, Vector3 angle, bool mute)
 		{
 			DebugCheckOpenALErrors();
 
-			float[] orientation = new float[6];
-			orientation[0] = 0.0f;	// forward vector x value
-			orientation[1] = 0.0f;	// forward vector y value
-			orientation[2] = -1.0f;	// forward vector z value
-			orientation[5] = 0.0f;	// up vector z value
-			//TODO: Convert position to Camera Relative
-			AL.Listener(ALListener3f.Position, (float)position.X, (float)(-position.Y), (float)(-position.Z));
+			//float[] orientation = new float[6];
+			//orientation[0] = 0.0f;	// forward vector x value
+			//orientation[1] = 0.0f;	// forward vector y value
+			//orientation[2] = -1.0f;	// forward vector z value
+			//orientation[5] = 0.0f;	// up vector z value
+			if (Duality.Resources.Scene.Current.MoveWorldInsteadOfCamera)
+			{
+				AL.Listener(ALListener3f.Position, 0, 0, 0);
+			}
+			else
+			{
+				AL.Listener(ALListener3f.Position, (float)position.X, (float)(-position.Y), (float)(-position.Z));
+			}
 			AL.Listener(ALListener3f.Velocity, (float)velocity.X, (float)(-velocity.Y), (float)(-velocity.Z));
-			orientation[3] = (float)MathF.Sin(angle);	// up vector x value
-			orientation[4] = (float)MathF.Cos(angle);	// up vector y value
+			//orientation[3] = (float)MathF.Sin(angle);	// up vector x value
+			//orientation[4] = (float)MathF.Cos(angle);	// up vector y value
 			//AL.Listener(ALListenerfv.Orientation, ref orientation);
 			AL.Listener(ALListenerf.Gain, mute ? 0.0f : 1.0f);
 

@@ -40,6 +40,19 @@ namespace Duality.Components
 			}
 		}
 
+		/// <summary>
+		/// This returns the Position Relative to the Main Camera, Used for rendering when Scene.MoveWorldInsteadOfCamera is true
+		/// </summary>
+		public Vector3 RelativePosition
+		{
+			get
+			{
+				if (Duality.Resources.Scene.Camera == null)
+					return Pos; // No Camera to be relative to
+				return Pos - Duality.Resources.Scene.Camera.GameObj.Transform.Pos;
+			}
+		}
+
 		public Vector3 LocalPos
 		{
 			get { return this.pos; }

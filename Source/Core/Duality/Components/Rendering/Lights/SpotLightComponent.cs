@@ -19,7 +19,7 @@ namespace Duality.Graphics.Components
 	[RequiredComponent(typeof(Transform))]
 	[EditorHintCategory(CoreResNames.CategoryGraphics)]
 	[EditorHintImage(CoreResNames.ImageFragmentShader)]
-	public class SpotLightComponent : Component, ICmpInitializable, ICmpUpdatable, ICmpEditorUpdatable, IDisposable
+	public class SpotLightComponent : Component, ICmpInitializable, IDisposable
 	{
 
 		[DontSerialize] SpotLight Light;
@@ -57,34 +57,22 @@ namespace Duality.Graphics.Components
 		void ICmpInitializable.OnActivate()
 		{
 			CreateLight();
+			DualityApp.PreRender += DualityApp_PreRender;
 		}
 
-		void ICmpInitializable.OnDeactivate()
+		private void DualityApp_PreRender(Scene scene, Duality.Components.Camera camera)
 		{
-			if (Light != null)
+			if(Gizmos.DrawLightGizmos)
+				Gizmos.DrawCone(this.GameObj.Transform.Pos, this.GameObj.Transform.Rotation, Distance, Angle, Color);
+
+			if (Duality.Resources.Scene.Current.MoveWorldInsteadOfCamera)
 			{
-				Scene.ThreeScene.Remove(Light);
-				Scene.ThreeScene.Remove(Light.Target);
-				Light.Dispose();
-				Light = null;
+				Light.Position.Set((float)this.GameObj.Transform.RelativePosition.X, (float)this.GameObj.Transform.RelativePosition.Y, (float)this.GameObj.Transform.RelativePosition.Z);
 			}
-		}
-
-		void ICmpUpdatable.OnUpdate()
-		{
-			UpdateLight();
-		}
-
-		void ICmpEditorUpdatable.OnUpdate()
-		{
-			Gizmos.DrawCone(this.GameObj.Transform.Pos, this.GameObj.Transform.Rotation, Distance, Angle, Color);
-
-			UpdateLight();
-		}
-
-		void UpdateLight()
-		{
-			Light.Position.Set((float)this.GameObj.Transform.Pos.X, (float)this.GameObj.Transform.Pos.Y, (float)this.GameObj.Transform.Pos.Z);
+			else
+			{
+				Light.Position.Set((float)this.GameObj.Transform.Pos.X, (float)this.GameObj.Transform.Pos.Y, (float)this.GameObj.Transform.Pos.Z);
+			}
 
 			Light.Color = new THREE.Math.Color(Color.R / 255f, Color.G / 255f, Color.B / 255f);
 			Light.Intensity = Intensity;
@@ -101,6 +89,18 @@ namespace Duality.Graphics.Components
 			Light.Shadow.Camera.Far = FarClip;
 			Light.Shadow.Camera.Fov = Fov;
 			//Light.Shadow.MapSize.Set(2048, 2048);
+		}
+
+		void ICmpInitializable.OnDeactivate()
+		{
+			if (Light != null)
+			{
+				Scene.ThreeScene.Remove(Light);
+				Scene.ThreeScene.Remove(Light.Target);
+				Light.Dispose();
+				Light = null;
+			}
+			DualityApp.PreRender -= DualityApp_PreRender;
 		}
 
 		void CreateLight()

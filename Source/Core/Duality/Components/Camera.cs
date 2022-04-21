@@ -23,6 +23,8 @@ namespace Duality.Components
 		[DontSerialize] private bool isDirty = false;
 
 		private bool orthographic = false;
+		private bool isMainCamera = false;
+		internal bool isEditorCamera = false;
 
 		[DontSerialize] public Matrix4? CustomViewMatrix = null;
 
@@ -108,6 +110,14 @@ namespace Duality.Components
 			get { return this.orthographic; }
 			set { this.orthographic = value; isDirty = true; }
 		}
+		/// <summary>
+		/// [GET / SET] If this camera should be considered the Main Camera in the scene, The main camera will be returned when doing Scene.Camera and is used as the World Origin if Scene.MoveWorldInsteadOfCamera Is set to true
+		/// </summary>
+		public bool IsMainCamera
+		{
+			get { return this.isMainCamera; }
+			set { this.isMainCamera = value; isDirty = true; }
+		}
 
 		[DontSerialize] private EffectComposer composer;
 
@@ -183,9 +193,19 @@ namespace Duality.Components
 			cachedCamera.Aspect = DualityApp.GraphicsBackend.AspectRatio;
 			cachedCamera.Near = NearZ;
 			cachedCamera.Far = FarZ;
-			cachedCamera.Position.X = (float)this.GameObj.Transform.Pos.X;
-			cachedCamera.Position.Y = (float)this.GameObj.Transform.Pos.Y;
-			cachedCamera.Position.Z = (float)this.GameObj.Transform.Pos.Z;
+			if (Scene.Current.MoveWorldInsteadOfCamera)
+			{
+				// Keep Camera at 0, 0, 0, we will be moving the Mesh's and other rendered objects instead
+				cachedCamera.Position.X = 0;
+				cachedCamera.Position.Y = 0;
+				cachedCamera.Position.Z = 0;
+			}
+			else
+			{
+				cachedCamera.Position.X = (float)this.GameObj.Transform.Pos.X;
+				cachedCamera.Position.Y = (float)this.GameObj.Transform.Pos.Y;
+				cachedCamera.Position.Z = (float)this.GameObj.Transform.Pos.Z;
+			}
 			cachedCamera.Rotation.Set((float)this.GameObj.Transform.Rotation.X, (float)this.GameObj.Transform.Rotation.Y, (float)this.GameObj.Transform.Rotation.Z, THREE.Math.RotationOrder.YXZ);
 			cachedCamera.UpdateProjectionMatrix();
 			return cachedCamera;
@@ -195,7 +215,20 @@ namespace Duality.Components
 		{
 			if(DualityApp.ExecContext == DualityApp.ExecutionContext.Game)
 			{
-				Scene.Camera = this;
+				if (IsMainCamera)
+				{
+					if(Scene.Camera != null && Scene.Camera.IsMainCamera)
+					{
+						Logs.Core.WriteWarning("There is multiple Main Cameras! Only one will work! Please make sure theres only one Main Camera in your scene!");
+						return;
+					}
+					Scene.Camera = this;
+				}
+				else if (Scene.Camera == null)
+				{
+					// no camera is being used for the scene so just use us for now, a Main Camera may overwrite this later
+					Scene.Camera = this;
+				}
 			}
 		}
 		void ICmpInitializable.OnDeactivate()

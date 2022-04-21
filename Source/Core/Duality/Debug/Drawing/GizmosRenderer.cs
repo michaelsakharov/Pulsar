@@ -22,13 +22,17 @@ namespace Duality.DebugDraw
 			activePrimitives.Add(p);
 		}
 
-		public BufferGeometry ConstructGeometry()
+		public BufferGeometry ConstructGeometry(Camera camera)
 		{
-			// TODO: Use Currently rendering camera and offset to Local Pos/Rotation
-
 			List<float> positions = new List<float>();
 			List<float> colors = new List<float>();
 			List<int> indices = new List<int>();
+
+			Vector3 toRelative = Vector3.Zero;
+			if (Duality.Resources.Scene.Current.MoveWorldInsteadOfCamera)
+			{
+				toRelative = camera.GameObj.Transform.Pos;
+			}
 
 			// Collect all primitives into geometry buffers.
 			int i, j;
@@ -41,6 +45,7 @@ namespace Duality.DebugDraw
 				for (j = 0; j < p.vertices.Count; j++)
 				{
 					var v = p.vertices[j] * p.matrix;
+					v = v - toRelative;
 					positions.Add((float)v.X);
 					positions.Add((float)v.Y);
 					positions.Add((float)v.Z);
@@ -80,7 +85,7 @@ namespace Duality.DebugDraw
 				return;
 
 			// Create geometry and add to scene.
-			var geometry = ConstructGeometry();
+			var geometry = ConstructGeometry(camera);
 			var material = new LineBasicMaterial() { VertexColors = true };
 			activeMesh = new LineSegments(geometry, material);
 			scene.Add(activeMesh);

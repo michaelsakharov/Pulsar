@@ -296,6 +296,7 @@ namespace Duality.Resources
 		private ColorRgba                   fogColor		   = ColorRgba.Grey;
 		private float						fogNear			   = 10f;
 		private float						fogFar			   = 30f;
+		private bool						moveWorldInstead   = true;
 
 		[DontSerialize] private bool active = false;
 		[DontSerialize] private bool isUpdating = false;
@@ -405,6 +406,12 @@ namespace Duality.Resources
 		{
 			get { return this.fogFar; }
 			set { this.fogFar = value; }
+		}
+
+		public bool MoveWorldInsteadOfCamera
+		{
+			get { return this.moveWorldInstead; }
+			set { this.moveWorldInstead = value; }
 		}
 
 
