@@ -172,9 +172,9 @@ namespace Duality.Components
 			get
 			{
 				if (this.ignoreParent) return null;
-				if (this.GameObj == null) return null;
+				if (this.gameobj == null) return null;
 
-				GameObject parent = this.GameObj.Parent;
+				GameObject parent = this.gameobj.Parent;
 				if (parent == null) return null;
 
 				_dirty = true;
@@ -235,27 +235,27 @@ namespace Duality.Components
 		
 		private void SubscribeParentEvents()
 		{
-			if (this.GameObj == null) return;
+			if (this.gameobj == null) return;
 
-			this.GameObj.EventParentChanged += this.gameobj_EventParentChanged;
-			if (this.GameObj.Parent != null)
+			this.gameobj.EventParentChanged += this.gameobj_EventParentChanged;
+			if (this.gameobj.Parent != null)
 			{
-				Transform parentTransform = this.GameObj.Parent.Transform;
+				Transform parentTransform = this.gameobj.Parent.Transform;
 				if (parentTransform == null)
-					this.GameObj.Parent.EventComponentAdded += this.Parent_EventComponentAdded;
+					this.gameobj.Parent.EventComponentAdded += this.Parent_EventComponentAdded;
 				else
-					this.GameObj.Parent.EventComponentRemoving += this.Parent_EventComponentRemoving;
+					this.gameobj.Parent.EventComponentRemoving += this.Parent_EventComponentRemoving;
 			}
 		}
 		private void UnsubscribeParentEvents()
 		{
-			if (this.GameObj == null) return;
+			if (this.gameobj == null) return;
 
-			this.GameObj.EventParentChanged -= this.gameobj_EventParentChanged;
-			if (this.GameObj.Parent != null)
+			this.gameobj.EventParentChanged -= this.gameobj_EventParentChanged;
+			if (this.gameobj.Parent != null)
 			{
-				this.GameObj.Parent.EventComponentAdded -= this.Parent_EventComponentAdded;
-				this.GameObj.Parent.EventComponentRemoving -= this.Parent_EventComponentRemoving;
+				this.gameobj.Parent.EventComponentAdded -= this.Parent_EventComponentAdded;
+				this.gameobj.Parent.EventComponentRemoving -= this.Parent_EventComponentRemoving;
 			}
 		}
 
@@ -320,17 +320,17 @@ namespace Duality.Components
 		
 		private void ResetVelocity()
 		{
-			if (this.GameObj == null) return;
-			VelocityTracker tracker = this.GameObj.GetComponent<VelocityTracker>();
+			if (this.gameobj == null) return;
+			VelocityTracker tracker = this.gameobj.GetComponent<VelocityTracker>();
 			if (tracker != null)
 				tracker.ResetVelocity(this.Pos);
 		}
 
 		public void GetWorldMatrix(out Matrix4 world)
 		{
-			var scale = Matrix4.CreateScale(GameObj.Transform.Scale);
-			var rotation = Matrix4.Rotate(GameObj.Transform.Quaternion);
-			var translation = Matrix4.CreateTranslation(GameObj.Transform.Pos);
+			var scale = Matrix4.CreateScale(gameobj.Transform.Scale);
+			var rotation = Matrix4.Rotate(gameobj.Transform.Quaternion);
+			var translation = Matrix4.CreateTranslation(gameobj.Transform.Pos);
 
 			Matrix4.Multiply(ref scale, ref rotation, out var rotationScale);
 			Matrix4.Multiply(ref rotationScale, ref translation, out world);

@@ -685,10 +685,10 @@ namespace Duality
 			Type type = newComp.GetType();
 
 			// Consistency checks. Don't fail silently when we can't do what was intended.
-			if (newComp.GameObj != null) throw new ArgumentException(string.Format(
+			if (newComp.gameobj != null) throw new ArgumentException(string.Format(
 				"Specified Component '{0}' is already part of another GameObject '{1}'",
 				LogFormat.Type(type),
-				newComp.GameObj.FullName));
+				newComp.gameobj.FullName));
 			if (this.compMap.ContainsKey(type)) throw new InvalidOperationException(string.Format(
 				"GameObject '{0}' already has a Component of type '{1}'.", 
 				this, 
@@ -698,7 +698,7 @@ namespace Duality
 		}
 		private void AddComponent(Component newComp, Type type)
 		{
-			newComp.GameObj = this;
+			newComp.gameobj = this;
 			this.compMap.Add(type, newComp);
 			
 			bool added = false;
@@ -756,7 +756,7 @@ namespace Duality
 		public void RemoveComponent(Component cmp)
 		{
 			if (cmp == null) throw new ArgumentNullException("cmp", "Can't remove a null reference Component");
-			if (cmp.GameObj != this) throw new ArgumentException("The specified Component does not belong to this GameObject", "cmp");
+			if (cmp.gameobj != this) throw new ArgumentException("The specified Component does not belong to this GameObject", "cmp");
 
 			Type type = cmp.GetType();
 			this.RemoveComponent(cmp, type);
@@ -770,7 +770,7 @@ namespace Duality
 
 			if (cmp is Components.Transform) this.compTransform = null;
 
-			cmp.GameObj = null;
+			cmp.gameobj = null;
 		}
 		/// <summary>
 		/// Removes all <see cref="Component">Components</see> from this GameObject.
@@ -780,7 +780,7 @@ namespace Duality
 			foreach (Component c in this.compList)
 			{
 				this.OnComponentRemoving(c);
-				c.GameObj = null;
+				c.gameobj = null;
 			}
 			this.compList.Clear();
 			this.compMap.Clear();

@@ -21,7 +21,7 @@ namespace Duality
 	[EditorHintImage(CoreResNames.ImageComponent)]
 	public abstract class Component : IManageableObject, IUniqueIdentifyable, ICloneExplicit
 	{
-		private GameObject gameobj = null;
+		internal GameObject gameobj = null;
 		private  bool       active  = true;
 
 		
