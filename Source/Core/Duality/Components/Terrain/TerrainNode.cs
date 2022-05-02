@@ -133,7 +133,13 @@ namespace Duality.Graphics.Components
 			else
 			{
 				// Initially created in Unity so this concept needs to be ported to Pulsar
-				// In Unity I did a quick DrawMesh, We need a similiar method for Pulsar, todo this we first need it in CUBED
+				// In Unity I did a quick DrawMesh, But in pulsar we probably want these to be Children of the Terrain object
+				// Ideally with the least overhead possible, making them pulsar gameobjects comes with a lot of overhead
+				// we can go a lil more direct and make them THREE.js Objects and child them to eachother then position the Root at the position of the terrain
+				// that seems like the better route, only issue is making them THREE.js Objects comes agian with the overhead of said objects
+				// Possibly some way to replicate Unity's DrawMesh method might be nice, but Three.js's structure makes that hard todo
+				// Could do it like our Gizmos renderer, but Hold it for the ENtire frame, so all cameras will render it instead of a single Render call
+				// should probably do that for Gizmos as well honestly
 				//if (leafMesh == null)
 				//{
 				//	leafMesh = new Mesh();
