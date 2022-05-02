@@ -143,6 +143,16 @@ namespace Duality
 		{
 			return (double)System.Math.Floor(v);
 		}
+		/// <summary>
+		/// Returns the highest whole-number smaller than the specified one. (Rounds down)
+		/// </summary>
+		/// <param name="v">A number.</param>
+		/// <returns>The rounded number as an int.</returns>
+		/// <seealso cref="Ceiling"/>
+		public static int FloorToInt(double v)
+		{
+			return (int)System.Math.Floor(v);
+		}
 
 		/// <summary>
 		/// Rounds the specified value.
