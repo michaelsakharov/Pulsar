@@ -12,77 +12,87 @@ namespace Duality.Drawing
 		/// <summary>
 		/// White.
 		/// </summary>
-		public static readonly ColorRgba White				= new ColorRgba(255,	255,	255);
+		public static readonly ColorRgba White = new ColorRgba(255, 255, 255);
 		/// <summary>
 		/// Black.
 		/// </summary>
-		public static readonly ColorRgba Black				= new ColorRgba(0,		0,		0);
+		public static readonly ColorRgba Black = new ColorRgba(0, 0, 0);
 
 		/// <summary>
 		/// Fully saturated and max-brightness red. Also known as [255,0,0].
 		/// </summary>
-		public static readonly ColorRgba Red				= new ColorRgba(255,	0,		0);
+		public static readonly ColorRgba Red = new ColorRgba(255, 0, 0);
 		/// <summary>
 		/// Fully saturated and max-brightness green. Also known as [0,255,0].
 		/// </summary>
-		public static readonly ColorRgba Green				= new ColorRgba(0,		255,	0);
+		public static readonly ColorRgba Green = new ColorRgba(0, 255, 0);
 		/// <summary>
 		/// Fully saturated and max-brightness blue. Also known as [0,0,255].
 		/// </summary>
-		public static readonly ColorRgba Blue				= new ColorRgba(0,		0,		255);
+		public static readonly ColorRgba Blue = new ColorRgba(0, 0, 255);
 		/// <summary>
 		/// Fully saturated and max-brightness yellow. Also known as [255,255,0].
 		/// </summary>
-		public static readonly ColorRgba Yellow				= new ColorRgba(255,	255,	0);
+		public static readonly ColorRgba Yellow = new ColorRgba(255, 255, 0);
 
 		/// <summary>
 		/// A very light grey. Value: 224.
 		/// </summary>
-		public static readonly ColorRgba VeryLightGrey		= new ColorRgba(224,	224,	224);
+		public static readonly ColorRgba VeryLightGrey = new ColorRgba(224, 224, 224);
 		/// <summary>
 		/// A light grey. Value: 192.
 		/// </summary>
-		public static readonly ColorRgba LightGrey			= new ColorRgba(192,	192,	192);
+		public static readonly ColorRgba LightGrey = new ColorRgba(192, 192, 192);
 		/// <summary>
 		/// Medium grey. Value: 128.
 		/// </summary>
-		public static readonly ColorRgba Grey				= new ColorRgba(128,	128,	128);
+		public static readonly ColorRgba Grey = new ColorRgba(128, 128, 128);
 		/// <summary>
 		/// A dark grey. Value: 64.
 		/// </summary>
-		public static readonly ColorRgba DarkGrey			= new ColorRgba(64,		64,		64);
+		public static readonly ColorRgba DarkGrey = new ColorRgba(64, 64, 64);
 		/// <summary>
 		/// A very dark grey. Value: 32.
 		/// </summary>
-		public static readonly ColorRgba VeryDarkGrey		= new ColorRgba(32,		32,		32);
+		public static readonly ColorRgba VeryDarkGrey = new ColorRgba(32, 32, 32);
 
 		/// <summary>
 		/// Transparent white. Completely invisible, when drawn, but might make a difference as
 		/// a background color.
 		/// </summary>
-		public static readonly ColorRgba TransparentWhite	= new ColorRgba(255,	255,	255,	0);
+		public static readonly ColorRgba TransparentWhite = new ColorRgba(255, 255, 255, 0);
 		/// <summary>
 		/// Transparent black. Completely invisible, when drawn, but might make a difference as
 		/// a background color.
 		/// </summary>
-		public static readonly ColorRgba TransparentBlack	= new ColorRgba(0,		0,		0,		0);
+		public static readonly ColorRgba TransparentBlack = new ColorRgba(0, 0, 0, 0);
 
 		/// <summary>
 		/// Red color component.
 		/// </summary>
-		public	byte	R;
+		public byte R;
 		/// <summary>
 		/// Green color component.
 		/// </summary>
-		public	byte	G;
+		public byte G;
 		/// <summary>
 		/// Blue color component.
 		/// </summary>
-		public	byte	B;
+		public byte B;
 		/// <summary>
 		/// Alpha color component. Usually treated as opacity.
 		/// </summary>
-		public	byte	A;
+		public byte A;
+
+		public byte Grayscale
+		{
+			get
+			{
+				return (byte)((R + G + B) / 3);
+			}
+		}
+
+		
 
 		/// <summary>
 		/// Creates a new color based on an existing one. This is basically a copy-constructor.
