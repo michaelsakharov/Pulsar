@@ -40,7 +40,8 @@ namespace Duality.Editor.Plugins.Base
 		{
 			Mesh resource = resourceRef.Res;
 			var result = Duality.Assimp.AssimpLoader.Import(new FileStream(input.Path, FileMode.Open), System.IO.Path.GetExtension(input.Path));
-			resource.SubMeshes = result.ToArray();
+			resource.SubMeshes = result.Item1.ToArray();
+			resource.Skeleton = result.Item2;
 		}
 		protected override void ExportResource(ContentRef<Mesh> resourceRef, string path, IAssetExportEnvironment env)
 		{

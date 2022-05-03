@@ -25,6 +25,9 @@ namespace Duality.Resources
 		[EditorHintFlags(MemberFlags.Invisible)]
 		public SubMesh[] SubMeshes;
 
+		[EditorHintFlags(MemberFlags.Invisible)]
+		public Skeleton Skeleton;
+
 		public Mesh() { }
 
 		public Mesh(Stream objStream, string hint)
@@ -83,10 +86,9 @@ namespace Duality.Resources
 
 						foreach (var draw in geometry.Groups)
 							SubMeshes[i].Groups.Add(new Vector3(draw.Count, draw.Start, draw.MaterialIndex));
-
 					}
-
 				}
+				Skeleton = new Skeleton();
 			}
 		}
 
@@ -122,5 +124,20 @@ namespace Duality.Resources
 		public List<Vector4> SkinIndices;
 		public List<Vector4> SkinWeights;
 		public List<Vector3> Groups;
+	}
+
+	[Serializable]
+	public class Skeleton
+	{
+		public List<Transform> Bones = new List<Transform>();
+		public List<int> BoneParents = new List<int>();
+		//public List<Animation> Animations = new List<Animation>();
+	}
+
+	[Serializable]
+	public struct Transform
+	{
+		public Vector3 Position;
+		public Quaternion Orientation;
 	}
 }

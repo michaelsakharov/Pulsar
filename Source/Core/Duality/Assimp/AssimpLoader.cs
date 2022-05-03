@@ -62,7 +62,7 @@ namespace Duality.Assimp
 			return toReturn;
 		}
 
-		public static unsafe List<SubMesh> Import(Stream stream, string hint)
+		public static unsafe (List<SubMesh>, Skeleton) Import(Stream stream, string hint)
 		{
 			var api = Silk.NET.Assimp.Assimp.GetApi();
 
@@ -71,7 +71,7 @@ namespace Duality.Assimp
 			Silk.NET.Assimp.Scene* model = api.ImportFileFromMemory(ref buffer[0], (uint)buffer.Length, (uint)(Silk.NET.Assimp.PostProcessSteps.LimitBoneWeights | Silk.NET.Assimp.PostProcessSteps.FlipUVs), hint);
 
 			var nameToIndex = new Dictionary<string, int>();
-			//ParseSkeleton(mesh, model, nameToIndex);
+			Skeleton skeleton = ParseSkeleton(model, nameToIndex);
 
 			List<SubMesh> Meshes = new List<SubMesh>();
 
@@ -82,7 +82,7 @@ namespace Duality.Assimp
 				// Validate sub mesh data
 				if (meshToImport->MPrimitiveTypes != (uint)Silk.NET.Assimp.PrimitiveType.PrimitiveTypeTriangle)
 				{
-					Logs.Core.Write($"Invalid prrimitive type, should be triangle. {meshToImport->MName.AsString}");
+					Logs.Core.Write($"Invalid primitive type, should be triangle. {meshToImport->MName.AsString}");
 					continue;
 				}
 
@@ -188,194 +188,207 @@ namespace Duality.Assimp
 				Meshes.Add(subMesh);
 			}
 
-			return Meshes;
+			return (Meshes, skeleton);
 		}
 
-		//private void ParseSkeleton(Mesh mesh, Scene model, Dictionary<string, int> nameToIndex)
-		//{
-		//    // Create skeleton if any of the models have bones
-		//    var bones = new Dictionary<string, Bone>();
-		//
-		//    // Fetch all bones first
-		//    foreach (var meshToImport in model.Meshes)
-		//    {
-		//        if (meshToImport.HasBones)
-		//        {
-		//            foreach (var bone in meshToImport.Bones)
-		//            {
-		//                if (!bones.ContainsKey(bone.Name))
-		//                {
-		//                    bones.Add(bone.Name, bone);
-		//                }
-		//            }
-		//        }
-		//    }
-		//
-		//    if (bones.Any())
-		//    {
-		//        mesh.Skeleton = new Skeletons.Skeleton
-		//        {
-		//            Bones = new List<Skeletons.Transform>(),
-		//            Animations = new List<Skeletons.Animation>()
-		//        };
-		//        
-		//        // Find actual root node
-		//        var rootNode = model.RootNode;
-		//        if (!bones.ContainsKey(rootNode.Name))
-		//        {
-		//            foreach (var child in rootNode.Children)
-		//            {
-		//                if (bones.ContainsKey(child.Name))
-		//                {
-		//                    rootNode = child;
-		//                    break;
-		//                }
-		//            }
-		//        }
-		//
-		//        var rootNodeName = rootNode.Name;
-		//
-		//        // Skeleton system assumes that the root node is located at index 0, so we reserve a slot for it
-		//        mesh.Skeleton.Bones.Add(new Skeletons.Transform());
-		//        nameToIndex[rootNodeName] = 0;
-		//
-		//        foreach (var bone in bones)
-		//        {
-		//            var bindPose = bone.Value.OffsetMatrix;
-		//            bindPose.DecomposeNoScaling(out var rotation, out var transalation);
-		//
-		//            var transform = new Skeletons.Transform
-		//            {
-		//                Position = new Vector3(transalation.X, transalation.Y, transalation.Z),
-		//                Orientation = new Quaternion(rotation.X, rotation.Y, rotation.Z, rotation.W)
-		//            };
-		//
-		//            if (bone.Key == rootNodeName)
-		//            {
-		//                mesh.Skeleton.Bones[0] = transform;
-		//            }
-		//            else
-		//            {
-		//                mesh.Skeleton.Bones.Add(transform);
-		//                nameToIndex.Add(bone.Key, mesh.Skeleton.Bones.Count - 1);
-		//            }
-		//        }
-		//
-		//        // Parse bone hierarchy
-		//        var parentIndexes = new Dictionary<string, int>();
-		//        var nameToNode = new Dictionary<string, Node>();
-		//        ParseParents(nameToIndex, parentIndexes, nameToNode, rootNode, true);
-		//
-		//        foreach (var node in nameToNode.Values)
-		//        {
-		//            var index = nameToIndex[node.Name];
-		//
-		//            node.Transform.DecomposeNoScaling(out var rotation, out var transalation);
-		//
-		//            mesh.Skeleton.Bones[index] = new Skeletons.Transform
-		//            {
-		//                Position = new Vector3(transalation.X, transalation.Y, transalation.Z),
-		//                Orientation = new Quaternion(rotation.X, rotation.Y, rotation.Z, rotation.W)
-		//            };
-		//        }
-		//
-		//        mesh.Skeleton.BoneParents = new List<int>(mesh.Skeleton.Bones.Count);
-		//        for (var i = 0; i < mesh.Skeleton.Bones.Count; i++)
-		//        {
-		//            mesh.Skeleton.BoneParents.Add(0);
-		//        }
-		//
-		//        foreach (var parentIndex in parentIndexes)
-		//        {
-		//            if (nameToIndex.ContainsKey(parentIndex.Key))
-		//            {
-		//                mesh.Skeleton.BoneParents[nameToIndex[parentIndex.Key]] = parentIndex.Value;
-		//            }
-		//            else
-		//            {
-		//                Logs.Core.WriteWarning($"Missing bone binding for node {parentIndex.Key}");
-		//            }
-		//        }
-		//
-		//        // Parse animations
-		//        foreach (var animationToImport in model.Animations)
-		//        {
-		//            var animation = new Skeletons.Animation
-		//            {
-		//                Name = animationToImport.Name,
-		//                Tracks = new List<Skeletons.Track>(),
-		//                Length = (float)(animationToImport.DurationInTicks / animationToImport.TicksPerSecond)
-		//            };
-		//
-		//            foreach (var nodeAnimation in animationToImport.NodeAnimationChannels)
-		//            {
-		//                // Skip missing bones
-		//                if (!bones.ContainsKey(nodeAnimation.NodeName))
-		//                    continue;
-		//
-		//                var track = new Skeletons.Track
-		//                {
-		//                    BoneIndex = nameToIndex[nodeAnimation.NodeName],
-		//                    KeyFrames = new List<Skeletons.KeyFrame>()
-		//                };
-		//
-		//                var defBonePoseInv = nameToNode[nodeAnimation.NodeName].Transform;
-		//                defBonePoseInv.Inverse();
-		//
-		//                for (var i = 0; i < nodeAnimation.PositionKeys.Count; i++)
-		//                {
-		//                    var position = nodeAnimation.PositionKeys[i].Value;
-		//                    var rotation = nodeAnimation.RotationKeys[i].Value;
-		//
-		//                    var fullTransform = new Matrix4x4(rotation.GetMatrix()) * Matrix4x4.FromTranslation(position);
-		//                    var poseToKey = fullTransform * defBonePoseInv;
-		//                    poseToKey.DecomposeNoScaling(out var rot, out var pos);
-		//
-		//                    var time = nodeAnimation.PositionKeys[i].Time / animationToImport.TicksPerSecond;
-		//
-		//                    track.KeyFrames.Add(new Skeletons.KeyFrame
-		//                    {
-		//                        Time = (float)time,
-		//                        Transform = new Skeletons.Transform
-		//                        {
-		//                            Position = new Vector3(pos.X, pos.Y, pos.Z),
-		//                            Orientation = new Quaternion(rot.X, rot.Y, rot.Z, rot.W)
-		//                        }
-		//                    });
-		//                }
-		//
-		//                animation.Tracks.Add(track);
-		//            }
-		//
-		//            mesh.Skeleton.Animations.Add(animation);
-		//        }
-		//    }
-		//}
+		private static unsafe Skeleton ParseSkeleton(Silk.NET.Assimp.Scene* model, Dictionary<string, int> nameToIndex)
+		{
+			Skeleton skeleton = new Skeleton
+			{
+				Bones = new List<Transform>(),
+				//Animations = new List<Animation>()
+			};
 
-		//private void ParseParents(Dictionary<string, int> nameToIndex, Dictionary<string, int> parentIndexes, Dictionary<string, Node> nameToNode, Node node, bool isRootNode)
-		//{
-		//    if (nameToIndex.ContainsKey(node.Name))
-		//    {
-		//        nameToNode.Add(node.Name, node);
-		//    }
-		//    
-		//    if (isRootNode)
-		//    {
-		//        parentIndexes.Add(node.Name, -1); // This is a root node!
-		//    }
-		//    else if (nameToIndex.ContainsKey(node.Parent.Name))
-		//    {
-		//        parentIndexes.Add(node.Name, nameToIndex[node.Parent.Name]);
-		//    }
-		//
-		//    if (node.HasChildren)
-		//    {
-		//        foreach (var child in node.Children)
-		//        {
-		//            ParseParents(nameToIndex, parentIndexes, nameToNode, child, false);
-		//        }
-		//    }
-		//}
+			// Create skeleton if any of the models have bones
+			var bones = new Dictionary<string, IntPtr>();
+		
+		    // Fetch all bones first
+		    //foreach (var meshToImport in model.Meshes)
+			for (var i = 0; i < model->MNumMeshes; i++)
+			{
+				var meshToImport = model->MMeshes[i];
+				if (meshToImport->MNumBones > 0)
+		        {
+					//foreach (var bone in meshToImport.Bones)
+					for (var b = 0; b < meshToImport->MNumBones; b++)
+					{
+						Silk.NET.Assimp.Bone* bone = meshToImport->MBones[i];
+						if (!bones.ContainsKey(bone->MName))
+						{
+							bones.Add(bone->MName, new IntPtr(bone));
+						}
+					}
+		        }
+		    }
+		
+		    if (bones.Any())
+		    {
+		        // Find actual root node
+		        var rootNode = model->MRootNode;
+		        if (!bones.ContainsKey(rootNode->MName))
+				{
+					for (var i = 0; i < rootNode->MNumChildren; i++)
+					{
+						var child = rootNode->MChildren[i];
+						if (bones.ContainsKey(child->MName))
+		                {
+		                    rootNode = child;
+		                    break;
+		                }
+		            }
+		        }
+		
+		        var rootNodeName = rootNode->MName;
+		
+		        // Skeleton system assumes that the root node is located at index 0, so we reserve a slot for it
+		        skeleton.Bones.Add(new Transform());
+		        nameToIndex[rootNodeName] = 0;
+		
+		        foreach (var bone in bones)
+		        {
+		            var bindPose = ((Silk.NET.Assimp.Bone*)bone.Value.ToPointer())->MOffsetMatrix;
+					var transalation = bindPose.Translation;
+					var rotation = System.Numerics.Quaternion.CreateFromRotationMatrix(bindPose);
+		
+		            var transform = new Transform
+		            {
+		                Position = new Vector3(transalation.X, transalation.Y, transalation.Z),
+		                Orientation = new Quaternion(rotation.X, rotation.Y, rotation.Z, rotation.W)
+		            };
+		
+		            if (bone.Key == rootNodeName)
+		            {
+		                skeleton.Bones[0] = transform;
+		            }
+		            else
+		            {
+		                skeleton.Bones.Add(transform);
+		                nameToIndex.Add(bone.Key, skeleton.Bones.Count - 1);
+		            }
+		        }
+		
+		        // Parse bone hierarchy
+		        var parentIndexes = new Dictionary<string, int>();
+		        var nameToNode = new Dictionary<string, IntPtr>();
+		        //var nameToNode = new Dictionary<string, Silk.NET.Assimp.Node>();
+		        ParseParents(nameToIndex, parentIndexes, nameToNode, rootNode, true);
+		
+		        foreach (var nodeptr in nameToNode.Values)
+				{
+					var node = ((Silk.NET.Assimp.Node*)nodeptr.ToPointer());
+					var index = nameToIndex[node->MName];
+		
+					var transalation = node->MTransformation.Translation;
+					var rotation = System.Numerics.Quaternion.CreateFromRotationMatrix(node->MTransformation);
+
+					skeleton.Bones[index] = new Transform
+		            {
+		                Position = new Vector3(transalation.X, transalation.Y, transalation.Z),
+		                Orientation = new Quaternion(rotation.X, rotation.Y, rotation.Z, rotation.W)
+		            };
+		        }
+		
+		        skeleton.BoneParents = new List<int>(skeleton.Bones.Count);
+		        for (var i = 0; i < skeleton.Bones.Count; i++)
+		        {
+		            skeleton.BoneParents.Add(0);
+		        }
+		
+		        foreach (var parentIndex in parentIndexes)
+		        {
+		            if (nameToIndex.ContainsKey(parentIndex.Key))
+		            {
+		                skeleton.BoneParents[nameToIndex[parentIndex.Key]] = parentIndex.Value;
+		            }
+		            else
+		            {
+		                Logs.Core.WriteWarning($"Missing bone binding for node {parentIndex.Key}");
+		            }
+		        }
+
+				// Parse animations
+				//for (var i = 0; i < model->MNumAnimations; i++)
+		        //{
+				//	var animationToImport = model->MAnimations[i];
+				//
+				//	var animation = new Skeletons.Animation
+		        //    {
+		        //        Name = animationToImport->MName,
+		        //        Tracks = new List<Skeletons.Track>(),
+		        //        Length = (float)(animationToImport->MDuration / animationToImport->MTicksPerSecond) // MDuration may not be in Ticks, if not it needs to be converted
+		        //    };
+				//
+				//	for (var a = 0; a < animationToImport->MNumChannels; a++) //foreach (var nodeAnimation in animationToImport->MChannels)
+				//	{
+				//		var nodeAnimation = animationToImport->MChannels[a];
+				//		// Skip missing bones
+				//		if (!bones.ContainsKey(nodeAnimation->MNodeName))
+		        //            continue;
+				//
+		        //        var track = new Track
+		        //        {
+		        //            BoneIndex = nameToIndex[nodeAnimation->MNodeName],
+		        //            KeyFrames = new List<KeyFrame>()
+		        //        };
+				//
+				//		var defptr = nameToNode[nodeAnimation->MNodeName];
+				//		var defBonePose = ((Silk.NET.Assimp.Node*)defptr.ToPointer())->MTransformation;
+				//		System.Numerics.Matrix4x4.Invert(defBonePose, out var defBonePoseInv);
+				//
+				//		for (var b = 0; b < nodeAnimation->MPositionKeys.Count; b++)
+		        //        {
+		        //            var position = nodeAnimation->MPositionKeys[b]->MValue;
+		        //            var rotation = nodeAnimation->MRotationKeys[b]->MValue;
+				//
+		        //            var fullTransform = System.Numerics.Matrix4x4.CreateFromQuaternion(rotation) * System.Numerics.Matrix4x4.CreateTranslation(position);
+		        //            var poseToKey = fullTransform * defBonePoseInv;
+				//
+				//			var rot = poseToKey.Translation;
+				//			var pos = System.Numerics.Quaternion.CreateFromRotationMatrix(poseToKey);
+				//
+				//			var time = nodeAnimation->MPositionKeys[b]->MTime / animationToImport->MTicksPerSecond;
+				//
+		        //            track.KeyFrames.Add(new KeyFrame
+		        //            {
+		        //                Time = (float)time,
+		        //                Transform = new Transform
+		        //                {
+		        //                    Position = new Vector3(pos.X, pos.Y, pos.Z),
+		        //                    Orientation = new Quaternion(rot.X, rot.Y, rot.Z, rot.W)
+		        //                }
+		        //            });
+		        //        }
+				//
+		        //        animation.Tracks.Add(track);
+		        //    }
+				//
+		        //    mesh.Skeleton.Animations.Add(animation);
+		        //}
+		    }
+			return skeleton;
+		}
+
+		private static unsafe void ParseParents(Dictionary<string, int> nameToIndex, Dictionary<string, int> parentIndexes, Dictionary<string, IntPtr> nameToNode, Silk.NET.Assimp.Node* node, bool isRootNode)
+		{
+			if (nameToIndex.ContainsKey(node->MName))
+			{
+				nameToNode.Add(node->MName, new IntPtr(node));
+			}
+
+			if (isRootNode)
+			{
+				parentIndexes.Add(node->MName, -1); // This is a root node!
+			}
+			else if (nameToIndex.ContainsKey(node->MParent->MName))
+			{
+				parentIndexes.Add(node->MName, nameToIndex[node->MParent->MName]);
+			}
+
+			for (var i = 0; i < node->MNumChildren; i++)
+			{
+				ParseParents(nameToIndex, parentIndexes, nameToNode, node->MChildren[i], false);
+			}
+		}
 
 		struct Vertex
 		{
