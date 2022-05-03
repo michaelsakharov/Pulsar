@@ -195,7 +195,7 @@ namespace Duality.Assimp
 		{
 			Skeleton skeleton = new Skeleton
 			{
-				Bones = new List<Transform>(),
+				RootBone = new SkeletonTransform(),
 				//Animations = new List<Animation>()
 			};
 
@@ -237,75 +237,19 @@ namespace Duality.Assimp
 		                }
 		            }
 		        }
-		
+			
+				// Setup Root Bone
 		        var rootNodeName = rootNode->MName;
-		
-		        // Skeleton system assumes that the root node is located at index 0, so we reserve a slot for it
-		        skeleton.Bones.Add(new Transform());
-		        nameToIndex[rootNodeName] = 0;
-		
-		        foreach (var bone in bones)
-		        {
-		            var bindPose = ((Silk.NET.Assimp.Bone*)bone.Value.ToPointer())->MOffsetMatrix;
-					var transalation = bindPose.Translation;
-					var rotation = System.Numerics.Quaternion.CreateFromRotationMatrix(bindPose);
-		
-		            var transform = new Transform
-		            {
-		                Position = new Vector3(transalation.X, transalation.Y, transalation.Z),
-		                Orientation = new Quaternion(rotation.X, rotation.Y, rotation.Z, rotation.W)
-		            };
-		
-		            if (bone.Key == rootNodeName)
-		            {
-		                skeleton.Bones[0] = transform;
-		            }
-		            else
-		            {
-		                skeleton.Bones.Add(transform);
-		                nameToIndex.Add(bone.Key, skeleton.Bones.Count - 1);
-		            }
-		        }
-		
-		        // Parse bone hierarchy
-		        var parentIndexes = new Dictionary<string, int>();
-		        var nameToNode = new Dictionary<string, IntPtr>();
-		        //var nameToNode = new Dictionary<string, Silk.NET.Assimp.Node>();
-		        ParseParents(nameToIndex, parentIndexes, nameToNode, rootNode, true);
-		
-		        foreach (var nodeptr in nameToNode.Values)
-				{
-					var node = ((Silk.NET.Assimp.Node*)nodeptr.ToPointer());
-					var index = nameToIndex[node->MName];
-		
-					var transalation = node->MTransformation.Translation;
-					var rotation = System.Numerics.Quaternion.CreateFromRotationMatrix(node->MTransformation);
+				var rootBone = new SkeletonTransform();
+				var transalation = rootNode->MTransformation.Translation;
+				var rotation = System.Numerics.Quaternion.CreateFromRotationMatrix(rootNode->MTransformation);
+				rootBone.Position = new Vector3(transalation.X, transalation.Y, transalation.Z);
+				rootBone.Orientation = new Quaternion(rotation.X, rotation.Y, rotation.Z, rotation.W);
+				skeleton.RootBone = rootBone;
 
-					skeleton.Bones[index] = new Transform
-		            {
-		                Position = new Vector3(transalation.X, transalation.Y, transalation.Z),
-		                Orientation = new Quaternion(rotation.X, rotation.Y, rotation.Z, rotation.W)
-		            };
-		        }
+				// Parse bone hierarchy
+				ParseHierarchy(skeleton.RootBone, rootNode);
 		
-		        skeleton.BoneParents = new List<int>(skeleton.Bones.Count);
-		        for (var i = 0; i < skeleton.Bones.Count; i++)
-		        {
-		            skeleton.BoneParents.Add(0);
-		        }
-		
-		        foreach (var parentIndex in parentIndexes)
-		        {
-		            if (nameToIndex.ContainsKey(parentIndex.Key))
-		            {
-		                skeleton.BoneParents[nameToIndex[parentIndex.Key]] = parentIndex.Value;
-		            }
-		            else
-		            {
-		                Logs.Core.WriteWarning($"Missing bone binding for node {parentIndex.Key}");
-		            }
-		        }
-
 				// Parse animations
 				//for (var i = 0; i < model->MNumAnimations; i++)
 		        //{
@@ -387,6 +331,24 @@ namespace Duality.Assimp
 			for (var i = 0; i < node->MNumChildren; i++)
 			{
 				ParseParents(nameToIndex, parentIndexes, nameToNode, node->MChildren[i], false);
+			}
+		}
+
+		private static unsafe void ParseHierarchy(SkeletonTransform parent, Silk.NET.Assimp.Node* parentnode)
+		{
+			// Add Child Bones to Parent
+			for (var i = 0; i < parentnode->MNumChildren; i++)
+			{
+				var node = parentnode->MChildren[i];
+				var child = new SkeletonTransform();
+
+				var transalation = node->MTransformation.Translation;
+				var rotation = System.Numerics.Quaternion.CreateFromRotationMatrix(node->MTransformation);
+				child.Position = new Vector3(transalation.X, transalation.Y, transalation.Z);
+				child.Orientation = new Quaternion(rotation.X, rotation.Y, rotation.Z, rotation.W);
+
+				parent.Children.Add(child);
+				ParseHierarchy(child, node);
 			}
 		}
 

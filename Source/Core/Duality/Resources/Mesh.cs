@@ -129,15 +129,15 @@ namespace Duality.Resources
 	[Serializable]
 	public class Skeleton
 	{
-		public List<Transform> Bones = new List<Transform>();
-		public List<int> BoneParents = new List<int>();
+		public SkeletonTransform RootBone;
 		//public List<Animation> Animations = new List<Animation>();
 	}
 
 	[Serializable]
-	public struct Transform
+	public class SkeletonTransform
 	{
 		public Vector3 Position;
 		public Quaternion Orientation;
+		public List<SkeletonTransform> Children = new List<SkeletonTransform>();
 	}
 }
