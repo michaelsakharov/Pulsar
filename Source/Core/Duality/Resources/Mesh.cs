@@ -51,6 +51,7 @@ namespace Duality.Resources
 						SubMeshes[i] = new SubMesh();
 						SubMeshes[i].Material = MeshPhongMaterial.Default.As<Material>();
 						SubMeshes[i].Vertices = new List<Vector3>();
+						SubMeshes[i].Triangles = new List<int>();
 						SubMeshes[i].Colors = new List<ColorRgba>();
 						SubMeshes[i].Normals = new List<Vector3>();
 						SubMeshes[i].Uvs = new List<Vector2>();
@@ -117,6 +118,7 @@ namespace Duality.Resources
 	{
 		public ContentRef<Material> Material;
 		public List<Vector3> Vertices;
+		public List<int> Triangles;
 		public List<ColorRgba> Colors;
 		public List<Vector3> Normals;
 		public List<Vector2> Uvs;

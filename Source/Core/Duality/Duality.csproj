@@ -7,6 +7,7 @@
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
 	  <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+	  <PlatformTarget>AnyCPU</PlatformTarget>
 	</PropertyGroup>
 	<ItemGroup>
 	  <None Remove="EmbeddedResources\ColorCorrectLUT.png" />
@@ -264,7 +265,6 @@
 		<PackageReference Include="NVorbis" Version="0.10.1" GeneratePathProperty="true" />
 		<PackageReference Include="OpenTK" Version="3.1.0" />
 		<PackageReference Include="OpenTK.GLControl" Version="3.1.0" />
-		<PackageReference Include="Silk.NET.Assimp" Version="2.15.0" />
 		<PackageReference Include="System.Threading.Tasks.Parallel" Version="4.3.0" />
     <PackageReference Include="MemoryInterop.ILPatcher" Version="2.2.0" />
 	</ItemGroup>
@@ -407,6 +407,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Reference Include="AssimpNet">
+	    <HintPath>..\..\Dependencies\AssimpNet.dll</HintPath>
+	  </Reference>
 	  <Reference Include="THREE">
 	    <HintPath>..\..\Dependencies\THREE.dll</HintPath>
 	  </Reference>
@@ -416,8 +419,8 @@
 		<Copy SourceFiles="$(OutputPath)$(AssemblyName).dll" DestinationFolder="$(RootFolder)Build\Output\" />
 		<Copy SourceFiles="$(OutputPath)$(AssemblyName).pdb" DestinationFolder="$(RootFolder)Build\Output\" />
 		<Copy SourceFiles="$(OutputPath)$(AssemblyName).xml" DestinationFolder="$(RootFolder)Build\Output\" />
-		<Copy SourceFiles="$(RootFolder)Source\Dependencies\Assimp32.dll" DestinationFolder="$(RootFolder)Build\Output\" />
-		<Copy SourceFiles="$(RootFolder)Source\Dependencies\Assimp64.dll" DestinationFolder="$(RootFolder)Build\Output\" />
+		<Copy SourceFiles="$(RootFolder)Source\Dependencies\NativeAssimp\win\x86\assimp.dll" DestinationFolder="$(RootFolder)Build\Output\libs\x86\" />
+		<Copy SourceFiles="$(RootFolder)Source\Dependencies\NativeAssimp\win\x86_64\assimp.dll" DestinationFolder="$(RootFolder)Build\Output\libs\x86_64\" />
 		<Copy SourceFiles="$(PkgNVorbis)\lib\netstandard2.0\NVorbis.dll" DestinationFolder="$(RootFolder)Build\Output\" />
 		<Copy SourceFiles="$(PkgNVorbis)\lib\netstandard2.0\NVorbis.xml" DestinationFolder="$(RootFolder)Build\Output\" />
 	</Target>

@@ -77,6 +77,7 @@ namespace Duality
 
 		public const string PluginDirectory = "Plugins";
 		public const string DataDirectory   = "Data";
+		public const string LibsDirectory   = "libs";
 
 
 		private static Thread				    mainThread;
@@ -355,7 +356,9 @@ namespace Duality
 
 			// Initialize all core plugins, this may allocate Resources or establish references between plugins
 			pluginManager.InitPlugins();
-			
+
+			Assimp.AssimpHandler.InitializeAssimp();
+
 			initialized = true;
 
 			// Write environment specs as a debug log

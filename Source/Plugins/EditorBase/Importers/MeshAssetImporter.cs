@@ -39,7 +39,7 @@ namespace Duality.Editor.Plugins.Base
 		protected override void ImportResource(ContentRef<Mesh> resourceRef, AssetImportInput input, IAssetImportEnvironment env)
 		{
 			Mesh resource = resourceRef.Res;
-			var result = Duality.Assimp.AssimpLoader.Import(new FileStream(input.Path, FileMode.Open), System.IO.Path.GetExtension(input.Path));
+			var result = Assimp.AssimpImporter.Load(input.Path);
 			resource.SubMeshes = result.Item1.ToArray();
 			resource.Skeleton = result.Item2;
 		}

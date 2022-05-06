@@ -164,29 +164,23 @@ namespace Duality.Graphics.Components
 			{
 				THREE.Core.DirectGeometry geometry = new THREE.Core.DirectGeometry();
 
-				foreach (var vertex in submesh.Vertices)
-					geometry.Vertices.Add(vertex);
+				if (submesh.Vertices != null) foreach (var vertex in submesh.Vertices) geometry.Vertices.Add(vertex);
 
-				foreach (var color in submesh.Colors)
-					geometry.Colors.Add(color);
+				if (submesh.Triangles != null) foreach (var triangle in submesh.Triangles) geometry.Indices.Add(triangle);
 
-				foreach (var normal in submesh.Normals)
-					geometry.Normals.Add(normal);
+				if (submesh.Colors != null) foreach (var color in submesh.Colors) geometry.Colors.Add(color);
 
-				foreach (var uv in submesh.Uvs)
-					geometry.Uvs.Add(uv);
+				if (submesh.Normals != null) foreach (var normal in submesh.Normals) geometry.Normals.Add(normal);
 
-				foreach (var uv2 in submesh.Uvs2)
-					geometry.Uvs2.Add(uv2);
+				if (submesh.Uvs != null) foreach (var uv in submesh.Uvs) geometry.Uvs.Add(uv);
 
-				foreach (var skin in submesh.SkinIndices)
-					geometry.SkinIndices.Add(skin);
+				if (submesh.Uvs2 != null) foreach (var uv2 in submesh.Uvs2) geometry.Uvs2.Add(uv2);
 
-				foreach (var skin in submesh.SkinWeights)
-					geometry.SkinWeights.Add(skin);
+				if (submesh.SkinIndices != null) foreach (var skin in submesh.SkinIndices) geometry.SkinIndices.Add(skin);
 
-				foreach (var draw in submesh.Groups)
-					geometry.Groups.Add(new THREE.Core.DrawRange() { Count = (int)draw.X, Start = (int)draw.Y, MaterialIndex = (int)draw.Z });
+				if (submesh.SkinWeights != null) foreach (var skin in submesh.SkinWeights) geometry.SkinWeights.Add(skin);
+
+				if (submesh.Groups != null) foreach (var draw in submesh.Groups) geometry.Groups.Add(new THREE.Core.DrawRange() { Count = (int)draw.X, Start = (int)draw.Y, MaterialIndex = (int)draw.Z });
 
 				var geometry2 = new BufferGeometry().FromDirectGeometry(geometry);
 

@@ -124,24 +124,6 @@ namespace Duality.Graphics.Components
 				foreach (var color in submesh.Colors)
 					geometry.Colors.Add(color);
 
-				//foreach (var normal in submesh.Normals)
-				//	geometry.Normals.Add(normal);
-				//
-				//foreach (var uv in submesh.Uvs)
-				//	geometry.Uvs.Add(Vector2);
-				//
-				//foreach (var uv2 in submesh.Uvs2)
-				//	geometry.Uvs2.Add(Vector2);
-				//
-				//foreach (var skin in submesh.SkinIndices)
-				//	geometry.SkinIndices.Add(Vector4);
-				//
-				//foreach (var skin in submesh.SkinWeights)
-				//	geometry.SkinWeights.Add(Vector4);
-
-				//foreach (var draw in submesh.Groups)
-				//	geometry.Groups.Add(new THREE.Core.DrawRange() { Count = (int)draw.X, Start = (int)draw.Y, MaterialIndex = (int)draw.Z });
-
 				var geometry2 = new BufferGeometry().FromDirectGeometry(geometry);
 
 				threeMesh = new THREE.Objects.Points(geometry2, (submesh.Material != null && submesh.Material.IsAvailable) ? submesh.Material.Res.GetThreeMaterial() : MeshBasicMaterial.Default.Res.GetThreeMaterial());
