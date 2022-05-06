@@ -188,6 +188,10 @@ namespace Duality.Graphics.Components
 
 			threeSkeleton = new THREE.Objects.Skeleton(Bones.ToArray());
 
+			if (threeMesh == null)
+			{
+				threeMesh = new List<THREE.Objects.Mesh>();
+			}
 
 			// This needs to be Improved, Ideally we want to find a way to store a Geometry object directly
 			// I think we need to re-introduce Json Saving/Loading on the THREE Port, so that
@@ -223,10 +227,6 @@ namespace Duality.Graphics.Components
 
 				var geometry2 = new BufferGeometry().FromDirectGeometry(geometry);
 
-				if (threeMesh == null)
-				{
-					threeMesh = new List<THREE.Objects.Mesh>();
-				}
 				var mesh = new THREE.Objects.SkinnedMesh(geometry2, new List<THREE.Materials.Material>() { (submesh.Material != null && submesh.Material.IsAvailable) ? submesh.Material.Res.GetThreeMaterial() : MeshBasicMaterial.Default.Res.GetThreeMaterial() });
 				mesh.Bind(threeSkeleton, null);
 				threeMesh.Add(mesh);
