@@ -104,6 +104,7 @@ namespace Duality.Utility
 				return;
 
 			if (obj is Line || obj is LineSegments || obj is LineLoop) return; // Dont support selecting Lines
+			if (obj is SkinnedMesh) return; // Dont support SkinnedMesh atm as it is broken
 
 			int objId = obj.Id;
 			Material material = renderItem.Material;
