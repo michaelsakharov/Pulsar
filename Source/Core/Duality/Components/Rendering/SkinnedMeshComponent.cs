@@ -107,6 +107,9 @@ namespace Duality.Graphics.Components
 
 			if (threeMesh != null && Mesh.IsAvailable)
 			{
+				Random rnd = new Random();
+				threeSkeleton.Bones[rnd.Next(0, threeSkeleton.Bones.Length)].Position += new THREE.Math.Vector3(0.01f, 0.0f, 0.0f);
+				threeSkeleton.Update();
 				int matID = 1;
 				foreach (var submesh in threeMesh)
 				{
@@ -187,6 +190,7 @@ namespace Duality.Graphics.Components
 			ParseHierarchy(Mesh.Res.Skeleton.RootBone, rootThreeBone, Bones);
 
 			threeSkeleton = new THREE.Objects.Skeleton(Bones.ToArray());
+			threeSkeleton.Pose();
 
 			if (threeMesh == null)
 			{
