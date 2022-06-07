@@ -106,27 +106,13 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 		protected override void PostPerformAction(IEnumerable<ObjectEditorSelObj> selObjEnum, ObjectEditorAction action)
 		{
 			base.PostPerformAction(selObjEnum, action);
-			if (action == ObjectEditorAction.Move)
-			{
-				DualityEditorApp.NotifyObjPropChanged(
-					this,
-					new ObjectSelection(selObjEnum.Select(s => (s.ActualObject as GameObject).Transform)),
-					ReflectionInfo.Property_Transform_LocalPos);
-			}
-			else if (action == ObjectEditorAction.Rotate)
+			if (action == ObjectEditorAction.Transform)
 			{
 				DualityEditorApp.NotifyObjPropChanged(
 					this,
 					new ObjectSelection(selObjEnum.Select(s => (s.ActualObject as GameObject).Transform)),
 					ReflectionInfo.Property_Transform_LocalPos,
-					ReflectionInfo.Property_Transform_LocalAngle);
-			}
-			else if (action == ObjectEditorAction.Scale)
-			{
-				DualityEditorApp.NotifyObjPropChanged(
-					this,
-					new ObjectSelection(selObjEnum.Select(s => (s.ActualObject as GameObject).Transform)),
-					ReflectionInfo.Property_Transform_LocalPos,
+					ReflectionInfo.Property_Transform_LocalAngle,
 					ReflectionInfo.Property_Transform_LocalScale);
 			}
 		}
@@ -249,7 +235,7 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 				// Select them & begin action
 				this.selBeforeDrag = DualityEditorApp.Selection;
 				this.SelectObjects(createAction.Result.Select(g => new SceneEditorSelGameObj(g) as ObjectEditorSelObj));
-				this.BeginAction(ObjectEditorAction.Move);
+				this.BeginAction(ObjectEditorAction.Transform);
 			
 				// Get focused
 				this.Focus();

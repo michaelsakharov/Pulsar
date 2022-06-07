@@ -20,8 +20,6 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 	public enum ObjectEditorAction
 	{
 		None,
-		Move,
-		Rotate,
-		Scale,
+		Transform,
 	}
 }

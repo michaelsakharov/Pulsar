@@ -77,35 +77,18 @@ namespace Duality.Editor.Plugins.CamView.CamViewStates
 
 		public override bool IsActionAvailable(ObjectEditorAction action)
 		{
-			if (action == ObjectEditorAction.Move ||
-				action == ObjectEditorAction.Rotate ||
-				action == ObjectEditorAction.Scale)
+			if (action == ObjectEditorAction.Transform)
 				return this.HasTransform;
 			return false;
 		}
 		public override string UpdateActionText(ObjectEditorAction action, bool performing)
 		{
-			if (action == ObjectEditorAction.Move)
+			if (action == ObjectEditorAction.Transform)
 			{
 				return
 					string.Format("X:{0,7:0}/n", this.gameObj.Transform.LocalPos.X) +
 					string.Format("Y:{0,7:0}/n", this.gameObj.Transform.LocalPos.Y) +
 					string.Format("Z:{0,7:0}", this.gameObj.Transform.LocalPos.Z);
-			}
-			else if (action == ObjectEditorAction.Scale)
-			{
-				return
-					string.Format("Scale X:{0,7:0}/n", this.gameObj.Transform.LocalScale.X) +
-					string.Format("Scale Y:{0,7:0}/n", this.gameObj.Transform.LocalScale.Y) +
-					string.Format("Scale Z:{0,7:0}", this.gameObj.Transform.LocalScale.Z);
-			}
-			else if (action == ObjectEditorAction.Rotate)
-			{
-				Vector3 rotation = this.gameObj.Transform.LocalRotation;
-				return
-					string.Format("Rotation X:{0,7:0}/n", rotation.X) +
-					string.Format("Rotation Y:{0,7:0}/n", rotation.Y) +
-					string.Format("Rotation Z:{0,7:0}", rotation.Z);
 			}
 
 			return base.UpdateActionText(action, performing);
